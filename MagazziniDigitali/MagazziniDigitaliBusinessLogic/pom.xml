@@ -1,0 +1,23 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>it.bncf.magazziniDigitali</groupId>
+    <artifactId>MagazziniDigitali</artifactId>
+    <version>1.0.0</version>
+  </parent>
+  <groupId>it.bncf.magazziniDigitali.businessLogic</groupId>
+  <artifactId>MagazziniDigitaliBusinessLogic</artifactId>
+  <version>1.0.1</version>
+  <description>Questo progetto vine utilizzato per la gestione della logica applicativa del programma</description>
+  <properties>
+    <maven.compiler.source>1.6</maven.compiler.source>
+    <maven.compiler.target>1.6</maven.compiler.target>
+  </properties>
+  <dependencies>
+  	<dependency>
+  		<groupId>it.bncf.magazziniDigitali.databaseSchema</groupId>
+  		<artifactId>MagazziniDigitaliDatabaseSchema</artifactId>
+  		<version>1.0.3</version>
+  	</dependency>
+  </dependencies>
+</project>

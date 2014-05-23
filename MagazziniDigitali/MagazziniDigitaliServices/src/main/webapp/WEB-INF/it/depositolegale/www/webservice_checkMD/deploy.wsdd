@@ -1,0 +1,114 @@
+<!-- Use this file to deploy some handlers/chains and services      -->
+<!-- Two ways to do this:                                           -->
+<!--   java org.apache.axis.client.AdminClient deploy.wsdd          -->
+<!--      after the axis server is running                          -->
+<!-- or                                                             -->
+<!--   java org.apache.axis.utils.Admin client|server deploy.wsdd   -->
+<!--      from the same directory that the Axis engine runs         -->
+
+<deployment
+    xmlns="http://xml.apache.org/axis/wsdd/"
+    xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+
+  <!-- Services from CheckMDService WSDL service -->
+
+  <service name="CheckMDPort" provider="java:RPC" style="document" use="literal">
+      <parameter name="wsdlTargetNamespace" value="http://www.depositolegale.it/webservice.checkMD"/>
+      <parameter name="wsdlServiceElement" value="CheckMDService"/>
+      <parameter name="schemaQualified" value="http://www.depositolegale.it/readInfoOutput,http://www.depositolegale.it/oggettiDigitali,http://www.depositolegale.it/readInfoInput,http://www.depositolegale.it/istituto"/>
+      <parameter name="wsdlServicePort" value="CheckMDPort"/>
+      <parameter name="className" value="it.depositolegale.www.webservice_checkMD.CheckMDBindSkeleton"/>
+      <parameter name="wsdlPortType" value="CheckMDPortType"/>
+      <parameter name="typeMappingVersion" value="1.2"/>
+      <parameter name="allowedMethods" value="*"/>
+
+      <typeMapping
+        xmlns:ns="http://www.depositolegale.it/istituto"
+        qname="ns:>istituto"
+        type="java:it.depositolegale.www.istituto.Istituto"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.depositolegale.it/istituto"
+        qname="ns:statoIstituto_type"
+        type="java:it.depositolegale.www.istituto.StatoIstituto_type"
+        serializer="org.apache.axis.encoding.ser.EnumSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.EnumDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.depositolegale.it/readInfoInput"
+        qname="ns:>readInfoInput"
+        type="java:it.depositolegale.www.readInfoInput.ReadInfoInput"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.depositolegale.it/readInfoOutput"
+        qname="ns:>warning"
+        type="java:it.depositolegale.www.readInfoOutput.Warning"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.depositolegale.it/oggettiDigitali"
+        qname="ns:digest_type"
+        type="java:it.depositolegale.www.oggettiDigitali.Digest_type"
+        serializer="org.apache.axis.encoding.ser.EnumSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.EnumDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.depositolegale.it/readInfoOutput"
+        qname="ns:>info"
+        type="java:it.depositolegale.www.readInfoOutput.Info"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.depositolegale.it/readInfoOutput"
+        qname="ns:>errori"
+        type="java:it.depositolegale.www.readInfoOutput.Errori"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.depositolegale.it/readInfoOutput"
+        qname="ns:>readInfoOutput"
+        type="java:it.depositolegale.www.readInfoOutput.ReadInfoOutput"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.depositolegale.it/oggettiDigitali"
+        qname="ns:statoOggettoDigitale_type"
+        type="java:it.depositolegale.www.oggettiDigitali.StatoOggettoDigitale_type"
+        serializer="org.apache.axis.encoding.ser.EnumSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.EnumDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.depositolegale.it/oggettiDigitali"
+        qname="ns:>digest"
+        type="java:it.depositolegale.www.oggettiDigitali.Digest"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.depositolegale.it/oggettiDigitali"
+        qname="ns:>oggettoDigitale"
+        type="java:it.depositolegale.www.oggettiDigitali.OggettoDigitale"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+  </service>
+</deployment>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://www.depositolegale.it/istituto"
+    xmlns="http://www.depositolegale.it/istituto"> 
+    <xs:element name="istituto">
+        <xs:annotation>
+            <xs:documentation xml:lang="it">Informazioni relative all'istituto</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="it">Identificativo dell'istituto</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element minOccurs="0" name="nome" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="it">Nome dell'istituto</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="password" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="it">Password di validazione dell'istituto</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element minOccurs="0" ref="statoIstituto"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="statoIstituto" type="statoIstituto_type">
+        <xs:annotation>
+            <xs:documentation xml:lang="it">Viene utilizzato per indicare lo stato di verifica dell'istituto</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:simpleType name="statoIstituto_type">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="VALIDO">
+                <xs:annotation>
+                    <xs:documentation xml:lang="it">L'istituto è stato validato e verificato</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="NONVALIDO">
+                <xs:annotation>
+                    <xs:documentation xml:lang="it">L'istituto è presente ma le informazioni non sono state validate</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="NONPRESENTE">
+                <xs:annotation>
+                    <xs:documentation xml:lang="it">L'istituto non risulta essere censito in Magazzini digitali</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

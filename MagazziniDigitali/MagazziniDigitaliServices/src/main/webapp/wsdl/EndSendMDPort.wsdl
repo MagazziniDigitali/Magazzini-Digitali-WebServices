@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:endSendType="http://www.depositolegale.it/endSend" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:ws="http://www.depositolegale.it/webservice.endSendMD" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsoap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="http://www.depositolegale.it/webservice.endSendMD">
+
+    <!-- definizione dei tipi di dato utilizzati... questo dovrebbe ricordarvi qualcosa ;) -->
+    <wsdl:types>
+        <xs:schema>
+            <xs:import namespace="http://www.depositolegale.it/endSend" schemaLocation="./Schema/MagazziniDigitaliEndSend.xsd"/>
+        </xs:schema>
+    </wsdl:types>
+    
+    <!-- definizione di uno dei messaggi impiegati dal web service per comunicare con l'applicazione client -->
+    <wsdl:message name="EndSendMDInput">
+        <wsdl:part element="endSendType:endSend" name="EndSendMDInput"/>
+    </wsdl:message>
+    <!-- naturalmente può esistere più di un elemento message 
+     all'interno del documento -->
+
+    <wsdl:portType name="EndSendMDPortType"> 
+        <!-- definisce una "porta" e le operazioni che possono essere eseguite dal web service.
+ Definisce inoltre i messaggi coinvolti nelle operazioni elencate -->
+        <wsdl:operation name="EndSendMDOperation">
+            <wsdl:input message="ws:EndSendMDInput" name="EndSendMDInput"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    
+    <wsdl:binding name="EndSendMDBind" type="ws:EndSendMDPortType"> 
+        <!-- definisce il formato del messaggio ed i 
+       dettagli di protocollo per ogni porta -->
+        
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="EndSendMDOperation">
+            <soap:operation soapAction=""/>
+            <wsdl:input name="EndSendMDInput">
+                <soap:body use="literal"/>
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+    
+    <wsdl:service name="EndSendMDService">
+        <wsdl:port binding="ws:EndSendMDBind" name="EndSendMDPort">
+            <soap:address location="http://localhost:8080/MagazziniDigitaliServices/services/EndSendMDPort"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

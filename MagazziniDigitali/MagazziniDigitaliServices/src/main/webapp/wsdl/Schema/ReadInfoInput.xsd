@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.depositolegale.it/readInfoInput" xmlns:istituto="http://www.depositolegale.it/istituto" xmlns:oggettiDigitali="http://www.depositolegale.it/oggettiDigitali" elementFormDefault="qualified" targetNamespace="http://www.depositolegale.it/readInfoInput">
+
+    <xs:import namespace="http://www.depositolegale.it/istituto" schemaLocation="Istituto.xsd"/>
+    <xs:import namespace="http://www.depositolegale.it/oggettiDigitali" schemaLocation="OggettiDigitali.xsd"/>
+    <xs:element name="readInfoInput">
+        <xs:annotation>
+            <xs:documentation>Informazioni relative all'oggetto digitale</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="istituto:istituto"/>
+                <xs:element ref="oggettiDigitali:oggettoDigitale"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://www.depositolegale.it/endSend"
+    xmlns="http://www.depositolegale.it/endSend"
+    xmlns:readInfoOutput="http://www.depositolegale.it/readInfoOutput">
+
+    <xs:import namespace="http://www.depositolegale.it/readInfoOutput"
+        schemaLocation="ReadInfoOutput.xsd"/>
+    <xs:element name="endSend">
+        <xs:annotation>
+            <xs:documentation xml:lang="it">Informazioni reletive al termine dell'invio del materiale</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="readInfoOutput:readInfoOutput"/>
+                <xs:element name="esito" type="xs:boolean">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="it">Esito dell'elaborazione</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element maxOccurs="unbounded" minOccurs="0" ref="readInfoOutput:errori"/>
+                <xs:element maxOccurs="unbounded" minOccurs="0" ref="readInfoOutput:warning"/>
+                <xs:element maxOccurs="unbounded" minOccurs="0" ref="readInfoOutput:info"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

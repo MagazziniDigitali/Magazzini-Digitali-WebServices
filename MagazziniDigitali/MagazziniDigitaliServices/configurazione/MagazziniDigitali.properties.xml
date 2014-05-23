@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties version="1.0">
+
+    <!-- Configurazione Istituto IBNF1 -->
+    <entry key="istituto.IBNF1.nome">Biblioteca Nazionale Centrale Firenze</entry>
+    <entry key="istituto.IBNF1.pathTmp">/mnt</entry>
+    <entry key="istituto.IBNF1.password">222222</entry>
+
+    <!-- Configurazione demone di Validazione -->
+    <entry key="demoni.Validate">true</entry>
+
+    <!-- Configurazione database FilesTmp -->
+    <entry key="db.MDFilestmp">/Users/massi/Desktop/Lavoro/Sorgenti/Bncf/MagazziniDigitali/MagazziniDigitali/MagazziniDigitaliServices/sqlite/MDFilestmp.db</entry>
+</properties>
