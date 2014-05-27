@@ -87,7 +87,7 @@ public class MDFilesTmpSqlite extends SqliteCore {
 			               " ID_ISTITUTO VARCHAR(50) NOT NULL, " + 
 			               " NOMEFILE VARCHAR(255) NOT NULL, " + 
 			               " SHA1 VARCHAR(50) NOT NULL, " + 
-			               " XMLMIMETYPE VARCHAR(10) NOT NULL, " + 
+			               " XMLMIMETYPE VARCHAR(10), " + 
 			               " NOMEFILE_MOD TIMESTAMP NOT NULL," +
 			               " STATO VARCHAR(10) NOT NULL," +
 			               " TRASF_DATASTART TIMESTAMP NOT NULL," +
