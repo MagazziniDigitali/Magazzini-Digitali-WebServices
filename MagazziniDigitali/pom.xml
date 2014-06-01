@@ -10,6 +10,7 @@
     <module>MagazziniDigitaliBusinessLogic</module>
     <module>MagazziniDigitaliDatabaseSchema</module>
     <module>MagazziniDigitaliServicesImplement</module>
+    <module>MagazziniDigitaliXsd</module>
   </modules>
   <repositories>
     <repository>

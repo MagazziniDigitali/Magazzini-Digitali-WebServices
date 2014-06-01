@@ -414,7 +414,7 @@ public class MDFilesTmpSqlite extends SqliteCore {
 	 * @param id
 	 * @throws SQLException
 	 */
-	public void updateStartValidate(String id) throws SQLException{
+	public GregorianCalendar updateStartValidate(String id) throws SQLException{
 		Statement stmt = null;
 		String sql = null;
 		GregorianCalendar gc = null;
@@ -442,7 +442,7 @@ public class MDFilesTmpSqlite extends SqliteCore {
 				throw e;
 			}
 		}
-		
+		return gc;
 	}
 
 	/**
@@ -451,7 +451,7 @@ public class MDFilesTmpSqlite extends SqliteCore {
 	 * @param id
 	 * @throws SQLException
 	 */
-	public void updateStopValidate(String id, String xmlMimeType, boolean esito, String[] msgError) throws SQLException{
+	public GregorianCalendar updateStopValidate(String id, String xmlMimeType, boolean esito, String[] msgError) throws SQLException{
 		Statement stmt = null;
 		String sql = null;
 		GregorianCalendar gc = null;
@@ -467,7 +467,8 @@ public class MDFilesTmpSqlite extends SqliteCore {
 			if (xmlMimeType != null){
 				sql += ", XMLMIMETYPE='"+xmlMimeType+"'";
 			}
-			sql +=" WHERE id='"+id+"' AND STATO='"+INITVALID+"'";
+			sql +=" WHERE id='"+id+"' AND (STATO='"+INITVALID+"' OR "
+					+ "STATO='"+FINETRASF+"')";
 			if (stmt.executeUpdate(sql)==0){
 				throw new SQLException("Riscontrato un problema nell'aggiornamento del record nella tabella");
 			} else if (msgError != null){
@@ -486,6 +487,6 @@ public class MDFilesTmpSqlite extends SqliteCore {
 				throw e;
 			}
 		}
-		
+		return gc;
 	}
 }
