@@ -10,15 +10,27 @@
     <entry key="istituto.IBNF1.nome">Biblioteca Nazionale Centrale Firenze</entry>
     <entry key="istituto.IBNF1.pathTmp">/mnt</entry>
     <entry key="istituto.IBNF1.password">222222</entry>
-    <entry key="istituto.IBNF1.UUID">35dc8f20-e686-11e3-ac10-0800200c9a66</entry>
+    <!-- Identificativo della scheda dell'Istituto -->
+    <entry key="istituto.IBNF1.UUID">35dc8f20-e686-11e3-ac10-0800200c9a66-AG</entry>
+    <!-- Identificativo del Software che l'istituto ha utilizzato per trasmettere i Files in MD -->
+    <entry key="istituto.IBNF1.software.UUID">9BF7E172-628D-4562-AD46-632F86E710D1-AG</entry>
+    <!-- Identificativo relativo hai diritti che l'istituto assegna all'oggetto -->
+    <entry key="istituto.IBNF1.right.UUID">35dc8f20-e686-11e3-ac10-0800200c9a66-RG</entry>  
     
 
     <!-- Configurazione demone di Validazione -->
     <entry key="demoni.Validate">true</entry>
-    <entry key="demoni.Validate.agent.identifier.UUID">3a31c6c7-5a90-4b97-9b62-1ff900b37e2e</entry>
-    <entry key="demoni.Validate.rights.open.UUID">90520f70-e686-11e3-ac10-0800200c9a66</entry>
-    <entry key="demoni.Validate.rights.open.bassis">Bassis</entry>
+    <!-- Identificativo relativo alla scheda del Software per la Validazione -->
+    <entry key="demoni.Validate.UUID">3a31c6c7-5a90-4b97-9b62-1ff900b37e2e-AG</entry>
     <entry key="demoni.Validate.nodo">F</entry>
+    <entry key="demoni.Validate.compositionLevel[image/jp2]">1</entry>
+    <entry key="demoni.Validate.compositionLevel[image/jpeg]">1</entry>
+    <entry key="demoni.Validate.compositionLevel[application/x-gzip]">1</entry>
+    <entry key="demoni.Validate.compositionLevel[multipart/x-gzip]">1</entry>
+    <entry key="demoni.Validate.compositionLevel[application/x-compressed]">1</entry>
+    <entry key="demoni.Validate.compositionLevel[application/x-zip-compressed]">1</entry>
+    <entry key="demoni.Validate.compositionLevel[application/zip]">1</entry>
+    <entry key="demoni.Validate.compositionLevel[multipart/x-zip]">1</entry>
     
     <!-- Indica la path in cui verranno archiviati i file Premis -->
     <entry key="path.premis">/Users/massi/Desktop/Lavoro/Sorgenti/Bncf/MagazziniDigitali/MagazziniDigitali/MagazziniDigitaliServices/premis</entry>

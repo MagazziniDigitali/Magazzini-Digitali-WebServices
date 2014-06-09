@@ -36,6 +36,12 @@ public class MDFilesTmp {
 	private boolean trasfEsito;
 	
 	private String validDataStart;
+	
+	private String decompDataStart;
+
+	private String decompDataEnd;
+
+	private boolean decompEsito;
 
 	private String validDataEnd;
 
@@ -44,6 +50,8 @@ public class MDFilesTmp {
 	private String dataArchiviazione;
 	
 	private String xmlMimeType;
+	
+	private String premisFile;
 
 	private List<MDFilesTmpError> errors;
 
@@ -172,6 +180,38 @@ public class MDFilesTmp {
 
 	public void setXmlMimeType(String xmlMimeType) {
 		this.xmlMimeType = xmlMimeType;
+	}
+
+	public String getDecompDataStart() {
+		return decompDataStart;
+	}
+
+	public void setDecompDataStart(String decompDataStart) {
+		this.decompDataStart = decompDataStart;
+	}
+
+	public String getDecompDataEnd() {
+		return decompDataEnd;
+	}
+
+	public void setDecompDataEnd(String decompDataEnd) {
+		this.decompDataEnd = decompDataEnd;
+	}
+
+	public boolean isDecompEsito() {
+		return decompEsito;
+	}
+
+	public void setDecompEsito(boolean decompEsito) {
+		this.decompEsito = decompEsito;
+	}
+
+	public String getPremisFile() {
+		return premisFile;
+	}
+
+	public void setPremisFile(String premisFile) {
+		this.premisFile = premisFile;
 	}
 
 }

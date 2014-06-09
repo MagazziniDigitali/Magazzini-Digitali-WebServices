@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
   <wb-module deploy-name="MagazziniDigitaliServices">
+        <dependent-module archiveName="MagazziniDigitaliDatabaseSchema-1.0.5.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/MagazziniDigitaliDatabaseSchema/MagazziniDigitaliDatabaseSchema">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="MagazziniDigitaliXsd-1.0.2.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/MagazziniDigitaliXsd/MagazziniDigitaliXsd">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
     <property name="context-root" value="MagazziniDigitaliServices"/>
     <property name="java-output-path" value="/target/classes"/>
     <wb-resource deploy-path="/WEB-INF/classes" source-path="src/main/resources"/>

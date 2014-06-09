@@ -76,7 +76,7 @@ public class MDRegistroIngresso extends SqliteCore {
 			stmt = conn.createStatement();
 
 			gc = new GregorianCalendar();
-			sql = "INSERT INTO MDFilesTmp " +
+			sql = "INSERT INTO MDRegistroIngresso " +
 					        "(ID, TIMESTAMPINGEST, AGENTDEPOSITOR, ORIGINALCONTAINERNAME, CONTAINERNAME, "+
 					        " CONTAINERFINGERPRINT, CONTAINERTYPE, AGENTMACHINEINGEST, AGENTSOFTWAREINGEST, " +
 					        " STATUS, TIMESTAMPINIT)"+
@@ -108,7 +108,7 @@ public class MDRegistroIngresso extends SqliteCore {
 		try {
 			stmt = conn.createStatement();
 
-			sql = "UPDATE MDFilesTmp " +
+			sql = "UPDATE MDRegistroIngresso " +
 					 "SET STATUS=1, TIMESTAMPELAB='"+convert(timeStampElab)+"' "+
 				   "WHERE ID='"+id+"'";
 			if (stmt.executeUpdate(sql)==0){

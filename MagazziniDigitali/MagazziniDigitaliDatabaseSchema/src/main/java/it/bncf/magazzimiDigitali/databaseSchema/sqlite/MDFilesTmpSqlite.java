@@ -51,6 +51,16 @@ public class MDFilesTmpSqlite extends SqliteCore {
 	public static String ERRORVAL = "ERRORVAL";
 
 	/**
+	 * Stato Erore
+	 */
+	public static String ERRORCOMP = "ERRORCOMP";
+
+	/**
+	 * Stato Erore
+	 */
+	public static String ERRORPUB = "ERRORPUB";
+
+	/**
 	 * Stato Inizio Validazione dell'oggetto trasferito
 	 */
 	public static String INITVALID = "INITVALID";
@@ -59,6 +69,16 @@ public class MDFilesTmpSqlite extends SqliteCore {
 	 * Stato Fine Validazione dell'oggetto trasferito
 	 */
 	public static String FINEVALID = "FINEVALID";
+
+	/**
+	 * Stato Inizio Validazione dell'oggetto trasferito
+	 */
+	public static String INITPUBLISH = "INITPUBLISH";
+
+	/**
+	 * Stato Fine Validazione dell'oggetto trasferito
+	 */
+	public static String FINEPUBLISH = "FINEPUBLISH";
 
 	/**
 	 * @param fileDb
@@ -96,7 +116,11 @@ public class MDFilesTmpSqlite extends SqliteCore {
 			               " VALID_DATASTART TIMESTAMP," +
 			               " VALID_DATAEND TIMESTAMP," +
 			               " VALID_ESITO BOOLEAN, " +
-			               " DATA_ARCHIVIAZIONE TIMESTAMP"+
+			               " DECOMP_DATASTART TIMESTAMP," +
+			               " DECOMP_DATAEND TIMESTAMP," +
+			               " DECOMP_ESITO BOOLEAN, " +
+			               " DATA_ARCHIVIAZIONE TIMESTAMP,"+
+			               " PREMIS_FILE VARCHAR(100)"+
 			               " ); "+
 			       "CREATE INDEX MDFilesTmp01 on MDFilesTmp(ID_ISTITUTO); "+
 			       "CREATE INDEX MDFilesTmp02 on MDFilesTmp(SHA1); "
@@ -227,12 +251,24 @@ public class MDFilesTmpSqlite extends SqliteCore {
 				if (rs.getObject("VALID_ESITO")!= null){
 					record.setValidEsito(rs.getBoolean("VALID_ESITO"));
 				}
+				if (rs.getString("DECOMP_DATASTART")!= null){
+					record.setDecompDataStart(rs.getString("DECOMP_DATASTART"));
+				}
+				if (rs.getString("DECOMP_DATAEND")!= null){
+					record.setDecompDataEnd(rs.getString("DECOMP_DATAEND"));
+				}
+				if (rs.getObject("DECOMP_ESITO")!= null){
+					record.setDecompEsito(rs.getBoolean("DECOMP_ESITO"));
+				}
 				
 				if (rs.getString("DATA_ARCHIVIAZIONE")!= null){
 					record.setDataArchiviazione(rs.getString("DATA_ARCHIVIAZIONE"));
 				}
 				if (rs.getString("XMLMIMETYPE")!= null){
 					record.setXmlMimeType(rs.getString("XMLMIMETYPE"));
+				}
+				if (rs.getString("PREMIS_FILE")!= null){
+					record.setPremisFile(rs.getString("PREMIS_FILE"));
 				}
 				findErrorById(rs.getString("ID"), record);
 				res.add(record);
@@ -451,7 +487,7 @@ public class MDFilesTmpSqlite extends SqliteCore {
 	 * @param id
 	 * @throws SQLException
 	 */
-	public GregorianCalendar updateStopValidate(String id, String xmlMimeType, boolean esito, String[] msgError) throws SQLException{
+	public GregorianCalendar updateStopValidate(String id, String xmlMimeType, boolean esito, String[] msgError, String premisFile) throws SQLException{
 		Statement stmt = null;
 		String sql = null;
 		GregorianCalendar gc = null;
@@ -466,6 +502,9 @@ public class MDFilesTmpSqlite extends SqliteCore {
 					    "VALID_ESITO="+(esito?"1":"0");
 			if (xmlMimeType != null){
 				sql += ", XMLMIMETYPE='"+xmlMimeType+"'";
+			}
+			if (premisFile != null){
+				sql += ", PREMIS_FILE='"+premisFile+"'";
 			}
 			sql +=" WHERE id='"+id+"' AND (STATO='"+INITVALID+"' OR "
 					+ "STATO='"+FINETRASF+"')";
@@ -488,5 +527,43 @@ public class MDFilesTmpSqlite extends SqliteCore {
 			}
 		}
 		return gc;
+	}
+
+	/**
+	 * Metodo utilizzato per indicare l'inizio della validazione
+	 * 
+	 * @param id
+	 * @throws SQLException
+	 */
+	public void updateCompress(String id, GregorianCalendar compressStart, GregorianCalendar compressStop, boolean esito, String[] msgError) throws SQLException{
+		Statement stmt = null;
+		String sql = null;
+		
+		try {
+			stmt = conn.createStatement();
+
+			sql = "UPDATE MDFilesTmp " +
+					"SET DECOMP_DATASTART='"+convert(compressStart)+"', "+
+					    "DECOMP_DATAEND='"+convert(compressStop)+"', "+
+					    "DECOMP_ESITO="+(esito?"1":"0");
+			sql +=" WHERE id='"+id+"' AND STATO='"+INITVALID+"'";
+			if (stmt.executeUpdate(sql)==0){
+				throw new SQLException("Riscontrato un problema nell'aggiornamento del record nella tabella");
+			} else if (msgError != null){
+				for (int x=0; x<msgError.length; x++){
+					insertNewError(id, ERRORCOMP, msgError[x]);
+				}
+			}
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			try {
+				if (stmt != null){
+					stmt.close();
+				}
+			} catch (SQLException e) {
+				throw e;
+			}
+		}
 	}
 }

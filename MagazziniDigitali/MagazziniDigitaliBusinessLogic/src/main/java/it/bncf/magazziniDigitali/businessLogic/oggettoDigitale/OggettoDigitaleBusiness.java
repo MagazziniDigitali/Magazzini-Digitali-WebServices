@@ -18,6 +18,7 @@ import java.util.Hashtable;
 import java.util.List;
 
 import mx.randalf.archive.info.DigestType;
+import mx.randalf.archive.info.Xmltype;
 import mx.randalf.configuration.Configuration;
 import mx.randalf.configuration.exception.ConfigurationException;
 import mx.randalf.xsd.exception.XsdException;
@@ -185,6 +186,39 @@ public class OggettoDigitaleBusiness {
 		}
 	}
 
+	public void indexer(){
+		MDFilesTmpSqlite mdFileTmp = null;
+		List<MDFilesTmp> rs = null;
+
+		try {
+			mdFileTmp = new MDFilesTmpSqlite();
+			
+			rs = mdFileTmp.findByStatus(new String[] {
+					MDFilesTmpSqlite.FINEVALID, MDFilesTmpSqlite.INITPUBLISH});
+			if (rs != null && rs.size() > 0) {
+				for (int x=0;x <rs.size(); x++){
+					
+				}
+			}
+		} catch (FileNotFoundException e) {
+			log.error(e.getMessage(), e);
+		} catch (ClassNotFoundException e) {
+			log.error(e.getMessage(), e);
+		} catch (SQLException e) {
+			log.error(e.getMessage(), e);
+		} catch (ConfigurationException e) {
+			log.error(e.getMessage(), e);
+		} finally {
+			try {
+				if (mdFileTmp != null) {
+					mdFileTmp.disconnect();
+				}
+			} catch (SQLException e) {
+				log.error(e.getMessage(), e);
+			}
+		}
+	}
+
 	public void validate(String application){
 		MDFilesTmpSqlite mdFileTmp = null;
 		List<MDFilesTmp> rs = null;
@@ -194,8 +228,14 @@ public class OggettoDigitaleBusiness {
 		PremisXsd premis = null;
 		GregorianCalendar start;
 		GregorianCalendar stop;
+		GregorianCalendar startDecomp = null;
+		GregorianCalendar stopDecomp = null;
 		ArchiveMD archive = null;
 		File filePremis = null;
+		String fileTar = null;
+		String objectIdentifierMaster = null;
+		String eventDetailDecomp = null;
+		String fPremis = null;
 
 		try {
 			mdFileTmp = new MDFilesTmpSqlite();
@@ -209,22 +249,24 @@ public class OggettoDigitaleBusiness {
 				validate = new ValidateFile();
 				for (int x = 0; x < rs.size(); x++) {
 					try {
-						filePremis = new File(Configuration.getValue("path.premis")+File.separator+
-								rs.get(x).getId()+".premis");
-						
+						fPremis = null;
 						// calcolo il file da validare
 						fileObj = Configuration.getValue("istituto."
 								+ rs.get(x).getIdIstituto() + ".pathTmp");
 						fileObj += File.separator;
 						fileObj += rs.get(x).getNomeFile();
 						fObj = new File(fileObj);
+
+						fileTar = fObj.getName().
+								replace(".tar.gz", ".tar").
+								replace(".tgz", ".tar");
+						
 						log.debug("fileObj: " + fObj.getAbsolutePath());
+						eventDetailDecomp = fObj.getName()+" => "+fileTar;
 						if (!fObj.exists()) {
 							fObj = new File(fObj.getParentFile().getAbsolutePath()+
 									File.separator+
-									fObj.getName().
-									replace(".tar.gz", ".tar").
-									replace(".tgz", ".tar"));
+									fileTar);
 						}
 						if (fObj.exists()) {
 							// il file Esiste
@@ -239,80 +281,151 @@ public class OggettoDigitaleBusiness {
 								start = convertDate(rs.get(x).getValidDataStart());
 							}
 							validate.check(fObj);
-							premis = new PremisXsd(Configuration.getValue("istituto."
-									+ rs.get(x).getIdIstituto() + ".UUID"), 
-									Configuration.getValue("demoni."+application+".rights.open.UUID"),
-									Configuration.getValue("demoni."+application+".rights.open.bassis"));
+							premis = new PremisXsd();
+							if (validate.getGcUnzipStart() != null ||
+									validate.getGcUnzipStop() != null){
+								mdFileTmp.updateCompress(rs.get(x).getId(), 
+										validate.getGcUnzipStart(), 
+										validate.getGcUnzipStop(), 
+										(validate.getUnzipError()==null?true:false), validate.getUnzipError());
+								startDecomp = validate.getGcUnzipStart();
+								stopDecomp = validate.getGcUnzipStop();
+							} else {
+								if (rs.get(x).getDecompDataStart() != null){
+									startDecomp = convertDate(rs.get(x).getDecompDataStart());
+								}
+								if (rs.get(x).getDecompDataEnd() != null){
+									stopDecomp = convertDate(rs.get(x).getDecompDataEnd());
+								}
+							}
 							if (validate.getArchive()!= null){
 								if (validate.getArchive().checkMimetype("application/x-tar")){
 									archive = validate.getArchive();
 								} else {
 									archive = (ArchiveMD) validate.getArchive().getArchive().get(0);
 								}
-								addArchive(premis, archive);
+								objectIdentifierMaster = archive.getID();
+								premis.addObjectFileContainer(objectIdentifierMaster, archive.getXmltype().value(), 
+										archive.getType().getExt(), new BigInteger("0"), 
+										archive.getDigest(DigestType.SHA_1), archive.getType().getSize(), 
+										archive.getMimetype(), archive.getNome(), 
+										Configuration.getValue("istituto."+rs.get(x).getIdIstituto()+".right.UUID"),
+										archive.getType().getFormat().getVersion(), archive.getType().getPUID());
+
+								if (archive.getArchive() != null && archive.getArchive().size() > 0) {
+									for (int y = 0; y < archive.getArchive().size(); y++) {
+										addArchive(premis, (ArchiveMD) archive.getArchive().get(y), objectIdentifierMaster);
+									}
+								}
 							}
-							
-							premis.addEvent("MD_Send", "MD_Send", "send", 
-									convertDate(rs.get(x).getTrasfDataStart()), 
-									convertDate(rs.get(x).getTrasfDataEnd()), 
-									"success", 
-									null, Configuration.getValue("istituto."
-											+ rs.get(x).getIdIstituto() + ".UUID"));
-							
-							if (validate.isErrors()) {
-								stop = mdFileTmp.updateStopValidate(rs.get(x).getId(),
-											null, false, validate.getErrors());
-								premis.addEvent("MD_Validate", "MD_Validate", "validation", start, stop, "failure", 
-										validate.getErrors(), Configuration.getValue("demoni."+application+".agent.identifier.UUID"));
+
+							fPremis = premis.getActualFileName()+".premis";
+							filePremis = new File(Configuration.getValue("path.premis")+File.separator+
+									fPremis);
+							premis.addEvent("send", convertDate(rs.get(x).getTrasfDataStart()), 
+									convertDate(rs.get(x).getTrasfDataEnd()), null, 
+									"OK", null, Configuration.getValue("istituto."+rs.get(x).getIdIstituto()+".UUID"), 
+									Configuration.getValue("istituto."+rs.get(x).getIdIstituto()+".software.UUID"), 
+									objectIdentifierMaster);
+							if (validate.getUnzipError() != null){
+								premis.addEvent("decompress", startDecomp, 
+										stopDecomp, eventDetailDecomp, 
+										"KO", validate.getUnzipError(), null, 
+										Configuration.getValue("demoni."+application+".UUID"), 
+										objectIdentifierMaster);
 								premis.write(filePremis, false);
 							} else {
-								stop = mdFileTmp.updateStopValidate(rs.get(x).getId(),
-										validate.getXmlType().value(), true,
-										null);
-								premis.addEvent("MD_Validate", "MD_Validate", "validation", start, stop, "success", 
-										null, Configuration.getValue("demoni."+application+".agent.identifier.UUID"));
-								premis.write(filePremis, true);
+								if (startDecomp != null ||
+										stopDecomp != null){
+									premis.addEvent("decompress", startDecomp, 
+											stopDecomp, eventDetailDecomp, 
+											"OK", null, null, 
+											Configuration.getValue("demoni."+application+".UUID"), 
+											objectIdentifierMaster);
+								}
+								if (validate.isErrors()) {
+									stop = mdFileTmp.updateStopValidate(rs.get(x).getId(),
+												null, false, validate.getErrors(), fPremis);
+									premis.addEvent("validation", start, 
+											stop, null, 
+											"KO", validate.getErrors(), null, 
+											Configuration.getValue("demoni."+application+".UUID"), 
+											objectIdentifierMaster);
+									premis.write(filePremis, false);
+								} else {
+									if (validate.getXmlType()== null){
+										stop = mdFileTmp.updateStopValidate(rs.get(x).getId(),
+												null, false, new String[] {
+														"Impossibile individuare il formato del tracciato XML presente nel file"
+													}, fPremis);
+										premis.addEvent("validation", start, 
+												stop, null, 
+												"KO", new String[] {
+														"Impossibile individuare il formato del tracciato XML presente nel file"
+													}, null, 
+												Configuration.getValue("demoni."+application+".UUID"), 
+												objectIdentifierMaster);
+										premis.write(filePremis, false);
+									} else {
+										stop = mdFileTmp.updateStopValidate(rs.get(x).getId(),
+												validate.getXmlType().value(), true,
+												null, fPremis);
+										premis.addEvent("validation", start, 
+												stop, null, 
+												"OK", null, null, 
+												Configuration.getValue("demoni."+application+".UUID"), 
+												objectIdentifierMaster);
+										premis.write(filePremis, false);
+									}
+								}
 							}
 						} else {
 							mdFileTmp.updateStopValidate(rs.get(x).getId(),
 									null, false, new String[] { "Il file ["
 											+ fObj.getAbsolutePath()
-											+ "] non è presente sul Server" });
+											+ "] non è presente sul Server" }, fPremis);
 						}
 					} catch (ConfigurationException e) {
 						mdFileTmp.updateStopValidate(
 								rs.get(x).getId(),
 								null,
 								false,
-								new String[] { e.getMessage() });
+								new String[] { e.getMessage() }, fPremis);
 						log.error(e.getMessage(), e);
 					} catch (SQLException e) {
 						mdFileTmp.updateStopValidate(
 								rs.get(x).getId(),
 								null,
 								false,
-								new String[] { e.getMessage() });
+								new String[] { e.getMessage() }, fPremis);
 						log.error(e.getMessage(), e);
 					} catch (PremisXsdException e) {
 						mdFileTmp.updateStopValidate(
 								rs.get(x).getId(),
 								null,
 								false,
-								new String[] { e.getMessage() });
+								new String[] { e.getMessage() }, fPremis);
 						log.error(e.getMessage(), e);
 					} catch (XsdException e) {
 						mdFileTmp.updateStopValidate(
 								rs.get(x).getId(),
 								null,
 								false,
-								new String[] { e.getMessage() });
+								new String[] { e.getMessage() }, fPremis);
 						log.error(e.getMessage(), e);
 					} catch (IOException e) {
 						mdFileTmp.updateStopValidate(
 								rs.get(x).getId(),
 								null,
 								false,
-								new String[] { e.getMessage() });
+								new String[] { e.getMessage() }, fPremis);
+						log.error(e.getMessage(), e);
+					} catch (Exception e) {
+						mdFileTmp.updateStopValidate(
+								rs.get(x).getId(),
+								null,
+								false,
+								new String[] { e.getMessage() }, fPremis);
 						log.error(e.getMessage(), e);
 					}
 				}
@@ -372,21 +485,100 @@ public class OggettoDigitaleBusiness {
 		}
 		return gc;
 	}
-	private void addArchive(PremisXsd premis, ArchiveMD archive) {
-		if (archive.checkMimetype("application/x-tar")) {
-			premis.addObjectFile(archive.getID(), new BigInteger("0"), archive
-					.getDigest(DigestType.SHA_1), archive.getType().getSize(),
-					archive.getMimetype(), archive.getNome());
-		} else {
-			premis.addObjectFile(archive.getID(), new BigInteger("0"), archive
-					.getDigest(DigestType.SHA_1), archive.getType().getSize(),
-					archive.getMimetype(), archive.getNome(), archive.getType()
-							.getContentLocation());
+
+	private void addArchive(PremisXsd premis, ArchiveMD archive, String objectIdentifierMaster) throws ConfigurationException {
+		String objectIdentifierValue = null;
+		BigInteger compositionLevel = null;
+		String digest = null;
+		Long size = null;
+		String formatDesignationValue = null;
+		String originalName = null;
+		String contentLocationValue = null;
+		String formatVersion = null;
+		String puid = null;
+		String relationshipSubType = null;
+		
+		objectIdentifierValue = archive.getID();
+
+		compositionLevel = new BigInteger("0");
+		if (archive.getMimetype() != null &&
+				Configuration.getValue("demoni.Validate.compositionLevel", archive.getMimetype().split(",")[0])!= null){
+			compositionLevel = new BigInteger(Configuration.getValue("demoni.Validate.compositionLevel", archive.getMimetype().split(",")[0]));
 		}
+
+		digest = archive.getDigest(DigestType.SHA_1);
+		size = archive.getType().getSize();
+		formatDesignationValue = archive.getMimetype();
+		originalName = archive.getNome();
+		contentLocationValue = archive.getType().getContentLocation();
+		if (archive.getType().getFormat() != null){
+			formatVersion = archive.getType().getFormat().getVersion();
+		}
+		if (archive.getType().getPUID() != null){
+			puid = archive.getType().getPUID();
+		}
+
+		if (archive.getType().getExt().equals("xml") &&
+				(archive.getXmltype() != null && 
+					(archive.getXmltype().equals(Xmltype.MAG) ||
+							archive.getXmltype().equals(Xmltype.METS)))
+				){
+			relationshipSubType="R";
+		} else {
+			relationshipSubType = "1";
+		}
+		premis.addObjectFile(objectIdentifierValue, compositionLevel, digest, size, 
+				formatDesignationValue, originalName, contentLocationValue, formatVersion, puid, relationshipSubType, 
+				objectIdentifierMaster);
+
 		if (archive.getArchive() != null && archive.getArchive().size() > 0) {
 			for (int x = 0; x < archive.getArchive().size(); x++) {
-				addArchive(premis, (ArchiveMD) archive.getArchive().get(x));
+				addArchive(premis, (ArchiveMD) archive.getArchive().get(x), objectIdentifierMaster);
 			}
 		}
+	}
+
+	public void publish(){
+//		MDFilesTmpSqlite mdFileTmp = null;
+//		List<MDFilesTmp> rs = null;
+//		File filePremis = null;
+//		PremisXsd premis = null;
+//		String fileObj = null;
+//		File fObj = null;
+//
+//		mdFileTmp = new MDFilesTmpSqlite();
+//		rs = mdFileTmp.findByStatus(new String[]{
+//				MDFilesTmpSqlite.FINEVALID,
+//				MDFilesTmpSqlite.INITPUBLISH
+//			});
+//
+//		for (int x=0; x<rs.size(); x++){
+//			filePremis = new File(Configuration.getValue("path.premis")+File.separator+
+//					rs.get(x).getId()+".premis");
+//			
+//			// calcolo il file da validare
+//			fileObj = Configuration.getValue("istituto."
+//					+ rs.get(x).getIdIstituto() + ".pathTmp");
+//			fileObj += File.separator;
+//			fileObj += rs.get(x).getNomeFile();
+//			fObj = new File(fileObj);
+//			log.debug("fileObj: " + fObj.getAbsolutePath());
+//			if (!fObj.exists()) {
+//				fObj = new File(fObj.getParentFile().getAbsolutePath()+
+//						File.separator+
+//						fObj.getName().
+//						replace(".tar.gz", ".tar").
+//						replace(".tgz", ".tar"));
+//			}
+////			if (fObj.exists()) {
+////				premis = new PremisXsd(filePremis);
+////				if (premis.)
+////			} else {
+////				mdFileTmp.updateStopValidate(rs.get(x).getId(),
+////						null, false, new String[] { "Il file ["
+////								+ fObj.getAbsolutePath()
+////								+ "] non è presente sul Server" });
+////			}
+//		}
 	}
 }

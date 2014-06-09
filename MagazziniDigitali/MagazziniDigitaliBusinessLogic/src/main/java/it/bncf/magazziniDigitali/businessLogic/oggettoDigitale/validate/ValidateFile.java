@@ -4,6 +4,7 @@
 package it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.validate;
 
 import java.io.File;
+import java.util.GregorianCalendar;
 import java.util.Vector;
 
 import mx.randalf.archive.check.exception.CheckArchiveException;
@@ -32,6 +33,21 @@ public class ValidateFile {
 	 * Variabile utilizzata per identificare le tipologie di Archiviazione
 	 */
 	private ArchiveMD archive = null;
+
+	/**
+	 * Variabile utilizzata per indicare la data in cui inizia la procedura di unzip dei File
+	 */
+	private GregorianCalendar gcUnzipStart = null;
+
+	/**
+	 * Variabile utilizzata per indicare la data in cui inizia la procedura di unzip dei File
+	 */
+	private String[] unzipError = null;
+
+	/**
+	 * Variabile utilizzata per indicare la data in cui fine la procedura di unzip dei File
+	 */
+	private GregorianCalendar gcUnzipStop = null;
 
 	/**
 	 * Costruttore
@@ -67,6 +83,12 @@ public class ValidateFile {
 			addError(e.getMessage());
 		} catch (ConfigurationException e) {
 			addError(e.getMessage());
+		} finally {
+			if (checkArchive != null){
+				gcUnzipStart = checkArchive.getGcUnzipStart();
+				gcUnzipStop = checkArchive.getGcUnzipStop();
+				unzipError = checkArchive.getUnzipError();
+			}
 		}
 	}
 
@@ -82,9 +104,10 @@ public class ValidateFile {
 				addError(archive.getNome() + " => "
 						+ archive.getType().getMsgError());
 			}
-			if (archive.checkMimetype("application/xml")) {
-				xmlType = archive.getType().getXmltype();
-			}
+		}
+		if (archive.checkMimetype("application/xml") &&
+				archive.getXmltype() != null) {
+			xmlType = archive.getXmltype();
 		}
 		if (archive.getArchive() != null && archive.getArchive().size() > 0) {
 			for (int x = 0; x < archive.getArchive().size(); x++) {
@@ -139,5 +162,17 @@ public class ValidateFile {
 
 	public ArchiveMD getArchive() {
 		return archive;
+	}
+
+	public GregorianCalendar getGcUnzipStart() {
+		return gcUnzipStart;
+	}
+
+	public String[] getUnzipError() {
+		return unzipError;
+	}
+
+	public GregorianCalendar getGcUnzipStop() {
+		return gcUnzipStop;
 	}
 }

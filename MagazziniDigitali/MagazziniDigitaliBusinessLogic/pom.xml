@@ -7,7 +7,7 @@
   </parent>
   <groupId>it.bncf.magazziniDigitali.businessLogic</groupId>
   <artifactId>MagazziniDigitaliBusinessLogic</artifactId>
-  <version>1.0.3</version>
+  <version>1.0.5</version>
   <description>Questo progetto vine utilizzato per la gestione della logica applicativa del programma</description>
   <properties>
     <maven.compiler.source>1.6</maven.compiler.source>
@@ -17,17 +17,17 @@
   	<dependency>
   		<groupId>it.bncf.magazziniDigitali.databaseSchema</groupId>
   		<artifactId>MagazziniDigitaliDatabaseSchema</artifactId>
-  		<version>1.0.4</version>
+  		<version>1.0.5</version>
   	</dependency>
   	<dependency>
   		<groupId>it.bncf.magazziniDigitali.xsd</groupId>
   		<artifactId>MagazziniDigitaliXsd</artifactId>
-  		<version>1.0.1</version>
+  		<version>1.0.2</version>
   	</dependency>
   	<dependency>
   		<groupId>mx.randalf.archive</groupId>
   		<artifactId>RandalfArchive</artifactId>
-  		<version>1.0.1</version>
+  		<version>1.0.3</version>
   	</dependency>
   	<dependency>
   		<groupId>mx.randalf.configuration</groupId>
@@ -38,14 +38,14 @@
   <repositories>
     <repository>
         <id>bncf</id>
-        <url>http://maven.bncf.lan:8081/artifactory/libs-release</url>
+        <url>http://maven.bncf.firenze.sbn.it/artifactory/libs-release</url>
         <snapshots>
             <enabled>false</enabled>
         </snapshots>
     </repository>
     <repository>
         <id>bncf-snapshots</id>
-        <url>http://maven.bncf.lan:8081/artifactory/libs-snapshot</url>
+        <url>http://maven.bncf.firenze.sbn.it/artifactory/libs-snapshot</url>
         <releases>
             <enabled>false</enabled>
         </releases>
@@ -54,14 +54,14 @@
 <pluginRepositories>
     <pluginRepository>
         <id>bncf</id>
-        <url>http://maven.bncf.lan:8081/artifactory/plugins-release</url>
+        <url>http://maven.bncf.firenze.sbn.it/artifactory/plugins-release</url>
         <snapshots>
             <enabled>false</enabled>
         </snapshots>
     </pluginRepository>
     <pluginRepository>
         <id>bncf-snapshots</id>
-        <url>http://maven.bncf.lan:8081/artifactory/plugins-snapshot</url>
+        <url>http://maven.bncf.firenze.sbn.it/artifactory/plugins-snapshot</url>
         <releases>
             <enabled>false</enabled>
         </releases>
@@ -71,7 +71,7 @@
     <repository>
         <id>mvn-bncf</id>
         <name>mvn-bncf-releases</name>
-        <url>http://maven.bncf.lan:8081/artifactory/libs-release-local</url>
+        <url>http://maven.bncf.firenze.sbn.it/artifactory/libs-release-local</url>
     </repository>
 </distributionManagement>
 </project>
