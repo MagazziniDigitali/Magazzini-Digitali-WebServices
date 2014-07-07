@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://www.depositolegale.it/MD" xmlns="http://www.depositolegale.it/MD"
+    xmlns:premis="info:lc/xmlns/premis-v2" xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <xs:import namespace="info:lc/xmlns/premis-v2"
+        schemaLocation="http://www.loc.gov/standards/premis/premis.xsd"/>
+    <xs:import namespace="http://purl.org/dc/elements/1.1/"
+        schemaLocation="http://www.bncf.firenze.sbn.it/SchemaXML/Mag/2.0.1/dc.xsd"/>
+    <xs:element name="md">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="bib" type="bib"> </xs:element>
+                <xs:element maxOccurs="unbounded" minOccurs="0" ref="premis:agent"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="bib">
+        <xs:sequence>
+            <xs:element ref="dc:identifier" maxOccurs="unbounded"/>
+            <xs:element ref="dc:title" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="dc:creator" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="dc:publisher" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="dc:subject" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="dc:description" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="dc:contributor" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="dc:date" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="dc:type" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="dc:format" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="dc:source" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="dc:language" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="dc:relation" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="dc:coverage" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element ref="dc:rights" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="holdings"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="local_bib"/>
+            <xs:element minOccurs="0" ref="piece"/>
+            <!-- aggiunto 2.0 per implementazioni locali -->
+        </xs:sequence>
+        <xs:attribute name="level" type="bibliographic_level" use="required"/>
+    </xs:complexType>
+
+    <xs:simpleType name="SICI">
+        <xs:restriction base="xs:string">
+            <xs:pattern
+                value="\((\d{4}(/\d{4})?((\d{2})(/(\d{2}|\d{6}))?((\d{2})(/\d{2})?)?)?)?\)((\+|\*)?|(\d{1,4}(:(\d{1,4})(/\d{1,4})?(\+|\*)?)?(:(\d{1,4})(/\d{1,4})?(\+|\*)?)?(:(\d{1,4})(/\d{1,4})?(\+|\*)?)?)?)?"
+            />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="BICI">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="\d{1,3}(:\d{1,4}(:\d{1,4})?)?"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="bibliographic_level">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="a">
+                <xs:annotation>
+                    <xs:documentation>analitico</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="m">
+                <xs:annotation>
+                    <xs:documentation>monografia</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="s">
+                <xs:annotation>
+                    <xs:documentation>pubblicazione in serie</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="c">
+                <xs:annotation>
+                    <xs:documentation>raccolta</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="holdings">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="library" type="xs:string" minOccurs="0"/>
+                <xs:element name="inventory_number" type="xs:string" minOccurs="0"/>
+                <xs:element minOccurs="0" name="precis_inv" type="xs:string"/>
+                <xs:element name="shelfmark" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType mixed="true">
+                        <xs:attribute name="type" type="xs:string"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="ID" type="xs:ID"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="local_bib">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="geo_coord" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="not_date" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="piece">
+        <xs:complexType>
+            <xs:choice minOccurs="0">
+                <xs:sequence>
+                    <xs:element name="year" type="xs:string"/>
+                    <xs:element name="issue" type="xs:string"/>
+                    <xs:element name="stpiece_per" type="SICI" minOccurs="0"/>
+                </xs:sequence>
+                <xs:sequence>
+                    <xs:element name="part_number" type="xs:positiveInteger"/>
+                    <xs:element name="part_name" type="xs:string"/>
+                    <xs:element name="stpiece_vol" type="BICI" minOccurs="0"/>
+                </xs:sequence>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

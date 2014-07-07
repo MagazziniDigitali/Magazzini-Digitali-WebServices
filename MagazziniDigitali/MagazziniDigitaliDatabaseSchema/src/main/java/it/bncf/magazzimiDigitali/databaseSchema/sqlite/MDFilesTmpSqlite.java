@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
+
 import mx.randalf.configuration.Configuration;
 import mx.randalf.configuration.exception.ConfigurationException;
 
@@ -24,6 +26,8 @@ import mx.randalf.configuration.exception.ConfigurationException;
  *
  */
 public class MDFilesTmpSqlite extends SqliteCore {
+
+	private Logger log = Logger.getLogger(getClass());
 
 	/**
 	 * Stato Inizio Trasferimento da Client verso Magazzini Digitali
@@ -53,12 +57,27 @@ public class MDFilesTmpSqlite extends SqliteCore {
 	/**
 	 * Stato Erore
 	 */
-	public static String ERRORCOMP = "ERRORCOMP";
+	public static String ERRORDECOMP = "ERRORDECOMP";
+
+	/**
+	 * Stato Erore
+	 */
+	public static String ERRORCOPY = "ERRORCOPY";
+
+	/**
+	 * Stato Erore
+	 */
+	public static String ERRORMOVE = "ERRORMOVE";
 
 	/**
 	 * Stato Erore
 	 */
 	public static String ERRORPUB = "ERRORPUB";
+
+	/**
+	 * Stato Erore
+	 */
+	public static String ERRORDELETE = "ERRORDELETE";
 
 	/**
 	 * Stato Inizio Validazione dell'oggetto trasferito
@@ -92,7 +111,7 @@ public class MDFilesTmpSqlite extends SqliteCore {
 		super(Configuration.getValue("db.MDFilestmp"));
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see it.bncf.magazzimiDigitali.databaseSchema.sqlite.SqliteCore#initDb()
 	 */
 	@Override
@@ -119,7 +138,17 @@ public class MDFilesTmpSqlite extends SqliteCore {
 			               " DECOMP_DATASTART TIMESTAMP," +
 			               " DECOMP_DATAEND TIMESTAMP," +
 			               " DECOMP_ESITO BOOLEAN, " +
-			               " DATA_ARCHIVIAZIONE TIMESTAMP,"+
+			               " PUBLISH_DATASTART TIMESTAMP," +
+			               " PUBLISH_DATAEND TIMESTAMP," +
+			               " PUBLISH_ESITO BOOLEAN, " +
+			               " COPYPREMIS_DATASTART TIMESTAMP," +
+			               " COPYPREMIS_DATAEND TIMESTAMP," +
+			               " COPYPREMIS_ESITO BOOLEAN, " +
+			               " MOVEFILE_DATASTART TIMESTAMP," +
+			               " MOVEFILE_DATAEND TIMESTAMP," +
+			               " MOVEFILE_ESITO BOOLEAN, " +
+			               " DELETELOCAL_DATA TIMESTAMP," +
+			               " DELETELOCAL_ESITO BOOLEAN, " +
 			               " PREMIS_FILE VARCHAR(100)"+
 			               " ); "+
 			       "CREATE INDEX MDFilesTmp01 on MDFilesTmp(ID_ISTITUTO); "+
@@ -187,6 +216,41 @@ public class MDFilesTmpSqlite extends SqliteCore {
 	 * @return
 	 * @throws SQLException
 	 */
+	public MDFilesTmp findByID(String id) throws SQLException{
+		MDFilesTmp res = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		
+	    try {
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery( "SELECT * FROM MDFilesTmp Where ID='"+id+"';" );
+			if (rs.next()){
+				res = convertRecord(rs);
+			}
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			try {
+				if (rs != null){
+				    rs.close();
+				}
+				if (stmt != null){
+				    stmt.close();
+				}
+			} catch (SQLException e) {
+				throw e;
+			}
+		}
+	    return res;
+	}
+
+	/**
+	 * Metodo utilizzato per la ricerca tramite lo Sha1
+	 * 
+	 * @param sha1
+	 * @return
+	 * @throws SQLException
+	 */
 	public List<MDFilesTmp> findBySha1(String sha1) throws SQLException{
 		Vector<MDFilesTmp> res = null;
 		Statement stmt = null;
@@ -221,13 +285,30 @@ public class MDFilesTmpSqlite extends SqliteCore {
 	 */
 	private List<MDFilesTmp> convert(ResultSet rs) throws SQLException{
 		Vector<MDFilesTmp> res = null;
-		MDFilesTmp record = null;
 
 		try {
 			while ( rs.next() ) {
 				if (res == null){
 					res = new Vector<MDFilesTmp>();
 				}
+				res.add(convertRecord(rs));
+			}
+		} catch (SQLException e) {
+			throw e;
+		}
+		return res;
+	}
+
+	/**
+	 * Questo metodo viene utilzzato per convertore il RecordSet in lista di tipo MDFilesTmp
+	 * @param rs
+	 * @return
+	 * @throws SQLException 
+	 */
+	private MDFilesTmp convertRecord(ResultSet rs) throws SQLException{
+		MDFilesTmp record = null;
+
+		try {
 				record = new MDFilesTmp();
 				record.setId(rs.getString("ID"));
 				record.setIdIstituto(rs.getString("ID_ISTITUTO"));
@@ -261,9 +342,36 @@ public class MDFilesTmpSqlite extends SqliteCore {
 					record.setDecompEsito(rs.getBoolean("DECOMP_ESITO"));
 				}
 				
-				if (rs.getString("DATA_ARCHIVIAZIONE")!= null){
-					record.setDataArchiviazione(rs.getString("DATA_ARCHIVIAZIONE"));
+				if (rs.getString("PUBLISH_DATASTART")!= null){
+					record.setPublishDataStart(rs.getString("PUBLISH_DATASTART"));
 				}
+				if (rs.getString("PUBLISH_DATAEND")!= null){
+					record.setPublishDataEnd(rs.getString("PUBLISH_DATAEND"));
+				}
+				if (rs.getObject("PUBLISH_ESITO")!= null){
+					record.setPublishEsito(rs.getBoolean("PUBLISH_ESITO"));
+				}
+				
+				if (rs.getString("COPYPREMIS_DATASTART")!= null){
+					record.setCopyPremisDataStart(rs.getString("COPYPREMIS_DATASTART"));
+				}
+				if (rs.getString("COPYPREMIS_DATAEND")!= null){
+					record.setCopyPremisDataEnd(rs.getString("COPYPREMIS_DATAEND"));
+				}
+				if (rs.getObject("COPYPREMIS_ESITO")!= null){
+					record.setCopyPremisEsito(rs.getBoolean("COPYPREMIS_ESITO"));
+				}
+				
+				if (rs.getString("MOVEFILE_DATASTART")!= null){
+					record.setMoveFileDataStart(rs.getString("MOVEFILE_DATASTART"));
+				}
+				if (rs.getString("MOVEFILE_DATAEND")!= null){
+					record.setMoveFileDataEnd(rs.getString("MOVEFILE_DATAEND"));
+				}
+				if (rs.getObject("MOVEFILE_ESITO")!= null){
+					record.setMoveFileEsito(rs.getBoolean("MOVEFILE_ESITO"));
+				}
+
 				if (rs.getString("XMLMIMETYPE")!= null){
 					record.setXmlMimeType(rs.getString("XMLMIMETYPE"));
 				}
@@ -271,12 +379,10 @@ public class MDFilesTmpSqlite extends SqliteCore {
 					record.setPremisFile(rs.getString("PREMIS_FILE"));
 				}
 				findErrorById(rs.getString("ID"), record);
-				res.add(record);
-			}
 		} catch (SQLException e) {
 			throw e;
 		}
-		return res;
+		return record;
 	}
 
 	/**
@@ -419,7 +525,7 @@ public class MDFilesTmpSqlite extends SqliteCore {
 
 			gc = new GregorianCalendar();
 			sql = "UPDATE MDFilesTmp " +
-					"SET STATO='"+(esito?FINETRASF:ERROR)+"', " +
+					"SET STATO='"+(esito?FINETRASF:ERRORTRASF)+"', " +
 					    "TRASF_DATAEND='"+convert(gc)+"', "+
 					    "TRASF_ESITO="+(esito?"1":"0");
 			sql +=" WHERE id='"+id+"' and STATO='"+INITTRASF+"'";
@@ -428,6 +534,47 @@ public class MDFilesTmpSqlite extends SqliteCore {
 			} else if (msgError != null){
 				for (int x=0; x<msgError.length; x++){
 					insertNewError(id, ERRORTRASF, msgError[x]);
+				}
+			}
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			try {
+				if (stmt != null){
+					stmt.close();
+				}
+			} catch (SQLException e) {
+				throw e;
+			}
+		}
+		
+	}
+
+	/**
+	 * Metodo utilizzato per indicare la Fine dell'invio dell'oggetto
+	 * @param id
+	 * @param esito
+	 * @param msgError
+	 * @throws SQLException
+	 */
+	public void confirmDel(String id, boolean esito, String[] msgError) throws SQLException{
+		Statement stmt = null;
+		String sql = null;
+		GregorianCalendar gc = null;
+		
+		try {
+			stmt = conn.createStatement();
+
+			gc = new GregorianCalendar();
+			sql = "UPDATE MDFilesTmp " +
+					"SET DELETELOCAL_DATA='"+convert(gc)+"', "+
+					    "DELETELOCAL_ESITO="+(esito?"1":"0");
+			sql +=" WHERE id='"+id+"' and STATO='"+FINEPUBLISH+"'";
+			if (stmt.executeUpdate(sql)==0){
+				throw new SQLException("Riscontrato un problema nell'aggiornamento del record nella tabella");
+			} else if (msgError != null){
+				for (int x=0; x<msgError.length; x++){
+					insertNewError(id, ERRORDELETE, msgError[x]);
 				}
 			}
 		} catch (SQLException e) {
@@ -497,7 +644,7 @@ public class MDFilesTmpSqlite extends SqliteCore {
 
 			gc = new GregorianCalendar();
 			sql = "UPDATE MDFilesTmp " +
-					"SET STATO='"+(esito?FINEVALID:ERROR)+"', " +
+					"SET STATO='"+(esito?FINEVALID:ERRORVAL)+"', " +
 					    "VALID_DATAEND='"+convert(gc)+"', "+
 					    "VALID_ESITO="+(esito?"1":"0");
 			if (xmlMimeType != null){
@@ -535,7 +682,103 @@ public class MDFilesTmpSqlite extends SqliteCore {
 	 * @param id
 	 * @throws SQLException
 	 */
-	public void updateCompress(String id, GregorianCalendar compressStart, GregorianCalendar compressStop, boolean esito, String[] msgError) throws SQLException{
+	public GregorianCalendar updateStartPublish(String id) throws SQLException{
+		Statement stmt = null;
+		String sql = null;
+		GregorianCalendar gc = null;
+		
+		try {
+			stmt = conn.createStatement();
+
+			gc = new GregorianCalendar();
+			sql = "UPDATE MDFilesTmp " +
+					"SET STATO='"+INITPUBLISH+"', " +
+					    "PUBLISH_DATASTART='"+convert(gc)+"' ";
+			sql +=" WHERE id='"+id+"' AND STATO='"+FINEVALID+"'";
+			if (stmt.executeUpdate(sql)==0){
+				throw new SQLException("Riscontrato un problema nell'aggiornamento del record nella tabella");
+				
+			}
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			try {
+				if (stmt != null){
+					stmt.close();
+				}
+			} catch (SQLException e) {
+				throw e;
+			}
+		}
+		return gc;
+	}
+
+	/**
+	 * Metodo utilizzato per indicare l'inizio della validazione
+	 * 
+	 * @param id
+	 * @throws SQLException
+	 */
+	public GregorianCalendar updateStopPublish(String id, boolean esito, String[] msgError) throws SQLException{
+		Statement stmt = null;
+		String sql = null;
+		GregorianCalendar gc = null;
+		MDRegistroIngresso regIngresso= null;
+		
+		try {
+			gc = new GregorianCalendar();
+			regIngresso = new MDRegistroIngresso();
+			if (esito){
+				regIngresso.pubblicato(id, gc);
+			}else{
+				regIngresso.error(id, "ERRORPUB", msgError);
+			}
+			stmt = conn.createStatement();
+
+			sql = "UPDATE MDFilesTmp " +
+					"SET STATO='"+(esito?FINEPUBLISH:ERRORPUB)+"', " +
+					    "PUBLISH_DATAEND='"+convert(gc)+"', "+
+					    "PUBLISH_ESITO="+(esito?"1":"0");
+			sql +=" WHERE id='"+id+"' AND (STATO='"+INITPUBLISH+"' OR "
+					+ "STATO='"+FINEVALID+"' OR "
+					+ "STATO='"+ERRORPUB+"')";
+			if (stmt.executeUpdate(sql)==0){
+				throw new SQLException("Riscontrato un problema nell'aggiornamento del record nella tabella");
+			} else if (msgError != null){
+				for (int x=0; x<msgError.length; x++){
+					insertNewError(id, ERRORPUB, msgError[x]);
+				}
+			}
+		} catch (SQLException e) {
+			throw e;
+		} catch (FileNotFoundException e) {
+			log.error(e.getMessage(), e);
+			throw new SQLException(e.getMessage(), e);
+		} catch (ClassNotFoundException e) {
+			log.error(e.getMessage(), e);
+			throw new SQLException(e.getMessage(), e);
+		} catch (ConfigurationException e) {
+			log.error(e.getMessage(), e);
+			throw new SQLException(e.getMessage(), e);
+		} finally {
+			try {
+				if (stmt != null){
+					stmt.close();
+				}
+			} catch (SQLException e) {
+				throw e;
+			}
+		}
+		return gc;
+	}
+
+	/**
+	 * Metodo utilizzato per indicare il periodo e l'esito dell'operazione di decompressione
+	 * 
+	 * @param id
+	 * @throws SQLException
+	 */
+	public void updateDecompress(String id, GregorianCalendar compressStart, GregorianCalendar compressStop, boolean esito, String[] msgError) throws SQLException{
 		Statement stmt = null;
 		String sql = null;
 		
@@ -551,11 +794,131 @@ public class MDFilesTmpSqlite extends SqliteCore {
 				throw new SQLException("Riscontrato un problema nell'aggiornamento del record nella tabella");
 			} else if (msgError != null){
 				for (int x=0; x<msgError.length; x++){
-					insertNewError(id, ERRORCOMP, msgError[x]);
+					insertNewError(id, ERRORDECOMP, msgError[x]);
 				}
 			}
 		} catch (SQLException e) {
 			throw e;
+		} finally {
+			try {
+				if (stmt != null){
+					stmt.close();
+				}
+			} catch (SQLException e) {
+				throw e;
+			}
+		}
+	}
+
+	/**
+	 * Metodo utilizzato per indicare il periodo e l'esito della procedura di copia del file premis nello Storage
+	 * 
+	 * @param id
+	 * @throws SQLException
+	 */
+	public void updateCopyPremis(String id, GregorianCalendar copyStart, 
+			GregorianCalendar copyStop, boolean esito, String[] msgError, 
+			String agentDepositor, String agentMachineIngest, String agentSoftwareIngest) throws SQLException{
+		Statement stmt = null;
+		String sql = null;
+		MDFilesTmp rec = null;
+		MDRegistroIngresso regIngresso= null;
+		int containerType = -1;
+		String containerName=null;
+		int pos = 0;
+		
+		try {
+			rec = findByID(id);
+			if (rec != null){
+				regIngresso = new MDRegistroIngresso();
+				if (rec.getXmlMimeType().equals("mets")){
+					containerType=5;
+				}
+				containerName = rec.getPremisFile();
+				pos = containerName.indexOf(".");
+				containerName = containerName.substring(0, pos);
+				regIngresso.insert(id, copyStart, agentDepositor, rec.getNomeFile(), containerName, 
+						rec.getSha1(), containerType, agentMachineIngest, agentSoftwareIngest, rec.getTrasfDataStart());
+			}
+			stmt = conn.createStatement();
+
+			sql = "UPDATE MDFilesTmp " +
+					"SET COPYPREMIS_DATASTART='"+convert(copyStart)+"', "+
+					    "COPYPREMIS_DATAEND='"+convert(copyStop)+"', "+
+					    "COPYPREMIS_ESITO="+(esito?"1":"0");
+			sql +=" WHERE id='"+id+"' AND STATO='"+INITPUBLISH+"'";
+			if (stmt.executeUpdate(sql)==0){
+				throw new SQLException("Riscontrato un problema nell'aggiornamento del record nella tabella");
+			} else if (msgError != null){
+				for (int x=0; x<msgError.length; x++){
+					insertNewError(id, ERRORCOPY, msgError[x]);
+				}
+			}
+		} catch (SQLException e) {
+			throw e;
+		} catch (FileNotFoundException e) {
+			log.error(e.getMessage(), e);
+			throw new SQLException(e.getMessage(), e);
+		} catch (ClassNotFoundException e) {
+			log.error(e.getMessage(), e);
+			throw new SQLException(e.getMessage(), e);
+		} catch (ConfigurationException e) {
+			log.error(e.getMessage(), e);
+			throw new SQLException(e.getMessage(), e);
+		} finally {
+			try {
+				if (stmt != null){
+					stmt.close();
+				}
+			} catch (SQLException e) {
+				throw e;
+			}
+		}
+	}
+
+	/**
+	 * Metodo utilizzato per indicare il periodo e l'esito dell'operazione di decompressione
+	 * 
+	 * @param id
+	 * @throws SQLException
+	 */
+	public void updateMoveFile(String id, GregorianCalendar moveFileStart, GregorianCalendar moveFileStop, boolean esito, String[] msgError) throws SQLException{
+		Statement stmt = null;
+		String sql = null;
+		MDRegistroIngresso regIngresso= null;
+		
+		try {
+			regIngresso = new MDRegistroIngresso();
+			if (esito){
+				regIngresso.archiviato(id, moveFileStop);
+			}else{
+				regIngresso.error(id, "ERRORARC", msgError);
+			}
+			stmt = conn.createStatement();
+
+			sql = "UPDATE MDFilesTmp " +
+					"SET MOVEFILE_DATASTART='"+convert(moveFileStart)+"', "+
+					    (moveFileStop== null?"":"MOVEFILE_DATAEND='"+convert(moveFileStop)+"', ")+
+					    "MOVEFILE_ESITO="+(esito?"1":"0");
+			sql +=" WHERE id='"+id+"' AND STATO='"+INITPUBLISH+"'";
+			if (stmt.executeUpdate(sql)==0){
+				throw new SQLException("Riscontrato un problema nell'aggiornamento del record nella tabella");
+			} else if (msgError != null){
+				for (int x=0; x<msgError.length; x++){
+					insertNewError(id, ERRORMOVE, msgError[x]);
+				}
+			}
+		} catch (SQLException e) {
+			throw e;
+		} catch (FileNotFoundException e) {
+			log.error(e.getMessage(), e);
+			throw new SQLException(e.getMessage(), e);
+		} catch (ClassNotFoundException e) {
+			log.error(e.getMessage(), e);
+			throw new SQLException(e.getMessage(), e);
+		} catch (ConfigurationException e) {
+			log.error(e.getMessage(), e);
+			throw new SQLException(e.getMessage(), e);
 		} finally {
 			try {
 				if (stmt != null){

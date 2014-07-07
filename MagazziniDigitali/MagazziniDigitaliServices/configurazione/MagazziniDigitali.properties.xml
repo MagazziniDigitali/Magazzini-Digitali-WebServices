@@ -13,13 +13,28 @@
     <!-- Identificativo della scheda dell'Istituto -->
     <entry key="istituto.IBNF1.UUID">35dc8f20-e686-11e3-ac10-0800200c9a66-AG</entry>
     <!-- Identificativo del Software che l'istituto ha utilizzato per trasmettere i Files in MD -->
+    <entry key="istituto.IBNF1.machine.UUID">16E176A1-45C1-4A49-9FD9-9FC3EDFBCE83-AG</entry>
+    <!-- Identificativo del Software che l'istituto ha utilizzato per trasmettere i Files in MD -->
     <entry key="istituto.IBNF1.software.UUID">9BF7E172-628D-4562-AD46-632F86E710D1-AG</entry>
     <!-- Identificativo relativo hai diritti che l'istituto assegna all'oggetto -->
     <entry key="istituto.IBNF1.right.UUID">35dc8f20-e686-11e3-ac10-0800200c9a66-RG</entry>  
     
 
+    <!-- Configurazione demone per la pubblicazione -->
+    <entry key="demoni.Publish">true</entry>
+    <entry key="demoni.Publish.pathStorage">/mnt/Storage</entry>
+    <entry key="demoni.Publish.right.UUID">9EDF0E46-6039-454C-8BF8-53D70684F0AA-RG</entry>
+    <entry key="demoni.Publish.UUID">F41AF7FC-1515-4291-BC26-41D0404624EF-AG</entry>
+    <entry key="demoni.Publish.solr.URL">md-solr01.bncf.lan:2181,md-solr02.bncf.lan:2181,md-solr03.bncf.lan:2181</entry>
+    <entry key="demoni.Publish.solr.Cloud">true</entry>
+    <entry key="demoni.Publish.solr.collection">md</entry>
+    <entry key="demoni.Publish.solr.connectionTimeOut">60000</entry>
+    <entry key="demoni.Publish.solr.clientTimeOut">100000</entry>
+    <entry key="demoni.Publish.mets.xslTransf.dc">/Users/massi/Desktop/Lavoro/Sorgenti/Bncf/MagazziniDigitaliDemoni/MagazziniDigitaliDemoni/configurazione/xsl/Mets2MD.xsl</entry>
+    
+    
     <!-- Configurazione demone di Validazione -->
-    <entry key="demoni.Validate">true</entry>
+    <entry key="demoni.Validate">false</entry>
     <!-- Identificativo relativo alla scheda del Software per la Validazione -->
     <entry key="demoni.Validate.UUID">3a31c6c7-5a90-4b97-9b62-1ff900b37e2e-AG</entry>
     <entry key="demoni.Validate.nodo">F</entry>
@@ -37,4 +52,7 @@
 
     <!-- Configurazione database FilesTmp -->
     <entry key="db.MDFilestmp">/Users/massi/Desktop/Lavoro/Sorgenti/Bncf/MagazziniDigitali/MagazziniDigitali/MagazziniDigitaliServices/sqlite/MDFilestmp.db</entry>
+    
+    <!-- Configurazione database Registro d'Ingresso -->
+    <entry key="db.MDRegistroIngresso">/Users/massi/Desktop/Lavoro/Sorgenti/Bncf/MagazziniDigitali/MagazziniDigitali/MagazziniDigitaliServices/sqlite/MDRegistroIngresso.db</entry>
 </properties>

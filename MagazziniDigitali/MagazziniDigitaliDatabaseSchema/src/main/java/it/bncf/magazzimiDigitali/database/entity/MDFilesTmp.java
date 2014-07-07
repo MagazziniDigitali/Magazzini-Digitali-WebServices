@@ -46,11 +46,27 @@ public class MDFilesTmp {
 	private String validDataEnd;
 
 	private boolean validEsito;
-
-	private String dataArchiviazione;
 	
 	private String xmlMimeType;
 	
+	private String publishDataStart;
+
+	private String publishDataEnd;
+
+	private boolean publishEsito;
+	
+	private String copyPremisDataStart;
+
+	private String copyPremisDataEnd;
+
+	private boolean copyPremisEsito;
+	
+	private String moveFileDataStart;
+
+	private String moveFileDataEnd;
+
+	private boolean moveFileEsito;
+
 	private String premisFile;
 
 	private List<MDFilesTmpError> errors;
@@ -138,14 +154,6 @@ public class MDFilesTmp {
 		this.validDataEnd = validDataEnd;
 	}
 
-	public String getDataArchiviazione() {
-		return dataArchiviazione;
-	}
-
-	public void setDataArchiviazione(String dataArchiviazione) {
-		this.dataArchiviazione = dataArchiviazione;
-	}
-
 	public boolean isTrasfEsito() {
 		return trasfEsito;
 	}
@@ -212,6 +220,78 @@ public class MDFilesTmp {
 
 	public void setPremisFile(String premisFile) {
 		this.premisFile = premisFile;
+	}
+
+	public String getPublishDataStart() {
+		return publishDataStart;
+	}
+
+	public void setPublishDataStart(String publishDataStart) {
+		this.publishDataStart = publishDataStart;
+	}
+
+	public String getPublishDataEnd() {
+		return publishDataEnd;
+	}
+
+	public void setPublishDataEnd(String publishDataEnd) {
+		this.publishDataEnd = publishDataEnd;
+	}
+
+	public boolean isPublishEsito() {
+		return publishEsito;
+	}
+
+	public void setPublishEsito(boolean publishEsito) {
+		this.publishEsito = publishEsito;
+	}
+
+	public String getCopyPremisDataStart() {
+		return copyPremisDataStart;
+	}
+
+	public void setCopyPremisDataStart(String copyPremisDataStart) {
+		this.copyPremisDataStart = copyPremisDataStart;
+	}
+
+	public String getCopyPremisDataEnd() {
+		return copyPremisDataEnd;
+	}
+
+	public void setCopyPremisDataEnd(String copyPremisDataEnd) {
+		this.copyPremisDataEnd = copyPremisDataEnd;
+	}
+
+	public boolean isCopyPremisEsito() {
+		return copyPremisEsito;
+	}
+
+	public void setCopyPremisEsito(boolean copyPremisEsito) {
+		this.copyPremisEsito = copyPremisEsito;
+	}
+
+	public String getMoveFileDataStart() {
+		return moveFileDataStart;
+	}
+
+	public void setMoveFileDataStart(String moveFileDataStart) {
+		this.moveFileDataStart = moveFileDataStart;
+	}
+
+	public String getMoveFileDataEnd() {
+		return moveFileDataEnd;
+	}
+
+	public void setMoveFileDataEnd(String moveFileDataEnd) {
+		this.moveFileDataEnd = moveFileDataEnd;
+	}
+
+	public boolean isMoveFileEsito() {
+		return moveFileEsito;
+	}
+
+	public void setMoveFileEsito(boolean moveFileEsito) {
+		this.moveFileEsito = moveFileEsito;
 	}
 
 }

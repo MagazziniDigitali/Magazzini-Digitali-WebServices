@@ -30,6 +30,11 @@ public class ArchiveMD extends ArchiveImp {
 	 */
 	@Override
 	public String getID() {
+		
+		return getIDMD();
+	}
+
+	public static String getIDMD() {
 		UUID uuid = null;
 		String ris = null;
 		GregorianCalendar gc = null;
@@ -50,7 +55,7 @@ public class ArchiveMD extends ArchiveImp {
 		
 		return ris;
 	}
-
+	
 	public boolean checkMimetype(String mimetype){
 		boolean ris = false;
 		if (this.getType().getMimetype() != null

@@ -7,10 +7,11 @@
   <packaging>pom</packaging>
   <modules>
     <module>MagazziniDigitaliBusinessLogic</module>
+    <module>MagazziniDigitaliServicesImplement</module>
     <module>MagazziniDigitaliServices</module>
     <module>MagazziniDigitaliDatabaseSchema</module>
-    <module>MagazziniDigitaliServicesImplement</module>
     <module>MagazziniDigitaliXsd</module>
+    <module>MagazziniDigitaliSolr</module>
   </modules>
   <repositories>
     <repository>

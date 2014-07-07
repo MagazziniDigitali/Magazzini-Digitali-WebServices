@@ -76,7 +76,7 @@ public abstract class SqliteCore {
 	 * @param gc
 	 * @return
 	 */
-	protected String convert(GregorianCalendar gc){
+	public static String convert(GregorianCalendar gc){
 		DecimalFormat df6 = new DecimalFormat("000000");
 		DecimalFormat df4 = new DecimalFormat("0000");
 		DecimalFormat df2 = new DecimalFormat("00");

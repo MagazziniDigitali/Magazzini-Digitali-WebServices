@@ -1,5 +1,6 @@
 package it.bncf.magazziniDigitali.services.implement;
 
+import it.bncf.magazzimiDigitali.databaseSchema.sqlite.MDFilesTmpSqlite;
 import it.bncf.magazziniDigitali.businessLogic.istituto.IstitutoBusiness;
 import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.OggettoDigitaleBusiness;
 import it.depositolegale.www.istituto.StatoIstituto_type;
@@ -66,14 +67,18 @@ public class CheckMDImpl {
 						if (dati!= null){
 							output.getOggettoDigitale().setId(dati.get("id"));
 							
-							if(dati.get("stato").equalsIgnoreCase("ARCHIVIATO")){
+							if(dati.get("stato").equalsIgnoreCase(MDFilesTmpSqlite.FINEPUBLISH)){
 								output.getOggettoDigitale().setStatoOggettoDigitale(StatoOggettoDigitale_type.ARCHIVIATO);
-							} else if (dati.get("stato").equalsIgnoreCase("CHECKARCHIVIAZIONE")){
+							} else if (dati.get("stato").equalsIgnoreCase(MDFilesTmpSqlite.INITPUBLISH) ||
+									dati.get("stato").equalsIgnoreCase(MDFilesTmpSqlite.FINEVALID) ||
+									dati.get("stato").equalsIgnoreCase(MDFilesTmpSqlite.INITVALID)){
 								output.getOggettoDigitale().setStatoOggettoDigitale(StatoOggettoDigitale_type.CHECKARCHIVIAZIONE);
-							} else if (dati.get("stato").equalsIgnoreCase("FINETRASF")){
+							} else if (dati.get("stato").equalsIgnoreCase(MDFilesTmpSqlite.FINETRASF)){
 								output.getOggettoDigitale().setStatoOggettoDigitale(StatoOggettoDigitale_type.FINETRASF);
-							} else if (dati.get("stato").equalsIgnoreCase("INITTRASF")){
+							} else if (dati.get("stato").equalsIgnoreCase(MDFilesTmpSqlite.INITTRASF)){
 								output.getOggettoDigitale().setStatoOggettoDigitale(StatoOggettoDigitale_type.INITTRASF);
+							} else {
+								output.getOggettoDigitale().setStatoOggettoDigitale(StatoOggettoDigitale_type.ERROR);
 							}
 						}
 					} catch (FileNotFoundException e) {

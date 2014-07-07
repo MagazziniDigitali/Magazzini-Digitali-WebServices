@@ -3,6 +3,7 @@
  */
 package it.magazziniDigitali.xsd.premis;
 
+import info.lc.xmlns.premis_v2.AgentComplexType;
 import info.lc.xmlns.premis_v2.ContentLocationComplexType;
 import info.lc.xmlns.premis_v2.EventComplexType;
 import info.lc.xmlns.premis_v2.EventIdentifierComplexType;
@@ -17,12 +18,14 @@ import info.lc.xmlns.premis_v2.LinkingAgentIdentifierComplexType;
 import info.lc.xmlns.premis_v2.LinkingObjectIdentifierComplexType;
 import info.lc.xmlns.premis_v2.LinkingRightsStatementIdentifierComplexType;
 import info.lc.xmlns.premis_v2.ObjectCharacteristicsComplexType;
+import info.lc.xmlns.premis_v2.ObjectComplexType;
 import info.lc.xmlns.premis_v2.ObjectFactory;
 import info.lc.xmlns.premis_v2.ObjectIdentifierComplexType;
 import info.lc.xmlns.premis_v2.OriginalNameComplexType;
 import info.lc.xmlns.premis_v2.PremisComplexType;
 import info.lc.xmlns.premis_v2.RelatedObjectIdentificationComplexType;
 import info.lc.xmlns.premis_v2.RelationshipComplexType;
+import info.lc.xmlns.premis_v2.RightsComplexType;
 import info.lc.xmlns.premis_v2.SignificantPropertiesComplexType;
 import info.lc.xmlns.premis_v2.StorageComplexType;
 import it.magazziniDigitali.xsd.premis.exception.PremisXsdException;
@@ -32,6 +35,7 @@ import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.UUID;
 
 import javax.xml.bind.JAXBElement;
@@ -44,6 +48,12 @@ import mx.randalf.xsd.exception.XsdException;
  * 
  */
 public class PremisXsd extends ReadXsd<PremisComplexType> {
+
+	public static String UUID_MD_RG = "UUID-MD-RG";
+	public static String UUID_MD = "UUID-MD";
+	public static String UUID_MD_OBJ = "UUID-MD-OBJ";
+	public static String UUID_MD_EV = "UUID-MD-EV";
+	public static String UUID_MD_AG = "UUID-MD-AG";
 
 	private PremisComplexType premis = null;
 
@@ -80,9 +90,62 @@ public class PremisXsd extends ReadXsd<PremisComplexType> {
 	 *            Nome del file contracciato Premis esistente
 	 * @throws XsdException
 	 */
+	@SuppressWarnings("unchecked")
 	public PremisXsd(java.io.File file) throws XsdException {
-		premis = read(file);
+		Object obj = null;
+		
+		obj = read(file);
+		if (obj instanceof JAXBElement){
+			premis = ((JAXBElement<PremisComplexType>)obj).getValue();
+		} else {
+			premis = (PremisComplexType) obj;
+		}
 		this.file = file;
+	}
+
+	/**
+	 * Metodo utilizzato per leggere la lista degli oggetti presenti
+	 * 
+	 * @return Lista oggetti presenti
+	 */
+	public List<ObjectComplexType> getObject(){
+		return premis.getObject();
+	}
+
+	/**
+	 * Metodo utilizzato per leggere la lista degli eventi presenti
+	 * 
+	 * @return Lista eventi presenti
+	 */
+	public List<EventComplexType> getEvent(){
+		return premis.getEvent();
+	}
+
+	/**
+	 * Metodo utilizzato per leggere la lista degli agent presenti
+	 * 
+	 * @return Lista agent presenti
+	 */
+	public List<AgentComplexType> getAgent(){
+		return premis.getAgent();
+	}
+
+	/**
+	 * Metodo utilizzato per leggere la lista delle rights presenti
+	 * 
+	 * @return Lista rights presenti
+	 */
+	public List<RightsComplexType> getRights(){
+		return premis.getRights();
+	}
+
+	/**
+	 * Questo metodo viene utilizzato per aggiungere un oggetto
+	 * 
+	 * @param object Oggeto da aggiungere
+	 */
+	public void addObject(ObjectComplexType object){
+		premis.getObject().add(object);
 	}
 
 	/**
@@ -153,14 +216,16 @@ public class PremisXsd extends ReadXsd<PremisComplexType> {
 
 		file.setOriginalName(addOriginalName(originalName));
 
-		linkingRightsStatementIdentifier = new LinkingRightsStatementIdentifierComplexType();
-		linkingRightsStatementIdentifier
-				.setLinkingRightsStatementIdentifierType("UUID-MD-RG");
-		linkingRightsStatementIdentifier
-				.setLinkingRightsStatementIdentifierValue(right);
-		file.getLinkingRightsStatementIdentifier().add(
-				linkingRightsStatementIdentifier);
-		premis.getObject().add(file);
+		if (right != null){
+			linkingRightsStatementIdentifier = new LinkingRightsStatementIdentifierComplexType();
+			linkingRightsStatementIdentifier
+					.setLinkingRightsStatementIdentifierType(UUID_MD_RG);
+			linkingRightsStatementIdentifier
+					.setLinkingRightsStatementIdentifierValue(right);
+			file.getLinkingRightsStatementIdentifier().add(
+					linkingRightsStatementIdentifier);
+		}
+		addObject(file);
 	}
 
 	/**
@@ -208,7 +273,7 @@ public class PremisXsd extends ReadXsd<PremisComplexType> {
 		file.getStorage().add(addStorage("tarindex", contentLocationValue));
 
 		file.getRelationship().add(addRelationship(relationshipSubType, objectIdentifierMaster));
-		premis.getObject().add(file);
+		addObject(file);
 	}
 
 	private RelationshipComplexType addRelationship(String relationshipSubType, String objectIdentifierMaster){
@@ -219,7 +284,7 @@ public class PremisXsd extends ReadXsd<PremisComplexType> {
 		relationShip.setRelationshipType("stru");
 		relationShip.setRelationshipSubType(relationshipSubType);
 		relatedObjectIdentification = new RelatedObjectIdentificationComplexType();
-		relatedObjectIdentification.setRelatedObjectIdentifierType("UUID-MD");
+		relatedObjectIdentification.setRelatedObjectIdentifierType(UUID_MD);
 		relatedObjectIdentification.setRelatedObjectIdentifierValue(objectIdentifierMaster);
 		relationShip.getRelatedObjectIdentification().add(relatedObjectIdentification);
 		return relationShip;
@@ -243,7 +308,7 @@ public class PremisXsd extends ReadXsd<PremisComplexType> {
 		ObjectIdentifierComplexType objectIdentifier = null;
 		// Assegnazione dell'identificatore univoco dell'oggetto
 		objectIdentifier = new ObjectIdentifierComplexType();
-		objectIdentifier.setObjectIdentifierType("UUID-MD-OBJ");
+		objectIdentifier.setObjectIdentifierType(UUID_MD_OBJ);
 		objectIdentifier.setObjectIdentifierValue(objectIdentifierValue);
 
 		return objectIdentifier;
@@ -321,7 +386,7 @@ public class PremisXsd extends ReadXsd<PremisComplexType> {
 		event = new EventComplexType();
 
 		eventIdentifier = new EventIdentifierComplexType();
-		eventIdentifier.setEventIdentifierType("UUID-MD-EV");
+		eventIdentifier.setEventIdentifierType(UUID_MD_EV);
 		eventIdentifier.setEventIdentifierValue(UUID.randomUUID().toString()+"-EV");
 		event.setEventIdentifier(eventIdentifier);
 
@@ -374,7 +439,7 @@ public class PremisXsd extends ReadXsd<PremisComplexType> {
 
 		if (linkingAgentIdentifierValue != null){
 			linkingAgentIdentifier = new LinkingAgentIdentifierComplexType();
-			linkingAgentIdentifier.setLinkingAgentIdentifierType("UUID-MD-AG");
+			linkingAgentIdentifier.setLinkingAgentIdentifierType(UUID_MD_AG);
 			linkingAgentIdentifier
 					.setLinkingAgentIdentifierValue(linkingAgentIdentifierValue);
 			linkingAgentIdentifier.getLinkingAgentRole().add("depositante");
@@ -382,14 +447,14 @@ public class PremisXsd extends ReadXsd<PremisComplexType> {
 		}
 
 		linkingAgentIdentifier = new LinkingAgentIdentifierComplexType();
-		linkingAgentIdentifier.setLinkingAgentIdentifierType("UUID-MD-AG");
+		linkingAgentIdentifier.setLinkingAgentIdentifierType(UUID_MD_AG);
 		linkingAgentIdentifier
 				.setLinkingAgentIdentifierValue(linkingSoftwareIdentifierValue);
 		linkingAgentIdentifier.getLinkingAgentRole().add("software");
 		event.getLinkingAgentIdentifier().add(linkingAgentIdentifier);
 
 		linkingObjectIdentifier = new LinkingObjectIdentifierComplexType();
-		linkingObjectIdentifier.setLinkingObjectIdentifierType("UUID-MD");
+		linkingObjectIdentifier.setLinkingObjectIdentifierType(UUID_MD);
 		linkingObjectIdentifier.setLinkingObjectIdentifierValue(objectIdentifierMaster);
 		event.getLinkingObjectIdentifier().add(linkingObjectIdentifier);
 		premis.getEvent().add(event);
