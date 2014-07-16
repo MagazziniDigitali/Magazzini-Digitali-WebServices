@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.UUID;
 import java.util.Vector;
@@ -209,6 +210,70 @@ public class MDFilesTmpSqlite extends SqliteCore {
 	    return res;
 	}
 
+	public List<MDFilesTmp> findByNomeFile(String idIstituto,
+			String nomeFile) throws SQLException{
+		Vector<MDFilesTmp> res = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		
+	    try {
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery( "SELECT * "
+					                + "FROM MDFilesTmp "
+					               + "Where ID_ISTITUTO='"+idIstituto+"' AND "
+					               		 + "NOMEFILE Like '"+nomeFile+"%';" );
+			res = (Vector<MDFilesTmp>) convert(rs);
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			try {
+				if (rs != null){
+				    rs.close();
+				}
+				if (stmt != null){
+				    stmt.close();
+				}
+			} catch (SQLException e) {
+				throw e;
+			}
+		}
+	    return res;
+	}
+
+	public Hashtable<String, Integer> findCountByIstituto(String Istituto) throws SQLException{
+		Hashtable<String, Integer> ris = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery( "SELECT STATO, count(*) as conta "
+					                + "FROM MDFilesTmp "
+					               + "Where ID_ISTITUTO='"+Istituto+"' "
+					            + "GROUP BY STATO;" );
+			while ( rs.next() ) {
+				if (ris == null){
+					ris = new Hashtable<String, Integer>();
+				}
+				ris.put(rs.getString("STATO"), rs.getInt("conta"));
+			}
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			try {
+				if (rs != null){
+				    rs.close();
+				}
+				if (stmt != null){
+				    stmt.close();
+				}
+			} catch (SQLException e) {
+				throw e;
+			}
+		}
+		return ris;
+	}
+
 	/**
 	 * Metodo utilizzato per la ricerca tramite lo Sha1
 	 * 
@@ -372,6 +437,13 @@ public class MDFilesTmpSqlite extends SqliteCore {
 					record.setMoveFileEsito(rs.getBoolean("MOVEFILE_ESITO"));
 				}
 
+				if (rs.getString("DELETELOCAL_DATA")!= null){
+					record.setDeleteLocalData(rs.getString("DELETELOCAL_DATA"));
+				}
+				if (rs.getObject("DELETELOCAL_ESITO")!= null){
+					record.setDeleteLocalEsito(rs.getBoolean("DELETELOCAL_ESITO"));
+				}
+				
 				if (rs.getString("XMLMIMETYPE")!= null){
 					record.setXmlMimeType(rs.getString("XMLMIMETYPE"));
 				}

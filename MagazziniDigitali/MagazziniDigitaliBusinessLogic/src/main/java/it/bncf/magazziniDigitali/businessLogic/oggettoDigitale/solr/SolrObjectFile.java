@@ -23,10 +23,12 @@ import it.depositolegale.md.Md;
 import it.magazziniDigitali.xsd.md.MdXsd;
 import it.magazziniDigitali.xsd.premis.PremisXsd;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 
@@ -39,9 +41,6 @@ import mx.randalf.converter.xsl.exception.ConvertXslException;
 import mx.randalf.solr.exception.SolrException;
 import mx.randalf.xsd.exception.XsdException;
 
-import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
-import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
-import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.purl.dc.elements._1.SimpleLiteral;
 
@@ -67,7 +66,7 @@ public class SolrObjectFile {
 		params = new Params();
 	}
 
-	public boolean publishSolr(File object, AddDocumentMD admd, java.io.File fObj) throws SolrException{
+	public boolean publishSolr(File object, AddDocumentMD admd, java.io.File pathTar) throws SolrException{
 		boolean ris = false;
 		
 		try {
@@ -110,13 +109,13 @@ public class SolrObjectFile {
 			
 			if (mimeType != null && mimeType.equals("text/plain")){
 				if (size>0){
-					publicSolrOcr(fObj);
+					publicSolrOcr(pathTar);
 				}
 			}
 			admd.add(params.getParams(), new ItemMD());
 			if ((filename != null && filename.endsWith(".xml")) && 
 					(fileType != null && fileType.equals("mets"))){
-				publicSolrMets(fObj, admd);
+				publicSolrMets(pathTar, admd);
 			}
 			ris = true;
 		} catch (SolrException e) {
@@ -129,90 +128,79 @@ public class SolrObjectFile {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void publicSolrMets(java.io.File fObj, AddDocumentMD admd) throws SolrException{
-		TarArchiveInputStream tais = null;
-		TarArchiveEntry entry= null;
-		FileInputStream fis = null;
-		ByteArrayOutputStream baos = null;
+	private void publicSolrMets(java.io.File pathTar, AddDocumentMD admd) throws SolrException{
 		ByteArrayOutputStream dc = null;
 		MdXsd mdXsd = null;
 		Md md = null;
 		Object obj = null;
+		java.io.File fName = null;
+		FileInputStream fInput = null;
+		
 		try {
-			fis = new FileInputStream(fObj);
-			tais = new TarArchiveInputStream(fis);
-			while ((entry = (TarArchiveEntry) tais.getNextEntry()) != null) {
-				
-				if (entry.getName().equals(filename)){
-					baos = new ByteArrayOutputStream();
-					IOUtils.copy(tais, baos);
-					baos.flush();
-					
-					params.getParams().clear();
-					params.add(ItemMD.ID, objectIdentifier+"-DC");
-					params.add(ItemMD._ROOT_, objectIdentifier);
-					params.add(ItemMD.TIPOOGGETTO, ItemMD.TIPOOGGETTO_DOCUMENTO);
-					params.add(ItemMD.ORIGINALFILENAME, filename);
+			
+			fName = new java.io.File(pathTar.getAbsolutePath()+
+					java.io.File.separator+ filename);
+			if (fName.exists()){
+				fInput = new FileInputStream(fName);
+				params.getParams().clear();
+				params.add(ItemMD.ID, objectIdentifier+"-DC");
+				params.add(ItemMD._ROOT_, objectIdentifier);
+				params.add(ItemMD.TIPOOGGETTO, ItemMD.TIPOOGGETTO_DOCUMENTO);
+				params.add(ItemMD.ORIGINALFILENAME, filename);
 
-					dc = new ByteArrayOutputStream();
-					ConverterXsl.convertXsl(Configuration.getValue("demoni.Publish.mets.xslTransf.dc"), 
-							new ByteArrayInputStream(baos.toByteArray()), dc);
-					mdXsd = new MdXsd();
-					obj = mdXsd.read(new ByteArrayInputStream(dc.toByteArray()));
+				dc = new ByteArrayOutputStream();
+				ConverterXsl.convertXsl(Configuration.getValue("demoni.Publish.mets.xslTransf.dc"), 
+						fInput, dc);
+				mdXsd = new MdXsd();
+				obj = mdXsd.read(new ByteArrayInputStream(dc.toByteArray()));
 
-					if (obj instanceof JAXBElement){
-						md = ((JAXBElement<Md>)obj).getValue();
-					} else {
-						md = (Md) obj;
-					}
-					
-					if (md != null){
-						if (md.getBib() != null){
-							if (md.getBib().getLevel() != null){
-								params.add(ItemMD.TIPODOCUMENTO, 
-										(md.getBib().getLevel().equals(BibliographicLevel.M)
-												?ItemMD.TIPODOCUMENTO_LIBRODIGITALIZZATO:
-													ItemMD.TIPODOCUMENTO_PERIODICODIGITALIZZATO));
-							}
-							read(ItemMD.BID, md.getBib().getIdentifier());
-							read(ItemMD.TITOLO, md.getBib().getTitle());
-							read(ItemMD.AUTORE, md.getBib().getCreator());
-							read(ItemMD.PUBBLICAZIONE, md.getBib().getPublisher());
-							read(ItemMD.SOGGETTO, md.getBib().getSubject());
-							read(ItemMD.DESCRIZIONE, md.getBib().getDescription());
-							read(ItemMD.CONTRIBUTO, md.getBib().getContributor());
-							read(ItemMD.DATA, md.getBib().getDate());
-							read(ItemMD.TIPORISORSA, md.getBib().getType());
-							read(ItemMD.FORMATO, md.getBib().getFormat());
-							read(ItemMD.FONTE, md.getBib().getSource());
-							read(ItemMD.LINGUA, md.getBib().getLanguage());
-							read(ItemMD.RELAZIONE, md.getBib().getRelation());
-							read(ItemMD.COPERTURA, md.getBib().getCoverage());
-							read(ItemMD.GESTIONEDIRITTI, md.getBib().getRights());
-							
-							read(md.getBib().getHoldings());
-						}
-						if (md.getAgent() != null){
-							for(int x=0; x<md.getAgent().size(); x++){
-								for(int y=0; y<md.getAgent().get(x).getAgentIdentifier().size(); y++){
-									params.add(ItemMD.PROVENIENZAOGGETTO, 
-											md.getAgent().get(x).
-												getAgentIdentifier().get(y).
-												getAgentIdentifierValue());
-								}
-							}
-						}
-					}
-//					params.add(ItemMD.KEYWORDSDOC, baos.toString());
-					admd.add(params.getParams(), new ItemMD());
-					baos.close();
-					break;
+				if (obj instanceof JAXBElement){
+					md = ((JAXBElement<Md>)obj).getValue();
+				} else {
+					md = (Md) obj;
 				}
+				
+				if (md != null){
+					if (md.getBib() != null){
+						if (md.getBib().getLevel() != null){
+							params.add(ItemMD.TIPODOCUMENTO, 
+									(md.getBib().getLevel().equals(BibliographicLevel.M)
+											?ItemMD.TIPODOCUMENTO_LIBRODIGITALIZZATO:
+												ItemMD.TIPODOCUMENTO_PERIODICODIGITALIZZATO));
+						}
+						read(ItemMD.BID, md.getBib().getIdentifier());
+						read(ItemMD.TITOLO, md.getBib().getTitle());
+						read(ItemMD.AUTORE, md.getBib().getCreator());
+						read(ItemMD.PUBBLICAZIONE, md.getBib().getPublisher());
+						read(ItemMD.SOGGETTO, md.getBib().getSubject());
+						read(ItemMD.DESCRIZIONE, md.getBib().getDescription());
+						read(ItemMD.CONTRIBUTO, md.getBib().getContributor());
+						read(ItemMD.DATA, md.getBib().getDate());
+						read(ItemMD.TIPORISORSA, md.getBib().getType());
+						read(ItemMD.FORMATO, md.getBib().getFormat());
+						read(ItemMD.FONTE, md.getBib().getSource());
+						read(ItemMD.LINGUA, md.getBib().getLanguage());
+						read(ItemMD.RELAZIONE, md.getBib().getRelation());
+						read(ItemMD.COPERTURA, md.getBib().getCoverage());
+						read(ItemMD.GESTIONEDIRITTI, md.getBib().getRights());
+						
+						read(md.getBib().getHoldings());
+					}
+					if (md.getAgent() != null){
+						for(int x=0; x<md.getAgent().size(); x++){
+							for(int y=0; y<md.getAgent().get(x).getAgentIdentifier().size(); y++){
+								params.add(ItemMD.PROVENIENZAOGGETTO, 
+										md.getAgent().get(x).
+											getAgentIdentifier().get(y).
+											getAgentIdentifierValue());
+							}
+						}
+					}
+				}
+//					params.add(ItemMD.KEYWORDSDOC, baos.toString());
+				admd.add(params.getParams(), new ItemMD());
 			}
 		} catch (FileNotFoundException e) {
-			log.error(e.getMessage(), e);
-			throw new SolrException(e.getMessage(), e);
-		} catch (IOException e) {
 			log.error(e.getMessage(), e);
 			throw new SolrException(e.getMessage(), e);
 		} catch (SolrException e) {
@@ -228,15 +216,8 @@ public class SolrObjectFile {
 			throw new SolrException(e.getMessage(), e);
 		} finally{
 			try {
-				if (baos != null){
-					baos.close();
-				}
-
-				if (tais != null){
-					tais.close();
-				}
-				if (fis != null){
-					fis.close();
+				if (fInput != null){
+					fInput.close();
 				}
 			} catch (IOException e) {
 				log.error(e.getMessage(), e);
@@ -279,25 +260,23 @@ public class SolrObjectFile {
 		}
 	}
 	
-	private void publicSolrOcr(java.io.File fObj) throws SolrException{
-		TarArchiveInputStream tais = null;
-		TarArchiveEntry entry= null;
-		FileInputStream fis = null;
-		ByteArrayOutputStream baos = null;
+	private void publicSolrOcr(java.io.File pathTar) throws SolrException{
+		java.io.File fName = null;
+		FileReader fr = null;
+		BufferedReader br = null;
+		String line= null;
 		
 		try {
-			fis = new FileInputStream(fObj);
-			tais = new TarArchiveInputStream(fis);
-			while ((entry = (TarArchiveEntry) tais.getNextEntry()) != null) {
-				
-				if (entry.getName().equals(filename)){
-					baos = new ByteArrayOutputStream();
-					IOUtils.copy(tais, baos);
-					baos.flush();
-					
-					params.add(ItemMD.KEYWORDSDOC, baos.toString());
-					baos.close();
-					break;
+			fName = new java.io.File(pathTar.getAbsolutePath()+
+					java.io.File.separator+
+					filename);
+			if (fName.exists()){
+				fr = new FileReader(fName);
+				br = new BufferedReader(fr);
+				while((line = br.readLine())!=null){
+					if (!line.trim().equals("")){
+						params.add(ItemMD.KEYWORDSDOC, line);
+					}
 				}
 			}
 		} catch (FileNotFoundException e) {
@@ -308,15 +287,12 @@ public class SolrObjectFile {
 			throw new SolrException(e.getMessage(), e);
 		} finally{
 			try {
-				if (baos != null){
-					baos.close();
+				if (br != null){
+					br.close();
 				}
 
-				if (tais != null){
-					tais.close();
-				}
-				if (fis != null){
-					fis.close();
+				if (fr != null){
+					fr.close();
 				}
 			} catch (IOException e) {
 				log.error(e.getMessage(), e);

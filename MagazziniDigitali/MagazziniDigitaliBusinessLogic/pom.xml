@@ -7,18 +7,18 @@
   </parent>
   <groupId>it.bncf.magazziniDigitali.businessLogic</groupId>
   <artifactId>MagazziniDigitaliBusinessLogic</artifactId>
-  <version>1.0.6</version>
+  <version>1.0.7</version>
   <description>Questo progetto vine utilizzato per la gestione della logica applicativa del programma</description>
   <properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.6</maven.compiler.source>
-    <maven.compiler.target>1.6</maven.compiler.target>
+    <maven.compiler.source>1.7</maven.compiler.source>
+    <maven.compiler.target>1.7</maven.compiler.target>
   </properties>
   <dependencies>
   	<dependency>
   		<groupId>it.bncf.magazziniDigitali.databaseSchema</groupId>
   		<artifactId>MagazziniDigitaliDatabaseSchema</artifactId>
-  		<version>1.0.7</version>
+  		<version>1.0.8</version>
   	</dependency>
   	<dependency>
   		<groupId>it.bncf.magazziniDigitali.xsd</groupId>
@@ -85,4 +85,21 @@
         <url>http://maven.bncf.firenze.sbn.it/artifactory/libs-release-local</url>
     </repository>
 </distributionManagement>
+  <build>
+	<resources>
+		<resource>
+			<directory>${basedir}/src/main/java</directory>
+			<includes>
+			<include>**/*.java</include>
+			</includes>
+		</resource>
+		<resource>
+			<directory>${basedir}/src/main/resources</directory>
+			<includes>
+			<include>**/*.gwt.xml</include>
+			</includes>
+		</resource>
+	</resources>
+  </build>
+
 </project>

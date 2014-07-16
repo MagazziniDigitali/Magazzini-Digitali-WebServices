@@ -67,6 +67,10 @@ public class MDFilesTmp {
 
 	private boolean moveFileEsito;
 
+	private String deleteLocalData;
+
+	private boolean deleteLocalEsito;
+
 	private String premisFile;
 
 	private List<MDFilesTmpError> errors;
@@ -292,6 +296,22 @@ public class MDFilesTmp {
 
 	public void setMoveFileEsito(boolean moveFileEsito) {
 		this.moveFileEsito = moveFileEsito;
+	}
+
+	public String getDeleteLocalData() {
+		return deleteLocalData;
+	}
+
+	public void setDeleteLocalData(String deleteLocalData) {
+		this.deleteLocalData = deleteLocalData;
+	}
+
+	public boolean isDeleteLocalEsito() {
+		return deleteLocalEsito;
+	}
+
+	public void setDeleteLocalEsito(boolean deleteLocalEsito) {
+		this.deleteLocalEsito = deleteLocalEsito;
 	}
 
 }
