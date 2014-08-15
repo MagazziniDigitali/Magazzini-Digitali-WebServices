@@ -32,6 +32,7 @@ import it.magazziniDigitali.xsd.premis.exception.PremisXsdException;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -366,7 +367,25 @@ public class PremisXsd extends ReadXsd<PremisComplexType> {
 		return origName;
 	}
 
-	public void addEvent(String eventType, GregorianCalendar start, GregorianCalendar stop,
+	/*
+	public void addEvent(String eventType, Timestamp start, Timestamp stop,
+			String eventDetail,
+			String eventOutcome, String[] eventOutcomeDetails,
+			String linkingAgentIdentifierValue, String linkingSoftwareIdentifierValue,
+			String objectIdentifierMaster) {
+		GregorianCalendar gcStart=null;
+		GregorianCalendar gcStop=null;
+
+		gcStart = new GregorianCalendar();
+		gcStart.setTimeInMillis(start.getTime());
+
+		gcStop = new GregorianCalendar();
+		gcStop.setTimeInMillis(stop.getTime());
+		addEvent(eventType, gcStart, gcStop, eventDetail, eventOutcome, eventOutcomeDetails, linkingAgentIdentifierValue, 
+				linkingSoftwareIdentifierValue, objectIdentifierMaster);
+	}
+	*/
+	public void addEvent(String eventType, Object oStart, Object oStop,
 			String eventDetail,
 			String eventOutcome, String[] eventOutcomeDetails,
 			String linkingAgentIdentifierValue, String linkingSoftwareIdentifierValue,
@@ -381,6 +400,8 @@ public class PremisXsd extends ReadXsd<PremisComplexType> {
 		DecimalFormat df6 = new DecimalFormat("000000");
 		DecimalFormat df4 = new DecimalFormat("0000");
 		DecimalFormat df2 = new DecimalFormat("00");
+		GregorianCalendar start = null;
+		GregorianCalendar stop = null;
 
 
 		event = new EventComplexType();
@@ -392,7 +413,13 @@ public class PremisXsd extends ReadXsd<PremisComplexType> {
 
 		event.setEventType(eventType);
 
-		if (start != null){
+		if (oStart != null){
+			if (oStart instanceof GregorianCalendar){
+				start = (GregorianCalendar) oStart;
+			} else if (oStart instanceof Timestamp){
+				start = new GregorianCalendar();
+				start.setTimeInMillis(((Timestamp)oStart).getTime());
+			}
 			eventDateTime = df4.format(start.get(Calendar.YEAR));
 			eventDateTime += df2.format(start.get(Calendar.MONTH) + 1);
 			eventDateTime += df2.format(start.get(Calendar.DAY_OF_MONTH));
@@ -402,7 +429,13 @@ public class PremisXsd extends ReadXsd<PremisComplexType> {
 			eventDateTime += df2.format(start.get(Calendar.SECOND));
 			eventDateTime += "-";
 			eventDateTime += df6.format(start.get(Calendar.MILLISECOND));
-			if (stop != null) {
+			if (oStop != null) {
+				if (oStop instanceof GregorianCalendar){
+					stop = (GregorianCalendar) oStop;
+				} else if (oStop instanceof Timestamp){
+					stop = new GregorianCalendar();
+					stop.setTimeInMillis(((Timestamp)oStop).getTime());
+				}
 				eventDateTime += "/";
 				eventDateTime += df4.format(stop.get(Calendar.YEAR));
 				eventDateTime += df2.format(stop.get(Calendar.MONTH) + 1);

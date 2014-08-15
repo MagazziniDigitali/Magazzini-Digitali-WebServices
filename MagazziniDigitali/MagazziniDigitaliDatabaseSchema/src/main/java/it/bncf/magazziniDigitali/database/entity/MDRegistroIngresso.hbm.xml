@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<!-- Generated 16-lug-2014 20.48.28 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="it.bncf.magazziniDigitali.database.entity.MDRegistroIngresso" table="MDRegistroIngresso">
+        <id name="id" type="java.lang.String">
+            <column name="ID" />
+            <generator class="assigned" />
+        </id>
+        <property name="timestampIngest" type="java.sql.Timestamp">
+            <column name="TIMESTAMPINGEST" />
+        </property>
+        <property name="agentDepositor" type="java.lang.String">
+            <column name="AGENTDEPOSITOR" />
+        </property>
+        <property name="originalContainerName" type="java.lang.String">
+            <column name="ORIGINALCONTAINERNAME" />
+        </property>
+        <property name="containerName" type="java.lang.String">
+            <column name="CONTAINERNAME" />
+        </property>
+        <property name="containerFingerPrint" type="java.lang.String">
+            <column name="CONTAINERFINGERPRINT" />
+        </property>
+        <property name="containerFingerPrintChain" type="java.lang.String">
+            <column name="CONTAINERFINGERPRINTCHAIN" />
+        </property>
+        <property name="containerType" type="java.lang.Integer">
+            <column name="CONTAINERTYPE" />
+        </property>
+        <property name="agentMachineIngest" type="java.lang.String">
+            <column name="AGENTMACHINEINGEST" />
+        </property>
+        <property name="agentSoftwareIngest" type="java.lang.String">
+            <column name="AGENTSOFTWAREINGEST" />
+        </property>
+        <property name="status" type="java.lang.Integer">
+            <column name="STATUS" />
+        </property>
+        <property name="timestampInit" type="java.sql.Timestamp">
+            <column name="TIMESTAMPINIT" />
+        </property>
+        <property name="timestampElab" type="java.sql.Timestamp">
+            <column name="TIMESTAMPELAB" />
+        </property>
+        <property name="timestampPub" type="java.sql.Timestamp">
+            <column name="TIMESTAMPPUB" />
+        </property>
+        <property name="timestampErr" type="java.sql.Timestamp">
+            <column name="TIMESTAMPERR" />
+        </property>
+    </class>
+</hibernate-mapping>

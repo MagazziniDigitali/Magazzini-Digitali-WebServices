@@ -66,6 +66,7 @@
   
   <root>
     <level value="ERROR"/>
-    <appender-ref ref="EMAIL"/>
+    <!-- appender-ref ref="EMAIL"/-->
+    <appender-ref ref="STDERR"/>
   </root>
 </log4j:configuration>

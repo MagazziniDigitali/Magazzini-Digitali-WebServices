@@ -21,24 +21,27 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-    	<groupId>axis</groupId>
-    	<artifactId>axis</artifactId>
-    	<version>1.4</version>
-    </dependency>
-    <dependency>
     	<groupId>it.bncf.magazziniDigitali.businessLogic</groupId>
     	<artifactId>MagazziniDigitaliBusinessLogic</artifactId>
-    	<version>1.0.6</version>
+    	<version>1.0.8</version>
     </dependency>
     <dependency>
     	<groupId>javax.mail</groupId>
     	<artifactId>mail</artifactId>
     	<version>1.5.0-b01</version>
     </dependency>
+    <dependency>
+    	<groupId>javax.servlet</groupId>
+    	<artifactId>javax.servlet-api</artifactId>
+    	<version>3.1.0</version>
+    	<scope>provided</scope>
+    </dependency>
   </dependencies>
   <properties>
     <maven.compiler.source>1.6</maven.compiler.source>
     <maven.compiler.target>1.6</maven.compiler.target>
+    <org.springframework.version>2.5.6</org.springframework.version>
+    <org.hibernate.version>3.5.1-Final</org.hibernate.version>
   </properties>
   <build>
     <finalName>MagazziniDigitaliServices</finalName>
@@ -62,5 +65,13 @@
 				</configuration>
 			</plugin>
     </plugins>
+		<resources>
+			<resource>
+				<directory>${basedir}/src/main/java</directory>
+				<includes>
+					<include>**/*.cfg.xml</include>
+				</includes>
+			</resource>
+		</resources>
   </build>
 </project>

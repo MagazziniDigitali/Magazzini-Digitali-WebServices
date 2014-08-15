@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<!-- Generated 16-lug-2014 20.54.46 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="it.bncf.magazziniDigitali.database.entity.MDRegistroIngressoError" table="MDRegistroIngressoError">
+        <id name="id" type="java.lang.String">
+            <column name="ID" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="idMDRegistroIngresso" class="it.bncf.magazziniDigitali.database.entity.MDRegistroIngresso" fetch="join">
+            <column name="ID_MDREGISTROINGRESSO" />
+        </many-to-one>
+        <property name="dataIns" type="java.sql.Timestamp">
+            <column name="DATA_INS" />
+        </property>
+        <property name="type" type="java.lang.String">
+            <column name="TYPE" />
+        </property>
+        <property name="msgError" type="java.lang.String">
+            <column name="MSGERROR" />
+        </property>
+    </class>
+</hibernate-mapping>

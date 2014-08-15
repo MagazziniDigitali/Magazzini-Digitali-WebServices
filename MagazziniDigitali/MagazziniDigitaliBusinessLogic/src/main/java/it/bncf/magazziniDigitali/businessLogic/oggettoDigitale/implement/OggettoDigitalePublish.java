@@ -6,13 +6,13 @@ package it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.implement;
 import info.lc.xmlns.premis_v2.EventComplexType;
 import info.lc.xmlns.premis_v2.ObjectComplexType;
 import info.lc.xmlns.premis_v2.SignificantPropertiesComplexType;
-import it.bncf.magazzimiDigitali.database.entity.MDFilesTmp;
-import it.bncf.magazzimiDigitali.databaseSchema.sqlite.MDFilesTmpSqlite;
-import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.OggettoDigitaleBusiness;
+import it.bncf.magazziniDigitali.businessLogic.filesTmp.MDFilesTmpBusiness;
 import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.solr.SolrEvent;
 import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.solr.SolrObjectFile;
 import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.validate.ArchiveMD;
 import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.validate.ValidateFile;
+import it.bncf.magazziniDigitali.database.dao.MDFilesTmpDAO;
+import it.bncf.magazziniDigitali.database.entity.MDFilesTmp;
 import it.bncf.magazziniDigitali.solr.AddDocumentMD;
 import it.magazziniDigitali.xsd.premis.PremisXsd;
 import it.magazziniDigitali.xsd.premis.exception.PremisXsdException;
@@ -27,9 +27,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
-import org.apache.log4j.Logger;
-import org.apache.solr.client.solrj.SolrServerException;
-
 import mx.randalf.archive.Tar;
 import mx.randalf.archive.info.DigestType;
 import mx.randalf.configuration.Configuration;
@@ -38,6 +35,9 @@ import mx.randalf.solr.exception.SolrException;
 import mx.randalf.tools.Utils;
 import mx.randalf.tools.exception.UtilException;
 import mx.randalf.xsd.exception.XsdException;
+
+import org.apache.log4j.Logger;
+import org.apache.solr.client.solrj.SolrServerException;
 
 /**
  * @author massi
@@ -51,7 +51,7 @@ public class OggettoDigitalePublish implements Callable<Boolean> {
 
 	private Logger logPublish = null;
 
-	private MDFilesTmpSqlite mdFileTmp = null;
+	private MDFilesTmpBusiness mdFileTmp = null;
 
 	private String name = null;
 
@@ -60,7 +60,7 @@ public class OggettoDigitalePublish implements Callable<Boolean> {
 	/**
 	 * 
 	 */
-	public OggettoDigitalePublish(MDFilesTmp record, Logger logPublish, MDFilesTmpSqlite mdFileTmp,
+	public OggettoDigitalePublish(MDFilesTmp record, Logger logPublish, MDFilesTmpBusiness mdFileTmp,
 			String name, String application) {
 		this.record = record;
 		this.logPublish = logPublish;
@@ -101,7 +101,7 @@ public class OggettoDigitalePublish implements Callable<Boolean> {
 							+ File.separator
 							+ record.getPremisFile());
 			if (record.getStato()
-					.equals(MDFilesTmpSqlite.FINEVALID)) {
+					.equals(MDFilesTmpDAO.FINEVALID)) {
 				logPublish.info(name+" Inizio la pubblicazione del file ["
 						+ filePremisMaster.getAbsolutePath() + "]");
 				start = mdFileTmp
@@ -109,7 +109,8 @@ public class OggettoDigitalePublish implements Callable<Boolean> {
 			} else {
 				logPublish.info(name+" Continuo la pubblicazione del file ["
 						+ filePremisMaster.getAbsolutePath() + "]");
-				start = OggettoDigitaleBusiness.convertGregorianCalendar(record.getPublishDataStart());
+				start = new GregorianCalendar();
+				start.setTimeInMillis(record.getPublishDataStart().getTime());
 			}
 
 			if (filePremisMaster.exists()) {
@@ -323,7 +324,9 @@ public class OggettoDigitalePublish implements Callable<Boolean> {
 			log.error(e.getMessage(), e);
 		} finally {
 			try {
-				premisElab.write(filePremis, false);
+				if (premisElab != null){
+					premisElab.write(filePremis, false);
+				}
 			} catch (PremisXsdException e) {
 				log.error(e.getMessage(), e);
 				mdFileTmp.updateStopPublish(record.getId(),
@@ -464,7 +467,7 @@ public class OggettoDigitalePublish implements Callable<Boolean> {
 	}
 
 	private boolean copyFile(File fInput, File fOutput, MDFilesTmp record,
-			MDFilesTmpSqlite mdFileTmp, PremisXsd premisElab,
+			MDFilesTmpBusiness mdFileTmp, PremisXsd premisElab,
 			String application, String objectIdentifierMaster, String idIstituto)
 			throws SQLException, ConfigurationException {
 		boolean result = false;
@@ -504,10 +507,9 @@ public class OggettoDigitalePublish implements Callable<Boolean> {
 										+ application + ".UUID"),
 								objectIdentifierMaster);
 			} else {
-				result = record.isCopyPremisEsito();
-				premisElab.addEvent("copyPremis", OggettoDigitaleBusiness.convertGregorianCalendar(record
-						.getCopyPremisDataStart()), OggettoDigitaleBusiness.convertGregorianCalendar(record
-						.getCopyPremisDataEnd()), fInput.getAbsolutePath()
+				result = record.getCopyPremisEsito();
+				premisElab.addEvent("copyPremis", record.getCopyPremisDataStart(), 
+						record.getCopyPremisDataEnd(), fInput.getAbsolutePath()
 						+ " => " + fOutput.getAbsolutePath(), (result ? "OK"
 						: "KO"), null, null, Configuration.getValue("demoni."
 						+ application + ".UUID"), objectIdentifierMaster);
@@ -561,7 +563,7 @@ public class OggettoDigitalePublish implements Callable<Boolean> {
 	}
 
 	private boolean moveFile(File fInput, File fOutput, MDFilesTmp record,
-			MDFilesTmpSqlite mdFileTmp, PremisXsd premisElab,
+			MDFilesTmpBusiness mdFileTmp, PremisXsd premisElab,
 			String application, String objectIdentifierMaster)
 			throws SQLException, ConfigurationException {
 		boolean result = false;
@@ -603,10 +605,9 @@ public class OggettoDigitalePublish implements Callable<Boolean> {
 								+ ".UUID"), objectIdentifierMaster);
 				result = true;
 			} else {
-				result = record.isCopyPremisEsito();
-				premisElab.addEvent("moveFile", OggettoDigitaleBusiness.convertGregorianCalendar(record
-						.getMoveFileDataStart()), OggettoDigitaleBusiness.convertGregorianCalendar(record
-						.getMoveFileDataEnd()), fInput.getAbsolutePath()
+				result = record.getCopyPremisEsito();
+				premisElab.addEvent("moveFile", record.getMoveFileDataStart(), 
+						record.getMoveFileDataEnd(), fInput.getAbsolutePath()
 						+ " => " + fOutput.getAbsolutePath(), (result ? "OK"
 						: "KO"), null, null, Configuration.getValue("demoni."
 						+ application + ".UUID"), objectIdentifierMaster);

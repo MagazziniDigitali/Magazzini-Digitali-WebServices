@@ -30,23 +30,33 @@ public class DepositoLegaleAxisServlet extends AxisServlet {
 		init(this.getServletContext().getInitParameter("nomeCatalogo"));
 	}
 
-	public static void init(String nomeCatalogo) throws ServletException {
+	public static void init(String nomeCatalogos) throws ServletException {
 		String pathProperties = "";
+		String[] st = null;
+		String nomeCatalogo = null;
+		File f = null;
 
 		try {
 			if (!Configuration.isInizialize()) {
-				if (nomeCatalogo != null && nomeCatalogo.startsWith("file://"))
-					pathProperties = nomeCatalogo.replace("file:///", "");
-				else {
-					pathProperties = System.getProperty("catalina.base")
-							+ File.separator;
-					if (nomeCatalogo == null)
-						pathProperties += "conf/teca_digitale";
-					else
-						pathProperties += nomeCatalogo;
+				
+				st = nomeCatalogos.split("\\|");
+				for (int x=0;x<st.length; x++){
+					nomeCatalogo = st[x];
+					if (nomeCatalogo != null && nomeCatalogo.startsWith("file://"))
+						pathProperties = nomeCatalogo.replace("file:///", "");
+					else {
+						pathProperties = System.getProperty("catalina.base")
+								+ File.separator;
+						if (nomeCatalogo == null)
+							pathProperties += "conf/teca_digitale";
+						else
+							pathProperties += nomeCatalogo;
+					}
+					f = new File(pathProperties);
+					if (f.exists()){
+						Configuration.init(pathProperties);
+					}
 				}
-
-				Configuration.init(pathProperties);
 			}
 		} catch (ConfigurationException e) {
 			throw new ServletException(e.getMessage(), e);

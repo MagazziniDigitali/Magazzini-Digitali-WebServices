@@ -2,6 +2,7 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties version="1.0">
 
+    <entry key="dataSource">/hibernate/MD/SF</entry>
     <!-- Configurazione dell'applicativo Droid -->
     <entry key="path.droid">/Users/massi/bin/droid/droid.sh</entry>
     
@@ -19,7 +20,7 @@
     <!-- Identificativo relativo hai diritti che l'istituto assegna all'oggetto -->
     <entry key="istituto.IBNF1.right.UUID">35dc8f20-e686-11e3-ac10-0800200c9a66-RG</entry>  
     <!-- Indica gli indirizzi IP da cui l'istituto è abilitato ad accedere al Gestionale -->
-    <entry key="istituto.IBNF1.ipAuthentication">192.168.5.8,192.168.5.9</entry>
+    <entry key="istituto.IBNF1.ipAuthentication">192.168.5.8,192.168.5.9,10.0.*.*</entry>
     
 
     <!-- Configurazione demone per la pubblicazione -->
@@ -34,7 +35,7 @@
     <entry key="demoni.Publish.solr.clientTimeOut">100000</entry>
     <entry key="demoni.Publish.mets.xslTransf.dc">/Users/massi/Desktop/Lavoro/Sorgenti/Bncf/MagazziniDigitaliDemoni/MagazziniDigitaliDemoni/configurazione/xsl/Mets2MD.xsl</entry>
     <!-- Numero di Thread contemporanei che verranno aperti -->
-    <entry key="demoni.Publish.numberThread">2</entry>
+    <entry key="demoni.Publish.numberThread">20</entry>
     <!-- Path Temporanea dove devomprimere i file Tar -->
     <entry key="demoni.Publish.tmpPath">/mnt/Tmp</entry>
     <!-- Tempo in Millisecondi di attesa tra un controllo e l'altro -->

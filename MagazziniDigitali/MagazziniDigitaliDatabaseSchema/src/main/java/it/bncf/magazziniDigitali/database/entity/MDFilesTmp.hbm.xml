@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+    
+<!-- Generated 16-lug-2014 20.35.33 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="it.bncf.magazziniDigitali.database.entity.MDFilesTmp" table="MDFilesTmp">
+        <id name="id" type="java.lang.String">
+            <column name="ID" />
+            <generator class="assigned" />
+        </id>
+        <property name="idIstituto" type="java.lang.String">
+            <column name="ID_ISTITUTO" />
+        </property>
+        <property name="nomeFile" type="java.lang.String">
+            <column name="NOMEFILE" />
+        </property>
+        <property name="sha1" type="java.lang.String">
+            <column name="SHA1" />
+        </property>
+        <property name="nomeFileMod" type="java.sql.Timestamp">
+            <column name="NOMEFILE_MOD" />
+        </property>
+        <property name="stato" type="java.lang.String">
+            <column name="STATO" />
+        </property>
+        <property name="trasfDataStart" type="java.sql.Timestamp">
+            <column name="TRASF_DATASTART" />
+        </property>
+        <property name="trasfDataEnd" type="java.sql.Timestamp">
+            <column name="TRASF_DATAEND" />
+        </property>
+        <property name="trasfEsito" type="boolean">
+            <column name="TRASF_ESITO" />
+        </property>
+        <property name="validDataStart" type="java.sql.Timestamp">
+            <column name="VALID_DATASTART" />
+        </property>
+        <property name="validDataEnd" type="java.sql.Timestamp">
+            <column name="VALID_DATAEND" />
+        </property>
+        <property name="validEsito" type="boolean">
+            <column name="VALID_ESITO" />
+        </property>
+        <property name="xmlMimeType" type="java.lang.String">
+            <column name="XMLMIMETYPE" />
+        </property>
+        <property name="decompDataStart" type="java.sql.Timestamp">
+            <column name="DECOMP_DATASTART" />
+        </property>
+        <property name="decompDataEnd" type="java.sql.Timestamp">
+            <column name="DECOMP_DATAEND" />
+        </property>
+        <property name="decompEsito" type="boolean">
+            <column name="DECOMP_ESITO" />
+        </property>
+        <property name="publishDataStart" type="java.sql.Timestamp">
+            <column name="PUBLISH_DATASTART" />
+        </property>
+        <property name="publishDataEnd" type="java.sql.Timestamp">
+            <column name="PUBLISH_DATAEND" />
+        </property>
+        <property name="publishEsito" type="boolean">
+            <column name="PUBLISH_ESITO" />
+        </property>
+        <property name="copyPremisDataStart" type="java.sql.Timestamp">
+            <column name="COPYPREMIS_DATASTART" />
+        </property>
+        <property name="copyPremisDataEnd" type="java.sql.Timestamp">
+            <column name="COPYPREMIS_DATAEND" />
+        </property>
+        <property name="copyPremisEsito" type="boolean">
+            <column name="COPYPREMIS_ESITO" />
+        </property>
+        <property name="moveFileDataStart" type="java.sql.Timestamp">
+            <column name="MOVEFILE_DATASTART" />
+        </property>
+        <property name="moveFileDataEnd" type="java.sql.Timestamp">
+            <column name="MOVEFILE_DATAEND" />
+        </property>
+        <property name="moveFileEsito" type="boolean">
+            <column name="MOVEFILE_ESITO" />
+        </property>
+        <property name="deleteLocalData" type="java.sql.Timestamp">
+            <column name="DELETELOCAL_DATA" />
+        </property>
+        <property name="deleteLocalEsito" type="boolean">
+            <column name="DELETELOCAL_ESITO" />
+        </property>
+        <property name="premisFile" type="java.lang.String">
+            <column name="PREMIS_FILE" />
+        </property>
+    </class>
+</hibernate-mapping>

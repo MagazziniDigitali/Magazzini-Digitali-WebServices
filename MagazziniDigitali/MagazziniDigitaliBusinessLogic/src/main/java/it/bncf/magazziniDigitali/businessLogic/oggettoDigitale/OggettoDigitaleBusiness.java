@@ -1,13 +1,12 @@
 package it.bncf.magazziniDigitali.businessLogic.oggettoDigitale;
 
-import it.bncf.magazzimiDigitali.database.entity.MDFilesTmp;
-import it.bncf.magazzimiDigitali.databaseSchema.sqlite.MDFilesTmpSqlite;
-import it.bncf.magazzimiDigitali.databaseSchema.sqlite.SqliteCore;
+import it.bncf.magazziniDigitali.businessLogic.filesTmp.MDFilesTmpBusiness;
 import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.implement.OggettoDigitalePublish;
 import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.validate.ArchiveMD;
 import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.validate.ValidateFile;
+import it.bncf.magazziniDigitali.database.dao.MDFilesTmpDAO;
+import it.bncf.magazziniDigitali.database.entity.MDFilesTmp;
 import it.bncf.magazziniDigitali.solr.AddDocumentMD;
-import it.bncf.magazziniDigitali.utils.DateBusiness;
 import it.bncf.magazziniDigitali.utils.Record;
 import it.magazziniDigitali.xsd.premis.PremisXsd;
 import it.magazziniDigitali.xsd.premis.exception.PremisXsdException;
@@ -18,6 +17,8 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -30,6 +31,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import javax.naming.NamingException;
+
 import mx.randalf.archive.info.DigestType;
 import mx.randalf.archive.info.Xmltype;
 import mx.randalf.configuration.Configuration;
@@ -40,14 +43,20 @@ import mx.randalf.xsd.exception.XsdException;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.hibernate.HibernateException;
+import org.springframework.orm.hibernate3.HibernateTemplate;
 
 public class OggettoDigitaleBusiness {
 
+
+	protected HibernateTemplate hibernateTemplate;
+	
 	public Logger log = Logger.getLogger(getClass());
 
-	private Vector<Record> records = null;
+//	private Vector<Record> records = null;
 
-	public OggettoDigitaleBusiness() {
+	public OggettoDigitaleBusiness(HibernateTemplate hibernateTemplate) {
+		this.hibernateTemplate = hibernateTemplate;
 	}
 
 	/**
@@ -63,57 +72,44 @@ public class OggettoDigitaleBusiness {
 	 * @throws ConfigurationException
 	 */
 	public TreeMap<String, Integer> findStatus(String idIstituto)
-			throws FileNotFoundException, ClassNotFoundException, SQLException,
-			ConfigurationException {
-		MDFilesTmpSqlite mdFileTmp = null;
+			throws HibernateException, NamingException, ConfigurationException {
+		MDFilesTmpBusiness mdFileTmp = null;
 		TreeMap<String, Integer> ris = null;
 
 		try {
-			mdFileTmp = new MDFilesTmpSqlite();
+			mdFileTmp = new MDFilesTmpBusiness(hibernateTemplate);
 			ris = new TreeMap<String, Integer>(
 					mdFileTmp.findCountByIstituto(idIstituto));
-		} catch (FileNotFoundException e) {
+		} catch (HibernateException e) {
 			throw e;
-		} catch (ClassNotFoundException e) {
-			throw e;
-		} catch (SQLException e) {
+		} catch (NamingException e) {
 			throw e;
 		} catch (ConfigurationException e) {
 			throw e;
-		} finally {
-			if (mdFileTmp != null) {
-				mdFileTmp.disconnect();
-			}
 		}
 		return ris;
 	}
 
 	public Vector<Record> findByNomeFile(String idIstituto, String nomeFile)
 			throws SQLException {
-		MDFilesTmpSqlite mdFileTmp = null;
-		List<MDFilesTmp> records = null;
+		MDFilesTmpBusiness mdFileTmp = null;
+		Vector<Record> records = null;
 
 		try {
-			mdFileTmp = new MDFilesTmpSqlite();
-			records = mdFileTmp.findByNomeFile(idIstituto, nomeFile);
-			if (records!= null){
-				for (MDFilesTmp ai : records) {
-					addRecord(ai);
-				}
-			}
-		} catch (FileNotFoundException e) {
-			log.error(e.getMessage(), e);
-			throw new SQLException(e.getMessage(), e);
-		} catch (ClassNotFoundException e) {
-			log.error(e.getMessage(), e);
-			throw new SQLException(e.getMessage(), e);
-		} catch (ConfigurationException e) {
+			mdFileTmp = new MDFilesTmpBusiness(hibernateTemplate);
+			records = mdFileTmp.findToRecord(null, idIstituto, nomeFile, null, null);
+//			if (records!= null){
+//				for (MDFilesTmp ai : records) {
+//					addRecord(ai);
+//				}
+//			}
+		} catch (ConfigurationException | HibernateException | NamingException e) {
 			log.error(e.getMessage(), e);
 			throw new SQLException(e.getMessage(), e);
 		}
-		return this.records;
+		return records;
 	}
-
+/*
 	protected void addRecord(MDFilesTmp dati) throws ConfigurationException {
 
 		try {
@@ -202,7 +198,7 @@ public class OggettoDigitaleBusiness {
 
 		return record;
 	}
-
+*/
 	/**
 	 * Metodo utilizzato per verificare lo stato dell'OggettoDigitale
 	 * 
@@ -217,16 +213,17 @@ public class OggettoDigitaleBusiness {
 	 */
 	public Hashtable<String, String> checkStatus(String sha1)
 			throws FileNotFoundException, ClassNotFoundException, SQLException,
-			ConfigurationException, SolrException, SolrServerException {
-		MDFilesTmpSqlite mdFileTmp = null;
+			ConfigurationException, SolrException, SolrServerException,
+			HibernateException, NamingException {
+		MDFilesTmpBusiness mdFileTmp = null;
 		List<MDFilesTmp> records = null;
 		Hashtable<String, String> result = null;
 		AddDocumentMD admd = null;
 		QueryResponse qr = null;
 
 		try {
-			mdFileTmp = new MDFilesTmpSqlite();
-			records = mdFileTmp.findBySha1(sha1);
+			mdFileTmp = new MDFilesTmpBusiness(hibernateTemplate);
+			records = mdFileTmp.find(null, null, null, null, sha1);
 
 			if (records != null) {
 				for (int x = 0; x < records.size(); x++) {
@@ -237,25 +234,6 @@ public class OggettoDigitaleBusiness {
 						result.put("id", records.get(x).getId());
 						result.put("stato", records.get(x).getStato());
 
-						// if
-						// (records.get(x).getStato().startsWith(MDFilesTmpSqlite.ERROR)){
-						// result.put("stato", "ERROR");
-						// }else if (records.get(x).getPublishDataEnd() != null)
-						// {
-						// result.put("stato", "ARCHIVIATO");
-						// } else if (records.get(x).getValidDataEnd() != null)
-						// {
-						// result.put("stato", "CHECKARCHIVIAZIONE");
-						// } else if (records.get(x).getValidDataStart() !=
-						// null) {
-						// result.put("stato", "CHECKARCHIVIAZIONE");
-						// } else if (records.get(x).getTrasfDataEnd() != null)
-						// {
-						// result.put("stato", "FINETRASF");
-						// } else if (records.get(x).getTrasfDataStart() !=
-						// null) {
-						// result.put("stato", "INITTRASF");
-						// }
 						break;
 					}
 				}
@@ -278,15 +256,9 @@ public class OggettoDigitaleBusiness {
 					}
 					result.put("id", ((String) qr.getResults().get(0)
 							.getFieldValue("id")).substring(0, 36));
-					result.put("stato", MDFilesTmpSqlite.FINEPUBLISH);
+					result.put("stato", MDFilesTmpDAO.FINEPUBLISH);
 				}
 			}
-		} catch (FileNotFoundException e) {
-			throw e;
-		} catch (ClassNotFoundException e) {
-			throw e;
-		} catch (SQLException e) {
-			throw e;
 		} catch (ConfigurationException e) {
 			throw e;
 		} catch (NumberFormatException e) {
@@ -295,13 +267,10 @@ public class OggettoDigitaleBusiness {
 			throw e;
 		} catch (SolrServerException e) {
 			throw e;
-		} finally {
-			if (mdFileTmp != null) {
-				mdFileTmp.disconnect();
-			}
-			if (admd != null) {
-				admd.close();
-			}
+		} catch (HibernateException e) {
+			throw e;
+		} catch (NamingException e) {
+			throw e;
 		}
 		return result;
 	}
@@ -324,33 +293,22 @@ public class OggettoDigitaleBusiness {
 	 * @throws SQLException
 	 *             Eccezione SQL
 	 * @throws ConfigurationException
-	 */
 	public String initSend(String idIstituto, String nomeFile, String sha1,
-			Calendar nomeFileMod) throws FileNotFoundException,
-			ClassNotFoundException, SQLException, ConfigurationException {
-		MDFilesTmpSqlite mdFileTmp = null;
+			Calendar nomeFileMod) throws SQLException {
+		MDFilesTmpBusiness mdFileTmp = null;
 		String id = null;
 
 		try {
-			mdFileTmp = new MDFilesTmpSqlite();
+			mdFileTmp = new MDFilesTmpBusiness(hibernateTemplate);
 
 			id = mdFileTmp
 					.insertNewRec(idIstituto, nomeFile, sha1, nomeFileMod);
-		} catch (FileNotFoundException e) {
-			throw e;
-		} catch (ClassNotFoundException e) {
-			throw e;
 		} catch (SQLException e) {
 			throw e;
-		} catch (ConfigurationException e) {
-			throw e;
-		} finally {
-			if (mdFileTmp != null) {
-				mdFileTmp.disconnect();
-			}
 		}
 		return id;
 	}
+	 */
 
 	/**
 	 * Metodo utilizzato per la gestione dell'inserimento dell'informazioni
@@ -370,14 +328,13 @@ public class OggettoDigitaleBusiness {
 	 * @throws SQLException
 	 *             Eccezione SQL
 	 * @throws ConfigurationException
-	 */
 	public void endSend(String id, boolean esito, String msgError)
 			throws FileNotFoundException, ClassNotFoundException, SQLException,
 			ConfigurationException {
-		MDFilesTmpSqlite mdFileTmp = null;
+		MDFilesTmpDAO mdFileTmp = null;
 
 		try {
-			mdFileTmp = new MDFilesTmpSqlite();
+			mdFileTmp = new MDFilesTmpDAO();
 
 			mdFileTmp.updatEndSend(id, esito, (msgError == null ? null
 					: new String[] { msgError }));
@@ -395,6 +352,7 @@ public class OggettoDigitaleBusiness {
 			}
 		}
 	}
+	 */
 
 	/**
 	 * Metodo utilizzato per la gestione dell'inserimento dell'informazioni
@@ -414,14 +372,13 @@ public class OggettoDigitaleBusiness {
 	 * @throws SQLException
 	 *             Eccezione SQL
 	 * @throws ConfigurationException
-	 */
 	public void confirmDel(String id, boolean esito, String msgError)
 			throws FileNotFoundException, ClassNotFoundException, SQLException,
 			ConfigurationException {
-		MDFilesTmpSqlite mdFileTmp = null;
+		MDFilesTmpDAO mdFileTmp = null;
 
 		try {
-			mdFileTmp = new MDFilesTmpSqlite();
+			mdFileTmp = new MDFilesTmpDAO();
 
 			mdFileTmp.confirmDel(id, esito, (msgError == null ? null
 					: new String[] { msgError }));
@@ -439,16 +396,18 @@ public class OggettoDigitaleBusiness {
 			}
 		}
 	}
+	 */
 
+	/*
 	public void indexer() {
-		MDFilesTmpSqlite mdFileTmp = null;
+		MDFilesTmpDAO mdFileTmp = null;
 		List<MDFilesTmp> rs = null;
 
 		try {
-			mdFileTmp = new MDFilesTmpSqlite();
+			mdFileTmp = new MDFilesTmpDAO();
 
 			rs = mdFileTmp.findByStatus(new String[] {
-					MDFilesTmpSqlite.FINEVALID, MDFilesTmpSqlite.INITPUBLISH });
+					MDFilesTmpDAO.FINEVALID, MDFilesTmpDAO.INITPUBLISH });
 			if (rs != null && rs.size() > 0) {
 				for (int x = 0; x < rs.size(); x++) {
 
@@ -472,10 +431,10 @@ public class OggettoDigitaleBusiness {
 			}
 		}
 	}
-
+*/
 	public void validate(String application, boolean testMode,
 			Logger logValidate) {
-		MDFilesTmpSqlite mdFileTmp = null;
+		MDFilesTmpBusiness mdFileTmp = null;
 		List<MDFilesTmp> rs = null;
 		String fileObj = null;
 		File fObj = null;
@@ -491,15 +450,17 @@ public class OggettoDigitaleBusiness {
 		String objectIdentifierMaster = null;
 		String eventDetailDecomp = null;
 		String fPremis = null;
+		DateFormat df = null;
 
 		try {
+			df = new SimpleDateFormat("dd/MM/yyyy HH:mm:SS");
 			logValidate.debug("Ricerco oggetti da validare");
-			mdFileTmp = new MDFilesTmpSqlite();
+			mdFileTmp = new MDFilesTmpBusiness(hibernateTemplate);
 
 			// Eseguo la ricerca di tutti i files che hanno finito il
 			// trasferimento oppure che risultano in fase di validazione
-			rs = mdFileTmp.findByStatus(new String[] {
-					MDFilesTmpSqlite.FINETRASF, MDFilesTmpSqlite.INITVALID });
+			rs = mdFileTmp.find(null, null, null, new String[] {
+					MDFilesTmpDAO.FINETRASF, MDFilesTmpDAO.INITVALID }, null);
 			if (rs != null && rs.size() > 0) {
 				logValidate.info("Numero oggetti da validare [" + rs.size()
 						+ "]");
@@ -531,7 +492,7 @@ public class OggettoDigitaleBusiness {
 						if (fObj.exists()) {
 							// il file Esiste
 							if (rs.get(x).getStato()
-									.equals(MDFilesTmpSqlite.FINETRASF)) {
+									.equals(MDFilesTmpDAO.FINETRASF)) {
 								logValidate
 										.info("Inizio la validazione del file ["
 												+ fObj.getAbsolutePath() + "]");
@@ -541,8 +502,9 @@ public class OggettoDigitaleBusiness {
 								logValidate
 										.info("Continuo la validazione del file ["
 												+ fObj.getAbsolutePath() + "]");
-								start = convertGregorianCalendar(rs.get(x)
-										.getValidDataStart());
+								start = new GregorianCalendar();
+								start.setTimeInMillis(rs.get(x)
+										.getValidDataStart().getTime());
 							}
 							validate.check(fObj);
 							premis = new PremisXsd();
@@ -558,23 +520,23 @@ public class OggettoDigitaleBusiness {
 								stopDecomp = validate.getGcUnzipStop();
 							} else {
 								if (rs.get(x).getDecompDataStart() != null) {
-									startDecomp = convertGregorianCalendar(rs.get(x)
-											.getDecompDataStart());
+									startDecomp = new GregorianCalendar();
+									startDecomp.setTimeInMillis(rs.get(x)
+											.getDecompDataStart().getTime());
 								}
 								if (rs.get(x).getDecompDataEnd() != null) {
-									stopDecomp = convertGregorianCalendar(rs.get(x)
-											.getDecompDataEnd());
+									stopDecomp = new GregorianCalendar();
+									stopDecomp.setTimeInMillis(rs.get(x)
+											.getDecompDataEnd().getTime());
 								}
 							}
 							if (startDecomp != null || stopDecomp != null) {
 								logValidate.info("Tempo per Unzip del file da "
 										+ (startDecomp == null ? "none"
-												: SqliteCore
-														.convert(startDecomp))
+												: df.format(startDecomp.getTime()))
 										+ " a "
 										+ (stopDecomp == null ? "none"
-												: SqliteCore
-														.convert(stopDecomp)));
+												: df.format(stopDecomp.getTime())));
 							}
 							if (validate.getArchive() != null) {
 								logValidate.info("Analizzo gli archivi");
@@ -631,9 +593,9 @@ public class OggettoDigitaleBusiness {
 							filePremis = new File(
 									Configuration.getValue("path.premis")
 											+ File.separator + fPremis);
-							premis.addEvent("send", convertGregorianCalendar(rs.get(x)
-									.getTrasfDataStart()), convertGregorianCalendar(rs
-									.get(x).getTrasfDataEnd()), null, "OK",
+							premis.addEvent("send", rs.get(x)
+									.getTrasfDataStart(), rs
+									.get(x).getTrasfDataEnd(), null, "OK",
 									null, Configuration.getValue("istituto."
 											+ rs.get(x).getIdIstituto()
 											+ ".UUID"), Configuration
@@ -661,12 +623,10 @@ public class OggettoDigitaleBusiness {
 									logValidate
 											.info("Tempo di decompressione da "
 													+ (startDecomp == null ? "none"
-															: SqliteCore
-																	.convert(startDecomp))
+															: df.format(startDecomp.getTime()))
 													+ " a "
 													+ (stopDecomp == null ? "none"
-															: SqliteCore
-																	.convert(stopDecomp)));
+															: df.format(stopDecomp.getTime())));
 									premis.addEvent(
 											"decompress",
 											startDecomp,
@@ -737,12 +697,10 @@ public class OggettoDigitaleBusiness {
 										logValidate
 												.info("Tempo di validazione da "
 														+ (start == null ? "none"
-																: SqliteCore
-																		.convert(start))
+																: df.format(start.getTime()))
 														+ " a "
 														+ (stop == null ? "none"
-																: SqliteCore
-																		.convert(stop)));
+																: df.format(stop.getTime())));
 									}
 								}
 							}
@@ -801,24 +759,14 @@ public class OggettoDigitaleBusiness {
 			} else {
 				logValidate.debug("Nessun oggetto da validare ");
 			}
-		} catch (FileNotFoundException e) {
-			log.error(e.getMessage(), e);
-		} catch (ClassNotFoundException e) {
-			log.error(e.getMessage(), e);
 		} catch (SQLException e) {
 			log.error(e.getMessage(), e);
 		} catch (ConfigurationException e) {
 			log.error(e.getMessage(), e);
-		} finally {
-			try {
-				if (mdFileTmp != null) {
-					mdFileTmp.disconnect();
-				}
-			} catch (SQLException e) {
-				log.error(e.getMessage(), e);
-			} finally {
-				logValidate.debug("Fine ciclo di validazione");
-			}
+		} catch (HibernateException e) {
+			log.error(e.getMessage(), e);
+		} catch (NamingException e) {
+			log.error(e.getMessage(), e);
 		}
 	}
 
@@ -940,7 +888,7 @@ public class OggettoDigitaleBusiness {
 	 * @param application
 	 */
 	public void publish(String application, boolean testMode, Logger logPublish) {
-		MDFilesTmpSqlite mdFileTmp = null;
+		MDFilesTmpBusiness mdFileTmp = null;
 		List<MDFilesTmp> rs = null;
 
 		List<Future<Boolean>> futuresList = null;
@@ -950,9 +898,9 @@ public class OggettoDigitaleBusiness {
 
 		try {
 			logPublish.debug("Ricerco oggetti da Pubblicare");
-			mdFileTmp = new MDFilesTmpSqlite();
-			rs = mdFileTmp.findByStatus(new String[] {
-					MDFilesTmpSqlite.FINEVALID, MDFilesTmpSqlite.INITPUBLISH });
+			mdFileTmp = new MDFilesTmpBusiness(hibernateTemplate);
+			rs = mdFileTmp.find(null, null, null, new String[] {
+					MDFilesTmpDAO.FINEVALID, MDFilesTmpDAO.INITPUBLISH }, null);
 
 			if (rs != null && rs.size() > 0) {
 				logPublish.info("Ci sono " + rs.size()
@@ -985,24 +933,14 @@ public class OggettoDigitaleBusiness {
 			} else {
 				logPublish.debug("Nessun oggetti da Pubblicare");
 			}
-		} catch (FileNotFoundException e) {
-			log.error(e.getMessage(), e);
-		} catch (ClassNotFoundException e) {
-			log.error(e.getMessage(), e);
-		} catch (SQLException e) {
-			log.error(e.getMessage(), e);
 		} catch (ConfigurationException e) {
 			log.error(e.getMessage(), e);
 		} catch (InterruptedException e) {
 			log.error(e.getMessage(), e);
-		} finally {
-			try {
-				if (mdFileTmp != null) {
-					mdFileTmp.disconnect();
-				}
-			} catch (SQLException e) {
-				log.error(e.getMessage(), e);
-			}
+		} catch (HibernateException e) {
+			log.error(e.getMessage(), e);
+		} catch (NamingException e) {
+			log.error(e.getMessage(), e);
 		}
 	}
 

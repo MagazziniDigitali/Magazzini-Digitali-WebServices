@@ -1,34 +1,35 @@
 /**
  * 
  */
-package it.bncf.magazzimiDigitali.databaseSchema.sqlite;
+package it.bncf.magazziniDigitali.database.dao;
 
-import it.bncf.magazzimiDigitali.database.entity.MDFilesTmp;
-import it.bncf.magazzimiDigitali.database.entity.MDFilesTmpError;
+import it.bncf.magazziniDigitali.database.entity.MDFilesTmp;
 
 import java.io.FileNotFoundException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.UUID;
-import java.util.Vector;
 
-import org.apache.log4j.Logger;
+import javax.naming.NamingException;
 
-import mx.randalf.configuration.Configuration;
 import mx.randalf.configuration.exception.ConfigurationException;
+import mx.randalf.hibernate.GenericHibernateDAO;
+
+import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.ProjectionList;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.orm.hibernate3.HibernateTemplate;
 
 /**
  * @author massi
  *
  */
-public class MDFilesTmpSqlite extends SqliteCore {
+public class MDFilesTmpDAO extends GenericHibernateDAO<MDFilesTmp, String> {
 
-	private Logger log = Logger.getLogger(getClass());
+//	private Logger log = Logger.getLogger(getClass());
 
 	/**
 	 * Stato Inizio Trasferimento da Client verso Magazzini Digitali
@@ -107,68 +108,52 @@ public class MDFilesTmpSqlite extends SqliteCore {
 	 * @throws SQLException
 	 * @throws ConfigurationException 
 	 */
-	public MDFilesTmpSqlite() throws FileNotFoundException,
-			ClassNotFoundException, SQLException, ConfigurationException {
-		super(Configuration.getValue("db.MDFilestmp"));
+	public MDFilesTmpDAO(HibernateTemplate hibernateTemplate) {
+		super(hibernateTemplate);
 	}
 
-	/**
-	 * @see it.bncf.magazzimiDigitali.databaseSchema.sqlite.SqliteCore#initDb()
-	 */
-	@Override
-	protected void initDb() throws SQLException {
-		Statement stmt = null;
-		String sql  = null;
+	@SuppressWarnings("unchecked")
+	public List<MDFilesTmp> find(String idIstituto,
+			String nomeFile, String[] stato, String sha1,
+			List<Order> orders) throws NamingException, HibernateException,
+			ConfigurationException {
+		Criteria criteria = null;
+		List<MDFilesTmp> result = null;
 
 		try {
-			stmt = conn.createStatement();
-			sql = "CREATE TABLE MDFilesTmp " +
-			               "(ID VARCHAR(36) PRIMARY KEY     NOT NULL," +
-			               " ID_ISTITUTO VARCHAR(50) NOT NULL, " + 
-			               " NOMEFILE VARCHAR(255) NOT NULL, " + 
-			               " SHA1 VARCHAR(50) NOT NULL, " + 
-			               " XMLMIMETYPE VARCHAR(10), " + 
-			               " NOMEFILE_MOD TIMESTAMP NOT NULL," +
-			               " STATO VARCHAR(10) NOT NULL," +
-			               " TRASF_DATASTART TIMESTAMP NOT NULL," +
-			               " TRASF_DATAEND TIMESTAMP," +
-			               " TRASF_ESITO BOOLEAN, " +
-			               " VALID_DATASTART TIMESTAMP," +
-			               " VALID_DATAEND TIMESTAMP," +
-			               " VALID_ESITO BOOLEAN, " +
-			               " DECOMP_DATASTART TIMESTAMP," +
-			               " DECOMP_DATAEND TIMESTAMP," +
-			               " DECOMP_ESITO BOOLEAN, " +
-			               " PUBLISH_DATASTART TIMESTAMP," +
-			               " PUBLISH_DATAEND TIMESTAMP," +
-			               " PUBLISH_ESITO BOOLEAN, " +
-			               " COPYPREMIS_DATASTART TIMESTAMP," +
-			               " COPYPREMIS_DATAEND TIMESTAMP," +
-			               " COPYPREMIS_ESITO BOOLEAN, " +
-			               " MOVEFILE_DATASTART TIMESTAMP," +
-			               " MOVEFILE_DATAEND TIMESTAMP," +
-			               " MOVEFILE_ESITO BOOLEAN, " +
-			               " DELETELOCAL_DATA TIMESTAMP," +
-			               " DELETELOCAL_ESITO BOOLEAN, " +
-			               " PREMIS_FILE VARCHAR(100)"+
-			               " ); "+
-			       "CREATE INDEX MDFilesTmp01 on MDFilesTmp(ID_ISTITUTO); "+
-			       "CREATE INDEX MDFilesTmp02 on MDFilesTmp(SHA1); "
-			               ;
-			sql += "CREATE TABLE MDFilesTmpError " +
-		               "(ID VARCHAR(36) PRIMARY KEY     NOT NULL," +
-		               " ID_MDFILESTMP VARCHAR(36) NOT NULL, " + 
-		               " DATA_INS TIMESTAMP NOT NULL," +
-		               " TYPE VARCHAR(10) NOT NULL, " + 
-		               " MSGERROR VARCHAR(500) NOT NULL "+
-		               " ); "+
-		       "CREATE INDEX MDFilesTmpError01 on MDFilesTmpError(ID_MDFILESTMP); "
-					;
-			stmt.executeUpdate(sql);
-			stmt.close();
-		} catch (SQLException e) {
+			beginTransaction();
+			criteria = this.createCriteria();
+			if (idIstituto != null) {
+				criteria.add(Restrictions.eq("idIstituto", idIstituto));
+			}
+			if (sha1 != null) {
+				criteria.add(Restrictions.eq("sha1", sha1));
+			}
+			if (nomeFile != null) {
+				criteria.add(Restrictions.ilike("nomeFile", nomeFile+"%"));
+			}
+			if (stato != null) {
+				criteria.add(Restrictions.in("stato", stato));
+			}
+			if (orders != null) {
+				for (Order order : orders) {
+					criteria.addOrder(order);
+				}
+			}
+			paging(criteria);
+			result = criteria.list();
+			commitTransaction();
+		} catch (HibernateException e) {
+			rollbackTransaction();
+			throw e;
+		} catch (NamingException e) {
+			rollbackTransaction();
+			throw e;
+		} catch (ConfigurationException e) {
+			rollbackTransaction();
 			throw e;
 		}
+		return result;
 	}
 
 	/**
@@ -176,8 +161,8 @@ public class MDFilesTmpSqlite extends SqliteCore {
 	 * 
 	 * @param status
 	 * @return
+	 * @throws NamingException 
 	 * @throws SQLException
-	 */
 	public List<MDFilesTmp> findByStatus(String[] status) throws SQLException{
 		Vector<MDFilesTmp> res = null;
 		Statement stmt = null;
@@ -209,7 +194,9 @@ public class MDFilesTmpSqlite extends SqliteCore {
 		}
 	    return res;
 	}
+	 */
 
+	/*
 	public List<MDFilesTmp> findByNomeFile(String idIstituto,
 			String nomeFile) throws SQLException{
 		Vector<MDFilesTmp> res = null;
@@ -239,7 +226,54 @@ public class MDFilesTmpSqlite extends SqliteCore {
 		}
 	    return res;
 	}
+*/
 
+	@SuppressWarnings("rawtypes")
+	public Hashtable<String, Integer> findCountByIstituto(String idIstituto) 
+			throws NamingException, HibernateException, ConfigurationException {
+		Criteria criteria = null;
+		Hashtable<String, Integer> ris= null;
+		List rs = null;
+		Object[] row;
+		ProjectionList projectionList = null;
+
+		try {
+			ris = new Hashtable<String, Integer>();
+			beginTransaction();
+			criteria = this.createCriteria();
+			
+			
+			criteria.add(Restrictions.eq("idIstituto", idIstituto));
+			
+			projectionList = Projections.projectionList();
+			projectionList.add(Projections.groupProperty("stato"));
+			projectionList.add(Projections.count("stato"));
+			criteria.setProjection(projectionList);		
+			
+			rs = criteria.list();
+
+			if (rs !=null && rs.size()>0){
+				for(int x=0; x<rs.size(); x++){
+					rs.get(x);
+					row = (Object[]) rs.get(x);
+					ris.put((String)row[0], (Integer)row[1]);
+				}
+			}
+			commitTransaction();
+		} catch (HibernateException e) {
+			rollbackTransaction();
+			throw e;
+		} catch (NamingException e) {
+			rollbackTransaction();
+			throw e;
+		} catch (ConfigurationException e) {
+			rollbackTransaction();
+			throw e;
+		}
+		return ris;
+	}
+
+	/*
 	public Hashtable<String, Integer> findCountByIstituto(String Istituto) throws SQLException{
 		Hashtable<String, Integer> ris = null;
 		Statement stmt = null;
@@ -273,6 +307,7 @@ public class MDFilesTmpSqlite extends SqliteCore {
 		}
 		return ris;
 	}
+	*/
 
 	/**
 	 * Metodo utilizzato per la ricerca tramite lo Sha1
@@ -280,7 +315,6 @@ public class MDFilesTmpSqlite extends SqliteCore {
 	 * @param sha1
 	 * @return
 	 * @throws SQLException
-	 */
 	public MDFilesTmp findByID(String id) throws SQLException{
 		MDFilesTmp res = null;
 		Statement stmt = null;
@@ -308,6 +342,7 @@ public class MDFilesTmpSqlite extends SqliteCore {
 		}
 	    return res;
 	}
+	 */
 
 	/**
 	 * Metodo utilizzato per la ricerca tramite lo Sha1
@@ -315,7 +350,6 @@ public class MDFilesTmpSqlite extends SqliteCore {
 	 * @param sha1
 	 * @return
 	 * @throws SQLException
-	 */
 	public List<MDFilesTmp> findBySha1(String sha1) throws SQLException{
 		Vector<MDFilesTmp> res = null;
 		Statement stmt = null;
@@ -341,13 +375,13 @@ public class MDFilesTmpSqlite extends SqliteCore {
 		}
 	    return res;
 	}
+	 */
 
 	/**
 	 * Questo metodo viene utilzzato per convertore il RecordSet in lista di tipo MDFilesTmp
 	 * @param rs
 	 * @return
 	 * @throws SQLException 
-	 */
 	private List<MDFilesTmp> convert(ResultSet rs) throws SQLException{
 		Vector<MDFilesTmp> res = null;
 
@@ -363,13 +397,13 @@ public class MDFilesTmpSqlite extends SqliteCore {
 		}
 		return res;
 	}
+	 */
 
 	/**
 	 * Questo metodo viene utilzzato per convertore il RecordSet in lista di tipo MDFilesTmp
 	 * @param rs
 	 * @return
 	 * @throws SQLException 
-	 */
 	private MDFilesTmp convertRecord(ResultSet rs) throws SQLException{
 		MDFilesTmp record = null;
 
@@ -456,13 +490,13 @@ public class MDFilesTmpSqlite extends SqliteCore {
 		}
 		return record;
 	}
+	 */
 
 	/**
 	 * Questo metodo viene utilizzato per ricavare la lista dei messaggi di errore
 	 * @param id
 	 * @return
 	 * @throws SQLException
-	 */
 	private void findErrorById(String id, MDFilesTmp record) throws SQLException{
 		MDFilesTmpError error = null;
 		Statement stmt = null;
@@ -495,6 +529,7 @@ public class MDFilesTmpSqlite extends SqliteCore {
 			}
 		}
 	}
+	 */
 	
 	/**
 	 * Metodo utilizzato per l'inserimento di un nuovo record nella tabella
@@ -505,7 +540,6 @@ public class MDFilesTmpSqlite extends SqliteCore {
 	 * @param nomeFileMod Data dell'ultima modifica del file originale
 	 * @return Identificativo dell'oggetto digitale
 	 * @throws SQLException Eccezione SQL
-	 */
 	private String insertNewError(String idMdFileTmp, String type, String msgError) throws SQLException{
 		Statement stmt = null;
 		String sql = null;
@@ -537,6 +571,7 @@ public class MDFilesTmpSqlite extends SqliteCore {
 		}
 		return id;
 	}
+	 */
 
 	/**
 	 * Metodo utilizzato per l'inserimento di un nuovo record nella tabella
@@ -547,7 +582,6 @@ public class MDFilesTmpSqlite extends SqliteCore {
 	 * @param nomeFileMod Data dell'ultima modifica del file originale
 	 * @return Identificativo dell'oggetto digitale
 	 * @throws SQLException Eccezione SQL
-	 */
 	public String insertNewRec(String idIstituto, String nomeFile, String sha1, Calendar nomeFileMod) throws SQLException{
 		Statement stmt = null;
 		String sql = null;
@@ -579,6 +613,7 @@ public class MDFilesTmpSqlite extends SqliteCore {
 		}
 		return id;
 	}
+	 */
 
 	/**
 	 * Metodo utilizzato per indicare la Fine dell'invio dell'oggetto
@@ -586,7 +621,6 @@ public class MDFilesTmpSqlite extends SqliteCore {
 	 * @param esito
 	 * @param msgError
 	 * @throws SQLException
-	 */
 	public void updatEndSend(String id, boolean esito, String[] msgError) throws SQLException{
 		Statement stmt = null;
 		String sql = null;
@@ -621,6 +655,7 @@ public class MDFilesTmpSqlite extends SqliteCore {
 		}
 		
 	}
+	 */
 
 	/**
 	 * Metodo utilizzato per indicare la Fine dell'invio dell'oggetto
@@ -628,7 +663,6 @@ public class MDFilesTmpSqlite extends SqliteCore {
 	 * @param esito
 	 * @param msgError
 	 * @throws SQLException
-	 */
 	public void confirmDel(String id, boolean esito, String[] msgError) throws SQLException{
 		Statement stmt = null;
 		String sql = null;
@@ -662,13 +696,13 @@ public class MDFilesTmpSqlite extends SqliteCore {
 		}
 		
 	}
+	 */
 
 	/**
 	 * Metodo utilizzato per indicare l'inizio della validazione
 	 * 
 	 * @param id
 	 * @throws SQLException
-	 */
 	public GregorianCalendar updateStartValidate(String id) throws SQLException{
 		Statement stmt = null;
 		String sql = null;
@@ -699,13 +733,13 @@ public class MDFilesTmpSqlite extends SqliteCore {
 		}
 		return gc;
 	}
+	 */
 
 	/**
 	 * Metodo utilizzato per indicare l'inizio della validazione
 	 * 
 	 * @param id
 	 * @throws SQLException
-	 */
 	public GregorianCalendar updateStopValidate(String id, String xmlMimeType, boolean esito, String[] msgError, String premisFile) throws SQLException{
 		Statement stmt = null;
 		String sql = null;
@@ -747,13 +781,13 @@ public class MDFilesTmpSqlite extends SqliteCore {
 		}
 		return gc;
 	}
+	 */
 
 	/**
 	 * Metodo utilizzato per indicare l'inizio della validazione
 	 * 
 	 * @param id
 	 * @throws SQLException
-	 */
 	public GregorianCalendar updateStartPublish(String id) throws SQLException{
 		Statement stmt = null;
 		String sql = null;
@@ -784,22 +818,22 @@ public class MDFilesTmpSqlite extends SqliteCore {
 		}
 		return gc;
 	}
+	 */
 
 	/**
 	 * Metodo utilizzato per indicare l'inizio della validazione
 	 * 
 	 * @param id
 	 * @throws SQLException
-	 */
 	public GregorianCalendar updateStopPublish(String id, boolean esito, String[] msgError) throws SQLException{
 		Statement stmt = null;
 		String sql = null;
 		GregorianCalendar gc = null;
-		MDRegistroIngresso regIngresso= null;
+		MDRegistroIngressoDAO regIngresso= null;
 		
 		try {
 			gc = new GregorianCalendar();
-			regIngresso = new MDRegistroIngresso();
+			regIngresso = new MDRegistroIngressoDAO();
 			if (esito){
 				regIngresso.pubblicato(id, gc);
 			}else{
@@ -843,13 +877,13 @@ public class MDFilesTmpSqlite extends SqliteCore {
 		}
 		return gc;
 	}
+	 */
 
 	/**
 	 * Metodo utilizzato per indicare il periodo e l'esito dell'operazione di decompressione
 	 * 
 	 * @param id
 	 * @throws SQLException
-	 */
 	public void updateDecompress(String id, GregorianCalendar compressStart, GregorianCalendar compressStop, boolean esito, String[] msgError) throws SQLException{
 		Statement stmt = null;
 		String sql = null;
@@ -881,20 +915,20 @@ public class MDFilesTmpSqlite extends SqliteCore {
 			}
 		}
 	}
+	 */
 
 	/**
 	 * Metodo utilizzato per indicare il periodo e l'esito della procedura di copia del file premis nello Storage
 	 * 
 	 * @param id
 	 * @throws SQLException
-	 */
 	public void updateCopyPremis(String id, GregorianCalendar copyStart, 
 			GregorianCalendar copyStop, boolean esito, String[] msgError, 
 			String agentDepositor, String agentMachineIngest, String agentSoftwareIngest) throws SQLException{
 		Statement stmt = null;
 		String sql = null;
 		MDFilesTmp rec = null;
-		MDRegistroIngresso regIngresso= null;
+		MDRegistroIngressoDAO regIngresso= null;
 		int containerType = -1;
 		String containerName=null;
 		int pos = 0;
@@ -902,7 +936,7 @@ public class MDFilesTmpSqlite extends SqliteCore {
 		try {
 			rec = findByID(id);
 			if (rec != null){
-				regIngresso = new MDRegistroIngresso();
+				regIngresso = new MDRegistroIngressoDAO();
 				if (rec.getXmlMimeType().equals("mets")){
 					containerType=5;
 				}
@@ -947,20 +981,20 @@ public class MDFilesTmpSqlite extends SqliteCore {
 			}
 		}
 	}
+	 */
 
 	/**
 	 * Metodo utilizzato per indicare il periodo e l'esito dell'operazione di decompressione
 	 * 
 	 * @param id
 	 * @throws SQLException
-	 */
 	public void updateMoveFile(String id, GregorianCalendar moveFileStart, GregorianCalendar moveFileStop, boolean esito, String[] msgError) throws SQLException{
 		Statement stmt = null;
 		String sql = null;
-		MDRegistroIngresso regIngresso= null;
+		MDRegistroIngressoDAO regIngresso= null;
 		
 		try {
-			regIngresso = new MDRegistroIngresso();
+			regIngresso = new MDRegistroIngressoDAO();
 			if (esito){
 				regIngresso.archiviato(id, moveFileStop);
 			}else{
@@ -1001,4 +1035,5 @@ public class MDFilesTmpSqlite extends SqliteCore {
 			}
 		}
 	}
+	 */
 }

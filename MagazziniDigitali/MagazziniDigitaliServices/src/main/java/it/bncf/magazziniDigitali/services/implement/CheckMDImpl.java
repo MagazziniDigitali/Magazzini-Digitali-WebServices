@@ -1,8 +1,8 @@
 package it.bncf.magazziniDigitali.services.implement;
 
-import it.bncf.magazzimiDigitali.databaseSchema.sqlite.MDFilesTmpSqlite;
 import it.bncf.magazziniDigitali.businessLogic.istituto.IstitutoBusiness;
 import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.OggettoDigitaleBusiness;
+import it.bncf.magazziniDigitali.database.dao.MDFilesTmpDAO;
 import it.depositolegale.www.istituto.StatoIstituto_type;
 import it.depositolegale.www.oggettiDigitali.StatoOggettoDigitale_type;
 import it.depositolegale.www.readInfoInput.ReadInfoInput;
@@ -14,15 +14,21 @@ import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.Hashtable;
 
+import javax.naming.NamingException;
+
 import mx.randalf.configuration.exception.ConfigurationException;
+import mx.randalf.solr.exception.SolrException;
 
 import org.apache.log4j.Logger;
+import org.apache.solr.client.solrj.SolrServerException;
+import org.hibernate.HibernateException;
 
 public class CheckMDImpl {
 
 	private static Logger log = Logger.getLogger(CheckMDImpl.class);
 
 	public CheckMDImpl() {
+		System.out.println("wwwww");
 	}
 
     public static ReadInfoOutput checkMDOperation(ReadInfoInput readInfoMsg) throws java.rmi.RemoteException {
@@ -60,22 +66,22 @@ public class CheckMDImpl {
 
 			output.setOggettoDigitale(readInfoMsg.getOggettoDigitale());
 			if (output.getIstituto().getStatoIstituto().equals(StatoIstituto_type.VALIDO)){
-				oggettoDigitaleBusiness = new OggettoDigitaleBusiness();
+				oggettoDigitaleBusiness = new OggettoDigitaleBusiness(null);
 				for (int x=0; x<output.getOggettoDigitale().getDigest().length; x++){
 					try {
 						dati = oggettoDigitaleBusiness.checkStatus(output.getOggettoDigitale().getDigest()[x].getDigestValue());
 						if (dati!= null){
 							output.getOggettoDigitale().setId(dati.get("id"));
 							
-							if(dati.get("stato").equalsIgnoreCase(MDFilesTmpSqlite.FINEPUBLISH)){
+							if(dati.get("stato").equalsIgnoreCase(MDFilesTmpDAO.FINEPUBLISH)){
 								output.getOggettoDigitale().setStatoOggettoDigitale(StatoOggettoDigitale_type.ARCHIVIATO);
-							} else if (dati.get("stato").equalsIgnoreCase(MDFilesTmpSqlite.INITPUBLISH) ||
-									dati.get("stato").equalsIgnoreCase(MDFilesTmpSqlite.FINEVALID) ||
-									dati.get("stato").equalsIgnoreCase(MDFilesTmpSqlite.INITVALID)){
+							} else if (dati.get("stato").equalsIgnoreCase(MDFilesTmpDAO.INITPUBLISH) ||
+									dati.get("stato").equalsIgnoreCase(MDFilesTmpDAO.FINEVALID) ||
+									dati.get("stato").equalsIgnoreCase(MDFilesTmpDAO.INITVALID)){
 								output.getOggettoDigitale().setStatoOggettoDigitale(StatoOggettoDigitale_type.CHECKARCHIVIAZIONE);
-							} else if (dati.get("stato").equalsIgnoreCase(MDFilesTmpSqlite.FINETRASF)){
+							} else if (dati.get("stato").equalsIgnoreCase(MDFilesTmpDAO.FINETRASF)){
 								output.getOggettoDigitale().setStatoOggettoDigitale(StatoOggettoDigitale_type.FINETRASF);
-							} else if (dati.get("stato").equalsIgnoreCase(MDFilesTmpSqlite.INITTRASF)){
+							} else if (dati.get("stato").equalsIgnoreCase(MDFilesTmpDAO.INITTRASF)){
 								output.getOggettoDigitale().setStatoOggettoDigitale(StatoOggettoDigitale_type.INITTRASF);
 							} else {
 								output.getOggettoDigitale().setStatoOggettoDigitale(StatoOggettoDigitale_type.ERROR);
@@ -86,6 +92,14 @@ public class CheckMDImpl {
 					} catch (ClassNotFoundException e) {
 						log.error(e.getMessage(), e);
 					} catch (SQLException e) {
+						log.error(e.getMessage(), e);
+					} catch (SolrException e) {
+						log.error(e.getMessage(), e);
+					} catch (SolrServerException e) {
+						log.error(e.getMessage(), e);
+					} catch (HibernateException e) {
+						log.error(e.getMessage(), e);
+					} catch (NamingException e) {
 						log.error(e.getMessage(), e);
 					}
 				}

@@ -1,0 +1,16 @@
+<hibernate-configuration xmlns="urn:jboss:hibernate-deployer:1.0">
+	<session-factory name="java:/hibernate/MD/SF" bean="MagazziniDigitaliDatabaseSchema.jar:app=MD">
+		<property name="datasourceName">java:/jdbc/MD_CD</property>
+		<property name="showSqlEnabled">false</property>
+		<property name="scanForMappingsEnabled">true</property>
+		<property name="harUrl" />
+		<property name="dialect">org.hibernate.dialect.MySQL5InnoDBDialect</property>
+		<!-- 
+		<property name="dialect">org.hibernate.dialect.DB2Dialect</property>
+		<property name="dialect">it.toscana.regione.hibernate.diealect.DB2400DialectImpl</property>
+
+		<depends>jboss:service=Naming</depends>
+		<depends>jboss:service=TransactionManager</depends>
+		-->
+	</session-factory>
+</hibernate-configuration>
