@@ -23,7 +23,7 @@
     <dependency>
     	<groupId>it.bncf.magazziniDigitali.businessLogic</groupId>
     	<artifactId>MagazziniDigitaliBusinessLogic</artifactId>
-    	<version>1.0.8</version>
+    	<version>1.0.10</version>
     </dependency>
     <dependency>
     	<groupId>javax.mail</groupId>

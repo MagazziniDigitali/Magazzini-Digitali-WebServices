@@ -7,8 +7,11 @@
 
 package it.depositolegale.www.webservice_confirmDelMD;
 
+import it.bncf.magazziniDigitali.services.implement.ConfirmDelMDImpl;
+
 public class ConfirmDelMDBindImpl implements it.depositolegale.www.webservice_confirmDelMD.ConfirmDelMDPortType{
     public void confirmDelMDOperation(it.depositolegale.www.readInfoInput.ReadInfoInput confirmDelMDInput) throws java.rmi.RemoteException {
+    	ConfirmDelMDImpl.confirmDelMDOperation(confirmDelMDInput);
     }
 
 }

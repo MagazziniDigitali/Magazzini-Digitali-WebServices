@@ -11,6 +11,9 @@
     <entry key="istituto.IBNF1.nome">Biblioteca Nazionale Centrale Firenze</entry>
     <entry key="istituto.IBNF1.pathTmp">/mnt</entry>
     <entry key="istituto.IBNF1.password">222222</entry>
+    <entry key="istituto.IBNF1.url">http://www.bncf.firenze.sbn.it/</entry>
+    <entry key="istituto.IBNF1.urlLogo">http://www.bncf.firenze.sbn.it/img/logo-bncf.jpg</entry>
+    <entry key="istituto.IBNF1.password">222222</entry>
     <!-- Identificativo della scheda dell'Istituto -->
     <entry key="istituto.IBNF1.UUID">35dc8f20-e686-11e3-ac10-0800200c9a66-AG</entry>
     <!-- Identificativo del Software che l'istituto ha utilizzato per trasmettere i Files in MD -->
@@ -20,11 +23,11 @@
     <!-- Identificativo relativo hai diritti che l'istituto assegna all'oggetto -->
     <entry key="istituto.IBNF1.right.UUID">35dc8f20-e686-11e3-ac10-0800200c9a66-RG</entry>  
     <!-- Indica gli indirizzi IP da cui l'istituto è abilitato ad accedere al Gestionale -->
-    <entry key="istituto.IBNF1.ipAuthentication">192.168.5.8,192.168.5.9,10.0.*.*</entry>
+    <entry key="istituto.IBNF1.ipAuthentication">192.168.5.8,192.168.5.9,172.25.*.*,10.0.*.*</entry>
     
 
     <!-- Configurazione demone per la pubblicazione -->
-    <entry key="demoni.Publish">true</entry>
+    <entry key="demoni.Publish">false</entry>
     <entry key="demoni.Publish.pathStorage">/mnt/Storage</entry>
     <entry key="demoni.Publish.right.UUID">9EDF0E46-6039-454C-8BF8-53D70684F0AA-RG</entry>
     <entry key="demoni.Publish.UUID">F41AF7FC-1515-4291-BC26-41D0404624EF-AG</entry>
@@ -57,6 +60,13 @@
     <entry key="demoni.Validate.compositionLevel[multipart/x-zip]">1</entry>
     <!-- Tempo in Millisecondi di attesa tra un controllo e l'altro -->
     <entry key="demoni.Validate.timeOut">600000</entry>
+    
+    <!-- Configurazione demone per la generazione del file coda -->
+    <entry key="demoni.Coda">true</entry>
+    <!-- Path dove scrivere i files coda -->
+    <entry key="demoni.Coda.path">/Users/massi/tmp/bncf/MagazziniDigitaliRoma/coda</entry>
+    <!-- Tempo in Millisecondi di attesa tra un controllo e l'altro -->
+    <entry key="demoni.Coda.timeOut">600000</entry>
     
     <!-- Indica la path in cui verranno archiviati i file Premis -->
     <entry key="path.premis">/Users/massi/Desktop/Lavoro/Sorgenti/Bncf/MagazziniDigitali/MagazziniDigitali/MagazziniDigitaliServices/premis</entry>

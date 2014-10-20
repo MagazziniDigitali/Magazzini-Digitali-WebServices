@@ -1,7 +1,7 @@
 package it.bncf.magazziniDigitali.services.implement;
 
 import it.bncf.magazziniDigitali.businessLogic.filesTmp.MDFilesTmpBusiness;
-import it.depositolegale.www.endSend.EndSend;
+import it.depositolegale.www.readInfoInput.ReadInfoInput;
 
 import java.rmi.RemoteException;
 import java.sql.SQLException;
@@ -15,23 +15,15 @@ public class ConfirmDelMDImpl {
 	public ConfirmDelMDImpl() {
 	}
 
-    public static void confirmDelMDOperation(EndSend input) throws java.rmi.RemoteException {
+    public static void confirmDelMDOperation(ReadInfoInput confirmDelMDInput) throws java.rmi.RemoteException {
     	MDFilesTmpBusiness oggettoDigitaleBusiness = null;
-    	String[] errors = null;
 
 		try {
 			oggettoDigitaleBusiness = new MDFilesTmpBusiness(null);
 
-			if (input.getErrori() != null && 
-					 input.getErrori().length>0){
-				errors = new String[input.getErrori().length];
-				for(int x=0; x<input.getErrori().length; x++){
-					errors[x]=input.getErrori()[x].getMessaggio();
-				}
-			}
-			oggettoDigitaleBusiness.confirmDel(input.getReadInfoOutput().getOggettoDigitale().getId(), 
-					input.isEsito(), 
-					errors);
+			oggettoDigitaleBusiness.confirmDel(confirmDelMDInput.getOggettoDigitale().getId(), 
+					true, 
+					null);
 
 //		} catch (FileNotFoundException e) {
 //			log.error(e.getMessage(), e);
