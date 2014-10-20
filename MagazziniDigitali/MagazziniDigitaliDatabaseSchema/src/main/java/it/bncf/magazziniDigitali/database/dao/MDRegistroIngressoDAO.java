@@ -16,6 +16,7 @@ import mx.randalf.hibernate.GenericHibernateDAO;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 
 /**
@@ -71,4 +72,42 @@ public class MDRegistroIngressoDAO extends GenericHibernateDAO<MDRegistroIngress
 	    return res;
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<MDRegistroIngresso> findCoda(Integer[] stato, boolean timeStamCodaNull,
+			List<Order> orders) throws NamingException, HibernateException,
+			ConfigurationException {
+		Criteria criteria = null;
+		List<MDRegistroIngresso> result = null;
+
+		try {
+			beginTransaction();
+			criteria = this.createCriteria();
+			if (stato != null) {
+				criteria.add(Restrictions.in("status", stato));
+			}
+			if (timeStamCodaNull) {
+				criteria.add(Restrictions.isNull("timestampCoda"));
+			} else {
+				criteria.add(Restrictions.isNotNull("timestampCoda"));
+			}
+			if (orders != null) {
+				for (Order order : orders) {
+					criteria.addOrder(order);
+				}
+			}
+			paging(criteria);
+			result = criteria.list();
+			commitTransaction();
+		} catch (HibernateException e) {
+			rollbackTransaction();
+			throw e;
+		} catch (NamingException e) {
+			rollbackTransaction();
+			throw e;
+		} catch (ConfigurationException e) {
+			rollbackTransaction();
+			throw e;
+		}
+		return result;
+	}
 }

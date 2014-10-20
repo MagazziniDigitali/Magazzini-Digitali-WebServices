@@ -31,7 +31,7 @@
         <property name="trasfDataEnd" type="java.sql.Timestamp">
             <column name="TRASF_DATAEND" />
         </property>
-        <property name="trasfEsito" type="boolean">
+        <property name="trasfEsito" type="java.lang.Boolean">
             <column name="TRASF_ESITO" />
         </property>
         <property name="validDataStart" type="java.sql.Timestamp">

@@ -52,5 +52,8 @@
         <property name="timestampErr" type="java.sql.Timestamp">
             <column name="TIMESTAMPERR" />
         </property>
+        <property name="timestampCoda" type="java.sql.Timestamp">
+            <column name="TIMESTAMPCODA" />
+        </property>
     </class>
 </hibernate-mapping>
