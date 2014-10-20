@@ -12,6 +12,7 @@
     <module>MagazziniDigitaliDatabaseSchema</module>
     <module>MagazziniDigitaliXsd</module>
     <module>MagazziniDigitaliSolr</module>
+    <module>MagazziniDigitaliUtils</module>
   </modules>
   <repositories>
     <repository>
