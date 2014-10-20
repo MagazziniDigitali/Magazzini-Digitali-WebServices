@@ -72,7 +72,7 @@ public class MDFilesTmpBusiness extends
 //		Iterator<SociClub> iClubs = null;
 
 		record = new Record();
-		record.set("idMDRegistroIngresso", dati.getId());
+		record.set("idMDFilesTmp", dati.getId());
 		record.set("idIstituto", dati.getIdIstituto());
 		record.set("nomeFile", dati.getNomeFile());
 		record.set("sha1", dati.getSha1());
@@ -900,9 +900,14 @@ public class MDFilesTmpBusiness extends
 			
 			dati = new HashTable<String, Object>();
 			dati.put("id", id);
-			dati.put("moveFileDataStart", new Timestamp(moveFileStart.getTimeInMillis()));
-			dati.put("moveFileDataEnd", new Timestamp(moveFileStop.getTimeInMillis()));
+			if (moveFileStart != null){
+				dati.put("moveFileDataStart", new Timestamp(moveFileStart.getTimeInMillis()));
+			}
+			if (moveFileStop != null){
+				dati.put("moveFileDataEnd", new Timestamp(moveFileStop.getTimeInMillis()));
+			}
 			if (esito){
+				dati.put("stato", MDFilesTmpDAO.FINEPUBLISH);
 				dati.put("moveFileEsito", Boolean.TRUE);
 			} else {
 				dati.put("stato", MDFilesTmpDAO.ERRORMOVE);
@@ -968,10 +973,10 @@ public class MDFilesTmpBusiness extends
 			dati.put("publishDataEnd", new Timestamp(gc.getTimeInMillis()));
 			if (esito){
 				dati.put("stato", MDFilesTmpDAO.FINEPUBLISH);
-				dati.put("copyPremisEsito", Boolean.TRUE);
+				dati.put("publishEsito", Boolean.TRUE);
 			} else {
 				dati.put("stato", MDFilesTmpDAO.ERRORPUB);
-				dati.put("copyPremisEsito", Boolean.FALSE);
+				dati.put("publishEsito", Boolean.FALSE);
 				dati.put("type", MDFilesTmpDAO.ERRORPUB);
 				dati.put("errors", msgError);
 			}

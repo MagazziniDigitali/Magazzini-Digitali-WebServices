@@ -21,6 +21,7 @@ import javax.naming.NamingException;
 import mx.randalf.configuration.exception.ConfigurationException;
 
 import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
 import org.hibernate.criterion.Order;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 
@@ -133,16 +134,38 @@ public class MDRegistroIngressoBusiness extends
 			HashTable<String, Object> dati, List<Order> orders)
 			throws NamingException, ConfigurationException {
 //		List<MDRegistroIngresso> tables;
-//
-//		tables = tableDao.find((String)dati.get("cognome"),
-//				(String) dati.get("nome"), 
-//				(dati.get("idClub")==null?null:
-//				club.findById(Integer.parseInt((String) dati.get("idClub")))), 
+
+//		tables = tableDao.find(, 
 //				orders);
 //		return tables;
 		return null;
 	}
 
+	public List<MDRegistroIngresso> findCoda() throws HibernateException, NamingException, ConfigurationException{
+		MDRegistroIngressoDAO operaDAO;
+		Vector<Order> orders;
+		List<MDRegistroIngresso> result = null;
+		Integer[] stato = null;
+		
+		try {
+			orders = new Vector<Order>();
+			orders.add(Order.asc("timestampPub"));
+			orders.add(Order.asc("timestampElab"));
+
+			operaDAO = newInstanceDao();
+			stato = new Integer[2];
+			stato[0]=1;
+			stato[1]=2;
+			result = operaDAO.findCoda(stato, true, orders);
+		} catch (HibernateException e) {
+			throw e;
+		} catch (NamingException e) {
+			throw e;
+		} catch (ConfigurationException e) {
+			throw e;
+		}
+		return result;
+	}
 	/**
 	 * @see it.bncf.magazziniDigitali.businessLogic.BusinessLogic#setOrder()
 	 */
@@ -170,11 +193,13 @@ public class MDRegistroIngressoBusiness extends
 			errors = (String[]) dati.get("errors");
 			errorBusiness = new MDRegistroIngressoErrorBusiness(hibernateTemplate);
 			for (int x=0; x<errors.length; x++){
-				myDati = new HashTable<String, Object>();
-				myDati.put("idMDRegistroIngresso", table.getId());
-				myDati.put("type", dati.get("type"));
-				myDati.put("msgError", errors[x]);
-				errorBusiness.save(myDati);
+				if (errors[x] != null){
+					myDati = new HashTable<String, Object>();
+					myDati.put("idMDRegistroIngresso", table.getId());
+					myDati.put("type", dati.get("type"));
+					myDati.put("msgError", errors[x]);
+					errorBusiness.save(myDati);
+				}
 			}
 		}
 	}
@@ -254,6 +279,10 @@ public class MDRegistroIngressoBusiness extends
 		if (dati.containsKey("timestampErr")) {
 			table.setTimestampErr((Timestamp) dati.get("timestampErr"));
 		}
+
+		if (dati.containsKey("timestampCoda")) {
+			table.setTimestampCoda((Timestamp) dati.get("timestampCoda"));
+		}
 	}
 
 	public void error(String id, String type, String[] registroErrori) throws IllegalAccessException,
@@ -328,6 +357,32 @@ public class MDRegistroIngressoBusiness extends
 			throw e;
 		}
 	}
+
+	public void coda(String id)
+			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException,
+			NamingException, ConfigurationException{
+		HashTable<String, Object> dati = null;
+		GregorianCalendar timeStampElab = null;
+
+		try {
+			timeStampElab = new GregorianCalendar();
+			dati = new HashTable<String,Object>();
+			dati.put("id", id);
+			dati.put("timestampCoda", new Timestamp(timeStampElab.getTimeInMillis()));
+			save(dati);
+		} catch (IllegalAccessException e) {
+			throw e;
+		} catch (InvocationTargetException e) {
+			throw e;
+		} catch (NoSuchMethodException e) {
+			throw e;
+		} catch (NamingException e) {
+			throw e;
+		} catch (ConfigurationException e) {
+			throw e;
+		}
+	}
+
 	/**
 	 * 
 	 * @param id

@@ -2,23 +2,25 @@ package it.bncf.magazziniDigitali.businessLogic.oggettoDigitale;
 
 import it.bncf.magazziniDigitali.businessLogic.filesTmp.MDFilesTmpBusiness;
 import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.implement.OggettoDigitalePublish;
-import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.validate.ArchiveMD;
-import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.validate.ValidateFile;
+import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.implement.OggettoDigitaleValidate;
+import it.bncf.magazziniDigitali.businessLogic.registroIngresso.MDRegistroIngressoBusiness;
 import it.bncf.magazziniDigitali.database.dao.MDFilesTmpDAO;
 import it.bncf.magazziniDigitali.database.entity.MDFilesTmp;
+import it.bncf.magazziniDigitali.database.entity.MDRegistroIngresso;
 import it.bncf.magazziniDigitali.solr.AddDocumentMD;
 import it.bncf.magazziniDigitali.utils.Record;
-import it.magazziniDigitali.xsd.premis.PremisXsd;
-import it.magazziniDigitali.xsd.premis.exception.PremisXsdException;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.math.BigInteger;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -33,12 +35,9 @@ import java.util.concurrent.Future;
 
 import javax.naming.NamingException;
 
-import mx.randalf.archive.info.DigestType;
-import mx.randalf.archive.info.Xmltype;
 import mx.randalf.configuration.Configuration;
 import mx.randalf.configuration.exception.ConfigurationException;
 import mx.randalf.solr.exception.SolrException;
-import mx.randalf.xsd.exception.XsdException;
 
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -436,24 +435,13 @@ public class OggettoDigitaleBusiness {
 			Logger logValidate) {
 		MDFilesTmpBusiness mdFileTmp = null;
 		List<MDFilesTmp> rs = null;
-		String fileObj = null;
-		File fObj = null;
-		ValidateFile validate = null;
-		PremisXsd premis = null;
-		GregorianCalendar start;
-		GregorianCalendar stop;
-		GregorianCalendar startDecomp = null;
-		GregorianCalendar stopDecomp = null;
-		ArchiveMD archive = null;
-		File filePremis = null;
-		String fileTar = null;
-		String objectIdentifierMaster = null;
-		String eventDetailDecomp = null;
-		String fPremis = null;
-		DateFormat df = null;
+
+		List<Future<Boolean>> futuresList = null;
+		int nrOfProcessors = 1;
+		ExecutorService eservice = null;
+		int numberThread = 10;
 
 		try {
-			df = new SimpleDateFormat("dd/MM/yyyy HH:mm:SS");
 			logValidate.debug("Ricerco oggetti da validare");
 			mdFileTmp = new MDFilesTmpBusiness(hibernateTemplate);
 
@@ -465,307 +453,41 @@ public class OggettoDigitaleBusiness {
 				logValidate.info("Numero oggetti da validare [" + rs.size()
 						+ "]");
 				// Risulta almeno 1 record da elaborare
-				validate = new ValidateFile();
+				futuresList = new ArrayList<Future<Boolean>>();
+				nrOfProcessors = Runtime.getRuntime().availableProcessors();
+				eservice = Executors.newFixedThreadPool(nrOfProcessors);
+				if (Configuration.getValue("demoni.Validate.numberThread") != null) {
+					numberThread = Integer.valueOf(Configuration
+							.getValue("demoni.Validate.numberThread"));
+				}
+				if (testMode) {
+					numberThread = 1;
+				}
 				for (int x = 0; x < rs.size(); x++) {
-					try {
-						fPremis = null;
-						// calcolo il file da validare
-						fileObj = Configuration.getValue("istituto."
-								+ rs.get(x).getIdIstituto() + ".pathTmp");
-						fileObj += File.separator;
-						fileObj += rs.get(x).getNomeFile();
-						fObj = new File(fileObj);
 
-						fileTar = fObj.getName().replace(".tar.gz", ".tar")
-								.replace(".tgz", ".tar");
-
-						logValidate.info(x + "/" + rs.size()
-								+ " File da validare: "
-								+ fObj.getAbsolutePath());
-						eventDetailDecomp = fObj.getName() + " => " + fileTar;
-						if (!fObj.exists()) {
-							fObj = new File(fObj.getParentFile()
-									.getAbsolutePath()
-									+ File.separator
-									+ fileTar);
-						}
-						if (fObj.exists()) {
-							// il file Esiste
-							if (rs.get(x).getStato()
-									.equals(MDFilesTmpDAO.FINETRASF)) {
-								logValidate
-										.info("Inizio la validazione del file ["
-												+ fObj.getAbsolutePath() + "]");
-								start = mdFileTmp.updateStartValidate(rs.get(x)
-										.getId());
-							} else {
-								logValidate
-										.info("Continuo la validazione del file ["
-												+ fObj.getAbsolutePath() + "]");
-								start = new GregorianCalendar();
-								start.setTimeInMillis(rs.get(x)
-										.getValidDataStart().getTime());
-							}
-							validate.check(fObj);
-							premis = new PremisXsd();
-							if (validate.getGcUnzipStart() != null
-									|| validate.getGcUnzipStop() != null) {
-								mdFileTmp.updateDecompress(rs.get(x).getId(),
-										validate.getGcUnzipStart(), validate
-												.getGcUnzipStop(), (validate
-												.getUnzipError() == null ? true
-												: false), validate
-												.getUnzipError());
-								startDecomp = validate.getGcUnzipStart();
-								stopDecomp = validate.getGcUnzipStop();
-							} else {
-								if (rs.get(x).getDecompDataStart() != null) {
-									startDecomp = new GregorianCalendar();
-									startDecomp.setTimeInMillis(rs.get(x)
-											.getDecompDataStart().getTime());
-								}
-								if (rs.get(x).getDecompDataEnd() != null) {
-									stopDecomp = new GregorianCalendar();
-									stopDecomp.setTimeInMillis(rs.get(x)
-											.getDecompDataEnd().getTime());
-								}
-							}
-							if (startDecomp != null || stopDecomp != null) {
-								logValidate.info("Tempo per Unzip del file da "
-										+ (startDecomp == null ? "none"
-												: df.format(startDecomp.getTime()))
-										+ " a "
-										+ (stopDecomp == null ? "none"
-												: df.format(stopDecomp.getTime())));
-							}
-							if (validate.getArchive() != null) {
-								logValidate.info("Analizzo gli archivi");
-								if (validate.getArchive().checkMimetype(
-										"application/x-tar")) {
-									archive = validate.getArchive();
-								} else {
-									archive = (ArchiveMD) validate.getArchive()
-											.getArchive().get(0);
-								}
-								objectIdentifierMaster = archive.getID();
-								premis.addObjectFileContainer(
-										objectIdentifierMaster, archive
-												.getXmltype().value(), archive
-												.getType().getExt(),
-										new BigInteger("0"), archive
-												.getDigest(DigestType.SHA_1),
-										archive.getType().getSize(), archive
-												.getMimetype(), archive
-												.getNome(),
-										Configuration.getValue("istituto."
-												+ rs.get(x).getIdIstituto()
-												+ ".right.UUID"), archive
-												.getType().getFormat()
-												.getVersion(), archive
-												.getType().getPUID());
-
-								if (archive.getArchive() != null
-										&& archive.getArchive().size() > 0) {
-									logValidate
-											.info("Inizio analisi degli Archivi "
-													+ archive.getArchive()
-															.size());
-									for (int y = 0; y < archive.getArchive()
-											.size(); y++) {
-										if ((y % 100) == 0) {
-											logValidate.info(y
-													+ " Archivi analizzati su "
-													+ archive.getArchive()
-															.size());
-										}
-										addArchive(premis, (ArchiveMD) archive
-												.getArchive().get(y),
-												objectIdentifierMaster);
-									}
-									logValidate
-											.info("Fine analisi degli Archivi "
-													+ archive.getArchive()
-															.size());
-								}
-							}
-
-							fPremis = premis.getActualFileName() + ".premis";
-							filePremis = new File(
-									Configuration.getValue("path.premis")
-											+ File.separator + fPremis);
-							premis.addEvent("send", rs.get(x)
-									.getTrasfDataStart(), rs
-									.get(x).getTrasfDataEnd(), null, "OK",
-									null, Configuration.getValue("istituto."
-											+ rs.get(x).getIdIstituto()
-											+ ".UUID"), Configuration
-											.getValue("istituto."
-													+ rs.get(x).getIdIstituto()
-													+ ".software.UUID"),
-									objectIdentifierMaster);
-							if (validate.getUnzipError() != null) {
-								logValidate
-										.error("Riscontrato un problema nella procedura di Unzip");
-								premis.addEvent(
-										"decompress",
-										startDecomp,
-										stopDecomp,
-										eventDetailDecomp,
-										"KO",
-										validate.getUnzipError(),
-										null,
-										Configuration.getValue("demoni."
-												+ application + ".UUID"),
-										objectIdentifierMaster);
-								premis.write(filePremis, false);
-							} else {
-								if (startDecomp != null || stopDecomp != null) {
-									logValidate
-											.info("Tempo di decompressione da "
-													+ (startDecomp == null ? "none"
-															: df.format(startDecomp.getTime()))
-													+ " a "
-													+ (stopDecomp == null ? "none"
-															: df.format(stopDecomp.getTime())));
-									premis.addEvent(
-											"decompress",
-											startDecomp,
-											stopDecomp,
-											eventDetailDecomp,
-											"OK",
-											null,
-											null,
-											Configuration.getValue("demoni."
-													+ application + ".UUID"),
-											objectIdentifierMaster);
-								}
-								if (validate.isErrors()) {
-									logValidate
-											.error("Riscontrato un errore nella validazione");
-									stop = mdFileTmp.updateStopValidate(
-											rs.get(x).getId(), null, false,
-											validate.getErrors(), fPremis);
-									premis.addEvent(
-											"validation",
-											start,
-											stop,
-											null,
-											"KO",
-											validate.getErrors(),
-											null,
-											Configuration.getValue("demoni."
-													+ application + ".UUID"),
-											objectIdentifierMaster);
-									premis.write(filePremis, false);
-								} else {
-									if (validate.getXmlType() == null) {
-										logValidate
-												.error("Impossibile individuare il formato del tracciato XML presente nel file");
-										stop = mdFileTmp
-												.updateStopValidate(
-														rs.get(x).getId(),
-														null,
-														false,
-														new String[] { "Impossibile individuare il formato del tracciato XML presente nel file" },
-														fPremis);
-										premis.addEvent(
-												"validation",
-												start,
-												stop,
-												null,
-												"KO",
-												new String[] { "Impossibile individuare il formato del tracciato XML presente nel file" },
-												null, Configuration
-														.getValue("demoni."
-																+ application
-																+ ".UUID"),
-												objectIdentifierMaster);
-										premis.write(filePremis, false);
-									} else {
-										stop = mdFileTmp.updateStopValidate(rs
-												.get(x).getId(), validate
-												.getXmlType().value(), true,
-												null, fPremis);
-										premis.addEvent("validation", start,
-												stop, null, "OK", null, null,
-												Configuration
-														.getValue("demoni."
-																+ application
-																+ ".UUID"),
-												objectIdentifierMaster);
-										premis.write(filePremis, false);
-										logValidate
-												.info("Tempo di validazione da "
-														+ (start == null ? "none"
-																: df.format(start.getTime()))
-														+ " a "
-														+ (stop == null ? "none"
-																: df.format(stop.getTime())));
-									}
-								}
-							}
-						} else {
-							logValidate.info("Il file ["
-									+ fObj.getAbsolutePath()
-									+ "] non è presente sul Server");
-							mdFileTmp.updateStopValidate(rs.get(x).getId(),
-									null, false, new String[] { "Il file ["
-											+ fObj.getAbsolutePath()
-											+ "] non è presente sul Server" },
-									fPremis);
-						}
-					} catch (ConfigurationException e) {
-						mdFileTmp
-								.updateStopValidate(rs.get(x).getId(), null,
-										false, new String[] { e.getMessage() },
-										fPremis);
-						log.error(e.getMessage(), e);
-					} catch (SQLException e) {
-						mdFileTmp
-								.updateStopValidate(rs.get(x).getId(), null,
-										false, new String[] { e.getMessage() },
-										fPremis);
-						log.error(e.getMessage(), e);
-					} catch (PremisXsdException e) {
-						mdFileTmp
-								.updateStopValidate(rs.get(x).getId(), null,
-										false, new String[] { e.getMessage() },
-										fPremis);
-						log.error(e.getMessage(), e);
-					} catch (XsdException e) {
-						mdFileTmp
-								.updateStopValidate(rs.get(x).getId(), null,
-										false, new String[] { e.getMessage() },
-										fPremis);
-						log.error(e.getMessage(), e);
-					} catch (IOException e) {
-						mdFileTmp
-								.updateStopValidate(rs.get(x).getId(), null,
-										false, new String[] { e.getMessage() },
-										fPremis);
-						log.error(e.getMessage(), e);
-					} catch (Exception e) {
-						mdFileTmp
-								.updateStopValidate(rs.get(x).getId(), null,
-										false, new String[] { e.getMessage() },
-										fPremis);
-						log.error(e.getMessage(), e);
-					} finally {
+					if (futuresList.size() >= numberThread) {
+						checkThread(futuresList, numberThread);
 						if (testMode) {
 							break;
 						}
 					}
+					futuresList.add(eservice.submit(new OggettoDigitaleValidate(
+							rs.get(x), logValidate, mdFileTmp, "Validate " + x
+									+ "/" + rs.size(), application)));
+					Thread.sleep(10000);
 				}
+				checkThread(futuresList, -1);
+				eservice.shutdown();
 			} else {
 				logValidate.debug("Nessun oggetto da validare ");
 			}
-		} catch (SQLException e) {
-			log.error(e.getMessage(), e);
 		} catch (ConfigurationException e) {
 			log.error(e.getMessage(), e);
 		} catch (HibernateException e) {
 			log.error(e.getMessage(), e);
 		} catch (NamingException e) {
+			log.error(e.getMessage(), e);
+		} catch (InterruptedException e) {
 			log.error(e.getMessage(), e);
 		}
 	}
@@ -825,63 +547,152 @@ public class OggettoDigitaleBusiness {
 		return gc;
 	}
 
-	private void addArchive(PremisXsd premis, ArchiveMD archive,
-			String objectIdentifierMaster) throws ConfigurationException {
-		String objectIdentifierValue = null;
-		BigInteger compositionLevel = null;
-		String digest = null;
-		Long size = null;
-		String formatDesignationValue = null;
-		String originalName = null;
-		String contentLocationValue = null;
-		String formatVersion = null;
-		String puid = null;
-		String relationshipSubType = null;
-
-		objectIdentifierValue = archive.getID();
-
-		compositionLevel = new BigInteger("0");
-		if (archive.getMimetype() != null
-				&& Configuration.getValue("demoni.Validate.compositionLevel",
-						archive.getMimetype().split(",")[0]) != null) {
-			compositionLevel = new BigInteger(Configuration.getValue(
-					"demoni.Validate.compositionLevel", archive.getMimetype()
-							.split(",")[0]));
-		}
-
-		digest = archive.getDigest(DigestType.SHA_1);
-		size = archive.getType().getSize();
-		formatDesignationValue = archive.getMimetype();
-		originalName = archive.getNome();
-		contentLocationValue = archive.getType().getContentLocation();
-		if (archive.getType().getFormat() != null) {
-			formatVersion = archive.getType().getFormat().getVersion();
-		}
-		if (archive.getType().getPUID() != null) {
-			puid = archive.getType().getPUID();
-		}
-
-		if (archive.getType().getExt().equals("xml")
-				&& (archive.getXmltype() != null && (archive.getXmltype()
-						.equals(Xmltype.MAG) || archive.getXmltype().equals(
-						Xmltype.METS)))) {
-			relationshipSubType = "R";
-		} else {
-			relationshipSubType = "1";
-		}
-		premis.addObjectFile(objectIdentifierValue, compositionLevel, digest,
-				size, formatDesignationValue, originalName,
-				contentLocationValue, formatVersion, puid, relationshipSubType,
-				objectIdentifierMaster);
-
-		if (archive.getArchive() != null && archive.getArchive().size() > 0) {
-			for (int x = 0; x < archive.getArchive().size(); x++) {
-				addArchive(premis, (ArchiveMD) archive.getArchive().get(x),
-						objectIdentifierMaster);
+	/**
+	 * Questo metodo viene utilizzato per gestire la coda del materiale da inviare negli altri Storage
+	 * 
+	 * @param application
+	 */
+	public void coda(String application, boolean testMode, Logger logCoda){
+		MDRegistroIngressoBusiness mdRegistroIngresso = null;
+		List<MDRegistroIngresso> rs = null;
+		String data = "";
+		boolean elabora = false;
+		GregorianCalendar gc = null;
+		try {
+			gc = new GregorianCalendar();
+			gc.add(Calendar.DAY_OF_MONTH, -1);
+			gc.set(Calendar.HOUR_OF_DAY, 23);
+			gc.set(Calendar.MINUTE, 59);
+			gc.set(Calendar.SECOND, 59);
+			gc.set(Calendar.MILLISECOND, 999);
+			logCoda.debug("Ricerco oggetti da mettere in coda");
+			mdRegistroIngresso = new MDRegistroIngressoBusiness(hibernateTemplate);
+			
+			rs = mdRegistroIngresso.findCoda();
+			if (rs != null && 
+					rs.size()>0){
+				for (int x=0; x<rs.size(); x++){
+					elabora = false;
+					if (rs.get(x).getTimestampPub()!= null){
+						if (rs.get(x).getTimestampPub().getTime()<=gc.getTimeInMillis()){
+							data = componiData(rs.get(x).getTimestampPub());
+							elabora = true;
+						}
+					} else {
+						if (rs.get(x).getTimestampElab().getTime()<=gc.getTimeInMillis()){
+							data = componiData(rs.get(x).getTimestampElab());
+							elabora = true;
+						}
+					}
+					if (elabora){
+						writeFileCoda(data, rs.get(x).getContainerName());
+						mdRegistroIngresso.coda(rs.get(x).getId());
+					}
+				}
 			}
+		} catch (HibernateException e) {
+			log.error(e.getMessage(), e);
+		} catch (FileNotFoundException e) {
+			log.error(e.getMessage(), e);
+		} catch (NamingException e) {
+			log.error(e.getMessage(), e);
+		} catch (ConfigurationException e) {
+			log.error(e.getMessage(), e);
+		} catch (IOException e) {
+			log.error(e.getMessage(), e);
+		} catch (IllegalAccessException e) {
+			log.error(e.getMessage(), e);
+		} catch (InvocationTargetException e) {
+			log.error(e.getMessage(), e);
+		} catch (NoSuchMethodException e) {
+			log.error(e.getMessage(), e);
 		}
 	}
 
+	private void writeFileCoda(String data, String containerName) throws FileNotFoundException, ConfigurationException,
+			IOException{
+		File coda = null;
+		BufferedWriter bw = null;
+		BufferedReader br = null;
+		FileWriter fw = null;
+		FileReader fr = null;
+		String line = "";
+		boolean trovato = false;
+		
+		try {
+			coda = new File(Configuration.getValue("demoni.Coda.path")+
+					File.separator+data+".coda");
+			
+			if (coda.exists()){
+				try {
+					fr = new FileReader(coda);
+					br = new BufferedReader(fr);
+					while((line= br.readLine()) != null){
+						if (line.equals(containerName)){
+							trovato = true;
+							break;
+						}
+					}
+				} catch (FileNotFoundException e) {
+					throw e;
+				} catch (IOException e) {
+					throw e;
+				} finally {
+					try {
+						if (br != null){
+							br.close();
+						}
+						if (fr != null){
+							fr.close();
+						}
+					} catch (IOException e) {
+						throw e;
+					}
+				}
+			}
+			if (! trovato){
+				try {
+					fw = new FileWriter(coda, true);
+					bw = new BufferedWriter(fw);
+					bw.write(containerName+"\n");
+				} catch (IOException e) {
+					throw e;
+				} finally {
+					try {
+						if (bw != null){
+							bw.flush();
+							bw.close();
+						}
+						if (fw != null){
+							fw.close();
+						}
+					} catch (IOException e) {
+						throw e;
+					}
+				}
+			}
+		} catch (FileNotFoundException e) {
+			throw e;
+		} catch (ConfigurationException e) {
+			throw e;
+		} catch (IOException e) {
+			throw e;
+		}
+	}
+
+	private String componiData(Timestamp data){
+		GregorianCalendar gc = null;
+		String result = "";
+		DecimalFormat df4 = new DecimalFormat("0000");
+		DecimalFormat df2 = new DecimalFormat("00");
+		
+		gc = new GregorianCalendar();
+		gc.setTimeInMillis(data.getTime());
+		result = df4.format(gc.get(Calendar.YEAR));
+		result += df2.format(gc.get(Calendar.MONTH)+1);
+		result += df2.format(gc.get(Calendar.DAY_OF_MONTH));
+		return result;
+	}
 	/**
 	 * Questo metodo viene utilizzato per gestire la pubblicazione del materiale
 	 * 
