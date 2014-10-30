@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.depositolegale.it/storage" elementFormDefault="qualified" targetNamespace="http://www.depositolegale.it/storage">
+    <xs:element name="storage">
+        <xs:annotation>
+            <xs:documentation>Informazioni relative all'oggetto digitale</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="documenti"/>
+            </xs:sequence>
+            <xs:attribute name="esito" type="xs:string"> </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="documenti">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" name="documento">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="it">Informazioni relative al singolo file da analizzare sullo storage</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="nomeFile" type="xs:string">
+                                <xs:annotation>
+                                    <xs:documentation xml:lang="it">Percorso assoluto relativa allo storage del matriale da verificare</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="digest" type="xs:string">
+                                <xs:annotation>
+                                    <xs:documentation xml:lang="it">Chiame SHA1 relativa al File</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="esito" type="xs:string">
+                                <xs:annotation>
+                                    <xs:documentation xml:lang="it">Esito della verifica sullo Storage</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="dataMod" type="xs:dateTime" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="numDoc" type="xs:integer"/>
+                <xs:element minOccurs="0" name="numErr" type="xs:integer"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

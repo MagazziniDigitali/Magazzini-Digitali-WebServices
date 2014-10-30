@@ -25,18 +25,9 @@ public class ConfirmDelMDImpl {
 					true, 
 					null);
 
-//		} catch (FileNotFoundException e) {
-//			log.error(e.getMessage(), e);
-//			throw new RemoteException(e.getMessage(), e);
-//		} catch (ClassNotFoundException e) {
-//			log.error(e.getMessage(), e);
-//			throw new RemoteException(e.getMessage(), e);
 		} catch (SQLException e) {
 			log.error(e.getMessage(), e);
 			throw new RemoteException(e.getMessage(), e);
-//		} catch (ConfigurationException e) {
-//			log.error(e.getMessage(), e);
-//			throw new RemoteException(e.getMessage(), e);
 		}
     	
 	}

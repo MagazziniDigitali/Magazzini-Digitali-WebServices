@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:storageType="http://www.depositolegale.it/storage" xmlns:ws="http://www.depositolegale.it/webservice.checkStorageMD" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsoap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="http://www.depositolegale.it/webservice.checkStorageMD">
+
+    <!-- definizione dei tipi di dato utilizzati... questo dovrebbe ricordarvi qualcosa ;) -->
+    <wsdl:types>
+        <xs:schema>
+            <xs:import namespace="http://www.depositolegale.it/storage" schemaLocation="./Schema/Storage.xsd"/>
+        </xs:schema>
+    </wsdl:types>
+    
+    <!-- definizione di uno dei messaggi impiegati dal web service per comunicare con l'applicazione client -->
+    <wsdl:message name="CheckStorageMDInput">
+        <wsdl:part element="storageType:documenti" name="CheckStorageMDInput"/>
+    </wsdl:message>
+    <wsdl:message name="CheckStorageMDOutput">
+        <wsdl:part element="storageType:storage" name="CheckStorageMDOutput"/>
+    </wsdl:message>
+    <!-- naturalmente può esistere più di un elemento message 
+     all'interno del documento -->
+
+    <wsdl:portType name="CheckStorageMDPortType"> 
+        <!-- definisce una "porta" e le operazioni che possono essere eseguite dal web service. 
+            Definisce inoltre i messaggi coinvolti nelle operazioni elencate -->
+        <wsdl:operation name="CheckStorageMDOperation">
+            <wsdl:input message="ws:CheckStorageMDInput" name="CheckStorageMDInput"/>
+            <wsdl:output message="ws:CheckStorageMDOutput" name="CheckStorageMDOutput"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    
+    <wsdl:binding name="CheckStorageMDBind" type="ws:CheckStorageMDPortType"> 
+        <!-- definisce il formato del messaggio ed i 
+       dettagli di protocollo per ogni porta -->
+
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="CheckStorageMDOperation">
+            <soap:operation soapAction=""/>
+            <wsdl:input name="CheckStorageMDInput">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="CheckStorageMDOutput">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    
+    <wsdl:service name="CheckStorageMDService">
+        <wsdl:port binding="ws:CheckStorageMDBind" name="CheckStorageMDPort">
+            <soap:address location="http://localhost:8080/MagazziniDigitaliServices/services/CheckStorageMDPort"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

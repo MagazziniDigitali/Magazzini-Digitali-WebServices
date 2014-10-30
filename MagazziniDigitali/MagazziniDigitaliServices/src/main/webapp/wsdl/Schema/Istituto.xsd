@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.depositolegale.it/istituto" elementFormDefault="qualified" targetNamespace="http://www.depositolegale.it/istituto"> 
+<?xml version="1.0" encoding="UTF-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.depositolegale.it/istituto" elementFormDefault="qualified" targetNamespace="http://www.depositolegale.it/istituto"> 
     <xs:element name="istituto">
         <xs:annotation>
             <xs:documentation xml:lang="it">Informazioni relative all'istituto</xs:documentation>

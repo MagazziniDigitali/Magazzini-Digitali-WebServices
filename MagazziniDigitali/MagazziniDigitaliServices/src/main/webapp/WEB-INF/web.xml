@@ -6,7 +6,7 @@
   <display-name>Magazzini Digitali - Services</display-name>
 	<context-param>
 		<param-name>version</param-name>
-		<param-value>1.0</param-value>
+		<param-value>1.0.2</param-value>
 	</context-param>
   <servlet>
   	<servlet-name>AxisServlet</servlet-name>

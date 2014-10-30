@@ -1,8 +1,8 @@
 package it.bncf.magazziniDigitali.services.implement;
 
-import it.bncf.magazziniDigitali.businessLogic.istituto.IstitutoBusiness;
+import it.bncf.magazziniDigitali.businessLogic.istituzione.MDIstituzioneBusiness;
 import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.OggettoDigitaleBusiness;
-import it.bncf.magazziniDigitali.database.dao.MDFilesTmpDAO;
+import it.bncf.magazziniDigitali.database.dao.MDStatoDAO;
 import it.depositolegale.www.istituto.StatoIstituto_type;
 import it.depositolegale.www.oggettiDigitali.StatoOggettoDigitale_type;
 import it.depositolegale.www.readInfoInput.ReadInfoInput;
@@ -28,12 +28,11 @@ public class CheckMDImpl {
 	private static Logger log = Logger.getLogger(CheckMDImpl.class);
 
 	public CheckMDImpl() {
-		System.out.println("wwwww");
 	}
 
     public static ReadInfoOutput checkMDOperation(ReadInfoInput readInfoMsg) throws java.rmi.RemoteException {
     	ReadInfoOutput output = null;
-    	IstitutoBusiness istitutoBusiness = null;
+    	MDIstituzioneBusiness istitutoBusiness = null;
     	OggettoDigitaleBusiness oggettoDigitaleBusiness = null;
     	Errori[] errori = null;
     	Hashtable<String , String> dati = null;
@@ -42,7 +41,7 @@ public class CheckMDImpl {
 			output = new ReadInfoOutput();
 
 			output.setIstituto(readInfoMsg.getIstituto());
-			istitutoBusiness = new IstitutoBusiness(readInfoMsg.getIstituto().getId());
+			istitutoBusiness = new MDIstituzioneBusiness(null, readInfoMsg.getIstituto().getId());
 			if (istitutoBusiness.isConfigurata()){
 				output.getIstituto().setNome(istitutoBusiness.getNome());
 				if (istitutoBusiness.getPassword().equals(readInfoMsg.getIstituto().getPassword())){
@@ -73,15 +72,15 @@ public class CheckMDImpl {
 						if (dati!= null){
 							output.getOggettoDigitale().setId(dati.get("id"));
 							
-							if(dati.get("stato").equalsIgnoreCase(MDFilesTmpDAO.FINEPUBLISH)){
+							if(dati.get("stato").equalsIgnoreCase(MDStatoDAO.FINEPUBLISH)){
 								output.getOggettoDigitale().setStatoOggettoDigitale(StatoOggettoDigitale_type.ARCHIVIATO);
-							} else if (dati.get("stato").equalsIgnoreCase(MDFilesTmpDAO.INITPUBLISH) ||
-									dati.get("stato").equalsIgnoreCase(MDFilesTmpDAO.FINEVALID) ||
-									dati.get("stato").equalsIgnoreCase(MDFilesTmpDAO.INITVALID)){
+							} else if (dati.get("stato").equalsIgnoreCase(MDStatoDAO.INITPUBLISH) ||
+									dati.get("stato").equalsIgnoreCase(MDStatoDAO.FINEVALID) ||
+									dati.get("stato").equalsIgnoreCase(MDStatoDAO.INITVALID)){
 								output.getOggettoDigitale().setStatoOggettoDigitale(StatoOggettoDigitale_type.CHECKARCHIVIAZIONE);
-							} else if (dati.get("stato").equalsIgnoreCase(MDFilesTmpDAO.FINETRASF)){
+							} else if (dati.get("stato").equalsIgnoreCase(MDStatoDAO.FINETRASF)){
 								output.getOggettoDigitale().setStatoOggettoDigitale(StatoOggettoDigitale_type.FINETRASF);
-							} else if (dati.get("stato").equalsIgnoreCase(MDFilesTmpDAO.INITTRASF)){
+							} else if (dati.get("stato").equalsIgnoreCase(MDStatoDAO.INITTRASF)){
 								output.getOggettoDigitale().setStatoOggettoDigitale(StatoOggettoDigitale_type.INITTRASF);
 							} else {
 								output.getOggettoDigitale().setStatoOggettoDigitale(StatoOggettoDigitale_type.ERROR);
@@ -108,6 +107,12 @@ public class CheckMDImpl {
 				}
 			}
 		} catch (ConfigurationException e) {
+			log.error(e.getMessage(), e);
+			throw new RemoteException(e.getMessage(), e);
+		} catch (HibernateException e) {
+			log.error(e.getMessage(), e);
+			throw new RemoteException(e.getMessage(), e);
+		} catch (NamingException e) {
 			log.error(e.getMessage(), e);
 			throw new RemoteException(e.getMessage(), e);
 		}
