@@ -92,7 +92,7 @@ public class OggettoDigitalePublish implements Callable<Boolean> {
 					Configuration.getValue("path.premis")
 							+ File.separator
 							+ record.getPremisFile());
-			if (record.getStato()
+			if (record.getStato().getId()
 					.equals(MDStatoDAO.FINEVALID)) {
 				logPublish.info(name+" Inizio la pubblicazione del file ["
 						+ filePremisMaster.getAbsolutePath() + "]");

@@ -105,7 +105,7 @@ public class OggettoDigitaleValidate implements Callable<Boolean> {
 			}
 			if (fObj.exists()) {
 				// il file Esiste
-				if (record.getStato()
+				if (record.getStato().getId()
 						.equals(MDStatoDAO.FINETRASF)) {
 					logValidate
 							.info(name+ " Inizio la validazione del file ["
