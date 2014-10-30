@@ -15,7 +15,7 @@ import javax.persistence.Table;
  */
 @Entity
 @SuppressWarnings("serial")
-@Table(name="MDFilesTmp")
+@Table(name="MDClient")
 public class MDClient implements Serializable {
 
 	@Id

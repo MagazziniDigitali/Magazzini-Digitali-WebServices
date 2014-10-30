@@ -22,7 +22,7 @@ public class MDFilesTmp implements Serializable {
 	@Id
 	private String id;
 
-	private String idIstituto;
+	private MDIstituzione idIstituto;
 
 	private String nomeFile;
 
@@ -30,7 +30,7 @@ public class MDFilesTmp implements Serializable {
 
 	private Timestamp nomeFileMod;
 
-	private String stato;
+	private MDStato stato;
 
 	private Timestamp trasfDataStart;
 
@@ -75,7 +75,21 @@ public class MDFilesTmp implements Serializable {
 	private Boolean deleteLocalEsito;
 
 	private String premisFile;
+	
+	private Timestamp archiveDataStart;
 
+	private Timestamp archiveDataEnd;
+
+	private Boolean archiveEsito;
+
+	private MDNodi idNodo;
+	
+	private Timestamp indexDataStart;
+
+	private Timestamp indexDataEnd;
+
+	private Boolean indexEsito;
+	
 	public MDFilesTmp() {
 	}
 
@@ -87,11 +101,11 @@ public class MDFilesTmp implements Serializable {
 		this.id = id;
 	}
 
-	public String getIdIstituto() {
+	public MDIstituzione getIdIstituto() {
 		return idIstituto;
 	}
 
-	public void setIdIstituto(String idIstituto) {
+	public void setIdIstituto(MDIstituzione idIstituto) {
 		this.idIstituto = idIstituto;
 	}
 
@@ -119,11 +133,11 @@ public class MDFilesTmp implements Serializable {
 		this.nomeFileMod = nomeFileMod;
 	}
 
-	public String getStato() {
+	public MDStato getStato() {
 		return stato;
 	}
 
-	public void setStato(String stato) {
+	public void setStato(MDStato stato) {
 		this.stato = stato;
 	}
 
@@ -301,6 +315,104 @@ public class MDFilesTmp implements Serializable {
 
 	public void setPremisFile(String premisFile) {
 		this.premisFile = premisFile;
+	}
+
+	/**
+	 * @return the archiveDataStart
+	 */
+	public Timestamp getArchiveDataStart() {
+		return archiveDataStart;
+	}
+
+	/**
+	 * @param archiveDataStart the archiveDataStart to set
+	 */
+	public void setArchiveDataStart(Timestamp archiveDataStart) {
+		this.archiveDataStart = archiveDataStart;
+	}
+
+	/**
+	 * @return the archiveDataEnd
+	 */
+	public Timestamp getArchiveDataEnd() {
+		return archiveDataEnd;
+	}
+
+	/**
+	 * @param archiveDataEnd the archiveDataEnd to set
+	 */
+	public void setArchiveDataEnd(Timestamp archiveDataEnd) {
+		this.archiveDataEnd = archiveDataEnd;
+	}
+
+	/**
+	 * @return the archiveEsito
+	 */
+	public Boolean getArchiveEsito() {
+		return archiveEsito;
+	}
+
+	/**
+	 * @param archiveEsito the archiveEsito to set
+	 */
+	public void setArchiveEsito(Boolean archiveEsito) {
+		this.archiveEsito = archiveEsito;
+	}
+
+	/**
+	 * @return the idNodo
+	 */
+	public MDNodi getIdNodo() {
+		return idNodo;
+	}
+
+	/**
+	 * @param idNodo the idNodo to set
+	 */
+	public void setIdNodo(MDNodi idNodo) {
+		this.idNodo = idNodo;
+	}
+
+	/**
+	 * @return the indexDataStart
+	 */
+	public Timestamp getIndexDataStart() {
+		return indexDataStart;
+	}
+
+	/**
+	 * @param indexDataStart the indexDataStart to set
+	 */
+	public void setIndexDataStart(Timestamp indexDataStart) {
+		this.indexDataStart = indexDataStart;
+	}
+
+	/**
+	 * @return the indexDataEnd
+	 */
+	public Timestamp getIndexDataEnd() {
+		return indexDataEnd;
+	}
+
+	/**
+	 * @param indexDataEnd the indexDataEnd to set
+	 */
+	public void setIndexDataEnd(Timestamp indexDataEnd) {
+		this.indexDataEnd = indexDataEnd;
+	}
+
+	/**
+	 * @return the indexEsito
+	 */
+	public Boolean getIndexEsito() {
+		return indexEsito;
+	}
+
+	/**
+	 * @param indexEsito the indexEsito to set
+	 */
+	public void setIndexEsito(Boolean indexEsito) {
+		this.indexEsito = indexEsito;
 	}
 
 }

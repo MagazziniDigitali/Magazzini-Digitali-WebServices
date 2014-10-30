@@ -26,7 +26,7 @@ public class MDRegistroIngressoError implements Serializable {
 
 	private Timestamp dataIns;
 
-	private String type;
+	private MDStato type;
 
 	private String msgError;
 
@@ -60,11 +60,11 @@ public class MDRegistroIngressoError implements Serializable {
 		this.dataIns = dataIns;
 	}
 
-	public String getType() {
+	public MDStato getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(MDStato type) {
 		this.type = type;
 	}
 

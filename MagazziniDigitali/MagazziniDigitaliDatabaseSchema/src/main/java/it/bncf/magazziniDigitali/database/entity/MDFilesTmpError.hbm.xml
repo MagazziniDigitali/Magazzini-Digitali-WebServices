@@ -16,9 +16,9 @@
         <property name="dataIns" type="java.sql.Timestamp">
             <column name="DATA_INS" />
         </property>
-        <property name="type" type="java.lang.String">
+        <many-to-one name="type" class="it.bncf.magazziniDigitali.database.entity.MDStato" fetch="join">
             <column name="TYPE" />
-        </property>
+        </many-to-one>
         <property name="MsgError" type="java.lang.String">
             <column name="MSGERROR" />
         </property>

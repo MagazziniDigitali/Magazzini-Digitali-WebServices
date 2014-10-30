@@ -1,18 +1,16 @@
 <?xml version="1.0"?>
-<!DOCTYPE hibernate-mapping PUBLIC
-    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
-    
-<!-- Generated 16-lug-2014 20.35.33 by Hibernate Tools 3.4.0.CR1 -->
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 22-ott-2014 16.00.31 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="it.bncf.magazziniDigitali.database.entity.MDFilesTmp" table="MDFilesTmp">
         <id name="id" type="java.lang.String">
             <column name="ID" />
             <generator class="assigned" />
         </id>
-        <property name="idIstituto" type="java.lang.String">
+        <many-to-one name="idIstituto" class="it.bncf.magazziniDigitali.database.entity.MDIstituzione" fetch="join">
             <column name="ID_ISTITUTO" />
-        </property>
+        </many-to-one>
         <property name="nomeFile" type="java.lang.String">
             <column name="NOMEFILE" />
         </property>
@@ -22,9 +20,9 @@
         <property name="nomeFileMod" type="java.sql.Timestamp">
             <column name="NOMEFILE_MOD" />
         </property>
-        <property name="stato" type="java.lang.String">
+        <many-to-one name="stato" class="it.bncf.magazziniDigitali.database.entity.MDStato" fetch="join">
             <column name="STATO" />
-        </property>
+        </many-to-one>
         <property name="trasfDataStart" type="java.sql.Timestamp">
             <column name="TRASF_DATASTART" />
         </property>
@@ -40,7 +38,7 @@
         <property name="validDataEnd" type="java.sql.Timestamp">
             <column name="VALID_DATAEND" />
         </property>
-        <property name="validEsito" type="boolean">
+        <property name="validEsito" type="java.lang.Boolean">
             <column name="VALID_ESITO" />
         </property>
         <property name="xmlMimeType" type="java.lang.String">
@@ -52,7 +50,7 @@
         <property name="decompDataEnd" type="java.sql.Timestamp">
             <column name="DECOMP_DATAEND" />
         </property>
-        <property name="decompEsito" type="boolean">
+        <property name="decompEsito" type="java.lang.Boolean">
             <column name="DECOMP_ESITO" />
         </property>
         <property name="publishDataStart" type="java.sql.Timestamp">
@@ -61,7 +59,7 @@
         <property name="publishDataEnd" type="java.sql.Timestamp">
             <column name="PUBLISH_DATAEND" />
         </property>
-        <property name="publishEsito" type="boolean">
+        <property name="publishEsito" type="java.lang.Boolean">
             <column name="PUBLISH_ESITO" />
         </property>
         <property name="copyPremisDataStart" type="java.sql.Timestamp">
@@ -70,7 +68,7 @@
         <property name="copyPremisDataEnd" type="java.sql.Timestamp">
             <column name="COPYPREMIS_DATAEND" />
         </property>
-        <property name="copyPremisEsito" type="boolean">
+        <property name="copyPremisEsito" type="java.lang.Boolean">
             <column name="COPYPREMIS_ESITO" />
         </property>
         <property name="moveFileDataStart" type="java.sql.Timestamp">
@@ -79,17 +77,38 @@
         <property name="moveFileDataEnd" type="java.sql.Timestamp">
             <column name="MOVEFILE_DATAEND" />
         </property>
-        <property name="moveFileEsito" type="boolean">
+        <property name="moveFileEsito" type="java.lang.Boolean">
             <column name="MOVEFILE_ESITO" />
         </property>
         <property name="deleteLocalData" type="java.sql.Timestamp">
             <column name="DELETELOCAL_DATA" />
         </property>
-        <property name="deleteLocalEsito" type="boolean">
+        <property name="deleteLocalEsito" type="java.lang.Boolean">
             <column name="DELETELOCAL_ESITO" />
         </property>
         <property name="premisFile" type="java.lang.String">
             <column name="PREMIS_FILE" />
+        </property>
+        <property name="archiveDataStart" type="java.sql.Timestamp">
+            <column name="ARCHIVE_DATASTART" />
+        </property>
+        <property name="archiveDataEnd" type="java.sql.Timestamp">
+            <column name="ARCHIVE_DATAEND" />
+        </property>
+        <property name="archiveEsito" type="java.lang.Boolean">
+            <column name="ARCHIVE_ESITO" />
+        </property>
+        <many-to-one name="idNodo" class="it.bncf.magazziniDigitali.database.entity.MDNodi" fetch="join">
+            <column name="ID_NODO" />
+        </many-to-one>
+        <property name="indexDataStart" type="java.sql.Timestamp">
+            <column name="INDEX_DATASTART" />
+        </property>
+        <property name="indexDataEnd" type="java.sql.Timestamp">
+            <column name="INDEX_DATAEND" />
+        </property>
+        <property name="indexEsito" type="java.lang.Boolean">
+            <column name="INDEX_ESITO" />
         </property>
     </class>
 </hibernate-mapping>

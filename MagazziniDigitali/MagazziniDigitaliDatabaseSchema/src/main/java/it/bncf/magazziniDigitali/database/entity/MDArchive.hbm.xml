@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 22-ott-2014 15.27.15 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="it.bncf.magazziniDigitali.database.entity.MDArchive" table="MDArchive">
+        <id name="id" type="java.lang.String">
+            <column name="ID" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="idMdFilesTmp" class="it.bncf.magazziniDigitali.database.entity.MDFilesTmp" fetch="join">
+            <column name="ID_MDFILESTMP" />
+        </many-to-one>
+        <many-to-one name="idNodo" class="it.bncf.magazziniDigitali.database.entity.MDNodi" fetch="join">
+            <column name="ID_NODO" />
+        </many-to-one>
+        <property name="dataStart" type="java.sql.Timestamp">
+            <column name="DATASTART" />
+        </property>
+        <property name="dataEnd" type="java.sql.Timestamp">
+            <column name="DATAEND" />
+        </property>
+        <property name="esito" type="java.lang.Boolean">
+            <column name="ESITO" />
+        </property>
+    </class>
+</hibernate-mapping>

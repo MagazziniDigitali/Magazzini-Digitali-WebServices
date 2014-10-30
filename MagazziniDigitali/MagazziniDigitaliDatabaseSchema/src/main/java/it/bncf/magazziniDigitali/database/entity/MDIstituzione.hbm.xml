@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 22-ott-2014 15.34.38 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="it.bncf.magazziniDigitali.database.entity.MDIstituzione" table="MDIstituzione">
+        <id name="id" type="java.lang.String">
+            <column name="ID" />
+            <generator class="assigned" />
+        </id>
+        <property name="nome" type="java.lang.String">
+            <column name="NOME" />
+        </property>
+        <property name="pathTmp" type="java.lang.String">
+            <column name="PATHTMP" />
+        </property>
+        <property name="password" type="java.lang.String">
+            <column name="PASSWORD" />
+        </property>
+        <property name="url" type="java.lang.String">
+            <column name="URL" />
+        </property>
+        <property name="urlLogo" type="java.lang.String">
+            <column name="URLLOGO" />
+        </property>
+        <property name="uuid" type="java.lang.String">
+            <column name="UUID" />
+        </property>
+        <property name="machineUuid" type="java.lang.String">
+            <column name="MACHINEUUID" />
+        </property>
+        <property name="softwareUuid" type="java.lang.String">
+            <column name="SOFTWAREUUID" />
+        </property>
+        <property name="rightUuid" type="java.lang.String">
+            <column name="RIGHTUUID" />
+        </property>
+        <property name="ipAuthentication" type="java.lang.String">
+            <column name="IPAUTHENTICATION" />
+        </property>
+        <property name="ipDownload" type="java.lang.String">
+            <column name="IPDOWNLOAD" />
+        </property>
+    </class>
+</hibernate-mapping>
