@@ -7,8 +7,10 @@ import it.bncf.magazziniDigitali.businessLogic.BusinessLogic;
 import it.bncf.magazziniDigitali.businessLogic.HashTable;
 import it.bncf.magazziniDigitali.database.dao.MDRegistroIngressoDAO;
 import it.bncf.magazziniDigitali.database.dao.MDRegistroIngressoErrorDAO;
+import it.bncf.magazziniDigitali.database.dao.MDStatoDAO;
 import it.bncf.magazziniDigitali.database.entity.MDRegistroIngresso;
 import it.bncf.magazziniDigitali.database.entity.MDRegistroIngressoError;
+import it.bncf.magazziniDigitali.database.entity.MDStato;
 import it.bncf.magazziniDigitali.utils.DateBusiness;
 import it.bncf.magazziniDigitali.utils.Record;
 
@@ -77,7 +79,10 @@ public class MDRegistroIngressoErrorBusiness extends
 			record.set("MDregistroIngresso", MDRegistroIngressoBusiness.setRecord(dati.getIdMDRegistroIngresso()));
 		}
 		record.set("dataIns", DateBusiness.convert(dati.getDataIns()));
-		record.set("type", dati.getType());
+		if (dati.getType() != null){
+			FactoryDAO.initialize(dati.getType());
+			record.set("type", dati.getType().getId());
+		}
 		record.set("msgError", dati.getMsgError());
 
 		return record;
@@ -166,6 +171,7 @@ public class MDRegistroIngressoErrorBusiness extends
 			throws NamingException, ConfigurationException {
 		MDRegistroIngressoDAO mdRegistroIngressoDAO=null;
 		MDRegistroIngresso mdRegistroIngresso = null;
+		MDStatoDAO mdStatoDAO = null;
 
 		if (dati.containsKey("idMDRegistroIngresso")) {
 			mdRegistroIngressoDAO = new MDRegistroIngressoDAO(hibernateTemplate);
@@ -188,7 +194,12 @@ public class MDRegistroIngressoErrorBusiness extends
 		}
 
 		if (dati.containsKey("type")) {
-			table.setType((String) dati.get("type"));
+			if (dati.get("type") instanceof String){
+				mdStatoDAO = new MDStatoDAO(hibernateTemplate);
+				table.setType(mdStatoDAO.findById((String) dati.get("type")));
+			} else {
+				table.setType((MDStato) dati.get("type"));
+			}
 		}
 		if (dati.containsKey("msgError")) {
 			table.setMsgError((String) dati.get("msgError"));

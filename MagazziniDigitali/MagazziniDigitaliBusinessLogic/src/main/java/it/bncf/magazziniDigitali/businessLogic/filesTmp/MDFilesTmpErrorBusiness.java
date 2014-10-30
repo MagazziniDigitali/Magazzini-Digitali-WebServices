@@ -5,9 +5,12 @@ package it.bncf.magazziniDigitali.businessLogic.filesTmp;
 
 import it.bncf.magazziniDigitali.businessLogic.BusinessLogic;
 import it.bncf.magazziniDigitali.businessLogic.HashTable;
+import it.bncf.magazziniDigitali.businessLogic.stato.MDStatoBusiness;
 import it.bncf.magazziniDigitali.database.dao.MDFilesTmpDAO;
 import it.bncf.magazziniDigitali.database.dao.MDFilesTmpErrorDAO;
+import it.bncf.magazziniDigitali.database.dao.MDStatoDAO;
 import it.bncf.magazziniDigitali.database.entity.MDFilesTmpError;
+import it.bncf.magazziniDigitali.database.entity.MDStato;
 import it.bncf.magazziniDigitali.utils.DateBusiness;
 import it.bncf.magazziniDigitali.utils.Record;
 
@@ -74,7 +77,10 @@ public class MDFilesTmpErrorBusiness extends
 			record.set("MDregistroIngresso", MDFilesTmpBusiness.setRecord(dati.getIdMdFilesTmp()));
 		}
 		record.set("dataIns", DateBusiness.convert(dati.getDataIns()));
-		record.set("type", dati.getType());
+		if (dati.getType() != null){
+			FactoryDAO.initialize(dati.getType());
+			record.set("type", MDStatoBusiness.setRecord(dati.getType()));
+		}
 		record.set("msgError", dati.getMsgError());
 
 		return record;
@@ -162,6 +168,7 @@ public class MDFilesTmpErrorBusiness extends
 	protected void save(MDFilesTmpError table, HashTable<String, Object> dati)
 			throws NamingException, ConfigurationException {
 		MDFilesTmpDAO mdRegistroIngressoDAO=null;
+		MDStatoDAO mdStatoDAO = new MDStatoDAO(hibernateTemplate);
 
 		if (dati.containsKey("idMDFilesTmp")) {
 			mdRegistroIngressoDAO = new MDFilesTmpDAO(hibernateTemplate);
@@ -174,7 +181,11 @@ public class MDFilesTmpErrorBusiness extends
 		}
 
 		if (dati.containsKey("type")) {
-			table.setType((String) dati.get("type"));
+			if (dati.get("type") instanceof String){
+				table.setType(mdStatoDAO.findById((String) dati.get("type")));
+			} else {
+				table.setType((MDStato) dati.get("type"));
+			}
 		}
 		if (dati.containsKey("msgError")) {
 			table.setMsgError((String) dati.get("msgError"));

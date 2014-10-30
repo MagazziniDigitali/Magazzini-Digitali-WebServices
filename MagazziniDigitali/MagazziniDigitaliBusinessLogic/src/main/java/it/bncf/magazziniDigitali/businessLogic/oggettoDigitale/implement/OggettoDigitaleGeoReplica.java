@@ -3,13 +3,11 @@
  */
 package it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.implement;
 
-import info.lc.xmlns.premis_v2.SignificantPropertiesComplexType;
 import it.bncf.magazziniDigitali.businessLogic.filesTmp.MDFilesTmpBusiness;
-import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.validate.ArchiveMD;
-import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.validate.ValidateFile;
+import it.bncf.magazziniDigitali.database.dao.MDNodiDAO;
 import it.bncf.magazziniDigitali.database.dao.MDStatoDAO;
 import it.bncf.magazziniDigitali.database.entity.MDFilesTmp;
-import it.bncf.magazziniDigitali.database.entity.MDIstituzione;
+import it.bncf.magazziniDigitali.database.entity.MDNodi;
 import it.bncf.magazziniDigitali.utils.GenFileDest;
 import it.magazziniDigitali.xsd.premis.PremisXsd;
 import it.magazziniDigitali.xsd.premis.exception.PremisXsdException;
@@ -19,53 +17,234 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.sql.SQLException;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.Callable;
 
-import mx.randalf.archive.info.DigestType;
+import javax.naming.NamingException;
+
 import mx.randalf.configuration.Configuration;
 import mx.randalf.configuration.exception.ConfigurationException;
-import mx.randalf.tools.Utils;
-import mx.randalf.tools.exception.UtilException;
+import mx.randalf.hibernate.FactoryDAO;
 import mx.randalf.xsd.exception.XsdException;
 
 import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
+import org.springframework.orm.hibernate3.HibernateTemplate;
 
 /**
  * @author massi
  *
  */
-public class OggettoDigitalePublish implements Callable<Boolean> {
+public class OggettoDigitaleGeoReplica {
 
-	private Logger log = Logger.getLogger(getClass());
-
-	private MDFilesTmp record = null;
+	private Logger log = Logger.getLogger(OggettoDigitaleGeoReplica.class);
 
 	private Logger logPublish = null;
-
-	private MDFilesTmpBusiness mdFileTmp = null;
-
+	
 	private String name = null;
-
-	private String application = null;
+	
+	private HibernateTemplate hibernateTemplate= null;
 
 	/**
 	 * 
 	 */
-	public OggettoDigitalePublish(MDFilesTmp record, Logger logPublish, MDFilesTmpBusiness mdFileTmp,
-			String name, String application) {
-		this.record = record;
+	public OggettoDigitaleGeoReplica(HibernateTemplate hibernateTemplate, Logger logPublish, String name) {
 		this.logPublish = logPublish;
-		this.mdFileTmp = mdFileTmp;
 		this.name = name;
-		this.application = application;
+		this.hibernateTemplate = hibernateTemplate;
 	}
 
-	@SuppressWarnings("unused")
-	@Override
-	public Boolean call() throws Exception {
-		Boolean ris = false;
+	public void esegui(String objectIdentifierPremis, MDFilesTmpBusiness mdFileTmpBusiness, String application) {
 		File filePremis = null;
+		PremisXsd premisElab = null;
+		GregorianCalendar gcStart = null;
+		GregorianCalendar gcEnd = null;
+		MDFilesTmp mdFilesTmp = null;
+		File fileElab = null;
+		File fileElabPremis = null;
+		MDNodiDAO mdNodiDAO = null;
+		List<MDNodi> mdNodis = null;
+		boolean elabNodi = true;
+
+		try {
+			mdFilesTmp = mdFileTmpBusiness.findPremis(objectIdentifierPremis);
+		} catch (HibernateException e) {
+			log.error(e.getMessage(), e);
+		} catch (NamingException e) {
+			log.error(e.getMessage(), e);
+		} catch (ConfigurationException e) {
+			log.error(e.getMessage(), e);
+		}
+
+		try {
+			if (mdFilesTmp != null){
+				FactoryDAO.initialize(mdFilesTmp.getStato());
+				if (mdFilesTmp.getStato().getId().equals(MDStatoDAO.FINEPUBLISH) ||
+						mdFilesTmp.getStato().getId().equals(MDStatoDAO.INITARCHIVE)){
+					try {
+						filePremis = new File(Configuration.getValue("path.premis")
+								+ File.separator + UUID.randomUUID().toString()
+								+ ".premis");
+
+						premisElab = new PremisXsd();
+						try {
+
+							fileElabPremis = GenFileDest.genFileDest(Configuration.getValue("demoni.Publish.pathStorage")
+									,mdFilesTmp.getPremisFile());
+							fileElab = new File(fileElabPremis.getAbsolutePath().replace(".premis", ""));
+							log.info(name+" Inizio l'elaborazione del file ["+fileElab.getAbsolutePath()+"]");
+							if (mdFilesTmp.getStato().getId().equals(MDStatoDAO.FINEPUBLISH)){
+								logPublish.info(name+" Inizio l'archiviazione del file ["
+										+ fileElab.getAbsolutePath() + "]");
+								gcStart = mdFileTmpBusiness
+										.updateStartArchive(mdFilesTmp.getId());
+							} else {
+								logPublish.info(name+" Continuo l'archivizione del file ["
+										+ fileElab.getAbsolutePath() + "]");
+								gcStart = new GregorianCalendar();
+								gcStart.setTimeInMillis(mdFilesTmp.getArchiveDataStart().getTime());
+							}
+							premisElab
+							.addObjectFileContainer(
+									objectIdentifierPremis,
+									null,
+									null,
+									new BigInteger("0"),
+									null,
+									null,
+									null, null, null,
+									null, null);
+							if (fileElab.exists()){
+								if (fileElabPremis.exists()){
+									mdNodiDAO = new MDNodiDAO(hibernateTemplate);
+									mdNodis = mdNodiDAO.findAll();
+									elabNodi = true;
+									for (MDNodi mdNodi : mdNodis){
+										if (!mdNodi.getId().equals(Configuration.getValues("nodo"))){
+											if (!geoReplica()){
+												elabNodi = false;
+											}
+										}
+									}
+									if (elabNodi){
+										gcEnd = mdFileTmpBusiness.updateStopArchive(mdFilesTmp.getId(), true, null);
+//										premisElab.addEvent("geoReplica", gcStart, gcEnd, "Nodo ID: "+, 
+//										eventOutcome, eventOutcomeDetails, linkingAgentIdentifierValue, linkingSoftwareIdentifierValue, objectIdentifierMaster);
+									}
+								} else {
+									logPublish.error(name+" Il file ["+fileElabPremis.getAbsolutePath()+"] non è presente");
+									premisElab.addEvent(
+											"Error",
+											null,
+											null,
+											null,
+											"KO",
+											new String[] { "Il file ["+fileElabPremis.getAbsolutePath()+"] non è presente" },
+											null,
+											Configuration.getValue("demoni."
+													+ application + ".UUID"), null);
+									mdFileTmpBusiness
+									.updateStopArchive(
+											mdFilesTmp.getId(),
+											false,
+											new String[] { "Il file ["+fileElabPremis.getAbsolutePath()+"] non è presente" });
+								}
+							} else {
+								logPublish.error(name+" Il file ["+fileElab.getAbsolutePath()+"] non è presente");
+								premisElab.addEvent(
+										"Error",
+										null,
+										null,
+										null,
+										"KO",
+										new String[] { "Il file ["+fileElab.getAbsolutePath()+"] non è presente" },
+										null,
+										Configuration.getValue("demoni."
+												+ application + ".UUID"), null);
+								mdFileTmpBusiness
+								.updateStopArchive(
+										mdFilesTmp.getId(),
+										false,
+										new String[] { "Il file ["+fileElab.getAbsolutePath()+"] non è presente" });
+							}
+						} catch (ConfigurationException e) {
+							if (premisElab != null) {
+								premisElab.addEvent(
+										"Error",
+										null,
+										null,
+										null,
+										"KO",
+										new String[] { e.getMessage() },
+										null,
+										Configuration.getValue("demoni."
+												+ application + ".UUID"), null);
+							}
+							mdFileTmpBusiness.updateStopArchive(mdFilesTmp.getId(), false,
+									new String[] { e.getMessage() });
+							log.error(e.getMessage(), e);
+						} catch (SQLException e) {
+							if (premisElab != null) {
+								premisElab.addEvent(
+										"Error",
+										null,
+										null,
+										null,
+										"KO",
+										new String[] { e.getMessage() },
+										null,
+										Configuration.getValue("demoni."
+												+ application + ".UUID"), null);
+							}
+							mdFileTmpBusiness.updateStopArchive(mdFilesTmp.getId(), false,
+									new String[] { e.getMessage() });
+							log.error(e.getMessage(), e);
+						}finally{
+							logPublish.info(name+" Fine l'elaborazione del file ["+objectIdentifierPremis+"]");
+							try {
+								if (premisElab != null){
+									premisElab.write(filePremis, false);
+								}
+							} catch (PremisXsdException e) {
+								log.error(e.getMessage(), e);
+								mdFileTmpBusiness.updateStopArchive(mdFilesTmp.getId(),
+										false, new String[] { e.getMessage() });
+							} catch (XsdException e) {
+								log.error(e.getMessage(), e);
+								mdFileTmpBusiness.updateStopArchive(mdFilesTmp.getId(),
+										false, new String[] { e.getMessage() });
+							} catch (IOException e) {
+								log.error(e.getMessage(), e);
+								mdFileTmpBusiness.updateStopArchive(mdFilesTmp.getId(),
+										false, new String[] { e.getMessage() });
+							} catch (Exception e) {
+								log.error(e.getMessage(), e);
+								mdFileTmpBusiness.updateStopArchive(mdFilesTmp.getId(),
+										false, new String[] { e.getMessage() });
+							}
+						}
+					} catch (SQLException e) {
+						log.error(e.getMessage(), e);
+					}
+				}
+			} else {
+				logPublish.error(name+" Il file premis ["+objectIdentifierPremis+"] non è presente in archivio");
+			}
+		} catch (NamingException e) {
+			log.error(e.getMessage(), e);
+		} catch (ConfigurationException e) {
+			log.error(e.getMessage(), e);
+		}
+	}
+
+	private boolean geoReplica(){
+		boolean ris = false;
+		
+		return ris;
+	}
+	/*
+	private void test(){
+		Boolean ris = false;
 		File filePremisMaster = null;
 		GregorianCalendar start = null;
 		String fileObj = null;
@@ -75,16 +254,12 @@ public class OggettoDigitalePublish implements Callable<Boolean> {
 		int pos = 0;
 		String ext = null;
 		File fObjNew = null;
-		PremisXsd premisElab = null;
 		ValidateFile validate = null;
 		ArchiveMD archive = null;
 		String objectIdentifierPremis = null;
 		File premisDest = null;
 		GregorianCalendar stop = null;
 
-		filePremis = new File(Configuration.getValue("path.premis")
-				+ File.separator + UUID.randomUUID().toString()
-				+ ".premis");
 		try {
 
 			validate = new ValidateFile();
@@ -93,7 +268,7 @@ public class OggettoDigitalePublish implements Callable<Boolean> {
 							+ File.separator
 							+ record.getPremisFile());
 			if (record.getStato()
-					.equals(MDStatoDAO.FINEVALID)) {
+					.equals(MDFilesTmpDAO.FINEVALID)) {
 				logPublish.info(name+" Inizio la pubblicazione del file ["
 						+ filePremisMaster.getAbsolutePath() + "]");
 				start = mdFileTmp
@@ -107,7 +282,8 @@ public class OggettoDigitalePublish implements Callable<Boolean> {
 
 			if (filePremisMaster.exists()) {
 				// calcolo il file da validare
-				fileObj = record.getIdIstituto().getPathTmp();
+				fileObj = Configuration.getValue("istituto."
+						+ record.getIdIstituto() + ".pathTmp");
 				fileObj += File.separator;
 				fileObj += record.getNomeFile();
 				fObj = new File(fileObj);
@@ -132,7 +308,6 @@ public class OggettoDigitalePublish implements Callable<Boolean> {
 						+ ext);
 				if (isFileExist(fObj, record, fObjNew)) {
 
-					premisElab = new PremisXsd();
 
 					validate.check(filePremisMaster);
 
@@ -148,21 +323,6 @@ public class OggettoDigitalePublish implements Callable<Boolean> {
 						}
 					}
 					objectIdentifierPremis = archive.getID();
-					premisElab
-							.addObjectFileContainer(
-									objectIdentifierPremis,
-									(archive.getXmltype() == null ? null
-											: archive.getXmltype()
-													.value()),
-									archive.getType().getExt(),
-									new BigInteger("0"),
-									archive.getDigest(DigestType.SHA_1),
-									archive.getType().getSize(),
-									archive.getMimetype(), archive
-											.getNome(), null,
-									archive.getType().getFormat()
-											.getVersion(), archive
-											.getType().getPUID());
 
 					premisDest= GenFileDest.genFileDest(Configuration.getValue("demoni.Publish.pathStorage")
 							,filePremisMaster.getName());
@@ -356,13 +516,12 @@ public class OggettoDigitalePublish implements Callable<Boolean> {
 		
 		return ris;
 	}
-
+*/
 	/**
 	 * Metodo utilizzato per ricamare l'identificativo dell'Oggetto dal tracciato Premis
 	 * 
 	 * @param premis Tracciato Premis da analizzare
 	 * @return Valore individuato
-	 */
 	private String findObjectIdentifierContainer(PremisXsd premis) {
 		String objectIdentifierContainer = null;
 		info.lc.xmlns.premis_v2.File file = null;
@@ -420,6 +579,7 @@ public class OggettoDigitalePublish implements Callable<Boolean> {
 		}
 		return objectIdentifierContainer;
 	}
+	 */
 
 	/**
 	 * Metodo utilizzato per verificare la presenza del file di destinazione nelle diverse condizioni di elaborazione
@@ -428,7 +588,6 @@ public class OggettoDigitalePublish implements Callable<Boolean> {
 	 * @param record
 	 * @param fObjNew
 	 * @return
-	 */
 	private boolean isFileExist(File fObj, MDFilesTmp record, File fObjNew){
 		boolean ris = false;
 		
@@ -448,7 +607,7 @@ public class OggettoDigitalePublish implements Callable<Boolean> {
 
 	private boolean copyFile(File fInput, File fOutput, MDFilesTmp record,
 			MDFilesTmpBusiness mdFileTmp, PremisXsd premisElab,
-			String application, String objectIdentifierMaster, MDIstituzione idIstituto)
+			String application, String objectIdentifierMaster, String idIstituto)
 			throws SQLException, ConfigurationException {
 		boolean result = false;
 		GregorianCalendar gcStart = null;
@@ -467,9 +626,12 @@ public class OggettoDigitalePublish implements Callable<Boolean> {
 						gcEnd,
 						true,
 						null,
-						idIstituto.getUuid(),
-						idIstituto.getMachineUuid(),
-						idIstituto.getSoftwareUuid());
+						Configuration.getValue("istituto." + idIstituto
+								+ ".UUID"),
+						Configuration.getValue("istituto." + idIstituto
+								+ ".machine.UUID"),
+						Configuration.getValue("istituto." + idIstituto
+								+ ".software.UUID"));
 				premisElab
 						.addEvent(
 								"copyPremis",
@@ -499,9 +661,11 @@ public class OggettoDigitalePublish implements Callable<Boolean> {
 					gcEnd,
 					false,
 					new String[] { e.getMessage() },
-					idIstituto.getUuid(),
-					idIstituto.getMachineUuid(),
-					idIstituto.getSoftwareUuid());
+					Configuration.getValue("istituto." + idIstituto + ".UUID"),
+					Configuration.getValue("istituto." + idIstituto
+							+ ".machine.UUID"),
+					Configuration.getValue("istituto." + idIstituto
+							+ ".software.UUID"));
 			premisElab.addEvent(
 					"copyPremis",
 					gcStart,
@@ -519,9 +683,11 @@ public class OggettoDigitalePublish implements Callable<Boolean> {
 					gcEnd,
 					false,
 					new String[] { e.getMessage() },
-					idIstituto.getUuid(),
-					idIstituto.getMachineUuid(),
-					idIstituto.getSoftwareUuid());
+					Configuration.getValue("istituto." + idIstituto + ".UUID"),
+					Configuration.getValue("istituto." + idIstituto
+							+ ".machine.UUID"),
+					Configuration.getValue("istituto." + idIstituto
+							+ ".software.UUID"));
 			premisElab.addEvent(
 					"copyPremis",
 					gcStart,
@@ -633,6 +799,7 @@ public class OggettoDigitalePublish implements Callable<Boolean> {
 		}
 		return result;
 	}
+	 */
 
 //	private boolean publishSolr(PremisXsd premis, File fObj, Logger logPublish)
 //			throws SolrException {

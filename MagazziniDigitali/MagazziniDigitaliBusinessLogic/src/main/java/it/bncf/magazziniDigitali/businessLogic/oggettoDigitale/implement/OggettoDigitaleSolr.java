@@ -3,45 +3,48 @@
  */
 package it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.implement;
 
-import info.lc.xmlns.premis_v2.SignificantPropertiesComplexType;
+import info.lc.xmlns.premis_v2.EventComplexType;
+import info.lc.xmlns.premis_v2.ObjectComplexType;
 import it.bncf.magazziniDigitali.businessLogic.filesTmp.MDFilesTmpBusiness;
+import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.solr.SolrEvent;
+import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.solr.SolrObjectFile;
 import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.validate.ArchiveMD;
 import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.validate.ValidateFile;
-import it.bncf.magazziniDigitali.database.dao.MDStatoDAO;
 import it.bncf.magazziniDigitali.database.entity.MDFilesTmp;
-import it.bncf.magazziniDigitali.database.entity.MDIstituzione;
+import it.bncf.magazziniDigitali.solr.AddDocumentMD;
 import it.bncf.magazziniDigitali.utils.GenFileDest;
 import it.magazziniDigitali.xsd.premis.PremisXsd;
 import it.magazziniDigitali.xsd.premis.exception.PremisXsdException;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.sql.SQLException;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
-import mx.randalf.archive.info.DigestType;
+import mx.randalf.archive.Tar;
 import mx.randalf.configuration.Configuration;
 import mx.randalf.configuration.exception.ConfigurationException;
-import mx.randalf.tools.Utils;
-import mx.randalf.tools.exception.UtilException;
+import mx.randalf.solr.exception.SolrException;
 import mx.randalf.xsd.exception.XsdException;
 
 import org.apache.log4j.Logger;
+import org.apache.solr.client.solrj.SolrServerException;
 
 /**
  * @author massi
  *
  */
-public class OggettoDigitalePublish implements Callable<Boolean> {
+public class OggettoDigitaleSolr implements Callable<Boolean> {
 
 	private Logger log = Logger.getLogger(getClass());
 
 	private MDFilesTmp record = null;
 
-	private Logger logPublish = null;
+	private Logger logSolr = null;
 
 	private MDFilesTmpBusiness mdFileTmp = null;
 
@@ -52,10 +55,10 @@ public class OggettoDigitalePublish implements Callable<Boolean> {
 	/**
 	 * 
 	 */
-	public OggettoDigitalePublish(MDFilesTmp record, Logger logPublish, MDFilesTmpBusiness mdFileTmp,
+	public OggettoDigitaleSolr(MDFilesTmp record, Logger logSolr, MDFilesTmpBusiness mdFileTmp,
 			String name, String application) {
 		this.record = record;
-		this.logPublish = logPublish;
+		this.logSolr = logSolr;
 		this.mdFileTmp = mdFileTmp;
 		this.name = name;
 		this.application = application;
@@ -66,7 +69,7 @@ public class OggettoDigitalePublish implements Callable<Boolean> {
 	public Boolean call() throws Exception {
 		Boolean ris = false;
 		File filePremis = null;
-		File filePremisMaster = null;
+//		File filePremisMaster = null;
 		GregorianCalendar start = null;
 		String fileObj = null;
 		File fObj = null;
@@ -87,169 +90,170 @@ public class OggettoDigitalePublish implements Callable<Boolean> {
 				+ ".premis");
 		try {
 
-			validate = new ValidateFile();
-			filePremisMaster = new File(
-					Configuration.getValue("path.premis")
-							+ File.separator
-							+ record.getPremisFile());
-			if (record.getStato()
-					.equals(MDStatoDAO.FINEVALID)) {
-				logPublish.info(name+" Inizio la pubblicazione del file ["
-						+ filePremisMaster.getAbsolutePath() + "]");
-				start = mdFileTmp
-						.updateStartPublish(record.getId());
-			} else {
-				logPublish.info(name+" Continuo la pubblicazione del file ["
-						+ filePremisMaster.getAbsolutePath() + "]");
-				start = new GregorianCalendar();
-				start.setTimeInMillis(record.getPublishDataStart().getTime());
-			}
-
-			if (filePremisMaster.exists()) {
-				// calcolo il file da validare
-				fileObj = record.getIdIstituto().getPathTmp();
-				fileObj += File.separator;
-				fileObj += record.getNomeFile();
-				fObj = new File(fileObj);
-				logPublish.info(name+" fileObj: " + fObj.getAbsolutePath());
-				if (!fObj.exists()) {
-					fObj = new File(fObj.getParentFile()
-							.getAbsolutePath()
-							+ File.separator
-							+ fObj.getName()
-									.replace(".tar.gz", ".tar")
-									.replace(".tgz", ".tar"));
-				}
-
-				premisInput = new PremisXsd(filePremisMaster);
-
-				objectIdentifierContainer = findObjectIdentifierContainer(premisInput);
-				
-				pos = fObj.getName().indexOf(".");
-				ext = fObj.getName().substring(pos);
+//			validate = new ValidateFile();
+//			filePremisMaster = new File(
+//					Configuration.getValue("path.premis")
+//							+ File.separator
+//							+ record.getPremisFile());
+//			if (record.getStato()
+//					.equals(MDFilesTmpDAO.FINEPUBLISH)) {
+//				logSolr.info(name+" Inizio l'indicizzazione del file ["
+//						+ filePremisMaster.getAbsolutePath() + "]");
+//				start = mdFileTmp
+//						.updateStartPublish(record.getId());
+//			} else {
+//				logSolr.info(name+" Continuo l'indicizzazione del file ["
+//						+ filePremisMaster.getAbsolutePath() + "]");
+//				start = new GregorianCalendar();
+//				start.setTimeInMillis(record.getPublishDataStart().getTime());
+//			}
+//
+//			if (filePremisMaster.exists()) {
+//				// calcolo il file da validare
+//				fileObj = Configuration.getValue("istituto."
+//						+ record.getIdIstituto() + ".pathTmp");
+//				fileObj += File.separator;
+//				fileObj += record.getNomeFile();
+//				fObj = new File(fileObj);
+//				logSolr.info(name+" fileObj: " + fObj.getAbsolutePath());
+//				if (!fObj.exists()) {
+//					fObj = new File(fObj.getParentFile()
+//							.getAbsolutePath()
+//							+ File.separator
+//							+ fObj.getName()
+//									.replace(".tar.gz", ".tar")
+//									.replace(".tgz", ".tar"));
+//				}
+//
+				premisInput = new PremisXsd(filePremis);
+//
+//				objectIdentifierContainer = findObjectIdentifierContainer(premisInput);
+//				
+//				pos = fObj.getName().indexOf(".");
+//				ext = fObj.getName().substring(pos);
 				fObjNew = GenFileDest.genFileDest(Configuration.getValue("demoni.Publish.pathStorage")
 						,objectIdentifierContainer
 						+ ext);
-				if (isFileExist(fObj, record, fObjNew)) {
-
-					premisElab = new PremisXsd();
-
-					validate.check(filePremisMaster);
-
-					if (validate.getArchive().checkMimetype(
-							"application/x-tar")) {
-						archive = validate.getArchive();
-					} else {
-						archive = validate.getArchive();
-						if (archive.getArchive() != null
-								&& archive.getArchive().size() > 0) {
-							archive = (ArchiveMD) archive
-									.getArchive().get(0);
-						}
-					}
-					objectIdentifierPremis = archive.getID();
-					premisElab
-							.addObjectFileContainer(
-									objectIdentifierPremis,
-									(archive.getXmltype() == null ? null
-											: archive.getXmltype()
-													.value()),
-									archive.getType().getExt(),
-									new BigInteger("0"),
-									archive.getDigest(DigestType.SHA_1),
-									archive.getType().getSize(),
-									archive.getMimetype(), archive
-											.getNome(), null,
-									archive.getType().getFormat()
-											.getVersion(), archive
-											.getType().getPUID());
-
-					premisDest= GenFileDest.genFileDest(Configuration.getValue("demoni.Publish.pathStorage")
-							,filePremisMaster.getName());
-					logPublish.info(name+" Copio il file "+
-								filePremisMaster.getAbsolutePath()+
-								" in "+
-								premisDest.getAbsolutePath());
-					// Copio il file premis nella sua posizione
-					// definitiva
-					if (copyFile(
-							filePremisMaster,
-							premisDest,
-							record, mdFileTmp, premisElab,
-							application, objectIdentifierPremis, 
-								record.getIdIstituto())) {
-						
-						logPublish.info(name+" Sposto il file  "+
-								fObj.getAbsolutePath()+
-								" in "+
-								fObjNew.getAbsolutePath());
-						if (moveFile(fObj, fObjNew, record,
-								mdFileTmp, premisElab, application,
-								objectIdentifierContainer)) {
-//							logPublish.info(name+" Pubblico il materiale in Solr");
-//							if (publishSolr(premisInput, fObjNew, logPublish)) {
-//								stop = mdFileTmp.updateStopPublish(
-//										record.getId(), true, null);
-//								premisElab
-//										.addEvent(
-//												"publish",
-//												start,
-//												stop,
-//												null,
-//												"OK",
-//												null,
-//												null,
-//												Configuration
-//														.getValue("demoni."
-//																+ application
-//																+ ".UUID"),
-//												objectIdentifierContainer);
-//								logPublish.info(name+" Materiale pubblicato");
-//							} else {
-//								logPublish.error(name+" Riscontrato un problema nella pubblicazione");
-//								mdFileTmp
-//								.updateStopPublish(
-//										record.getId(),
-//										false,
-//										new String[] { "Riscontrato un problema nella pubblicazione" });
-//							}
-						} else {
-							logPublish.error(name+" Riscontrato un problema nello spostamento");
-							mdFileTmp
-							.updateStopPublish(
-									record.getId(),
-									false,
-									new String[] { "Riscontrato un problema nello spostamento del file da Archiviare" });
-						}
-					} else {
-						logPublish.error(name+" Riscontrato un problema nella copia");
-						mdFileTmp
-						.updateStopPublish(
-								record.getId(),
-								false,
-								new String[] { "Riscontrato un problema nella copia del file Premis" });
-					}
-				} else {
-					logPublish.error(name+" Il file ["
-											+ fObj.getAbsolutePath()
-											+ "] non è presente sul Server");
-					mdFileTmp
-							.updateStopPublish(
-									record.getId(),
-									false,
-									new String[] { "Il file ["
-											+ fObj.getAbsolutePath()
-											+ "] non è presente sul Server" });
-				}
+//				if (isFileExist(fObj, record, fObjNew)) {
+//
+//					premisElab = new PremisXsd();
+//
+//					validate.check(filePremisMaster);
+//
+//					if (validate.getArchive().checkMimetype(
+//							"application/x-tar")) {
+//						archive = validate.getArchive();
+//					} else {
+//						archive = validate.getArchive();
+//						if (archive.getArchive() != null
+//								&& archive.getArchive().size() > 0) {
+//							archive = (ArchiveMD) archive
+//									.getArchive().get(0);
+//						}
+//					}
+//					objectIdentifierPremis = archive.getID();
+//					premisElab
+//							.addObjectFileContainer(
+//									objectIdentifierPremis,
+//									(archive.getXmltype() == null ? null
+//											: archive.getXmltype()
+//													.value()),
+//									archive.getType().getExt(),
+//									new BigInteger("0"),
+//									archive.getDigest(DigestType.SHA_1),
+//									archive.getType().getSize(),
+//									archive.getMimetype(), archive
+//											.getNome(), null,
+//									archive.getType().getFormat()
+//											.getVersion(), archive
+//											.getType().getPUID());
+//
+//					premisDest= GenFileDest.genFileDest(Configuration.getValue("demoni.Publish.pathStorage")
+//							,filePremisMaster.getName());
+//					logSolr.info(name+" Copio il file "+
+//								filePremisMaster.getAbsolutePath()+
+//								" in "+
+//								premisDest.getAbsolutePath());
+//					// Copio il file premis nella sua posizione
+//					// definitiva
+//					if (copyFile(
+//							filePremisMaster,
+//							premisDest,
+//							record, mdFileTmp, premisElab,
+//							application, objectIdentifierPremis, 
+//								record.getIdIstituto())) {
+//						
+//						logSolr.info(name+" Sposto il file  "+
+//								fObj.getAbsolutePath()+
+//								" in "+
+//								fObjNew.getAbsolutePath());
+//						if (moveFile(fObj, fObjNew, record,
+//								mdFileTmp, premisElab, application,
+//								objectIdentifierContainer)) {
+			logSolr.info(name+" Pubblico il materiale in Solr");
+			if (publishSolr(premisInput, fObjNew, logSolr)) {
+				stop = mdFileTmp.updateStopPublish(
+						record.getId(), true, null);
+				premisElab
+						.addEvent(
+								"publish",
+								start,
+								stop,
+								null,
+								"OK",
+								null,
+								null,
+								Configuration
+										.getValue("demoni."
+												+ application
+												+ ".UUID"),
+								objectIdentifierContainer);
+				logSolr.info(name+" Materiale pubblicato");
 			} else {
-				mdFileTmp.updateStopPublish(
+				logSolr.error(name+" Riscontrato un problema nella pubblicazione");
+				mdFileTmp
+				.updateStopPublish(
 						record.getId(),
 						false,
-						new String[] { "Il file ["
-								+ filePremisMaster
-										.getAbsolutePath()
-								+ "] non è presente sul Server" });
+						new String[] { "Riscontrato un problema nella pubblicazione" });
 			}
+//						} else {
+//							logSolr.error(name+" Riscontrato un problema nello spostamento");
+//							mdFileTmp
+//							.updateStopPublish(
+//									record.getId(),
+//									false,
+//									new String[] { "Riscontrato un problema nello spostamento del file da Archiviare" });
+//						}
+//					} else {
+//						logSolr.error(name+" Riscontrato un problema nella copia");
+//						mdFileTmp
+//						.updateStopPublish(
+//								record.getId(),
+//								false,
+//								new String[] { "Riscontrato un problema nella copia del file Premis" });
+//					}
+//				} else {
+//					logSolr.error(name+" Il file ["
+//											+ fObj.getAbsolutePath()
+//											+ "] non è presente sul Server");
+//					mdFileTmp
+//							.updateStopPublish(
+//									record.getId(),
+//									false,
+//									new String[] { "Il file ["
+//											+ fObj.getAbsolutePath()
+//											+ "] non è presente sul Server" });
+//				}
+//			} else {
+//				mdFileTmp.updateStopPublish(
+//						record.getId(),
+//						false,
+//						new String[] { "Il file ["
+//								+ filePremisMaster
+//										.getAbsolutePath()
+//								+ "] non è presente sul Server" });
+//			}
 		} catch (ConfigurationException e) {
 			if (premisElab != null) {
 				premisElab.addEvent(
@@ -282,22 +286,22 @@ public class OggettoDigitalePublish implements Callable<Boolean> {
 			mdFileTmp.updateStopPublish(record.getId(), false,
 					new String[] { e.getMessage() });
 			log.error(e.getMessage(), e);
-		} catch (XsdException e) {
-			if (premisElab != null) {
-				premisElab.addEvent(
-						"Error",
-						null,
-						null,
-						null,
-						"KO",
-						new String[] { e.getMessage() },
-						null,
-						Configuration.getValue("demoni."
-								+ application + ".UUID"), null);
-			}
-			mdFileTmp.updateStopPublish(record.getId(), false,
-					new String[] { e.getMessage() });
-			log.error(e.getMessage(), e);
+//		} catch (XsdException e) {
+//			if (premisElab != null) {
+//				premisElab.addEvent(
+//						"Error",
+//						null,
+//						null,
+//						null,
+//						"KO",
+//						new String[] { e.getMessage() },
+//						null,
+//						Configuration.getValue("demoni."
+//								+ application + ".UUID"), null);
+//			}
+//			mdFileTmp.updateStopPublish(record.getId(), false,
+//					new String[] { e.getMessage() });
+//			log.error(e.getMessage(), e);
 //		} catch (SolrException e) {
 //			if (premisElab != null) {
 //				premisElab.addEvent(
@@ -362,7 +366,6 @@ public class OggettoDigitalePublish implements Callable<Boolean> {
 	 * 
 	 * @param premis Tracciato Premis da analizzare
 	 * @return Valore individuato
-	 */
 	private String findObjectIdentifierContainer(PremisXsd premis) {
 		String objectIdentifierContainer = null;
 		info.lc.xmlns.premis_v2.File file = null;
@@ -420,6 +423,7 @@ public class OggettoDigitalePublish implements Callable<Boolean> {
 		}
 		return objectIdentifierContainer;
 	}
+	 */
 
 	/**
 	 * Metodo utilizzato per verificare la presenza del file di destinazione nelle diverse condizioni di elaborazione
@@ -428,7 +432,6 @@ public class OggettoDigitalePublish implements Callable<Boolean> {
 	 * @param record
 	 * @param fObjNew
 	 * @return
-	 */
 	private boolean isFileExist(File fObj, MDFilesTmp record, File fObjNew){
 		boolean ris = false;
 		
@@ -445,10 +448,24 @@ public class OggettoDigitalePublish implements Callable<Boolean> {
 		
 		return ris;
 	}
+	 */
 
+	/**
+	 * 
+	 * @param fInput
+	 * @param fOutput
+	 * @param record
+	 * @param mdFileTmp
+	 * @param premisElab
+	 * @param application
+	 * @param objectIdentifierMaster
+	 * @param idIstituto
+	 * @return
+	 * @throws SQLException
+	 * @throws ConfigurationException
 	private boolean copyFile(File fInput, File fOutput, MDFilesTmp record,
 			MDFilesTmpBusiness mdFileTmp, PremisXsd premisElab,
-			String application, String objectIdentifierMaster, MDIstituzione idIstituto)
+			String application, String objectIdentifierMaster, String idIstituto)
 			throws SQLException, ConfigurationException {
 		boolean result = false;
 		GregorianCalendar gcStart = null;
@@ -467,9 +484,12 @@ public class OggettoDigitalePublish implements Callable<Boolean> {
 						gcEnd,
 						true,
 						null,
-						idIstituto.getUuid(),
-						idIstituto.getMachineUuid(),
-						idIstituto.getSoftwareUuid());
+						Configuration.getValue("istituto." + idIstituto
+								+ ".UUID"),
+						Configuration.getValue("istituto." + idIstituto
+								+ ".machine.UUID"),
+						Configuration.getValue("istituto." + idIstituto
+								+ ".software.UUID"));
 				premisElab
 						.addEvent(
 								"copyPremis",
@@ -499,9 +519,11 @@ public class OggettoDigitalePublish implements Callable<Boolean> {
 					gcEnd,
 					false,
 					new String[] { e.getMessage() },
-					idIstituto.getUuid(),
-					idIstituto.getMachineUuid(),
-					idIstituto.getSoftwareUuid());
+					Configuration.getValue("istituto." + idIstituto + ".UUID"),
+					Configuration.getValue("istituto." + idIstituto
+							+ ".machine.UUID"),
+					Configuration.getValue("istituto." + idIstituto
+							+ ".software.UUID"));
 			premisElab.addEvent(
 					"copyPremis",
 					gcStart,
@@ -519,9 +541,11 @@ public class OggettoDigitalePublish implements Callable<Boolean> {
 					gcEnd,
 					false,
 					new String[] { e.getMessage() },
-					idIstituto.getUuid(),
-					idIstituto.getMachineUuid(),
-					idIstituto.getSoftwareUuid());
+					Configuration.getValue("istituto." + idIstituto + ".UUID"),
+					Configuration.getValue("istituto." + idIstituto
+							+ ".machine.UUID"),
+					Configuration.getValue("istituto." + idIstituto
+							+ ".software.UUID"));
 			premisElab.addEvent(
 					"copyPremis",
 					gcStart,
@@ -535,7 +559,20 @@ public class OggettoDigitalePublish implements Callable<Boolean> {
 		}
 		return result;
 	}
+	 */
 
+	/**
+	 * 
+	 * @param fInput
+	 * @param fOutput
+	 * @param record
+	 * @param mdFileTmp
+	 * @param premisElab
+	 * @param application
+	 * @param objectIdentifierMaster
+	 * @return
+	 * @throws SQLException
+	 * @throws ConfigurationException
 	private boolean moveFile(File fInput, File fOutput, MDFilesTmp record,
 			MDFilesTmpBusiness mdFileTmp, PremisXsd premisElab,
 			String application, String objectIdentifierMaster)
@@ -633,156 +670,157 @@ public class OggettoDigitalePublish implements Callable<Boolean> {
 		}
 		return result;
 	}
+	 */
 
-//	private boolean publishSolr(PremisXsd premis, File fObj, Logger logPublish)
-//			throws SolrException {
-//		boolean ris = false;
-//		List<ObjectComplexType> objects = null;
-//		List<EventComplexType> events = null;
-//		ObjectComplexType object = null;
-//		EventComplexType event = null;
-//		AddDocumentMD admd = null;
-//		SolrEvent se = null;
-//		SolrObjectFile sof = null;
-//		File pathTar = null;
-//
-//		try {
-//			pathTar = new File(Configuration.getValue("demoni.Publish.tmpPath")+
-//					File.separator+fObj.getName());
-//			if (!pathTar.exists()){
-//				if (pathTar.mkdirs()){
-//					
-//				}
-//			}
-//			Tar.decompress(fObj, pathTar);
-//			admd = new AddDocumentMD(
-//					Configuration.getValue("demoni.Publish.solr.URL"),
-//					Boolean.parseBoolean(Configuration
-//							.getValue("demoni.Publish.solr.Cloud")),
-//					Configuration.getValue("demoni.Publish.solr.collection"),
-//					Integer.parseInt(Configuration
-//							.getValue("demoni.Publish.solr.connectionTimeOut")),
-//					Integer.parseInt(Configuration
-//							.getValue("demoni.Publish.solr.clientTimeOut")));
-//			objects = premis.getObject();
-//			if (objects != null && objects.size() > 0) {
-//				logPublish.info(name+" Oggetto da pubblicare "+objects.size());
-//				sof = new SolrObjectFile();
-//				for (int x = 0; x < objects.size(); x++) {
-//					if ((x%100)==0){
-//						logPublish.info(name+" Oggetto "+x+"/"+objects.size());
-//						System.gc();
-//					}
-//					object = objects.get(x);
-//					if (object instanceof info.lc.xmlns.premis_v2.File) {
-//						sof.publishSolr((info.lc.xmlns.premis_v2.File) object,
-//								admd, pathTar);
-//					}
-//				}
-//				logPublish.info(name+" Fine pubblicazione oggetti");
-//			}
-//			System.gc();
-//			events = premis.getEvent();
-//			if (events != null && events.size() > 0) {
-//				logPublish.info(name+" Eventi da pubblicare "+events.size());
-//				se = new SolrEvent();
-//				for (int x = 0; x < events.size(); x++) {
-//					if ((x%100)==0){
-//						logPublish.info(name+" Eventi "+x+"/"+events.size());
-//						System.gc();
-//					}
-//					event = events.get(x);
-//					se.publishSolr(event, admd);
-//				}
-//				logPublish.info(name+" Fine pubblicazione eventi");
-//			}
-//			logPublish.info(name+" Inizio pubblicazione in Solr GC");
-//			System.gc();
-//			logPublish.info(name+" Inizio pubblicazione in Solr");
-//			admd.commit();
-//			logPublish.info(name+" Fine pubblicazione in Solr");
-//			Thread.sleep(5000);
-//			ris = true;
-//		} catch (NumberFormatException e) {
-//			log.error(e.getMessage(), e);
-//			throw new SolrException(e.getMessage(), e);
-//		} catch (SolrException e) {
-//			log.error(e.getMessage(), e);
-//			throw e;
-//		} catch (ConfigurationException e) {
-//			log.error(e.getMessage(), e);
-//			throw new SolrException(e.getMessage(), e);
-//		} catch (InterruptedException e) {
-//			log.error(e.getMessage(), e);
-//			throw new SolrException(e.getMessage(), e);
-//		} catch (Exception e) {
-//			log.error(e.getMessage(), e);
-//			throw new SolrException(e.getMessage(), e);
-//		} finally {
-//			try {
-//				if (admd != null){
-//					logPublish.info(name+" Inizio ottimizzazione in Solr");
-//					admd.optimize();
-//					logPublish.info(name+" Fine ottimizzazione in Solr");
-//				} else {
-//					throw new SolrException("Riscontrato un problema nella connessione al Database");
-//				}
-//				if (pathTar.exists()){
-//					
-//					if (!deleteFolder(pathTar)){
-//						throw new SolrException("Problemi nella cancellazione della cartella ["+pathTar.getAbsolutePath()+"]");
-//					}
-//				}
-//			} catch (SolrServerException e) {
-//				log.error(e.getMessage(), e);
-//				throw new SolrException(e.getMessage(), e);
-//			} catch (IOException e) {
-//				log.error(e.getMessage(), e);
-//				throw new SolrException(e.getMessage(), e);
-//			} catch (Exception e) {
-//				log.error(e.getMessage(), e);
-//				throw new SolrException(e.getMessage(), e);
-//			} finally{
-//				if (admd != null){
-//					admd.close();
-//				}
-//			}
-//		}
-//
-//		return ris;
-//	}
+	private boolean publishSolr(PremisXsd premis, File fObj, Logger logPublish)
+			throws SolrException {
+		boolean ris = false;
+		List<ObjectComplexType> objects = null;
+		List<EventComplexType> events = null;
+		ObjectComplexType object = null;
+		EventComplexType event = null;
+		AddDocumentMD admd = null;
+		SolrEvent se = null;
+		SolrObjectFile sof = null;
+		File pathTar = null;
 
-//	private boolean deleteFolder(File path){
-//		boolean ris = true;
-//		File[] fl = null;
-//		fl = path.listFiles(new FileFilter() {
-//			
-//			@Override
-//			public boolean accept(File pathname) {
-//				if (pathname.getName().equals(".") ||
-//						pathname.getName().equals("..")){
-//					return false;
-//				} else {
-//					return true;
-//				}
-//			}
-//		});
-//		for (int x=0; x<fl.length; x++){
-//			if (fl[x].isDirectory()){
-//				if (!deleteFolder(fl[x])){
-//					ris = false;
-//				}
-//			} else {
-//				if (!fl[x].delete()){
-//					ris=false;
-//				}
-//			}
-//		}
-//		if (ris){
-//			if (!path.delete()){
-//				ris = false;
-//			}
-//		}
-//		return ris;
-//	}
+		try {
+			pathTar = new File(Configuration.getValue("demoni.Publish.tmpPath")+
+					File.separator+fObj.getName());
+			if (!pathTar.exists()){
+				if (pathTar.mkdirs()){
+					
+				}
+			}
+			Tar.decompress(fObj, pathTar);
+			admd = new AddDocumentMD(
+					Configuration.getValue("demoni.Publish.solr.URL"),
+					Boolean.parseBoolean(Configuration
+							.getValue("demoni.Publish.solr.Cloud")),
+					Configuration.getValue("demoni.Publish.solr.collection"),
+					Integer.parseInt(Configuration
+							.getValue("demoni.Publish.solr.connectionTimeOut")),
+					Integer.parseInt(Configuration
+							.getValue("demoni.Publish.solr.clientTimeOut")));
+			objects = premis.getObject();
+			if (objects != null && objects.size() > 0) {
+				logPublish.info(name+" Oggetto da pubblicare "+objects.size());
+				sof = new SolrObjectFile();
+				for (int x = 0; x < objects.size(); x++) {
+					if ((x%100)==0){
+						logPublish.info(name+" Oggetto "+x+"/"+objects.size());
+						System.gc();
+					}
+					object = objects.get(x);
+					if (object instanceof info.lc.xmlns.premis_v2.File) {
+						sof.publishSolr((info.lc.xmlns.premis_v2.File) object,
+								admd, pathTar);
+					}
+				}
+				logPublish.info(name+" Fine pubblicazione oggetti");
+			}
+			System.gc();
+			events = premis.getEvent();
+			if (events != null && events.size() > 0) {
+				logPublish.info(name+" Eventi da pubblicare "+events.size());
+				se = new SolrEvent();
+				for (int x = 0; x < events.size(); x++) {
+					if ((x%100)==0){
+						logPublish.info(name+" Eventi "+x+"/"+events.size());
+						System.gc();
+					}
+					event = events.get(x);
+					se.publishSolr(event, admd);
+				}
+				logPublish.info(name+" Fine pubblicazione eventi");
+			}
+			logPublish.info(name+" Inizio pubblicazione in Solr GC");
+			System.gc();
+			logPublish.info(name+" Inizio pubblicazione in Solr");
+			admd.commit();
+			logPublish.info(name+" Fine pubblicazione in Solr");
+			Thread.sleep(5000);
+			ris = true;
+		} catch (NumberFormatException e) {
+			log.error(e.getMessage(), e);
+			throw new SolrException(e.getMessage(), e);
+		} catch (SolrException e) {
+			log.error(e.getMessage(), e);
+			throw e;
+		} catch (ConfigurationException e) {
+			log.error(e.getMessage(), e);
+			throw new SolrException(e.getMessage(), e);
+		} catch (InterruptedException e) {
+			log.error(e.getMessage(), e);
+			throw new SolrException(e.getMessage(), e);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			throw new SolrException(e.getMessage(), e);
+		} finally {
+			try {
+				if (admd != null){
+					logPublish.info(name+" Inizio ottimizzazione in Solr");
+					admd.optimize();
+					logPublish.info(name+" Fine ottimizzazione in Solr");
+				} else {
+					throw new SolrException("Riscontrato un problema nella connessione al Database");
+				}
+				if (pathTar.exists()){
+					
+					if (!deleteFolder(pathTar)){
+						throw new SolrException("Problemi nella cancellazione della cartella ["+pathTar.getAbsolutePath()+"]");
+					}
+				}
+			} catch (SolrServerException e) {
+				log.error(e.getMessage(), e);
+				throw new SolrException(e.getMessage(), e);
+			} catch (IOException e) {
+				log.error(e.getMessage(), e);
+				throw new SolrException(e.getMessage(), e);
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+				throw new SolrException(e.getMessage(), e);
+			} finally{
+				if (admd != null){
+					admd.close();
+				}
+			}
+		}
+
+		return ris;
+	}
+
+	private boolean deleteFolder(File path){
+		boolean ris = true;
+		File[] fl = null;
+		fl = path.listFiles(new FileFilter() {
+			
+			@Override
+			public boolean accept(File pathname) {
+				if (pathname.getName().equals(".") ||
+						pathname.getName().equals("..")){
+					return false;
+				} else {
+					return true;
+				}
+			}
+		});
+		for (int x=0; x<fl.length; x++){
+			if (fl[x].isDirectory()){
+				if (!deleteFolder(fl[x])){
+					ris = false;
+				}
+			} else {
+				if (!fl[x].delete()){
+					ris=false;
+				}
+			}
+		}
+		if (ris){
+			if (!path.delete()){
+				ris = false;
+			}
+		}
+		return ris;
+	}
 }

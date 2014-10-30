@@ -7,6 +7,7 @@ import it.bncf.magazziniDigitali.businessLogic.BusinessLogic;
 import it.bncf.magazziniDigitali.businessLogic.HashTable;
 import it.bncf.magazziniDigitali.database.dao.MDRegistroIngressoDAO;
 import it.bncf.magazziniDigitali.database.entity.MDRegistroIngresso;
+import it.bncf.magazziniDigitali.database.entity.MDStato;
 import it.bncf.magazziniDigitali.utils.DateBusiness;
 import it.bncf.magazziniDigitali.utils.Record;
 
@@ -285,7 +286,7 @@ public class MDRegistroIngressoBusiness extends
 		}
 	}
 
-	public void error(String id, String type, String[] registroErrori) throws IllegalAccessException,
+	public void error(String id, MDStato type, String[] registroErrori) throws IllegalAccessException,
 			InvocationTargetException, NoSuchMethodException, NamingException, ConfigurationException{
 		HashTable<String, Object> dati = null;
 		

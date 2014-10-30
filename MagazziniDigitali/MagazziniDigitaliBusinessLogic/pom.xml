@@ -7,7 +7,7 @@
   </parent>
   <groupId>it.bncf.magazziniDigitali.businessLogic</groupId>
   <artifactId>MagazziniDigitaliBusinessLogic</artifactId>
-  <version>1.0.19</version>
+  <version>1.0.20</version>
   <description>Questo progetto vine utilizzato per la gestione della logica applicativa del programma</description>
   <properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -23,7 +23,7 @@
   	<dependency>
   		<groupId>it.bncf.magazziniDigitali.databaseSchema</groupId>
   		<artifactId>MagazziniDigitaliDatabaseSchema</artifactId>
-  		<version>1.0.12</version>
+  		<version>1.0.14</version>
   	</dependency>
   	<dependency>
   		<groupId>it.bncf.magazziniDigitali.xsd</groupId>
@@ -53,7 +53,7 @@
   	<dependency>
   		<groupId>it.bncf.magazziniDigitali.utils</groupId>
   		<artifactId>MagazziniDigitaliUtils</artifactId>
-  		<version>1.0.0</version>
+  		<version>1.0.2</version>
   	</dependency>
   </dependencies>
   <repositories>

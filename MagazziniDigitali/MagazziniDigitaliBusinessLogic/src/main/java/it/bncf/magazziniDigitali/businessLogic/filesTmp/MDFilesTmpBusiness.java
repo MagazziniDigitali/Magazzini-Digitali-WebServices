@@ -5,9 +5,18 @@ package it.bncf.magazziniDigitali.businessLogic.filesTmp;
 
 import it.bncf.magazziniDigitali.businessLogic.BusinessLogic;
 import it.bncf.magazziniDigitali.businessLogic.HashTable;
+import it.bncf.magazziniDigitali.businessLogic.istituzione.MDIstituzioneBusiness;
+import it.bncf.magazziniDigitali.businessLogic.nodi.MDNodiBusiness;
 import it.bncf.magazziniDigitali.businessLogic.registroIngresso.MDRegistroIngressoBusiness;
+import it.bncf.magazziniDigitali.businessLogic.stato.MDStatoBusiness;
 import it.bncf.magazziniDigitali.database.dao.MDFilesTmpDAO;
+import it.bncf.magazziniDigitali.database.dao.MDIstituzioneDAO;
+import it.bncf.magazziniDigitali.database.dao.MDNodiDAO;
+import it.bncf.magazziniDigitali.database.dao.MDStatoDAO;
 import it.bncf.magazziniDigitali.database.entity.MDFilesTmp;
+import it.bncf.magazziniDigitali.database.entity.MDIstituzione;
+import it.bncf.magazziniDigitali.database.entity.MDNodi;
+import it.bncf.magazziniDigitali.database.entity.MDStato;
 import it.bncf.magazziniDigitali.utils.DateBusiness;
 import it.bncf.magazziniDigitali.utils.Record;
 
@@ -23,6 +32,7 @@ import java.util.Vector;
 import javax.naming.NamingException;
 
 import mx.randalf.configuration.exception.ConfigurationException;
+import mx.randalf.hibernate.FactoryDAO;
 
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
@@ -45,7 +55,7 @@ public class MDFilesTmpBusiness extends
 		super(hibernateTemplate);
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see it.bncf.magazziniDigitali.businessLogic.BusinessLogic#addRecord(java.io.Serializable)
 	 */
 	@Override
@@ -73,11 +83,14 @@ public class MDFilesTmpBusiness extends
 
 		record = new Record();
 		record.set("idMDFilesTmp", dati.getId());
-		record.set("idIstituto", dati.getIdIstituto());
+
+		FactoryDAO.initialize(dati.getIdIstituto());
+		record.set("istituto", MDIstituzioneBusiness.setRecord(dati.getIdIstituto()));
 		record.set("nomeFile", dati.getNomeFile());
 		record.set("sha1", dati.getSha1());
 		record.set("nomeFileMod", DateBusiness.convert(dati.getNomeFileMod()));
-		record.set("stato", dati.getStato());
+		FactoryDAO.initialize(dati.getStato());
+		record.set("stato", MDStatoBusiness.setRecord(dati.getStato()));
 
 		if (dati.getTrasfDataStart() != null){
 			record.set("trasfDataStart", DateBusiness.convert(dati.getTrasfDataStart()));
@@ -153,7 +166,32 @@ public class MDFilesTmpBusiness extends
 		if (dati.getPremisFile() != null){
 			record.set("premisFile", dati.getPremisFile());
 		}
-		
+
+		if (dati.getArchiveDataStart() != null){
+			record.set("archiveDataStart", DateBusiness.convert(dati.getArchiveDataStart()));
+		}
+		if (dati.getArchiveDataEnd() != null){
+			record.set("archiveDataEnd", DateBusiness.convert(dati.getArchiveDataEnd()));
+		}
+		if (dati.getArchiveEsito() != null){
+			record.set("archiveEsito", dati.getArchiveEsito());
+		}
+
+		if (dati.getIdNodo() != null){
+			FactoryDAO.initialize(dati.getIdNodo());
+			record.set("nodo", MDNodiBusiness.setRecord(dati.getIdNodo()));
+		}
+
+		if (dati.getIndexDataStart() != null){
+			record.set("indexDataStart", DateBusiness.convert(dati.getIndexDataStart()));
+		}
+		if (dati.getIndexDataEnd() != null){
+			record.set("indexDataEnd", DateBusiness.convert(dati.getIndexDataEnd()));
+		}
+		if (dati.getIndexEsito() != null){
+			record.set("indexEsito", dati.getIndexEsito());
+		}
+
 		return record;
 	}
 
@@ -186,12 +224,24 @@ public class MDFilesTmpBusiness extends
 			throws NamingException, ConfigurationException {
 		List<MDFilesTmp> tables;
 
-		tables = tableDao.find((String)dati.get("idIstituto"),
-				(String)dati.get("nomeFile"), (String[])dati.get("stato"), (String)dati.get("sha1"), 
+		tables = tableDao.find((MDIstituzione)dati.get("idIstituto"),
+				(String)dati.get("nomeFile"), (MDStato[])dati.get("stato"), (String)dati.get("sha1"), 
 				orders);
 		return tables;
 	}
 
+	public MDFilesTmp findPremis(String premisFile)
+		throws NamingException, HibernateException, ConfigurationException{
+
+		MDFilesTmp ris = null;
+		MDFilesTmpDAO operaDAO;
+		
+		operaDAO = newInstanceDao();
+		ris = operaDAO.findPremis(premisFile);
+		return ris;
+
+	}
+	
 	/**
 	 * @see it.bncf.magazziniDigitali.businessLogic.BusinessLogic#setOrder()
 	 */
@@ -250,9 +300,17 @@ public class MDFilesTmpBusiness extends
 	@Override
 	protected void save(MDFilesTmp table, HashTable<String, Object> dati)
 			throws NamingException, ConfigurationException {
+		MDIstituzioneDAO mdIstituzioneDAO = null;
+		MDStatoDAO mdStatoDAO = null;
+		MDNodiDAO mdNodiDAO = null;
 
 		if (dati.containsKey("idIstituto")) {
-			table.setIdIstituto((String) dati.get("idIstituto"));
+			if (dati.get("idIstituto") instanceof String){
+				mdIstituzioneDAO = new MDIstituzioneDAO(hibernateTemplate);
+				table.setIdIstituto(mdIstituzioneDAO.findById((String) dati.get("idIstituto")));
+			} else {
+				table.setIdIstituto((MDIstituzione) dati.get("idIstituto"));
+			}
 		}
 		if (dati.containsKey("nomeFile")) {
 			table.setNomeFile((String) dati.get("nomeFile"));
@@ -264,7 +322,12 @@ public class MDFilesTmpBusiness extends
 			table.setNomeFileMod((Timestamp) dati.get("nomeFileMod"));
 		}
 		if (dati.containsKey("stato")) {
-			table.setStato((String) dati.get("stato"));
+			if (dati.get("stato") instanceof String){
+				mdStatoDAO = new MDStatoDAO(hibernateTemplate);
+				table.setStato(mdStatoDAO.findById((String) dati.get("stato")));
+			} else {
+				table.setStato((MDStato) dati.get("stato"));
+			}
 		}
 
 		if (dati.containsKey("trasfDataStart")) {
@@ -341,133 +404,39 @@ public class MDFilesTmpBusiness extends
 		if (dati.containsKey("premisFile")) {
 			table.setPremisFile((String) dati.get("premisFile"));
 		}
-	}
 
-	/*
-	public void error(String id, String type, String[] registroErrori) throws IllegalAccessException,
-			InvocationTargetException, NoSuchMethodException, NamingException, ConfigurationException{
-		HashTable<String, Object> dati = null;
-		
-		try {
-			dati = new HashTable<String,Object>();
-			dati.put("id", id);
-			dati.put("status", -1);
-			dati.put("type", type);
-			dati.put("errors", registroErrori);
-			save(dati);
-		} catch (IllegalAccessException e) {
-			throw e;
-		} catch (InvocationTargetException e) {
-			throw e;
-		} catch (NoSuchMethodException e) {
-			throw e;
-		} catch (NamingException e) {
-			throw e;
-		} catch (ConfigurationException e) {
-			throw e;
+		if (dati.containsKey("archiveDataStart")) {
+			table.setArchiveDataStart((Timestamp) dati.get("archiveDataStart"));
 		}
-	}
-
-
-	public void pubblicato(String id, GregorianCalendar timeStampPub)
-			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException,
-			NamingException, ConfigurationException{
-		HashTable<String, Object> dati = null;
-
-		try {
-			dati = new HashTable<String,Object>();
-			dati.put("id", id);
-			dati.put("status", 2);
-			dati.put("timestampElab", new Timestamp(timeStampPub.getTimeInMillis()));
-			save(dati);
-		} catch (IllegalAccessException e) {
-			throw e;
-		} catch (InvocationTargetException e) {
-			throw e;
-		} catch (NoSuchMethodException e) {
-			throw e;
-		} catch (NamingException e) {
-			throw e;
-		} catch (ConfigurationException e) {
-			throw e;
+		if (dati.containsKey("archiveDataEnd")) {
+			table.setArchiveDataEnd((Timestamp) dati.get("archiveDataEnd"));
 		}
-	}
-
-	public void archiviato(String id, GregorianCalendar timeStampElab)
-			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException,
-			NamingException, ConfigurationException{
-		HashTable<String, Object> dati = null;
-
-		try {
-			dati = new HashTable<String,Object>();
-			dati.put("id", id);
-			dati.put("status", 1);
-			dati.put("timestampElab", new Timestamp(timeStampElab.getTimeInMillis()));
-			save(dati);
-		} catch (IllegalAccessException e) {
-			throw e;
-		} catch (InvocationTargetException e) {
-			throw e;
-		} catch (NoSuchMethodException e) {
-			throw e;
-		} catch (NamingException e) {
-			throw e;
-		} catch (ConfigurationException e) {
-			throw e;
+		if (dati.containsKey("archiveEsito")) {
+			table.setArchiveEsito((Boolean) dati.get("archiveEsito"));
 		}
-	}
 
-	public void insert(String id, GregorianCalendar timeStampIngest, String agentDepositor, String originalContainerName, String containerName, 
-			String containerFingerPrint,
-			int containerType, String agentMachineIngest,
-			String agentSoftwareIngest, String timeStampInit)
-			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException, NamingException, ConfigurationException {
-		
-		MDRegistroIngressoDAO registroDAO = null;
-		HashTable<String, Object> dati = null;
-		String containerFingerPrintChain = null;
-
-
-		try {
-			registroDAO = new MDRegistroIngressoDAO(hibernateTemplate);
-			containerFingerPrintChain = registroDAO.findLastKey();
-			if (containerFingerPrintChain != null){
-				containerFingerPrintChain = containerFingerPrint+containerFingerPrintChain;
+		if (dati.containsKey("idNodo")) {
+			if (dati.get("idNodo") instanceof String){
+				mdNodiDAO = new MDNodiDAO(hibernateTemplate);
+				table.setIdNodo(mdNodiDAO.findById((String) dati.get("idNodo")));
+			} else {
+				table.setIdNodo((MDNodi) dati.get("idNodo"));
 			}
-
-			dati = new HashTable<String,Object>();
-			dati.put("id", id);
-			dati.put("status", 1);
-			dati.put("timestampIngest", new Timestamp(timeStampIngest.getTimeInMillis()));
-			dati.put("agentDepositor", agentDepositor);
-			dati.put("originalContainerName", originalContainerName);
-			dati.put("containerName", containerName);
-			dati.put("containerFingerPrint", containerFingerPrint);
-			if (containerFingerPrintChain!=null){
-				dati.put("containerFingerPrintChain", containerFingerPrintChain);
-			}
-			dati.put("containerType", containerType);
-			dati.put("agentMachineIngest", agentMachineIngest);
-			dati.put("agentSoftwareIngest", agentSoftwareIngest);
-			dati.put("status", 0);
-			dati.put("timestampInit", timeStampInit);
-			save(dati, true);
-		} catch (IllegalAccessException e) {
-			throw e;
-		} catch (InvocationTargetException e) {
-			throw e;
-		} catch (NoSuchMethodException e) {
-			throw e;
-		} catch (NamingException e) {
-			throw e;
-		} catch (ConfigurationException e) {
-			throw e;
 		}
-		
+
+		if (dati.containsKey("indexDataStart")) {
+			table.setIndexDataStart((Timestamp) dati.get("indexDataStart"));
+		}
+		if (dati.containsKey("indexDataEnd")) {
+			table.setIndexDataEnd((Timestamp) dati.get("indexDataEnd"));
+		}
+		if (dati.containsKey("indexEsito")) {
+			table.setIndexEsito((Boolean) dati.get("indexEsito"));
+		}
 	}
-*/
-	public List<MDFilesTmp> find(String idMDFilesTmp, String idIstituto,
-			String nomeFile, String[] stato, String sha1) throws HibernateException, NamingException, ConfigurationException{
+
+	public List<MDFilesTmp> find(String idMDFilesTmp, MDIstituzione idIstituto,
+			String nomeFile, MDStato[] stato, String sha1) throws HibernateException, NamingException, ConfigurationException{
 		HashTable<String, Object> dati = null;
 		
 		dati = new HashTable<String, Object>();
@@ -495,8 +464,8 @@ public class MDFilesTmpBusiness extends
 		return find(dati);
 	}
 
-	public Vector<Record> findToRecord(String idMDFilesTmp, String idIstituto,
-			String nomeFile, String[] stato, String sha1) throws HibernateException, NamingException, ConfigurationException{
+	public Vector<Record> findToRecord(String idMDFilesTmp, MDIstituzione idIstituto,
+			String nomeFile, MDStato[] stato, String sha1, int maxRec) throws HibernateException, NamingException, ConfigurationException{
 		HashTable<String, Object> dati = null;
 		
 		dati = new HashTable<String, Object>();
@@ -521,10 +490,10 @@ public class MDFilesTmpBusiness extends
 			dati.put("sha1", sha1);
 		}
 		
-		return new Vector<Record>(findToRecord(dati));
+		return new Vector<Record>(findToRecord(dati, maxRec));
 	}
 
-	public Hashtable<String, Integer> findCountByIstituto(String idIstituto) throws HibernateException, NamingException, ConfigurationException{
+	public Hashtable<String, Integer> findCountByIstituto(MDIstituzione idIstituto) throws HibernateException, NamingException, ConfigurationException{
 		MDFilesTmpDAO operaDAO;
 		Hashtable<String, Integer> ris = null;
 		
@@ -534,11 +503,12 @@ public class MDFilesTmpBusiness extends
 		
 	}
 	
-	public String insertNewRec(String idIstituto, String nomeFile, String sha1, 
-			Calendar nomeFileMod) throws SQLException 
+	public String insertNewRec(MDIstituzione idIstituto, String nomeFile, String sha1, 
+			Calendar nomeFileMod, MDNodi idNodo) throws SQLException 
 					{
 		String ris = null;
 		HashTable<String, Object> dati=null;
+		MDStatoDAO mdStattoDAO =  new MDStatoDAO(hibernateTemplate);
 		
 		try {
 			dati = new HashTable<String, Object>();
@@ -546,8 +516,9 @@ public class MDFilesTmpBusiness extends
 			dati.put("nomeFile", nomeFile);
 			dati.put("sha1", sha1);
 			dati.put("nomeFileMod", new Timestamp(nomeFileMod.getTimeInMillis()));
-			dati.put("stato", MDFilesTmpDAO.INITTRASF);
+			dati.put("stato", mdStattoDAO.INITTRASF());
 			dati.put("trasfDataStart", new Timestamp(new GregorianCalendar().getTimeInMillis()));
+			dati.put("idNodo", idNodo);
 			ris = save(dati);
 			if (ris == null || ris.trim().equals("")){
 				throw new SQLException("Riscontrato un problema nell'inserimento del record nella tabella");
@@ -576,18 +547,19 @@ public class MDFilesTmpBusiness extends
 	public void updatEndSend(String id, boolean esito, String[] msgError) throws SQLException{
 		String ris = null;
 		HashTable<String, Object> dati=null;
+		MDStatoDAO mdStatoDAO = new MDStatoDAO(hibernateTemplate);
 		
 		try {
 			dati = new HashTable<String, Object>();
 			dati.put("id", id);
 			dati.put("trasfDataEnd", new Timestamp(new GregorianCalendar().getTimeInMillis()));
 			if (esito){
-				dati.put("stato", MDFilesTmpDAO.FINETRASF);
+				dati.put("stato", mdStatoDAO.FINETRASF());
 				dati.put("trasfEsito", Boolean.TRUE);
 			} else {
-				dati.put("stato", MDFilesTmpDAO.ERRORTRASF);
+				dati.put("stato", mdStatoDAO.ERRORTRASF());
 				dati.put("trasfEsito", Boolean.FALSE);
-				dati.put("type", MDFilesTmpDAO.ERRORTRASF);
+				dati.put("type", mdStatoDAO.ERRORTRASF());
 				dati.put("errors", msgError);
 			}
 			ris = save(dati);
@@ -617,6 +589,7 @@ public class MDFilesTmpBusiness extends
 	public void confirmDel(String id, boolean esito, String[] msgError) throws SQLException{
 		String ris = null;
 		HashTable<String, Object> dati=null;
+		MDStatoDAO mdStatoDAO= new MDStatoDAO(hibernateTemplate);
 		
 		try {
 			dati = new HashTable<String, Object>();
@@ -626,7 +599,7 @@ public class MDFilesTmpBusiness extends
 				dati.put("deleteLocalEsito", Boolean.TRUE);
 			} else {
 				dati.put("deleteLocalEsito", Boolean.FALSE);
-				dati.put("type", MDFilesTmpDAO.ERRORDELETE);
+				dati.put("type", mdStatoDAO.ERRORDELETE());
 				dati.put("errors", msgError);
 			}
 			ris = save(dati);
@@ -656,13 +629,14 @@ public class MDFilesTmpBusiness extends
 		String ris = null;
 		HashTable<String, Object> dati=null;
 		GregorianCalendar gc = null;
+		MDStatoDAO mdStatoDAO = new MDStatoDAO(hibernateTemplate);
 		
 		try {
 			gc = new GregorianCalendar();
 			
 			dati = new HashTable<String, Object>();
 			dati.put("id", id);
-			dati.put("stato", MDFilesTmpDAO.INITVALID);
+			dati.put("stato", mdStatoDAO.INITVALID());
 			dati.put("validDataStart", new Timestamp(gc.getTimeInMillis()));
 			ris = save(dati);
 			if (ris == null || ris.trim().equals("")){
@@ -688,10 +662,12 @@ public class MDFilesTmpBusiness extends
 	 * @param id
 	 * @throws SQLException
 	 */
-	public GregorianCalendar updateStopValidate(String id, String xmlMimeType, boolean esito, String[] msgError, String premisFile) throws SQLException{
+	public GregorianCalendar updateStopValidate(String id, String xmlMimeType, boolean esito, 
+			String[] msgError, String premisFile) throws SQLException{
 		String ris = null;
 		HashTable<String, Object> dati=null;
 		GregorianCalendar gc = null;
+		MDStatoDAO mdStatoDAO = new MDStatoDAO(hibernateTemplate);
 		
 		try {
 			gc = new GregorianCalendar();
@@ -702,12 +678,95 @@ public class MDFilesTmpBusiness extends
 			dati.put("premisFile", premisFile);
 			dati.put("xmlMimeType", xmlMimeType);
 			if (esito){
-				dati.put("stato", MDFilesTmpDAO.FINEVALID);
+				dati.put("stato", mdStatoDAO.FINEVALID());
 				dati.put("validEsito", Boolean.TRUE);
 			} else {
-				dati.put("stato", MDFilesTmpDAO.ERRORVAL);
+				dati.put("stato", mdStatoDAO.ERRORVAL());
 				dati.put("validEsito", Boolean.FALSE);
-				dati.put("type", MDFilesTmpDAO.ERRORVAL);
+				dati.put("type", mdStatoDAO.ERRORVAL());
+				dati.put("errors", msgError);
+			}
+			ris = save(dati);
+			if (ris == null || ris.trim().equals("")){
+				throw new SQLException("Riscontrato un problema nell'inserimento del record nella tabella");
+			}
+		} catch (IllegalAccessException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (InvocationTargetException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (NoSuchMethodException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (NamingException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (ConfigurationException e) {
+			throw new SQLException(e.getMessage(), e);
+		}
+		return gc;
+	}
+
+	/**
+	 * Metodo utilizzato per indicare l'inizio dell'archiviazione
+	 * 
+	 * @param id
+	 * @throws SQLException
+	 */
+	public GregorianCalendar updateStartArchive(String id) throws SQLException{
+		String ris = null;
+		HashTable<String, Object> dati=null;
+		GregorianCalendar gc = null;
+		MDStatoDAO mdStatoDAO = new MDStatoDAO(hibernateTemplate);
+		
+		try {
+			gc = new GregorianCalendar();
+			
+			dati = new HashTable<String, Object>();
+			dati.put("id", id);
+			dati.put("stato", mdStatoDAO.INITARCHIVE());
+			dati.put("archiveDataStart", new Timestamp(gc.getTimeInMillis()));
+			ris = save(dati);
+			if (ris == null || ris.trim().equals("")){
+				throw new SQLException("Riscontrato un problema nell'inserimento del record nella tabella");
+			}
+		} catch (IllegalAccessException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (InvocationTargetException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (NoSuchMethodException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (NamingException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (ConfigurationException e) {
+			throw new SQLException(e.getMessage(), e);
+		}
+		return gc;
+	}
+
+	/**
+	 * Metodo utilizzato per indicare la fine dell'archiviazione
+	 * 
+	 * @param id
+	 * @throws SQLException
+	 */
+	public GregorianCalendar updateStopArchive(String id, boolean esito, 
+			String[] msgError) throws SQLException{
+		String ris = null;
+		HashTable<String, Object> dati=null;
+		GregorianCalendar gc = null;
+		MDStatoDAO mdStatoDAO = new MDStatoDAO(hibernateTemplate);
+		
+		try {
+			gc = new GregorianCalendar();
+			
+			dati = new HashTable<String, Object>();
+			dati.put("id", id);
+			dati.put("archiveDataEnd", new Timestamp(gc.getTimeInMillis()));
+			if (esito){
+				dati.put("stato", mdStatoDAO.FINEARCHIVE());
+				dati.put("archiveEsito", Boolean.TRUE);
+			} else {
+				dati.put("stato", mdStatoDAO.ERRORARCHIVE());
+				dati.put("archiveEsito", Boolean.FALSE);
+				dati.put("type", mdStatoDAO.ERRORARCHIVE());
 				dati.put("errors", msgError);
 			}
 			ris = save(dati);
@@ -738,13 +797,14 @@ public class MDFilesTmpBusiness extends
 		String ris = null;
 		HashTable<String, Object> dati=null;
 		GregorianCalendar gc = null;
+		MDStatoDAO mdStatoDAO = new MDStatoDAO(hibernateTemplate);
 		
 		try {
 			gc = new GregorianCalendar();
 			
 			dati = new HashTable<String, Object>();
 			dati.put("id", id);
-			dati.put("stato", MDFilesTmpDAO.INITPUBLISH);
+			dati.put("stato", mdStatoDAO.INITPUBLISH());
 			dati.put("publishDataStart", new Timestamp(gc.getTimeInMillis()));
 			ris = save(dati);
 			if (ris == null || ris.trim().equals("")){
@@ -770,9 +830,11 @@ public class MDFilesTmpBusiness extends
 	 * @param id
 	 * @throws SQLException
 	 */
-	public void updateDecompress(String id, GregorianCalendar compressStart, GregorianCalendar compressStop, boolean esito, String[] msgError) throws SQLException{
+	public void updateDecompress(String id, GregorianCalendar compressStart, GregorianCalendar compressStop, 
+			boolean esito, String[] msgError) throws SQLException{
 		String ris = null;
 		HashTable<String, Object> dati=null;
+		MDStatoDAO mdStatoDAO = new MDStatoDAO(hibernateTemplate);
 		
 		try {
 			
@@ -783,9 +845,9 @@ public class MDFilesTmpBusiness extends
 			if (esito){
 				dati.put("decompEsito", Boolean.TRUE);
 			} else {
-				dati.put("stato", MDFilesTmpDAO.ERRORDECOMP);
+				dati.put("stato", mdStatoDAO.ERRORDECOMP());
 				dati.put("validEsito", Boolean.FALSE);
-				dati.put("type", MDFilesTmpDAO.ERRORDECOMP);
+				dati.put("type", mdStatoDAO.ERRORDECOMP());
 				dati.put("errors", msgError);
 			}
 			ris = save(dati);
@@ -822,6 +884,7 @@ public class MDFilesTmpBusiness extends
 		int containerType = -1;
 		String containerName=null;
 		int pos = 0;
+		MDStatoDAO mdStatoDAO = new MDStatoDAO(hibernateTemplate);
 		
 		try {
 			
@@ -832,9 +895,9 @@ public class MDFilesTmpBusiness extends
 			if (esito){
 				dati.put("copyPremisEsito", Boolean.TRUE);
 			} else {
-				dati.put("stato", MDFilesTmpDAO.ERRORCOPY);
+				dati.put("stato", mdStatoDAO.ERRORCOPY());
 				dati.put("copyPremisEsito", Boolean.FALSE);
-				dati.put("type", MDFilesTmpDAO.ERRORCOPY);
+				dati.put("type", mdStatoDAO.ERRORCOPY());
 				dati.put("errors", msgError);
 			}
 			ris = save(dati);
@@ -891,10 +954,12 @@ public class MDFilesTmpBusiness extends
 	 * @param id
 	 * @throws SQLException
 	 */
-	public void updateMoveFile(String id, GregorianCalendar moveFileStart, GregorianCalendar moveFileStop, boolean esito, String[] msgError) throws SQLException{
+	public void updateMoveFile(String id, GregorianCalendar moveFileStart, GregorianCalendar moveFileStop, 
+			boolean esito, String[] msgError) throws SQLException{
 		String ris = null;
 		HashTable<String, Object> dati=null;
 		MDRegistroIngressoBusiness registroBusiness = null;
+		MDStatoDAO mdStatoDAO = new MDStatoDAO(hibernateTemplate);
 		
 		try {
 			
@@ -905,14 +970,17 @@ public class MDFilesTmpBusiness extends
 			}
 			if (moveFileStop != null){
 				dati.put("moveFileDataEnd", new Timestamp(moveFileStop.getTimeInMillis()));
+				dati.put("publishDataEnd", new Timestamp(moveFileStop.getTimeInMillis()));
 			}
 			if (esito){
-				dati.put("stato", MDFilesTmpDAO.FINEPUBLISH);
+				dati.put("stato", mdStatoDAO.FINEPUBLISH());
 				dati.put("moveFileEsito", Boolean.TRUE);
+				dati.put("publishEsito", Boolean.TRUE);
 			} else {
-				dati.put("stato", MDFilesTmpDAO.ERRORMOVE);
+				dati.put("stato", mdStatoDAO.ERRORMOVE());
 				dati.put("moveFileEsito", Boolean.FALSE);
-				dati.put("type", MDFilesTmpDAO.ERRORMOVE);
+				dati.put("publishEsito", Boolean.FALSE);
+				dati.put("type", mdStatoDAO.ERRORMOVE());
 				dati.put("errors", msgError);
 			}
 			ris = save(dati);
@@ -935,7 +1003,7 @@ public class MDFilesTmpBusiness extends
 				if (esito){
 					registroBusiness.archiviato(id, moveFileStop);
 				} else {
-					registroBusiness.error(id, MDFilesTmpDAO.ERRORMOVE, msgError);
+					registroBusiness.error(id, mdStatoDAO.ERRORMOVE(), msgError);
 				}
 			} catch (HibernateException e) {
 				throw new SQLException(e.getMessage(), e);
@@ -964,6 +1032,7 @@ public class MDFilesTmpBusiness extends
 		HashTable<String, Object> dati=null;
 		GregorianCalendar gc = null;
 		MDRegistroIngressoBusiness registroBusiness = null;
+		MDStatoDAO mdStatoDAO = new MDStatoDAO(hibernateTemplate);
 		
 		try {
 			gc = new GregorianCalendar();
@@ -972,12 +1041,12 @@ public class MDFilesTmpBusiness extends
 			dati.put("id", id);
 			dati.put("publishDataEnd", new Timestamp(gc.getTimeInMillis()));
 			if (esito){
-				dati.put("stato", MDFilesTmpDAO.FINEPUBLISH);
+				dati.put("stato", mdStatoDAO.FINEPUBLISH());
 				dati.put("publishEsito", Boolean.TRUE);
 			} else {
-				dati.put("stato", MDFilesTmpDAO.ERRORPUB);
+				dati.put("stato", mdStatoDAO.ERRORPUB());
 				dati.put("publishEsito", Boolean.FALSE);
-				dati.put("type", MDFilesTmpDAO.ERRORPUB);
+				dati.put("type", mdStatoDAO.ERRORPUB());
 				dati.put("errors", msgError);
 			}
 			ris = save(dati);
@@ -1000,7 +1069,7 @@ public class MDFilesTmpBusiness extends
 				if (esito){
 					registroBusiness.pubblicato(id, gc);
 				} else {
-					registroBusiness.error(id, MDFilesTmpDAO.ERRORPUB, msgError);
+					registroBusiness.error(id, mdStatoDAO.ERRORPUB(), msgError);
 				}
 			} catch (HibernateException e) {
 				throw new SQLException(e.getMessage(), e);

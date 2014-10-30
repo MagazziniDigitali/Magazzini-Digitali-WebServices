@@ -6,7 +6,7 @@ package it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.implement;
 import it.bncf.magazziniDigitali.businessLogic.filesTmp.MDFilesTmpBusiness;
 import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.validate.ArchiveMD;
 import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.validate.ValidateFile;
-import it.bncf.magazziniDigitali.database.dao.MDFilesTmpDAO;
+import it.bncf.magazziniDigitali.database.dao.MDStatoDAO;
 import it.bncf.magazziniDigitali.database.entity.MDFilesTmp;
 import it.magazziniDigitali.xsd.premis.PremisXsd;
 import it.magazziniDigitali.xsd.premis.exception.PremisXsdException;
@@ -20,13 +20,13 @@ import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 import java.util.concurrent.Callable;
 
-import org.apache.log4j.Logger;
-
 import mx.randalf.archive.info.DigestType;
 import mx.randalf.archive.info.Xmltype;
 import mx.randalf.configuration.Configuration;
 import mx.randalf.configuration.exception.ConfigurationException;
 import mx.randalf.xsd.exception.XsdException;
+
+import org.apache.log4j.Logger;
 
 /**
  * @author massi
@@ -85,8 +85,7 @@ public class OggettoDigitaleValidate implements Callable<Boolean> {
 			validate = new ValidateFile();
 			fPremis = null;
 			// calcolo il file da validare
-			fileObj = Configuration.getValue("istituto."
-					+ record.getIdIstituto() + ".pathTmp");
+			fileObj = record.getIdIstituto().getPathTmp();
 			fileObj += File.separator;
 			fileObj += record.getNomeFile();
 			fObj = new File(fileObj);
@@ -107,7 +106,7 @@ public class OggettoDigitaleValidate implements Callable<Boolean> {
 			if (fObj.exists()) {
 				// il file Esiste
 				if (record.getStato()
-						.equals(MDFilesTmpDAO.FINETRASF)) {
+						.equals(MDStatoDAO.FINETRASF)) {
 					logValidate
 							.info(name+ " Inizio la validazione del file ["
 									+ fObj.getAbsolutePath() + "]");
@@ -172,9 +171,8 @@ public class OggettoDigitaleValidate implements Callable<Boolean> {
 							archive.getType().getSize(), archive
 									.getMimetype(), archive
 									.getNome(),
-							Configuration.getValue("istituto."
-									+ record.getIdIstituto()
-									+ ".right.UUID"), archive
+							record.getIdIstituto().getRightUuid()
+									, archive
 									.getType().getFormat()
 									.getVersion(), archive
 									.getType().getPUID());
@@ -210,12 +208,8 @@ public class OggettoDigitaleValidate implements Callable<Boolean> {
 								+ File.separator + fPremis);
 				premis.addEvent("send", record
 						.getTrasfDataStart(), record.getTrasfDataEnd(), null, "OK",
-						null, Configuration.getValue("istituto."
-								+ record.getIdIstituto()
-								+ ".UUID"), Configuration
-								.getValue("istituto."
-										+ record.getIdIstituto()
-										+ ".software.UUID"),
+						null, record.getIdIstituto().getUuid()
+								, record.getIdIstituto().getSoftwareUuid(),
 						objectIdentifierMaster);
 				if (validate.getUnzipError() != null) {
 					logValidate

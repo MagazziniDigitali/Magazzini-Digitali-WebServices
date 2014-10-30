@@ -34,7 +34,7 @@ public abstract class BusinessLogic<T extends Serializable, D extends GenericHib
 
 	protected Vector<Record> records = null;
 
-	private Logger log = Logger.getLogger(getClass());
+	private Logger log = Logger.getLogger(BusinessLogic.class);
 
 	/**
 	 * 
@@ -76,20 +76,27 @@ public abstract class BusinessLogic<T extends Serializable, D extends GenericHib
 			throw e;
 		} catch (ConfigurationException e) {
 			throw e;
+		} catch (Exception e) {
+			throw e;
 		}
 
 		return tables;
 	}
 
-	protected Vector<Record> findToRecord(HashTable<String, Object> dati)
+	protected Vector<Record> findToRecord(HashTable<String, Object> dati, int maxRec)
 			throws NamingException, HibernateException, ConfigurationException {
 		List<T> tables = null;
+		int x = 0;
 
 		try {
 			tables = find(dati);
 			if (tables != null) {
 				for (T ai : tables) {
+					x++;
 					addRecord(ai);
+					if (x==maxRec){
+						break;
+					}
 				}
 			}
 		} catch (NamingException e) {
@@ -162,34 +169,47 @@ public abstract class BusinessLogic<T extends Serializable, D extends GenericHib
 			FactoryDAO.commitTransaction(true);
 			postSave(dati, table);
 		} catch (HibernateException e) {
+			e.printStackTrace();
 			FactoryDAO.rollbackTransaction(true);
 			log.error(e.getMessage(), e);
 			throw e;
 		} catch (NamingException e) {
+			e.printStackTrace();
 			FactoryDAO.rollbackTransaction(true);
 			log.error(e.getMessage(), e);
 			throw e;
 		} catch (ConfigurationException e) {
+			e.printStackTrace();
 			FactoryDAO.rollbackTransaction(true);
 			log.error(e.getMessage(), e);
 			throw e;
 		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
 			FactoryDAO.rollbackTransaction(true);
 			log.error(e.getMessage(), e);
 			throw e;
 		} catch (SecurityException e) {
+			e.printStackTrace();
 			FactoryDAO.rollbackTransaction(true);
 			log.error(e.getMessage(), e);
 			throw e;
 		} catch (IllegalAccessException e) {
+			e.printStackTrace();
 			FactoryDAO.rollbackTransaction(true);
 			log.error(e.getMessage(), e);
 			throw e;
 		} catch (InvocationTargetException e) {
+			e.printStackTrace();
 			FactoryDAO.rollbackTransaction(true);
 			log.error(e.getMessage(), e);
 			throw e;
 		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+			FactoryDAO.rollbackTransaction(true);
+			log.error(e.getMessage(), e);
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
 			FactoryDAO.rollbackTransaction(true);
 			log.error(e.getMessage(), e);
 			throw e;
