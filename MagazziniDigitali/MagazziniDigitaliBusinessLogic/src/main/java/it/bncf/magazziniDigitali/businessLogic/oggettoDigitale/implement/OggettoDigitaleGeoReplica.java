@@ -3,33 +3,51 @@
  */
 package it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.implement;
 
+import it.bncf.magazziniDigitali.businessLogic.archive.MDArchiveBusiness;
 import it.bncf.magazziniDigitali.businessLogic.filesTmp.MDFilesTmpBusiness;
+import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.implement.exception.ClientMDException;
 import it.bncf.magazziniDigitali.database.dao.MDNodiDAO;
 import it.bncf.magazziniDigitali.database.dao.MDStatoDAO;
+import it.bncf.magazziniDigitali.database.entity.MDArchive;
 import it.bncf.magazziniDigitali.database.entity.MDFilesTmp;
 import it.bncf.magazziniDigitali.database.entity.MDNodi;
 import it.bncf.magazziniDigitali.utils.GenFileDest;
+import it.depositolegale.www.storage.Documenti;
+import it.depositolegale.www.storage.DocumentiDocumento;
+import it.depositolegale.www.storage.Storage;
+import it.depositolegale.www.webservice_checkStorageMD.CheckStorageMDPortTypeProxy;
 import it.magazziniDigitali.xsd.premis.PremisXsd;
 import it.magazziniDigitali.xsd.premis.exception.PremisXsdException;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.BigInteger;
+import java.rmi.RemoteException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.UUID;
+import java.util.Vector;
 
 import javax.naming.NamingException;
 
 import mx.randalf.configuration.Configuration;
 import mx.randalf.configuration.exception.ConfigurationException;
+import mx.randalf.digest.SHA1;
 import mx.randalf.hibernate.FactoryDAO;
 import mx.randalf.xsd.exception.XsdException;
 
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.springframework.orm.hibernate3.HibernateTemplate;
+
 
 /**
  * @author massi
@@ -44,6 +62,7 @@ public class OggettoDigitaleGeoReplica {
 	private String name = null;
 	
 	private HibernateTemplate hibernateTemplate= null;
+	private boolean trasterito = false;
 
 	/**
 	 * 
@@ -54,7 +73,8 @@ public class OggettoDigitaleGeoReplica {
 		this.hibernateTemplate = hibernateTemplate;
 	}
 
-	public void esegui(String objectIdentifierPremis, MDFilesTmpBusiness mdFileTmpBusiness, String application) {
+	@SuppressWarnings("unused")
+	public boolean esegui(String objectIdentifierPremis, MDFilesTmpBusiness mdFileTmpBusiness, String application) {
 		File filePremis = null;
 		PremisXsd premisElab = null;
 		GregorianCalendar gcStart = null;
@@ -65,7 +85,12 @@ public class OggettoDigitaleGeoReplica {
 		MDNodiDAO mdNodiDAO = null;
 		List<MDNodi> mdNodis = null;
 		boolean elabNodi = true;
+		File[] files = null;
+		String[] msgs = null;
+		Vector<String> msgErr = null;
+		boolean esito = true;
 
+		trasterito = false;
 		try {
 			mdFilesTmp = mdFileTmpBusiness.findPremis(objectIdentifierPremis);
 		} catch (HibernateException e) {
@@ -81,6 +106,7 @@ public class OggettoDigitaleGeoReplica {
 				FactoryDAO.initialize(mdFilesTmp.getStato());
 				if (mdFilesTmp.getStato().getId().equals(MDStatoDAO.FINEPUBLISH) ||
 						mdFilesTmp.getStato().getId().equals(MDStatoDAO.INITARCHIVE)){
+					trasterito = true;
 					try {
 						filePremis = new File(Configuration.getValue("path.premis")
 								+ File.separator + UUID.randomUUID().toString()
@@ -119,19 +145,32 @@ public class OggettoDigitaleGeoReplica {
 									mdNodiDAO = new MDNodiDAO(hibernateTemplate);
 									mdNodis = mdNodiDAO.findAll();
 									elabNodi = true;
+									files = new File[2];
+									files[0] = fileElab;
+									files[1] = fileElabPremis;
 									for (MDNodi mdNodi : mdNodis){
-										if (!mdNodi.getId().equals(Configuration.getValues("nodo"))){
-											if (!geoReplica()){
+										if (!mdNodi.getId().equals(Configuration.getValue("nodo"))){
+											msgs =geoReplica(mdNodi, files, mdFilesTmp, premisElab, application, objectIdentifierPremis);
+											if (msgs!=null){
+												if (msgErr==null){
+													msgErr = new Vector<String>();
+												}
+												for (int x=0; x<msgs.length; x++){
+													msgErr.add(msgs[x]);
+												}
 												elabNodi = false;
 											}
 										}
 									}
 									if (elabNodi){
 										gcEnd = mdFileTmpBusiness.updateStopArchive(mdFilesTmp.getId(), true, null);
-//										premisElab.addEvent("geoReplica", gcStart, gcEnd, "Nodo ID: "+, 
-//										eventOutcome, eventOutcomeDetails, linkingAgentIdentifierValue, linkingSoftwareIdentifierValue, objectIdentifierMaster);
+									} else {
+										esito = false;
+										gcEnd = mdFileTmpBusiness.updateStopArchive(mdFilesTmp.getId(), false, 
+												msgErr.toArray(new String[msgErr.size()]));
 									}
 								} else {
+									esito = false;
 									logPublish.error(name+" Il file ["+fileElabPremis.getAbsolutePath()+"] non è presente");
 									premisElab.addEvent(
 											"Error",
@@ -150,6 +189,7 @@ public class OggettoDigitaleGeoReplica {
 											new String[] { "Il file ["+fileElabPremis.getAbsolutePath()+"] non è presente" });
 								}
 							} else {
+								esito = false;
 								logPublish.error(name+" Il file ["+fileElab.getAbsolutePath()+"] non è presente");
 								premisElab.addEvent(
 										"Error",
@@ -168,6 +208,7 @@ public class OggettoDigitaleGeoReplica {
 										new String[] { "Il file ["+fileElab.getAbsolutePath()+"] non è presente" });
 							}
 						} catch (ConfigurationException e) {
+							esito = false;
 							if (premisElab != null) {
 								premisElab.addEvent(
 										"Error",
@@ -184,6 +225,58 @@ public class OggettoDigitaleGeoReplica {
 									new String[] { e.getMessage() });
 							log.error(e.getMessage(), e);
 						} catch (SQLException e) {
+							esito = false;
+							if (premisElab != null) {
+								premisElab.addEvent(
+										"Error",
+										null,
+										null,
+										null,
+										"KO",
+										new String[] { e.getMessage() },
+										null,
+										Configuration.getValue("demoni."
+												+ application + ".UUID"), null);
+							}
+							mdFileTmpBusiness.updateStopArchive(mdFilesTmp.getId(), false,
+									new String[] { e.getMessage() });
+							log.error(e.getMessage(), e);
+						} catch (HibernateException e) {
+							esito = false;
+							if (premisElab != null) {
+								premisElab.addEvent(
+										"Error",
+										null,
+										null,
+										null,
+										"KO",
+										new String[] { e.getMessage() },
+										null,
+										Configuration.getValue("demoni."
+												+ application + ".UUID"), null);
+							}
+							mdFileTmpBusiness.updateStopArchive(mdFilesTmp.getId(), false,
+									new String[] { e.getMessage() });
+							log.error(e.getMessage(), e);
+						} catch (NoSuchAlgorithmException e) {
+							esito = false;
+							if (premisElab != null) {
+								premisElab.addEvent(
+										"Error",
+										null,
+										null,
+										null,
+										"KO",
+										new String[] { e.getMessage() },
+										null,
+										Configuration.getValue("demoni."
+												+ application + ".UUID"), null);
+							}
+							mdFileTmpBusiness.updateStopArchive(mdFilesTmp.getId(), false,
+									new String[] { e.getMessage() });
+							log.error(e.getMessage(), e);
+						} catch (IOException e) {
+							esito = false;
 							if (premisElab != null) {
 								premisElab.addEvent(
 										"Error",
@@ -206,41 +299,414 @@ public class OggettoDigitaleGeoReplica {
 									premisElab.write(filePremis, false);
 								}
 							} catch (PremisXsdException e) {
+								esito = false;
 								log.error(e.getMessage(), e);
 								mdFileTmpBusiness.updateStopArchive(mdFilesTmp.getId(),
 										false, new String[] { e.getMessage() });
 							} catch (XsdException e) {
+								esito = false;
 								log.error(e.getMessage(), e);
 								mdFileTmpBusiness.updateStopArchive(mdFilesTmp.getId(),
 										false, new String[] { e.getMessage() });
 							} catch (IOException e) {
+								esito = false;
 								log.error(e.getMessage(), e);
 								mdFileTmpBusiness.updateStopArchive(mdFilesTmp.getId(),
 										false, new String[] { e.getMessage() });
 							} catch (Exception e) {
+								esito = false;
 								log.error(e.getMessage(), e);
 								mdFileTmpBusiness.updateStopArchive(mdFilesTmp.getId(),
 										false, new String[] { e.getMessage() });
 							}
 						}
 					} catch (SQLException e) {
+						esito = false;
 						log.error(e.getMessage(), e);
 					}
+				} else if (!mdFilesTmp.getStato().getId().equals(MDStatoDAO.FINEARCHIVE)){
+					esito = false;
 				}
 			} else {
 				logPublish.error(name+" Il file premis ["+objectIdentifierPremis+"] non è presente in archivio");
+				esito = false;
 			}
 		} catch (NamingException e) {
 			log.error(e.getMessage(), e);
+			esito = false;
 		} catch (ConfigurationException e) {
 			log.error(e.getMessage(), e);
+			esito = false;
 		}
+		return esito;
 	}
 
-	private boolean geoReplica(){
-		boolean ris = false;
+	private String[] geoReplica(MDNodi mdNodi, File[] files, MDFilesTmp mdFilesTmp, PremisXsd premisElab, 
+			String application, String objectIdentifierMaster) throws HibernateException, NamingException, 
+			ConfigurationException, SQLException, NoSuchAlgorithmException, IOException{
+		Vector<String> ris = null;
+		Storage storage = null;
+//		MDArchiveDAO mdArchivioDAO = null;
+		MDArchive mdArchive = null;
+		MDArchiveBusiness mdArchiveBusiness = null;
+		GregorianCalendar dataStart = null;
+		GregorianCalendar dataEnd = null;
+		GregorianCalendar dStart = null;
+		Documenti documenti = null;
 		
+		try {
+			dataStart = new GregorianCalendar();
+			dStart = new GregorianCalendar();
+			mdArchiveBusiness = new MDArchiveBusiness(hibernateTemplate);
+			mdArchive = mdArchiveBusiness.find(mdFilesTmp, mdNodi);
+			if (mdArchive == null || !mdArchive.getEsito().booleanValue()){
+				documenti = genDocumenti(files);
+				storage = checkStorage(mdNodi, documenti);
+				if (storage !=null && (storage.getEsito().equals("OK")
+						||storage.getEsito().equals("DOCNOTFOUND"))){
+					for (int x=0; x<files.length; x++){
+						ris = sendFile(mdNodi,files[x],premisElab, application, objectIdentifierMaster, ris);
+					}
+					if (ris==null){
+						storage = checkStorage(mdNodi, documenti);
+						ris = analizeRisp(storage, mdNodi, premisElab, dStart, files, application, objectIdentifierMaster, ris, true);
+					}
+				} else {
+					ris = analizeRisp(storage, mdNodi, premisElab, dStart, files, application, objectIdentifierMaster, ris, false);
+				}
+				dataEnd = new GregorianCalendar();
+				mdArchiveBusiness.insert((mdArchive==null?null:mdArchive.getId()), 
+						mdFilesTmp, mdNodi, dataStart, dataEnd, (ris==null));
+			} else {
+				for (int x=0; x<files.length; x++){
+					addGeoReplica(premisElab, mdArchive.getDataStart(), mdArchive.getDataEnd(), 
+							mdNodi, files[x].getAbsolutePath(), 
+							null, application, objectIdentifierMaster);
+				}
+			}
+		} catch (HibernateException e) {
+			throw e;
+		} catch (NamingException e) {
+			throw e;
+		} catch (ConfigurationException e) {
+			throw e;
+		} catch (SQLException e) {
+			throw e;
+		} catch (NoSuchAlgorithmException e) {
+			throw e;
+		} catch (FileNotFoundException e) {
+			throw e;
+		} catch (IOException e) {
+			throw e;
+		}
+		return (ris==null?null:ris.toArray(new String[ris.size()]));
+	}
+
+	private Vector<String> analizeRisp(Storage storage, MDNodi mdNodi, PremisXsd premisElab,
+			GregorianCalendar dStart, File[] files, String application, String objectIdentifierMaster,
+			Vector<String> ris, boolean testRes) throws ConfigurationException{
+		String msg = null;
+		GregorianCalendar dEnd = null;
+
+		dEnd = new GregorianCalendar();
+		for (int x=0; x<storage.getDocumenti().getDocumento().length; x++){
+			if (storage.getDocumenti().getDocumento()[x].getEsito().equals("ERRORDIGEST")){
+				if (ris ==null){
+					ris = new Vector<String>();
+				}
+				msg = "Nel modo: ["+
+						mdNodi.getNome()+
+						" - "+
+						mdNodi.getDescrizione()+
+						"] lo sha1 del file ["+
+						storage.getDocumenti().getDocumento()[x].getNomeFile()+
+						"] non coincide";
+				ris.add(msg);
+				addGeoReplica(premisElab, dStart, dEnd, mdNodi, files[0].getAbsolutePath(), 
+						msg, application, objectIdentifierMaster);
+			} else if (storage.getDocumenti().getDocumento()[x].getEsito().equals("ERRORCREATEFOLDER")){
+				if (ris ==null){
+					ris = new Vector<String>();
+				}
+				msg = "Nel modo: ["+
+						mdNodi.getNome()+
+						" - "+
+						mdNodi.getDescrizione()+
+						"] riscontrato un problema nella creazione della cartella per il file ["+
+						storage.getDocumenti().getDocumento()[x].getNomeFile()+
+						"]";
+				ris.add(msg);
+				addGeoReplica(premisElab, dStart, dEnd, mdNodi, files[0].getAbsolutePath(), 
+						msg, application, objectIdentifierMaster);
+			} else if (storage.getDocumenti().getDocumento()[x].getEsito().equals("ERROR")){
+				if (ris ==null){
+					ris = new Vector<String>();
+				}
+				msg = "Nel modo: ["+
+						mdNodi.getNome()+
+						" - "+
+						mdNodi.getDescrizione()+
+						"] riscontrato un errore generio per il file ["+
+						storage.getDocumenti().getDocumento()[x].getNomeFile()+
+						"]";
+				ris.add(msg);
+				addGeoReplica(premisElab, dStart, dEnd, mdNodi, files[0].getAbsolutePath(), 
+						msg, application, objectIdentifierMaster);
+			} else if (!testRes && 
+					storage.getDocumenti().getDocumento()[x].getEsito().equals("FOUND")){
+				addGeoReplica(premisElab, dStart, dEnd, mdNodi, files[0].getAbsolutePath(), 
+						null, application, objectIdentifierMaster);
+			} else if (storage.getDocumenti().getDocumento()[x].getEsito().equals("NOTFOUND")){
+				if (testRes){
+					if (ris ==null){
+						ris = new Vector<String>();
+					}
+					msg = "Nel modo: ["+
+							mdNodi.getNome()+
+							" - "+
+							mdNodi.getDescrizione()+
+							"] riscontrato un errore nella verifica per il file ["+
+							storage.getDocumenti().getDocumento()[x].getNomeFile()+
+							"]";
+					ris.add(msg);
+					addGeoReplica(premisElab, dStart, dEnd, mdNodi, files[0].getAbsolutePath(), 
+							msg, application, objectIdentifierMaster);
+				} else {
+					ris = sendFile(mdNodi,files[x],premisElab, application, objectIdentifierMaster, ris);
+				}
+			}
+		}
 		return ris;
+	}
+	
+	private Vector<String> sendFile(MDNodi mdNodi, File file, PremisXsd premisElab, 
+			String application, String objectIdentifierMaster, Vector<String> ris) throws ConfigurationException{
+		GregorianCalendar dStart = null;
+		GregorianCalendar dEnd = null;
+		try {
+			dStart = new GregorianCalendar();
+			rsyncFile(mdNodi, file);
+			dEnd = new GregorianCalendar();
+			addGeoReplica(premisElab, dStart, dEnd, mdNodi, file.getAbsolutePath(), 
+					null, application, objectIdentifierMaster);
+		} catch (ClientMDException e) {
+			if (ris ==null){
+				ris = new Vector<String>();
+			}
+			ris.add(e.getMessage());
+			dEnd = new GregorianCalendar();
+			addGeoReplica(premisElab, dStart, dEnd, mdNodi, file.getAbsolutePath(), 
+					e.getMessage(), application, objectIdentifierMaster);
+		}
+		return ris;
+	}
+
+	private void addGeoReplica(PremisXsd premisElab, Timestamp dataStart, Timestamp dataEnd,
+			MDNodi mdNodi, String file, String msgError, String application, String objectIdentifierMaster) throws ConfigurationException{
+		GregorianCalendar dStart;
+		GregorianCalendar dEnd;
+
+		dStart = new GregorianCalendar();
+		dStart.setTimeInMillis(dataStart.getTime());
+
+		dEnd = new GregorianCalendar();
+		dEnd.setTimeInMillis(dataEnd.getTime());
+
+		addGeoReplica(premisElab, dStart, dEnd, mdNodi, file, msgError, application, objectIdentifierMaster);
+	}
+
+	private void addGeoReplica(PremisXsd premisElab, GregorianCalendar dataStart, GregorianCalendar dataEnd,
+			MDNodi mdNodi, String file, String msgError, String application, String objectIdentifierMaster) throws ConfigurationException{
+		premisElab.addEvent("geoReplica", dataStart, dataEnd, 
+				"Nodo ID: "+mdNodi.getNome()+" File: "+file, 
+				(msgError==null?"OK":"KO"), 
+				(msgError==null?null:new String[]{msgError}), 
+				null, Configuration.getValue("demoni."
+						+ application + ".UUID"),
+				objectIdentifierMaster);
+	}
+
+	private void rsyncFile(MDNodi mdNodi, File fSend) throws ClientMDException{
+		Runtime rt = null;
+		String fileInput = null;
+		String[] cmd = null;
+		Process proc = null;
+		InputStream stderr = null;
+		InputStreamReader isrErr = null;
+		BufferedReader brErr = null;
+		InputStream stdout = null;
+		InputStreamReader isrStd = null;
+		BufferedReader brStd = null;
+		String val = null;
+		int exitVal = -1;
+		
+		try {
+			rt = Runtime.getRuntime();
+			if (File.separator.equals("\\")){
+				fileInput = "/cygdrive/"+fSend.getAbsolutePath().replace(":", "").replace("\\", "/");
+			} else {
+				fileInput = fSend.getAbsolutePath();
+			}
+			cmd = new String[] { Configuration.getValue("md.sendRsync.path"), 
+					"-av", 
+					"--progress",
+					fileInput,
+					mdNodi.getRsync()+
+					fSend.getAbsolutePath().replace(Configuration.getValue("demoni.Publish.pathStorage"), "")};
+
+			proc = rt.exec(cmd, new String[]{"RSYNC_PASSWORD="+mdNodi.getRsyncPassword()});
+
+			stderr = proc.getErrorStream();
+			isrErr = new InputStreamReader(stderr);
+			brErr = new BufferedReader(isrErr);
+
+			stdout = proc.getInputStream();
+			isrStd = new InputStreamReader(stdout);
+			brStd = new BufferedReader(isrStd);
+
+			while ((val = brStd.readLine()) != null) {
+				log.debug(val);
+			}
+
+			while ((val = brErr.readLine()) != null) {
+				log.error(val);
+			}
+
+			exitVal = proc.waitFor();
+
+			switch (exitVal) {
+			case 0:
+				break;
+			case 1:
+				throw new ClientMDException("Errore di sintassi o l'utilizzo");
+			case 2:
+				throw new ClientMDException("Protocollo di incompatibilità");
+			case 3:
+				throw new ClientMDException(
+						"Errori di selezione dei file di input / output, dirs");
+			case 4:
+				throw new ClientMDException(
+						"L'azione richiesta non è supportata: un tentativo è stato fatto per manipolare file a 64 bit su una piattaforma che non li può sostenere, o un'opzione stato precisato che è supportato dal client e non dal server.");
+			case 5:
+				throw new ClientMDException(
+						"Errore durante l'avvio del protocollo client-server");
+			case 6:
+				throw new ClientMDException(
+						"Daemon in grado di aggiungere al log-file");
+			case 10:
+				throw new ClientMDException("Errore in socket I/O");
+			case 11:
+				throw new ClientMDException("Errore in file I/O");
+			case 12:
+				throw new ClientMDException(
+						"Errore nei rsync flusso di dati del protocollo");
+			case 13:
+				throw new ClientMDException(
+						"Errori con diagnostica del programma");
+			case 14:
+				throw new ClientMDException("Errore nel codice IPC");
+			case 20:
+				throw new ClientMDException("Ricevuto SIGUSR1 o SIGINT");
+			case 21:
+				throw new ClientMDException(
+						"Qualche errore restituito da waitpid()");
+			case 22:
+				throw new ClientMDException(
+						"Buffer di memoria centrale che ripartisce errore");
+			case 23:
+				throw new ClientMDException(
+						"Trasferimento parziale a causa di un errore");
+			case 24:
+				throw new ClientMDException(
+						"Trasferimento parziale a causa di file di origine scomparsi");
+			case 25:
+				throw new ClientMDException(
+						"Il limite --max-delete a fermato eliminazioni");
+			case 30:
+				throw new ClientMDException(
+						"Timeout nei dati di invio / ricezione");
+			case 255:
+				throw new ClientMDException(
+						"Autorizzazione negata, riprova.");
+			default:
+				throw new ClientMDException(
+						"Errore generico ["+exitVal+"]");
+			}
+		} catch (ConfigurationException e) {
+			throw new ClientMDException(e.getMessage(), e);
+		} catch (IOException e) {
+			throw new ClientMDException(e.getMessage(), e);
+		} catch (InterruptedException e) {
+			throw new ClientMDException(e.getMessage(), e);
+		} catch (ClientMDException e) {
+			throw e;
+		} finally {
+			try {
+				if (brStd!= null){
+					brStd.close();
+				}
+				if (isrStd != null){
+					isrStd.close();
+				}
+				if (stdout != null){
+					stdout.close();
+				}
+				if (brErr != null){
+					brErr.close();
+				}
+				if (isrErr != null){
+					isrErr.close();
+				}
+				if (stderr != null){
+					stderr.close();
+				}
+				log.info("File: "+fSend.getAbsolutePath()+" inviato");
+			} catch (IOException e) {
+				throw new ClientMDException(e.getMessage(), e);
+			}
+		}
+	}
+	
+	private Documenti genDocumenti(File[] files) throws ConfigurationException, NoSuchAlgorithmException, FileNotFoundException, IOException{
+		Documenti documenti = null;
+		DocumentiDocumento[] documento =  null;
+		SHA1 sha1 = null;
+		Calendar calendar = null;
+		
+		documenti = new Documenti();
+		documenti.setNumDoc(new BigInteger(String.valueOf(files.length)));
+
+		documento = new DocumentiDocumento[files.length];
+		sha1 = new SHA1();
+		for (int x=0; x<files.length; x++){
+			documento[x] = new DocumentiDocumento();
+			documento[x].setNomeFile(files[x].getAbsolutePath().replace(Configuration.getValue("demoni.Publish.pathStorage"), 
+					""));
+			documento[x].setDigest(sha1.getDigest(files[x]));
+			calendar = new GregorianCalendar();
+			calendar.setTimeInMillis(files[x].lastModified());
+			documento[x].setDataMod(calendar);
+			
+			documento[x].setEsito("CHECK");
+		}
+		documenti.setDocumento(documento);
+
+		return documenti;
+	}
+	
+	private Storage checkStorage(MDNodi mdNodi, Documenti documenti){
+		CheckStorageMDPortTypeProxy proxy = null;
+		Storage storage = null;
+		
+		try {
+
+			proxy = new CheckStorageMDPortTypeProxy(mdNodi.getUrlCheckStorage());
+			storage = proxy.checkStorageMDOperation(documenti);
+		} catch (RemoteException e) {
+			log.error(e.getMessage(),e);
+		}
+		
+		return storage;
 	}
 	/*
 	private void test(){
@@ -580,6 +1046,13 @@ public class OggettoDigitaleGeoReplica {
 		return objectIdentifierContainer;
 	}
 	 */
+
+	/**
+	 * @return the trasterito
+	 */
+	public boolean isTrasterito() {
+		return trasterito;
+	}
 
 	/**
 	 * Metodo utilizzato per verificare la presenza del file di destinazione nelle diverse condizioni di elaborazione
