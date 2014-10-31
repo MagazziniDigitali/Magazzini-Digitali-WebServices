@@ -20,5 +20,8 @@
         <property name="rsyncPassword" type="java.lang.String">
             <column name="RSYNCPASSWORD" />
         </property>
+        <property name="urlCheckStorage" type="java.lang.String">
+            <column name="URLCHECKSTORAGE" />
+        </property>
     </class>
 </hibernate-mapping>

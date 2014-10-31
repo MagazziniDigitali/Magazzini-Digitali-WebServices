@@ -29,6 +29,8 @@ public class MDNodi implements Serializable {
 
 	private String rsyncPassword;
 
+	private String urlCheckStorage;
+
 	public MDNodi() {
 	}
 
@@ -100,6 +102,20 @@ public class MDNodi implements Serializable {
 	 */
 	public void setRsyncPassword(String rsyncPassword) {
 		this.rsyncPassword = rsyncPassword;
+	}
+
+	/**
+	 * @return the urlCheckStorage
+	 */
+	public String getUrlCheckStorage() {
+		return urlCheckStorage;
+	}
+
+	/**
+	 * @param urlCheckStorage the urlCheckStorage to set
+	 */
+	public void setUrlCheckStorage(String urlCheckStorage) {
+		this.urlCheckStorage = urlCheckStorage;
 	}
 
 }
