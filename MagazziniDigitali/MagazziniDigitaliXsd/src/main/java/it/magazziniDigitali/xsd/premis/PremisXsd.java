@@ -215,7 +215,9 @@ public class PremisXsd extends ReadXsd<PremisComplexType> {
 				addObjectCharacteristics(compositionLevel, digest, size,
 						formatDesignationValue, formatVersion, puid));
 
-		file.setOriginalName(addOriginalName(originalName));
+		if (originalName != null){
+			file.setOriginalName(addOriginalName(originalName));
+		}
 
 		if (right != null){
 			linkingRightsStatementIdentifier = new LinkingRightsStatementIdentifierComplexType();
@@ -329,31 +331,39 @@ public class PremisXsd extends ReadXsd<PremisComplexType> {
 		objectCharacterstics = new ObjectCharacteristicsComplexType();
 		objectCharacterstics.setCompositionLevel(compositionLevel);
 
-		fixity = new FixityComplexType();
-		fixity.setMessageDigestAlgorithm("SHA-1");
-		fixity.setMessageDigest(digest);
-		objectCharacterstics.getFixity().add(fixity);
+		if (digest != null){
+			fixity = new FixityComplexType();
+			fixity.setMessageDigestAlgorithm("SHA-1");
+			fixity.setMessageDigest(digest);
+			objectCharacterstics.getFixity().add(fixity);
+		}
 
 		objectCharacterstics.setSize(size);
 
-		format = new FormatComplexType();
-
-		if (formatDesignationValue != null){
-			st = formatDesignationValue.split(",");
-			for (int x = 0; x < st.length; x++) {
-				formatDesignation = new FormatDesignationComplexType();
-				formatDesignation.setFormatName(st[x]);
-				formatDesignation.setFormatVersion(formatVersion);
-				format.getContent().add(
-						objectFactory.createFormatDesignation(formatDesignation));
+		if (formatDesignationValue != null ||
+				puid != null){
+			format = new FormatComplexType();
+	
+			if (formatDesignationValue != null){
+				st = formatDesignationValue.split(",");
+				for (int x = 0; x < st.length; x++) {
+					formatDesignation = new FormatDesignationComplexType();
+					formatDesignation.setFormatName(st[x]);
+					formatDesignation.setFormatVersion(formatVersion);
+					format.getContent().add(
+							objectFactory.createFormatDesignation(formatDesignation));
+				}
 			}
-		}
+	
+			if (puid != null){
+				formatRegistry = new FormatRegistryComplexType();
+				formatRegistry.setFormatRegistryName("PRONOM");
+				formatRegistry.setFormatRegistryKey(puid);
+				format.getContent().add(objectFactory.createFormatRegistry(formatRegistry));
+			}
 
-		formatRegistry = new FormatRegistryComplexType();
-		formatRegistry.setFormatRegistryName("PRONOM");
-		formatRegistry.setFormatRegistryKey(puid);
-		format.getContent().add(objectFactory.createFormatRegistry(formatRegistry));
-		objectCharacterstics.getFormat().add(format);
+			objectCharacterstics.getFormat().add(format);
+		}
 
 		return objectCharacterstics;
 	}
