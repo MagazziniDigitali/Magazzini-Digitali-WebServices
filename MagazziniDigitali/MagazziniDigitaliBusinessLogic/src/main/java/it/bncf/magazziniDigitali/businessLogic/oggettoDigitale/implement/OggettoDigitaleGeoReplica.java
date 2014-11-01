@@ -108,7 +108,7 @@ public class OggettoDigitaleGeoReplica {
 						mdFilesTmp.getStato().getId().equals(MDStatoDAO.INITARCHIVE)){
 					trasterito = true;
 					try {
-						filePremis = new File(Configuration.getValue("path.premis")
+						filePremis = new File(Configuration.getValue("path.premisGeoReplica")
 								+ File.separator + UUID.randomUUID().toString()
 								+ ".geoReplica.premis");
 

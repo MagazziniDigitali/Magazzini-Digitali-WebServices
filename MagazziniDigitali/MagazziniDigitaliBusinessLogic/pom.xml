@@ -7,7 +7,7 @@
   </parent>
   <groupId>it.bncf.magazziniDigitali.businessLogic</groupId>
   <artifactId>MagazziniDigitaliBusinessLogic</artifactId>
-  <version>1.0.23</version>
+  <version>1.0.24</version>
   <description>Questo progetto vine utilizzato per la gestione della logica applicativa del programma</description>
   <properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
