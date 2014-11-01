@@ -110,7 +110,7 @@ public class OggettoDigitaleGeoReplica {
 					try {
 						filePremis = new File(Configuration.getValue("path.premis")
 								+ File.separator + UUID.randomUUID().toString()
-								+ ".premis");
+								+ ".geoReplica.premis");
 
 						premisElab = new PremisXsd();
 						try {
