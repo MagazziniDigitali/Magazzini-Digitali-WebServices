@@ -6,6 +6,7 @@
     <version>1.0.0</version>
   </parent>
   <artifactId>MagazziniDigitaliSolr</artifactId>
+  <version>1.0.3</version>
   <description>Librerie per l'interfaccia verso il database Solr</description>
   <groupId>it.bncf.magazziniDigitali.solr</groupId>
   <properties>
@@ -17,13 +18,22 @@
   	<dependency>
   		<groupId>mx.randalf.solr</groupId>
   		<artifactId>RandalfSolrCore</artifactId>
-  		<version>1.0.3</version>
+  		<version>1.0.4</version>
   	</dependency>
   	<dependency>
   		<groupId>commons-logging</groupId>
   		<artifactId>commons-logging</artifactId>
   		<version>1.1.3</version>
   	</dependency>
+  	<dependency>
+  		<groupId>mx.randalf.configuration</groupId>
+  		<artifactId>RandalfConfiguration</artifactId>
+  		<version>1.0.0</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>mx.randalf.tools</groupId>
+  		<artifactId>RandalfTools</artifactId>
+  		<version>1.0.3</version>
+  	</dependency>
   </dependencies>
-  <version>1.0.1</version>
 </project>
