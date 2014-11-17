@@ -7,25 +7,8 @@
     <entry key="path.droid">/Users/massi/bin/droid/droid.sh</entry>
     
     <entry key="nodo">caa16cd0-59ea-11e4-aa45-f01fafe387cf</entry>
-
-    <!-- Configurazione Istituto IBNF1 -->
-    <entry key="Xistituto.IBNF1.nome">Biblioteca Nazionale Centrale Firenze</entry>
-    <entry key="Xistituto.IBNF1.pathTmp">/mnt</entry>
-    <entry key="Xistituto.IBNF1.password">222222</entry>
-    <entry key="Xistituto.IBNF1.url">http://www.bncf.firenze.sbn.it/</entry>
-    <entry key="Xistituto.IBNF1.urlLogo">http://www.bncf.firenze.sbn.it/img/logo-bncf.jpg</entry>
-    <entry key="Xistituto.IBNF1.password">222222</entry>
-    <!-- Identificativo della scheda dell'Istituto -->
-    <entry key="Xistituto.IBNF1.UUID">35dc8f20-e686-11e3-ac10-0800200c9a66-AG</entry>
-    <!-- Identificativo del Software che l'istituto ha utilizzato per trasmettere i Files in MD -->
-    <entry key="Xistituto.IBNF1.machine.UUID">16E176A1-45C1-4A49-9FD9-9FC3EDFBCE83-AG</entry>
-    <!-- Identificativo del Software che l'istituto ha utilizzato per trasmettere i Files in MD -->
-    <entry key="Xistituto.IBNF1.software.UUID">9BF7E172-628D-4562-AD46-632F86E710D1-AG</entry>
-    <!-- Identificativo relativo hai diritti che l'istituto assegna all'oggetto -->
-    <entry key="Xistituto.IBNF1.right.UUID">35dc8f20-e686-11e3-ac10-0800200c9a66-RG</entry>  
-    <!-- Indica gli indirizzi IP da cui l'istituto è abilitato ad accedere al Gestionale -->
-    <entry key="Xistituto.IBNF1.ipAuthentication">192.168.5.8,192.168.5.9,172.25.*.*,10.0.*.*</entry>
     
+    <entry key="md.sendRsync.path">/opt/local/bin/rsync</entry>
 
     <!-- Configurazione demone per la pubblicazione -->
     <entry key="demoni.Publish">false</entry>
@@ -40,8 +23,6 @@
     <entry key="demoni.Publish.mets.xslTransf.dc">/Users/massi/Desktop/Lavoro/Sorgenti/Bncf/MagazziniDigitaliDemoni/MagazziniDigitaliDemoni/configurazione/xsl/Mets2MD.xsl</entry>
     <!-- Numero di Thread contemporanei che verranno aperti -->
     <entry key="demoni.Publish.numberThread">20</entry>
-    <!-- Path Temporanea dove devomprimere i file Tar -->
-    <entry key="demoni.Publish.tmpPath">/mnt/Tmp</entry>
     <!-- Tempo in Millisecondi di attesa tra un controllo e l'altro -->
     <entry key="demoni.Publish.timeOut">600000</entry>
     
@@ -63,19 +44,36 @@
     <entry key="demoni.Validate.timeOut">600000</entry>
     
     <!-- Configurazione demone per la generazione del file coda -->
-    <entry key="demoni.Coda">true</entry>
+    <entry key="demoni.Coda">false</entry>
     <!-- Path dove scrivere i files coda -->
     <entry key="demoni.Coda.path">/Users/massi/tmp/bncf/MagazziniDigitaliRoma/coda</entry>
     <!-- Tempo in Millisecondi di attesa tra un controllo e l'altro -->
     <entry key="demoni.Coda.timeOut">600000</entry>
     
     <!-- Configurazione demone della GeoReplica -->
-    <entry key="demoni.GeoReplica">true</entry>
+    <entry key="demoni.GeoReplica">false</entry>
     <!-- Identificativo relativo alla scheda del Software per la Validazione -->
     <entry key="demoni.GeoReplica.UUID">7F45C05B-9964-4E22-9DF5-A1EFD88FDB36-AG</entry>
+
+
+    <!-- Configurazione demone della GeoReplica -->
+    <entry key="demoni.SolrIndex">true</entry>
+    <!-- Identificativo relativo alla scheda del Software per la Validazione -->
+    <entry key="demoni.SolrIndex.UUID">4D92B630-4523-4EF8-8E61-DB424407372A-AG</entry>
+    <!-- Tempo in Millisecondi di attesa tra un controllo e l'altro -->
+    <entry key="demoni.SolrIndex.timeOut">60000</entry>
+    <!-- Indica il numero massimo di Thread contemporanei per questo processo -->
+    <entry key="demoni.SolrIndex.numberThread">2</entry>
+    <!-- Path Temporanea dove devomprimere i file Tar -->
+    <entry key="demoni.SolrIndex.tmpPath">/Users/massi/tmp/bncf/MagazziniDigitali/tmp</entry>
+    <!-- Indica la lista dei nodi in cui è presente il file -->
+    <entry key="demoni.SolrIndex.nodi">F,R,T</entry>
+    <entry key="demoni.SolrIndex.rSync">rsync://SCAMBIO@md-solr01.bncf.lan/SCAMBIOSOLR</entry>
+    <entry key="demone.SolrIndex.rSyncPassword">epYEHdEq8cS</entry>
     
     <!-- Indica la path in cui verranno archiviati i file Premis -->
     <entry key="path.premis">/Users/massi/Desktop/Lavoro/Sorgenti/Bncf/MagazziniDigitali/MagazziniDigitali/MagazziniDigitaliServices/premis</entry>
+    <entry key="path.premisGeoReplica">/Users/massi/Desktop/Lavoro/Sorgenti/Bncf/MagazziniDigitali/MagazziniDigitali/MagazziniDigitaliServices/premisGeoReplica</entry>
 
     <!-- Configurazione database FilesTmp -->
     <entry key="db.MDFilestmp">/Users/massi/Desktop/Lavoro/Sorgenti/Bncf/MagazziniDigitali/MagazziniDigitali/MagazziniDigitaliServices/sqlite/MDFilestmp.db</entry>

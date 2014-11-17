@@ -72,7 +72,11 @@ public class CheckMDImpl {
 						if (dati!= null){
 							output.getOggettoDigitale().setId(dati.get("id"));
 							
-							if(dati.get("stato").equalsIgnoreCase(MDStatoDAO.FINEPUBLISH)){
+							if(dati.get("stato").equalsIgnoreCase(MDStatoDAO.FINEPUBLISH) ||
+									dati.get("stato").equalsIgnoreCase(MDStatoDAO.INITARCHIVE) ||
+									dati.get("stato").equalsIgnoreCase(MDStatoDAO.FINEARCHIVE) ||
+									dati.get("stato").equalsIgnoreCase(MDStatoDAO.INITINDEX) ||
+									dati.get("stato").equalsIgnoreCase(MDStatoDAO.FINEINDEX)){
 								output.getOggettoDigitale().setStatoOggettoDigitale(StatoOggettoDigitale_type.ARCHIVIATO);
 							} else if (dati.get("stato").equalsIgnoreCase(MDStatoDAO.INITPUBLISH) ||
 									dati.get("stato").equalsIgnoreCase(MDStatoDAO.FINEVALID) ||
