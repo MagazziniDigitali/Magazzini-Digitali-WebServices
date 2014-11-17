@@ -703,7 +703,7 @@ public class MDFilesTmpBusiness extends
 		}
 		return gc;
 	}
-
+	
 	/**
 	 * Metodo utilizzato per indicare l'inizio dell'archiviazione
 	 * 
@@ -767,6 +767,126 @@ public class MDFilesTmpBusiness extends
 				dati.put("stato", mdStatoDAO.ERRORARCHIVE());
 				dati.put("archiveEsito", Boolean.FALSE);
 				dati.put("type", mdStatoDAO.ERRORARCHIVE());
+				dati.put("errors", msgError);
+			}
+			ris = save(dati);
+			if (ris == null || ris.trim().equals("")){
+				throw new SQLException("Riscontrato un problema nell'inserimento del record nella tabella");
+			}
+		} catch (IllegalAccessException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (InvocationTargetException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (NoSuchMethodException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (NamingException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (ConfigurationException e) {
+			throw new SQLException(e.getMessage(), e);
+		}
+		return gc;
+	}
+	
+	/**
+	 * Metodo utilizzato per indicare l'inizio dell'archiviazione
+	 * 
+	 * @param id
+	 * @throws SQLException
+	 */
+	public GregorianCalendar updateStartIndex(String id) throws SQLException{
+		String ris = null;
+		HashTable<String, Object> dati=null;
+		GregorianCalendar gc = null;
+		MDStatoDAO mdStatoDAO = new MDStatoDAO(hibernateTemplate);
+		
+		try {
+			gc = new GregorianCalendar();
+			
+			dati = new HashTable<String, Object>();
+			dati.put("id", id);
+			dati.put("stato", mdStatoDAO.INITINDEX());
+			dati.put("indexDataStart", new Timestamp(gc.getTimeInMillis()));
+			ris = save(dati);
+			if (ris == null || ris.trim().equals("")){
+				throw new SQLException("Riscontrato un problema nell'inserimento del record nella tabella");
+			}
+		} catch (IllegalAccessException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (InvocationTargetException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (NoSuchMethodException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (NamingException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (ConfigurationException e) {
+			throw new SQLException(e.getMessage(), e);
+		}
+		return gc;
+	}
+	
+	/**
+	 * Metodo utilizzato per indicare l'inizio dell'archiviazione
+	 * 
+	 * @param id
+	 * @throws SQLException
+	 */
+	public GregorianCalendar updateCheckIndex(String id) throws SQLException{
+		String ris = null;
+		HashTable<String, Object> dati=null;
+		GregorianCalendar gc = null;
+		MDStatoDAO mdStatoDAO = new MDStatoDAO(hibernateTemplate);
+		
+		try {
+			gc = new GregorianCalendar();
+			
+			dati = new HashTable<String, Object>();
+			dati.put("id", id);
+			dati.put("stato", mdStatoDAO.CHECKINDEX());
+//			dati.put("indexDataStart", new Timestamp(gc.getTimeInMillis()));
+			ris = save(dati);
+			if (ris == null || ris.trim().equals("")){
+				throw new SQLException("Riscontrato un problema nell'inserimento del record nella tabella");
+			}
+		} catch (IllegalAccessException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (InvocationTargetException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (NoSuchMethodException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (NamingException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (ConfigurationException e) {
+			throw new SQLException(e.getMessage(), e);
+		}
+		return gc;
+	}
+
+	/**
+	 * Metodo utilizzato per indicare la fine dell'archiviazione
+	 * 
+	 * @param id
+	 * @throws SQLException
+	 */
+	public GregorianCalendar updateStopIndex(String id, boolean esito, 
+			String[] msgError) throws SQLException{
+		String ris = null;
+		HashTable<String, Object> dati=null;
+		GregorianCalendar gc = null;
+		MDStatoDAO mdStatoDAO = new MDStatoDAO(hibernateTemplate);
+		
+		try {
+			gc = new GregorianCalendar();
+			
+			dati = new HashTable<String, Object>();
+			dati.put("id", id);
+			dati.put("indexDataEnd", new Timestamp(gc.getTimeInMillis()));
+			if (esito){
+				dati.put("stato", mdStatoDAO.FINEINDEX());
+				dati.put("indexEsito", Boolean.TRUE);
+			} else {
+				dati.put("stato", mdStatoDAO.ERRORINDEX());
+				dati.put("indexEsito", Boolean.FALSE);
+				dati.put("type", mdStatoDAO.ERRORINDEX());
 				dati.put("errors", msgError);
 			}
 			ris = save(dati);

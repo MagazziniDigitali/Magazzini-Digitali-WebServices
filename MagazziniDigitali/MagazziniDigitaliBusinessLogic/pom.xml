@@ -7,7 +7,7 @@
   </parent>
   <groupId>it.bncf.magazziniDigitali.businessLogic</groupId>
   <artifactId>MagazziniDigitaliBusinessLogic</artifactId>
-  <version>1.0.24</version>
+  <version>1.0.29</version>
   <description>Questo progetto vine utilizzato per la gestione della logica applicativa del programma</description>
   <properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -15,15 +15,10 @@
     <maven.compiler.target>1.7</maven.compiler.target>
   </properties>
   <dependencies>
-    <dependency>
-    	<groupId>axis</groupId>
-    	<artifactId>axis</artifactId>
-    	<version>1.4</version>
-    </dependency>
   	<dependency>
   		<groupId>it.bncf.magazziniDigitali.databaseSchema</groupId>
   		<artifactId>MagazziniDigitaliDatabaseSchema</artifactId>
-  		<version>1.0.15</version>
+  		<version>1.0.16</version>
   	</dependency>
   	<dependency>
   		<groupId>it.bncf.magazziniDigitali.xsd</groupId>
@@ -33,7 +28,7 @@
   	<dependency>
   		<groupId>mx.randalf.archive</groupId>
   		<artifactId>RandalfArchive</artifactId>
-  		<version>1.0.3</version>
+  		<version>1.0.4</version>
   	</dependency>
   	<dependency>
   		<groupId>mx.randalf.configuration</groupId>
@@ -43,7 +38,7 @@
   	<dependency>
   		<groupId>it.bncf.magazziniDigitali.solr</groupId>
   		<artifactId>MagazziniDigitaliSolr</artifactId>
-  		<version>1.0.1</version>
+  		<version>1.0.3</version>
   	</dependency>
   	<dependency>
   		<groupId>mx.randalf.converter.xsl</groupId>
@@ -60,7 +55,7 @@
   			it.bncf.magazziniDigitali.demoni.clientServices
   		</groupId>
   		<artifactId>MagazziniDigitaliDemoniClientServices</artifactId>
-  		<version>1.0.0</version>
+  		<version>1.0.1</version>
   	</dependency>
   	<dependency>
   		<groupId>mx.randalf.digest</groupId>

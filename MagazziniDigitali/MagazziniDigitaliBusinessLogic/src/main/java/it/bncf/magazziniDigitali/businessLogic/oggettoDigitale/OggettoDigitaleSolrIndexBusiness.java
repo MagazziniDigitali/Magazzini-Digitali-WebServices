@@ -1,7 +1,7 @@
 package it.bncf.magazziniDigitali.businessLogic.oggettoDigitale;
 
 import it.bncf.magazziniDigitali.businessLogic.filesTmp.MDFilesTmpBusiness;
-import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.implement.OggettoDigitaleSolr;
+import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.implement.OggettoDigitaleSolrIndex;
 import it.bncf.magazziniDigitali.database.dao.MDStatoDAO;
 import it.bncf.magazziniDigitali.database.entity.MDFilesTmp;
 import it.bncf.magazziniDigitali.database.entity.MDStato;
@@ -21,11 +21,11 @@ import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 
-public class OggettoDigitaleSolrBusiness extends OggettoDigitaleBusiness{
+public class OggettoDigitaleSolrIndexBusiness extends OggettoDigitaleBusiness{
 	
-	public Logger log = Logger.getLogger(OggettoDigitaleSolrBusiness.class);
+	public Logger log = Logger.getLogger(OggettoDigitaleSolrIndexBusiness.class);
 
-	public OggettoDigitaleSolrBusiness(HibernateTemplate hibernateTemplate) {
+	public OggettoDigitaleSolrIndexBusiness(HibernateTemplate hibernateTemplate) {
 		super(hibernateTemplate);
 	}
 
@@ -34,7 +34,7 @@ public class OggettoDigitaleSolrBusiness extends OggettoDigitaleBusiness{
 	 * 
 	 * @param application
 	 */
-	public void solr(String application, boolean testMode, Logger logSolr) {
+	public void solrIndex(String application, boolean testMode, Logger logSolr) {
 		MDFilesTmpBusiness mdFileTmp = null;
 		List<MDFilesTmp> rs = null;
 
@@ -48,7 +48,7 @@ public class OggettoDigitaleSolrBusiness extends OggettoDigitaleBusiness{
 			logSolr.debug("Ricerco oggetti da Indicizzare");
 			mdFileTmp = new MDFilesTmpBusiness(hibernateTemplate);
 			rs = mdFileTmp.find(null, null, null, new MDStato[] {
-					mdStatoDAO.FINEPUBLISH(), mdStatoDAO.INITINDEX()}, null);
+					mdStatoDAO.FINEARCHIVE(), mdStatoDAO.INITINDEX()}, null);
 
 			if (rs != null && rs.size() > 0) {
 				logSolr.info("Ci sono " + rs.size()
@@ -56,9 +56,9 @@ public class OggettoDigitaleSolrBusiness extends OggettoDigitaleBusiness{
 				futuresList = new ArrayList<Future<Boolean>>();
 				nrOfProcessors = Runtime.getRuntime().availableProcessors();
 				eservice = Executors.newFixedThreadPool(nrOfProcessors);
-				if (Configuration.getValue("demoni.Solr.numberThread") != null) {
+				if (Configuration.getValue("demoni.SolrIndex.numberThread") != null) {
 					numberThread = Integer.valueOf(Configuration
-							.getValue("demoni.Solr.numberThread"));
+							.getValue("demoni.SolrIndex.numberThread"));
 				}
 				if (testMode) {
 					numberThread = 1;
@@ -71,8 +71,8 @@ public class OggettoDigitaleSolrBusiness extends OggettoDigitaleBusiness{
 							break;
 						}
 					}
-					futuresList.add(eservice.submit(new OggettoDigitaleSolr(
-							rs.get(x), logSolr, mdFileTmp, "Solr " + x
+					futuresList.add(eservice.submit(new OggettoDigitaleSolrIndex(
+							rs.get(x), logSolr, mdFileTmp, "SolrIndex " + (x+1)
 									+ "/" + rs.size(), application)));
 					Thread.sleep(10000);
 				}

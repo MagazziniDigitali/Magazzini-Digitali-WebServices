@@ -15,7 +15,7 @@ import info.lc.xmlns.premis_v2.RelatedObjectIdentificationComplexType;
 import info.lc.xmlns.premis_v2.RelationshipComplexType;
 import info.lc.xmlns.premis_v2.SignificantPropertiesComplexType;
 import info.lc.xmlns.premis_v2.StorageComplexType;
-import it.bncf.magazziniDigitali.solr.AddDocumentMD;
+import it.bncf.magazziniDigitali.solr.IndexDocumentMD;
 import it.bncf.magazziniDigitali.solr.ItemMD;
 import it.depositolegale.md.BibliographicLevel;
 import it.depositolegale.md.Holdings;
@@ -66,8 +66,9 @@ public class SolrObjectFile {
 		params = new Params();
 	}
 
-	public boolean publishSolr(File object, AddDocumentMD admd, java.io.File pathTar) throws SolrException{
+	public boolean publishSolr(File object, IndexDocumentMD admd, java.io.File pathTar) throws SolrException{
 		boolean ris = false;
+		String[] st = null;
 		
 		try {
 			params.getParams().clear();
@@ -111,6 +112,11 @@ public class SolrObjectFile {
 				if (size>0){
 					publicSolrOcr(pathTar);
 				}
+			}else if (mimeType != null && mimeType.equals("application/x-tar")){
+				st = Configuration.getValue("demoni.SolrIndex.nodi").split(",");
+				for (int x=0; x<st.length; x++){
+					params.add(ItemMD.NODO,st[x]);
+				}
 			}
 			admd.add(params.getParams(), new ItemMD());
 			if ((filename != null && filename.endsWith(".xml")) && 
@@ -128,7 +134,7 @@ public class SolrObjectFile {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void publicSolrMets(java.io.File pathTar, AddDocumentMD admd) throws SolrException{
+	private void publicSolrMets(java.io.File pathTar, IndexDocumentMD admd) throws SolrException{
 		ByteArrayOutputStream dc = null;
 		MdXsd mdXsd = null;
 		Md md = null;

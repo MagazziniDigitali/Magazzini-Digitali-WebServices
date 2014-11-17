@@ -8,7 +8,7 @@ import info.lc.xmlns.premis_v2.EventIdentifierComplexType;
 import info.lc.xmlns.premis_v2.EventOutcomeInformationComplexType;
 import info.lc.xmlns.premis_v2.LinkingAgentIdentifierComplexType;
 import info.lc.xmlns.premis_v2.LinkingObjectIdentifierComplexType;
-import it.bncf.magazziniDigitali.solr.AddDocumentMD;
+import it.bncf.magazziniDigitali.solr.IndexDocumentMD;
 import it.bncf.magazziniDigitali.solr.ItemMD;
 import it.magazziniDigitali.xsd.premis.PremisXsd;
 
@@ -37,7 +37,7 @@ public class SolrEvent {
 		params = new Params();
 	}
 
-	public boolean publishSolr(EventComplexType object, AddDocumentMD admd) throws SolrException{
+	public boolean publishSolr(EventComplexType object, IndexDocumentMD admd) throws SolrException{
 		boolean ris = false;
 		String[] st = null;
 		
