@@ -245,6 +245,7 @@ public class MDStatoDAO extends GenericHibernateDAO<MDStato, String> {
 		return this.findById(FINEARCHIVE);
 	}
 
+	public static String INITINDEX = "INITINDEX";
 	/**
 	 * Stato Inizio indicizzazione del materiale in Solr
 	 * 
@@ -254,9 +255,23 @@ public class MDStatoDAO extends GenericHibernateDAO<MDStato, String> {
 	 * @throws ConfigurationException
 	 */
 	public MDStato INITINDEX() throws HibernateException, NamingException, ConfigurationException{
-		return this.findById("INITINDEX");
+		return this.findById(INITINDEX);
 	}
 
+	public static String CHECKINDEX = "CHECKINDEX";
+	/**
+	 * Stato Inizio indicizzazione del materiale in Solr
+	 * 
+	 * @return
+	 * @throws HibernateException
+	 * @throws NamingException
+	 * @throws ConfigurationException
+	 */
+	public MDStato CHECKINDEX() throws HibernateException, NamingException, ConfigurationException{
+		return this.findById(CHECKINDEX);
+	}
+
+	public static String FINEINDEX = "FINEINDEX";
 	/**
 	 * Stato Fine indicizzazione del materiale in Solr
 	 * 
@@ -266,6 +281,19 @@ public class MDStatoDAO extends GenericHibernateDAO<MDStato, String> {
 	 * @throws ConfigurationException
 	 */
 	public MDStato FINEINDEX() throws HibernateException, NamingException, ConfigurationException{
-		return this.findById("FINEINDEX");
+		return this.findById(FINEINDEX);
+	}
+
+	public static String ERRORINDEX = "ERRORINDEX";
+	/**
+	 * Stato Erore riscontrato durante la fase di replica negli altri archivi
+	 * 
+	 * @return
+	 * @throws HibernateException
+	 * @throws NamingException
+	 * @throws ConfigurationException
+	 */
+	public MDStato ERRORINDEX() throws HibernateException, NamingException, ConfigurationException{
+		return this.findById(ERRORINDEX);
 	}
 }
