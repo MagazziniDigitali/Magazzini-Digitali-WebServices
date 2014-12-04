@@ -4,6 +4,7 @@ import it.bncf.magazziniDigitali.businessLogic.filesTmp.MDFilesTmpBusiness;
 import it.bncf.magazziniDigitali.database.dao.MDStatoDAO;
 import it.bncf.magazziniDigitali.database.entity.MDFilesTmp;
 import it.bncf.magazziniDigitali.database.entity.MDIstituzione;
+import it.bncf.magazziniDigitali.database.entity.MDStato;
 import it.bncf.magazziniDigitali.solr.AddDocumentMD;
 import it.bncf.magazziniDigitali.utils.Record;
 
@@ -42,6 +43,31 @@ public class OggettoDigitaleBusiness {
 		this.hibernateTemplate = hibernateTemplate;
 	}
 
+	public List<MDFilesTmp> findStatus(String idMDFilesTmp, MDStato[] status, int numRec, List<MDFilesTmp> result)
+				throws HibernateException, NamingException, ConfigurationException {
+		MDFilesTmpBusiness mdFileTmp = null;
+		List<MDFilesTmp> rs = null;
+
+		try {
+			mdFileTmp = new MDFilesTmpBusiness(hibernateTemplate);
+			rs = mdFileTmp.find(idMDFilesTmp, null, null, status, null);
+			if (rs!=null && rs.size()>0){
+				if (result== null){
+					result = new Vector<MDFilesTmp>();
+				}
+				for (int x=0; x<(rs.size()<numRec?rs.size():numRec); x++){
+					result.add(rs.get(x));
+				}
+			}
+		} catch (HibernateException e) {
+			throw e;
+		} catch (NamingException e) {
+			throw e;
+		} catch (ConfigurationException e) {
+			throw e;
+		}
+		return result;
+	}
 	/**
 	 * Metodo utilizzato per individuare lo stato di caricamento del materiale
 	 * relativo ad un istituto specifico

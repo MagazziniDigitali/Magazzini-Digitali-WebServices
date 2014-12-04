@@ -61,7 +61,7 @@ public class OggettoDigitaleGeoReplica {
 	private String name = null;
 	
 	private HibernateTemplate hibernateTemplate= null;
-	private boolean trasterito = false;
+	private boolean trasferito = false;
 
 	/**
 	 * 
@@ -73,7 +73,7 @@ public class OggettoDigitaleGeoReplica {
 	}
 
 	@SuppressWarnings("unused")
-	public boolean esegui(String objectIdentifierPremis, MDFilesTmpBusiness mdFileTmpBusiness, String application) {
+	public boolean esegui(String objectIdentifierPremis, String application) {
 		File filePremis = null;
 		PremisXsd premisElab = null;
 		GregorianCalendar gcStart = null;
@@ -89,9 +89,11 @@ public class OggettoDigitaleGeoReplica {
 		Vector<String> msgErr = null;
 		boolean esito = true;
 		Documenti documenti = null;
+		MDFilesTmpBusiness mdFileTmpBusiness = null;
 
-		trasterito = false;
+		trasferito = false;
 		try {
+			mdFileTmpBusiness = new MDFilesTmpBusiness(null);
 			mdFilesTmp = mdFileTmpBusiness.findPremis(objectIdentifierPremis);
 		} catch (HibernateException e) {
 			log.error(e.getMessage(), e);
@@ -106,7 +108,7 @@ public class OggettoDigitaleGeoReplica {
 				FactoryDAO.initialize(mdFilesTmp.getStato());
 				if (mdFilesTmp.getStato().getId().equals(MDStatoDAO.FINEPUBLISH) ||
 						mdFilesTmp.getStato().getId().equals(MDStatoDAO.INITARCHIVE)){
-					trasterito = true;
+					trasferito = true;
 					try {
 						filePremis = new File(Configuration.getValue("path.premisGeoReplica")
 								+ File.separator + UUID.randomUUID().toString()
@@ -593,8 +595,8 @@ public class OggettoDigitaleGeoReplica {
 	/**
 	 * @return the trasterito
 	 */
-	public boolean isTrasterito() {
-		return trasterito;
+	public boolean isTrasferito() {
+		return trasferito;
 	}
 
 }
