@@ -110,5 +110,8 @@
         <property name="indexEsito" type="java.lang.Boolean">
             <column name="INDEX_ESITO" />
         </property>
-    </class>
+        <property name="indexPremis" type="java.lang.String">
+            <column name="INDEX_PREMIS" />
+        </property>
+        </class>
 </hibernate-mapping>

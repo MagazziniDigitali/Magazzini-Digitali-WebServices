@@ -89,6 +89,8 @@ public class MDFilesTmp implements Serializable {
 	private Timestamp indexDataEnd;
 
 	private Boolean indexEsito;
+
+	private String indexPremis;
 	
 	public MDFilesTmp() {
 	}
@@ -413,6 +415,20 @@ public class MDFilesTmp implements Serializable {
 	 */
 	public void setIndexEsito(Boolean indexEsito) {
 		this.indexEsito = indexEsito;
+	}
+
+	/**
+	 * @return the indexPremis
+	 */
+	public String getIndexPremis() {
+		return indexPremis;
+	}
+
+	/**
+	 * @param indexPremis the indexPremis to set
+	 */
+	public void setIndexPremis(String indexPremis) {
+		this.indexPremis = indexPremis;
 	}
 
 }
