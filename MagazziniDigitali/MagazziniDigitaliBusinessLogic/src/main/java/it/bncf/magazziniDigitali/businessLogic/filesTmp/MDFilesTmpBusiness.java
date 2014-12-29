@@ -220,10 +220,12 @@ public class MDFilesTmpBusiness extends
 	 */
 	@Override
 	protected List<MDFilesTmp> find(MDFilesTmpDAO tableDao,
-			HashTable<String, Object> dati, List<Order> orders)
+			HashTable<String, Object> dati, List<Order> orders, int page, int pageSize)
 			throws NamingException, ConfigurationException {
 		List<MDFilesTmp> tables;
 
+		tableDao.setPage(page);
+		tableDao.setPageSize(pageSize);
 		tables = tableDao.find((MDIstituzione)dati.get("idIstituto"),
 				(String)dati.get("nomeFile"), (MDStato[])dati.get("stato"), (String)dati.get("sha1"), 
 				orders);
@@ -433,10 +435,30 @@ public class MDFilesTmpBusiness extends
 		if (dati.containsKey("indexEsito")) {
 			table.setIndexEsito((Boolean) dati.get("indexEsito"));
 		}
+		
+		if (dati.containsKey("indexPremis")) {
+			table.setIndexPremis((String) dati.get("indexPremis"));
+		}
 	}
 
+	/**
+	 * Metodo utilizzato per la ricerca del materiale
+	 * 
+	 * @param idMDFilesTmp Identificativo del MDFileTmp
+	 * @param idIstituto Identificativo dell'istituto
+	 * @param nomeFile Nome del File
+	 * @param stato Lista degli stati
+	 * @param sha1 Chiave Sha1
+	 * @param page Pagina da ricercare
+	 * @param pageSize Record per pagine 
+	 * @return Lista dei record trovati
+	 * @throws HibernateException Eccezioni di Hibernate
+	 * @throws NamingException Eccezioni di Naming
+	 * @throws ConfigurationException Eccezioni di Configurazione
+	 */
 	public List<MDFilesTmp> find(String idMDFilesTmp, MDIstituzione idIstituto,
-			String nomeFile, MDStato[] stato, String sha1) throws HibernateException, NamingException, ConfigurationException{
+			String nomeFile, MDStato[] stato, String sha1, int page, int pageSize) 
+					throws HibernateException, NamingException, ConfigurationException{
 		HashTable<String, Object> dati = null;
 		
 		dati = new HashTable<String, Object>();
@@ -461,11 +483,11 @@ public class MDFilesTmpBusiness extends
 			dati.put("sha1", sha1);
 		}
 		
-		return find(dati);
+		return find(dati, page, pageSize);
 	}
 
 	public Vector<Record> findToRecord(String idMDFilesTmp, MDIstituzione idIstituto,
-			String nomeFile, MDStato[] stato, String sha1, int maxRec) throws HibernateException, NamingException, ConfigurationException{
+			String nomeFile, MDStato[] stato, String sha1, int page, int pageSize) throws HibernateException, NamingException, ConfigurationException{
 		HashTable<String, Object> dati = null;
 		
 		dati = new HashTable<String, Object>();
@@ -490,7 +512,7 @@ public class MDFilesTmpBusiness extends
 			dati.put("sha1", sha1);
 		}
 		
-		return new Vector<Record>(findToRecord(dati, maxRec));
+		return new Vector<Record>(findToRecord(dati, page, pageSize));
 	}
 
 	public Hashtable<String, Integer> findCountByIstituto(MDIstituzione idIstituto) throws HibernateException, NamingException, ConfigurationException{
@@ -830,7 +852,7 @@ public class MDFilesTmpBusiness extends
 	 * @param id
 	 * @throws SQLException
 	 */
-	public GregorianCalendar updateCheckIndex(String id) throws SQLException{
+	public GregorianCalendar updateCheckIndex(String id, String indexPremis) throws SQLException{
 		String ris = null;
 		HashTable<String, Object> dati=null;
 		GregorianCalendar gc = null;
@@ -842,6 +864,7 @@ public class MDFilesTmpBusiness extends
 			dati = new HashTable<String, Object>();
 			dati.put("id", id);
 			dati.put("stato", mdStatoDAO.CHECKINDEX());
+			dati.put("indexPremis", indexPremis);
 //			dati.put("indexDataStart", new Timestamp(gc.getTimeInMillis()));
 			ris = save(dati);
 			if (ris == null || ris.trim().equals("")){

@@ -47,8 +47,19 @@ public abstract class BusinessLogic<T extends Serializable, D extends GenericHib
 
 	public abstract void delete(ID id) throws Exception;
 
+	/**
+	 * Metodo per la ricerca
+	 * 
+	 * @param dati Lista dei dati da ricercare
+	 * @param page Pagina da ricercare
+	 * @param pageSize Record per pagine 
+	 * @return Lista dei record trovati
+	 * @throws HibernateException Eccezioni di Hibernate
+	 * @throws NamingException Eccezioni di Naming
+	 * @throws ConfigurationException Eccezioni di Configurazione
+	 */
 	@SuppressWarnings("unchecked")
-	public List<T> find(HashTable<String, Object> dati)
+	public List<T> find(HashTable<String, Object> dati, int page, int pageSize)
 			throws NamingException, HibernateException, ConfigurationException {
 		D tableDao = null;
 		T table = null;
@@ -68,7 +79,7 @@ public abstract class BusinessLogic<T extends Serializable, D extends GenericHib
 					tables.add(table);
 				}
 			} else {
-				tables = find(tableDao, dati, orders);
+				tables = find(tableDao, dati, orders, page, pageSize);
 			}
 		} catch (NamingException e) {
 			throw e;
@@ -83,18 +94,18 @@ public abstract class BusinessLogic<T extends Serializable, D extends GenericHib
 		return tables;
 	}
 
-	protected Vector<Record> findToRecord(HashTable<String, Object> dati, int maxRec)
+	protected Vector<Record> findToRecord(HashTable<String, Object> dati, int page, int pageSize)
 			throws NamingException, HibernateException, ConfigurationException {
 		List<T> tables = null;
 		int x = 0;
 
 		try {
-			tables = find(dati);
+			tables = find(dati, page, pageSize);
 			if (tables != null) {
 				for (T ai : tables) {
 					x++;
 					addRecord(ai);
-					if (x==maxRec){
+					if (x==pageSize){
 						break;
 					}
 				}
@@ -110,8 +121,20 @@ public abstract class BusinessLogic<T extends Serializable, D extends GenericHib
 		return records;
 	}
 
+	/**
+	 * Metodo per la Ricerca
+	 * 
+	 * @param tableDao Oggetto DAO per la ricerca
+	 * @param dati Metodi per la ricerca
+	 * @param orders Metodi di Ordinamento
+	 * @param page Pagina da ricercare
+	 * @param pageSize Record per pagine 
+	 * @return Lista dei record trovati
+	 * @throws NamingException Eccezioni di Naming
+	 * @throws ConfigurationException Eccezioni di Configurazione
+	 */
 	protected abstract List<T> find(D tableDao, HashTable<String, Object> dati,
-			List<Order> orders) throws NamingException, ConfigurationException;
+			List<Order> orders, int page, int pageSize) throws NamingException, ConfigurationException;
 
 	protected abstract List<Order> setOrder();
 
@@ -224,6 +247,7 @@ public abstract class BusinessLogic<T extends Serializable, D extends GenericHib
 		id = (ID) UUID.randomUUID().toString();
 		return id;
 	}
+
 	protected abstract void postSave(HashTable<String, Object> dati, T table)
 			throws NamingException, ConfigurationException,
 			IllegalAccessException, InvocationTargetException,

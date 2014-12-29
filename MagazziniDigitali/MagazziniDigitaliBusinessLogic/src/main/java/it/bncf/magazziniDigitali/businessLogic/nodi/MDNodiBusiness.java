@@ -84,7 +84,7 @@ public class MDNodiBusiness extends BusinessLogic<MDNodi, MDNodiDAO, String> {
 	 */
 	@Override
 	protected List<MDNodi> find(MDNodiDAO tableDao,
-			HashTable<String, Object> dati, List<Order> orders)
+			HashTable<String, Object> dati, List<Order> orders, int page, int pageSize)
 			throws NamingException, ConfigurationException {
 		return null;
 	}

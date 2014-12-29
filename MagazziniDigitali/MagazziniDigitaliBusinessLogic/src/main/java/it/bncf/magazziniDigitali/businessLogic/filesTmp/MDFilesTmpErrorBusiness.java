@@ -111,7 +111,7 @@ public class MDFilesTmpErrorBusiness extends
 	 */
 	@Override
 	protected List<MDFilesTmpError> find(MDFilesTmpErrorDAO tableDao,
-			HashTable<String, Object> dati, List<Order> orders)
+			HashTable<String, Object> dati, List<Order> orders, int page, int pageSize)
 			throws NamingException, ConfigurationException {
 //		List<MDRegistroIngresso> tables;
 //

@@ -47,7 +47,8 @@ public class OggettoDigitaleValidateBusiness extends OggettoDigitaleBusiness{
 			// Eseguo la ricerca di tutti i files che hanno finito il
 			// trasferimento oppure che risultano in fase di validazione
 			rs = mdFileTmp.find(null, null, null, new MDStato[] {
-					mdStatoDAO.FINETRASF(), mdStatoDAO.INITVALID() }, null);
+					mdStatoDAO.FINETRASF(), mdStatoDAO.INITVALID() }, null,
+					1, 100);
 			if (rs != null && rs.size() > 0) {
 				logValidate.info("Numero oggetti da validare [" + rs.size()
 						+ "]");

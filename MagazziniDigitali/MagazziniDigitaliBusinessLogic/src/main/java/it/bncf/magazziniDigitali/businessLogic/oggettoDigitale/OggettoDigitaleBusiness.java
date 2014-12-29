@@ -50,7 +50,7 @@ public class OggettoDigitaleBusiness {
 
 		try {
 			mdFileTmp = new MDFilesTmpBusiness(hibernateTemplate);
-			rs = mdFileTmp.find(idMDFilesTmp, null, null, status, null);
+			rs = mdFileTmp.find(idMDFilesTmp, null, null, status, null,1,numRec);
 			if (rs!=null && rs.size()>0){
 				if (result== null){
 					result = new Vector<MDFilesTmp>();
@@ -106,7 +106,7 @@ public class OggettoDigitaleBusiness {
 
 		try {
 			mdFileTmp = new MDFilesTmpBusiness(hibernateTemplate);
-			records = mdFileTmp.findToRecord(null, idIstituto, nomeFile, null, null, 1000);
+			records = mdFileTmp.findToRecord(null, idIstituto, nomeFile, null, null, 1, 1000);
 //			if (records!= null){
 //				for (MDFilesTmp ai : records) {
 //					addRecord(ai);
@@ -143,7 +143,7 @@ public class OggettoDigitaleBusiness {
 
 		try {
 			mdFileTmp = new MDFilesTmpBusiness(hibernateTemplate);
-			records = mdFileTmp.find(null, null, null, null, sha1);
+			records = mdFileTmp.find(null, null, null, null, sha1, 0, 0);
 
 			if (records != null) {
 				for (int x = 0; x < records.size(); x++) {

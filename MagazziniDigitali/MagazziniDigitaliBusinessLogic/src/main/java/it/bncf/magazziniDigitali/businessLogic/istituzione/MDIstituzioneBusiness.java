@@ -133,7 +133,7 @@ public class MDIstituzioneBusiness extends BusinessLogic<MDIstituzione, MDIstitu
 	 */
 	@Override
 	protected List<MDIstituzione> find(MDIstituzioneDAO tableDao,
-			HashTable<String, Object> dati, List<Order> orders)
+			HashTable<String, Object> dati, List<Order> orders, int page, int pageSize)
 			throws NamingException, ConfigurationException {
 		return null;
 	}

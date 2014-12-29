@@ -81,7 +81,7 @@ public class MDStatoBusiness extends BusinessLogic<MDStato, MDStatoDAO, String> 
 	 */
 	@Override
 	protected List<MDStato> find(MDStatoDAO tableDao,
-			HashTable<String, Object> dati, List<Order> orders)
+			HashTable<String, Object> dati, List<Order> orders, int page, int pageSize)
 			throws NamingException, ConfigurationException {
 		return null;
 	}

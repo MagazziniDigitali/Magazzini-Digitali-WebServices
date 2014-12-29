@@ -60,7 +60,7 @@ public class MDArchiveBusiness extends
 	 */
 	@Override
 	protected List<MDArchive> find(MDArchiveDAO tableDao,
-			HashTable<String, Object> dati, List<Order> orders)
+			HashTable<String, Object> dati, List<Order> orders, int firstRecord, int maxRecords)
 			throws NamingException, ConfigurationException {
 		return null;
 	}

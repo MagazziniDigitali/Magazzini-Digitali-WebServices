@@ -113,7 +113,7 @@ public class MDRegistroIngressoErrorBusiness extends
 	 */
 	@Override
 	protected List<MDRegistroIngressoError> find(MDRegistroIngressoErrorDAO tableDao,
-			HashTable<String, Object> dati, List<Order> orders)
+			HashTable<String, Object> dati, List<Order> orders, int page, int pageSize)
 			throws NamingException, ConfigurationException {
 //		List<MDRegistroIngresso> tables;
 //

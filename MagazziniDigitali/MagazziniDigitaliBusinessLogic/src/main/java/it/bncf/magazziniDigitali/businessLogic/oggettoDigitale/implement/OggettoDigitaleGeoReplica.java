@@ -66,7 +66,8 @@ public class OggettoDigitaleGeoReplica {
 	/**
 	 * 
 	 */
-	public OggettoDigitaleGeoReplica(HibernateTemplate hibernateTemplate, Logger logPublish, String name) {
+	public OggettoDigitaleGeoReplica(HibernateTemplate hibernateTemplate, 
+			Logger logPublish, String name) {
 		this.logPublish = logPublish;
 		this.name = name;
 		this.hibernateTemplate = hibernateTemplate;

@@ -48,7 +48,8 @@ public class OggettoDigitalePublishBusiness extends OggettoDigitaleBusiness{
 			logPublish.debug("Ricerco oggetti da Pubblicare");
 			mdFileTmp = new MDFilesTmpBusiness(hibernateTemplate);
 			rs = mdFileTmp.find(null, null, null, new MDStato[] {
-					mdStatoDAO.FINEVALID(), mdStatoDAO.INITPUBLISH() }, null);
+					mdStatoDAO.FINEVALID(), mdStatoDAO.INITPUBLISH() }, null,
+					1, 100);
 
 			if (rs != null && rs.size() > 0) {
 				logPublish.info("Ci sono " + rs.size()
