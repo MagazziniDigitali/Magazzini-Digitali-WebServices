@@ -8,7 +8,7 @@
 	</parent>
 	<groupId>it.bncf.magazziniDigitali.utils</groupId>
 	<artifactId>MagazziniDigitaliUtils</artifactId>
-	<version>1.0.2</version>
+	<version>1.0.3</version>
   <build>
 	<resources>
 		<resource>
@@ -25,4 +25,11 @@
 		</resource>
 	</resources>
   </build>
+  <dependencies>
+  	<dependency>
+  		<groupId>mx.randalf.configuration</groupId>
+  		<artifactId>RandalfConfiguration</artifactId>
+  		<version>1.0.0</version>
+  	</dependency>
+  </dependencies>
 </project>
