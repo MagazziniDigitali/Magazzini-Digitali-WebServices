@@ -25,6 +25,8 @@ public class MDIstituzione implements Serializable {
 
 	private String pathTmp;
 
+	private String pathTar;
+
 	private String password;
 
 	private String url;
@@ -212,5 +214,19 @@ public class MDIstituzione implements Serializable {
 	 */
 	public void setIpDownload(String ipDownload) {
 		this.ipDownload = ipDownload;
+	}
+
+	/**
+	 * @return the pathTar
+	 */
+	public String getPathTar() {
+		return pathTar;
+	}
+
+	/**
+	 * @param pathTar the pathTar to set
+	 */
+	public void setPathTar(String pathTar) {
+		this.pathTar = pathTar;
 	}
 }

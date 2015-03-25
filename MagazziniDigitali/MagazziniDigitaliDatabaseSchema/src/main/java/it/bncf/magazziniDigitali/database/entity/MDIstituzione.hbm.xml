@@ -14,6 +14,9 @@
         <property name="pathTmp" type="java.lang.String">
             <column name="PATHTMP" />
         </property>
+        <property name="pathTar" type="java.lang.String">
+            <column name="PATHTAR" />
+        </property>
         <property name="password" type="java.lang.String">
             <column name="PASSWORD" />
         </property>
