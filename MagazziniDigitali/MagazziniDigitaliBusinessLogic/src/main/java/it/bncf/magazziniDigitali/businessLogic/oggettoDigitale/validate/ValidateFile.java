@@ -61,7 +61,7 @@ public class ValidateFile {
 	 * 
 	 * @param file
 	 */
-	public void check(File file) {
+	public void check(File file, File fileTar) {
 		CheckArchiveMD checkArchive = null;
 
 		try {
@@ -72,7 +72,7 @@ public class ValidateFile {
 			checkArchive.setUnZip(true);
 			checkArchive.setRemoveOrgin(true);
 
-			archive = checkArchive.check(file);
+			archive = checkArchive.check(file, fileTar);
 			if (archive != null) {
 				check((ArchiveMD)archive);
 			} else {
@@ -80,6 +80,7 @@ public class ValidateFile {
 						+ file.getAbsolutePath() + "]");
 			}
 		} catch (CheckArchiveException e) {
+			e.printStackTrace();
 			addError(e.getMessage());
 		} catch (ConfigurationException e) {
 			addError(e.getMessage());

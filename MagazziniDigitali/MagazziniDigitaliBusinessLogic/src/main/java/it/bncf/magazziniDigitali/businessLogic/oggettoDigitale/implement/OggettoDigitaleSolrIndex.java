@@ -77,17 +77,18 @@ public class OggettoDigitaleSolrIndex {
 		MDFilesTmpDAO mdFileTmpDao= null;
 		MDFilesTmp mdFilesTmp = null;
 
+		logSolr.info(name+" ["+objectIdentifierPremis+"] Inizio l'indicizzazione");
 		
 		try {
 			mdFileTmpBusiness = new MDFilesTmpBusiness(hibernateTemplate);
 			mdFileTmpDao = new MDFilesTmpDAO(hibernateTemplate);
 			mdFilesTmp = mdFileTmpDao.findById(objectIdentifierPremis);
 		} catch (HibernateException e) {
-			log.error(e.getMessage(), e);
+			log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
 		} catch (NamingException e) {
-			log.error(e.getMessage(), e);
+			log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
 		} catch (ConfigurationException e) {
-			log.error(e.getMessage(), e);
+			log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
 		}
 
 		try {
@@ -107,12 +108,12 @@ public class OggettoDigitaleSolrIndex {
 								File.separator+fObjNewPremis.getName().replace(".premis", ""));
 						if (mdFilesTmp.getStato().getId()
 								.equals(MDStatoDAO.FINEARCHIVE)) {
-							logSolr.info(name+" Inizio l'indicizzazione del file ["
+							logSolr.info(name+" ["+objectIdentifierPremis+"]"+" Inizio l'indicizzazione del file ["
 									+ fObjNew.getAbsolutePath() + "]");
 							start = mdFileTmpBusiness
 									.updateStartIndex(mdFilesTmp.getId());
 						} else {
-							logSolr.info(name+" Continuo l'indicizzazione del file ["
+							logSolr.info(name+" ["+objectIdentifierPremis+"]"+" Continuo l'indicizzazione del file ["
 									+ fObjNew.getAbsolutePath() + "]");
 							start = new GregorianCalendar();
 							start.setTimeInMillis(mdFilesTmp.getIndexDataStart().getTime());
@@ -124,8 +125,8 @@ public class OggettoDigitaleSolrIndex {
 										null, null,
 										new BigInteger("0"),
 										null, null, null, null, null, null, null);
-						logSolr.info(name+" Preparo l'indicizzazione del materiale in Solr");
-						if (preIndexSolr(premisInput, fObjNew, logSolr)) {
+						logSolr.info(name+" ["+objectIdentifierPremis+"]"+" Preparo l'indicizzazione del materiale in Solr");
+						if (preIndexSolr(premisInput, fObjNew, logSolr, objectIdentifierPremis)) {
 							stop = mdFileTmpBusiness.updateCheckIndex(
 									mdFilesTmp.getId(),
 									filePremis.getName());
@@ -143,10 +144,10 @@ public class OggettoDigitaleSolrIndex {
 														+ application
 														+ ".UUID"),
 										objectIdentifierContainer);
-							logSolr.info(name+" Materiale pubblicato");
+							logSolr.info(name+" ["+objectIdentifierPremis+"]"+" Materiale pubblicato");
 							esito = true;
 						} else {
-							logSolr.error(name+" Riscontrato un problema nella pubblicazione");
+							logSolr.error(name+" ["+objectIdentifierPremis+"]"+" Riscontrato un problema nella pubblicazione");
 							mdFileTmpBusiness
 								.updateStopIndex(
 										mdFilesTmp.getId(),
@@ -168,7 +169,7 @@ public class OggettoDigitaleSolrIndex {
 						}
 						mdFileTmpBusiness.updateStopIndex(mdFilesTmp.getId(), false,
 								new String[] { e.getMessage() });
-						log.error(e.getMessage(), e);
+						log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
 					} catch (SQLException e) {
 						if (premisElab != null) {
 							premisElab.addEvent(
@@ -184,7 +185,7 @@ public class OggettoDigitaleSolrIndex {
 						}
 						mdFileTmpBusiness.updateStopIndex(mdFilesTmp.getId(), false,
 								new String[] { e.getMessage() });
-						log.error(e.getMessage(), e);
+						log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
 					} catch (SolrWarning e) {
 						if (premisElab != null) {
 							premisElab.addEvent(
@@ -211,7 +212,7 @@ public class OggettoDigitaleSolrIndex {
 									Configuration.getValue("demoni."
 											+ application + ".UUID"), null);
 						}
-						log.error(e.getMessage(), e);
+						log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
 						mdFileTmpBusiness.updateStopIndex(mdFilesTmp.getId(), false,
 								new String[] { e.getMessage() });
 					} finally {
@@ -220,19 +221,19 @@ public class OggettoDigitaleSolrIndex {
 								premisElab.write(filePremis, false);
 							}
 						} catch (PremisXsdException e) {
-							log.error(e.getMessage(), e);
+							log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
 							mdFileTmpBusiness.updateStopIndex(mdFilesTmp.getId(),
 									false, new String[] { e.getMessage() });
 						} catch (XsdException e) {
-							log.error(e.getMessage(), e);
+							log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
 							mdFileTmpBusiness.updateStopIndex(mdFilesTmp.getId(),
 									false, new String[] { e.getMessage() });
 						} catch (IOException e) {
-							log.error(e.getMessage(), e);
+							log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
 							mdFileTmpBusiness.updateStopIndex(mdFilesTmp.getId(),
 									false, new String[] { e.getMessage() });
 						} catch (Exception e) {
-							log.error(e.getMessage(), e);
+							log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
 							mdFileTmpBusiness.updateStopIndex(mdFilesTmp.getId(),
 									false, new String[] { e.getMessage() });
 						}
@@ -242,19 +243,21 @@ public class OggettoDigitaleSolrIndex {
 				}
 			}
 		} catch (NamingException e) {
-			log.error(e.getMessage(), e);
+			log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
 			esito = false;
 		} catch (ConfigurationException e) {
-			log.error(e.getMessage(), e);
+			log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
 			esito = false;
 		} catch (SQLException e) {
-			log.error(e.getMessage(), e);
+			log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
 			esito = false;
+		}finally {
+			logSolr.info(name+" ["+objectIdentifierPremis+"] Fine dell'indicizzazione");
 		}
 		return esito;
 	}
 
-	private boolean preIndexSolr(PremisXsd premis, File fObj, Logger logPublish)
+	private boolean preIndexSolr(PremisXsd premis, File fObj, Logger logPublish, String objectIdentifierPremis)
 			throws SolrException, SolrWarning {
 		boolean ris = false;
 		List<ObjectComplexType> objects = null;
@@ -279,11 +282,11 @@ public class OggettoDigitaleSolrIndex {
 			admd = new IndexDocumentMD(fObj.getName());
 			objects = premis.getObject();
 			if (objects != null && objects.size() > 0) {
-				logPublish.info(name+" Oggetto da preIndicizzare "+objects.size());
+				logPublish.info(name+" ["+objectIdentifierPremis+"]"+" Oggetto da preIndicizzare "+objects.size());
 				sof = new SolrObjectFile();
 				for (int x = 0; x < objects.size(); x++) {
 					if ((x%100)==0){
-						logPublish.info(name+" Oggetto "+x+"/"+objects.size());
+						logPublish.info(name+" ["+objectIdentifierPremis+"]"+" Oggetto "+x+"/"+objects.size());
 						System.gc();
 					}
 					object = objects.get(x);
@@ -292,40 +295,40 @@ public class OggettoDigitaleSolrIndex {
 								admd, pathTar);
 					}
 				}
-				logPublish.info(name+" Fine preIndicizzare oggetti");
+				logPublish.info(name+" ["+objectIdentifierPremis+"]"+" Fine preIndicizzare oggetti");
 			}
 			System.gc();
 			events = premis.getEvent();
 			if (events != null && events.size() > 0) {
-				logPublish.info(name+" Eventi da preIndicizzare "+events.size());
+				logPublish.info(name+" ["+objectIdentifierPremis+"]"+" Eventi da preIndicizzare "+events.size());
 				se = new SolrEvent();
 				for (int x = 0; x < events.size(); x++) {
 					if ((x%100)==0){
-						logPublish.info(name+" Eventi "+x+"/"+events.size());
+						logPublish.info(name+" ["+objectIdentifierPremis+"]"+" Eventi "+x+"/"+events.size());
 						System.gc();
 					}
 					event = events.get(x);
 					se.publishSolr(event, admd);
 				}
-				logPublish.info(name+" Fine preIndicizzare eventi");
+				logPublish.info(name+" ["+objectIdentifierPremis+"]"+" Fine preIndicizzare eventi");
 			}
-			logPublish.info(name+" Inizio pubblicazione in Solr");
+			logPublish.info(name+" ["+objectIdentifierPremis+"]"+" Inizio pubblicazione in Solr");
 			admd.send();
 			ris = true;
 		} catch (NumberFormatException e) {
-			log.error(e.getMessage(), e);
+			log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
 			throw new SolrException(e.getMessage(), e);
 		} catch (SolrException e) {
-			log.error(e.getMessage(), e);
+			log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
 			throw e;
 		} catch (ConfigurationException e) {
-			log.error(e.getMessage(), e);
+			log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
 			throw new SolrException(e.getMessage(), e);
 		} catch (SolrWarning e) {
-			log.warn(e.getMessage(), e);
+			log.warn(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
 			throw e;
 		} catch (Exception e) {
-			log.error(e.getMessage(), e);
+			log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
 			throw new SolrException(e.getMessage(), e);
 		} finally {
 			try {
@@ -336,7 +339,7 @@ public class OggettoDigitaleSolrIndex {
 					}
 				}
 			} catch (Exception e) {
-				log.error(e.getMessage(), e);
+				log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
 				throw new SolrException(e.getMessage(), e);
 			}
 		}

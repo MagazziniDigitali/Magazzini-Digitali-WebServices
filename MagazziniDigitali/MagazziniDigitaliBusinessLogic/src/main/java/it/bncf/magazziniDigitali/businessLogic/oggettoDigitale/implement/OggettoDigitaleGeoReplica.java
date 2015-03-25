@@ -61,6 +61,7 @@ public class OggettoDigitaleGeoReplica {
 	private String name = null;
 	
 	private HibernateTemplate hibernateTemplate= null;
+
 	private boolean trasferito = false;
 
 	/**
@@ -92,16 +93,17 @@ public class OggettoDigitaleGeoReplica {
 		Documenti documenti = null;
 		MDFilesTmpBusiness mdFileTmpBusiness = null;
 
+		logPublish.info(name+" ["+objectIdentifierPremis+"] Inizio la geo replica");
 		trasferito = false;
 		try {
 			mdFileTmpBusiness = new MDFilesTmpBusiness(null);
 			mdFilesTmp = mdFileTmpBusiness.findPremis(objectIdentifierPremis);
 		} catch (HibernateException e) {
-			log.error(e.getMessage(), e);
+			log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
 		} catch (NamingException e) {
-			log.error(e.getMessage(), e);
+			log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
 		} catch (ConfigurationException e) {
-			log.error(e.getMessage(), e);
+			log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
 		}
 
 		try {
@@ -121,14 +123,14 @@ public class OggettoDigitaleGeoReplica {
 							fileElabPremis = GenFileDest.genFileDest(Configuration.getValue("demoni.Publish.pathStorage")
 									,mdFilesTmp.getPremisFile());
 							fileElab = new File(fileElabPremis.getAbsolutePath().replace(".premis", ""));
-							log.info(name+" Inizio l'elaborazione del file ["+fileElab.getAbsolutePath()+"]");
+							log.info(name+" ["+objectIdentifierPremis+"]"+" Inizio l'elaborazione del file ["+fileElab.getAbsolutePath()+"]");
 							if (mdFilesTmp.getStato().getId().equals(MDStatoDAO.FINEPUBLISH)){
-								logPublish.info(name+" Inizio l'archiviazione del file ["
+								logPublish.info(name+" ["+objectIdentifierPremis+"]"+" Inizio l'archiviazione del file ["
 										+ fileElab.getAbsolutePath() + "]");
 								gcStart = mdFileTmpBusiness
 										.updateStartArchive(mdFilesTmp.getId());
 							} else {
-								logPublish.info(name+" Continuo l'archivizione del file ["
+								logPublish.info(name+" ["+objectIdentifierPremis+"]"+" Continuo l'archivizione del file ["
 										+ fileElab.getAbsolutePath() + "]");
 								gcStart = new GregorianCalendar();
 								gcStart.setTimeInMillis(mdFilesTmp.getArchiveDataStart().getTime());
@@ -155,7 +157,7 @@ public class OggettoDigitaleGeoReplica {
 									for (MDNodi mdNodi : mdNodis){
 										if (!mdNodi.getId().equals(Configuration.getValue("nodo"))){
 											msgs =geoReplica(mdNodi, files, mdFilesTmp, premisElab, application, 
-													objectIdentifierPremis, documenti);
+													objectIdentifierPremis, documenti, objectIdentifierPremis);
 											if (msgs!=null){
 												if (msgErr==null){
 													msgErr = new Vector<String>();
@@ -176,7 +178,7 @@ public class OggettoDigitaleGeoReplica {
 									}
 								} else {
 									esito = false;
-									logPublish.error(name+" Il file ["+fileElabPremis.getAbsolutePath()+"] non è presente");
+									logPublish.error(name+" ["+objectIdentifierPremis+"]"+" Il file ["+fileElabPremis.getAbsolutePath()+"] non è presente");
 									premisElab.addEvent(
 											"Error",
 											null,
@@ -195,7 +197,7 @@ public class OggettoDigitaleGeoReplica {
 								}
 							} else {
 								esito = false;
-								logPublish.error(name+" Il file ["+fileElab.getAbsolutePath()+"] non è presente");
+								logPublish.error(name+" ["+objectIdentifierPremis+"]"+" Il file ["+fileElab.getAbsolutePath()+"] non è presente");
 								premisElab.addEvent(
 										"Error",
 										null,
@@ -228,7 +230,7 @@ public class OggettoDigitaleGeoReplica {
 							}
 							mdFileTmpBusiness.updateStopArchive(mdFilesTmp.getId(), false,
 									new String[] { e.getMessage() });
-							log.error(e.getMessage(), e);
+							log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
 						} catch (SQLException e) {
 							esito = false;
 							if (premisElab != null) {
@@ -245,7 +247,7 @@ public class OggettoDigitaleGeoReplica {
 							}
 							mdFileTmpBusiness.updateStopArchive(mdFilesTmp.getId(), false,
 									new String[] { e.getMessage() });
-							log.error(e.getMessage(), e);
+							log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
 						} catch (HibernateException e) {
 							esito = false;
 							if (premisElab != null) {
@@ -262,7 +264,7 @@ public class OggettoDigitaleGeoReplica {
 							}
 							mdFileTmpBusiness.updateStopArchive(mdFilesTmp.getId(), false,
 									new String[] { e.getMessage() });
-							log.error(e.getMessage(), e);
+							log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
 						} catch (NoSuchAlgorithmException e) {
 							esito = false;
 							if (premisElab != null) {
@@ -279,7 +281,7 @@ public class OggettoDigitaleGeoReplica {
 							}
 							mdFileTmpBusiness.updateStopArchive(mdFilesTmp.getId(), false,
 									new String[] { e.getMessage() });
-							log.error(e.getMessage(), e);
+							log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
 						} catch (IOException e) {
 							esito = false;
 							if (premisElab != null) {
@@ -296,7 +298,7 @@ public class OggettoDigitaleGeoReplica {
 							}
 							mdFileTmpBusiness.updateStopArchive(mdFilesTmp.getId(), false,
 									new String[] { e.getMessage() });
-							log.error(e.getMessage(), e);
+							log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
 						}finally{
 							logPublish.info(name+" Fine l'elaborazione del file ["+objectIdentifierPremis+"]");
 							try {
@@ -305,49 +307,51 @@ public class OggettoDigitaleGeoReplica {
 								}
 							} catch (PremisXsdException e) {
 								esito = false;
-								log.error(e.getMessage(), e);
+								log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
 								mdFileTmpBusiness.updateStopArchive(mdFilesTmp.getId(),
 										false, new String[] { e.getMessage() });
 							} catch (XsdException e) {
 								esito = false;
-								log.error(e.getMessage(), e);
+								log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
 								mdFileTmpBusiness.updateStopArchive(mdFilesTmp.getId(),
 										false, new String[] { e.getMessage() });
 							} catch (IOException e) {
 								esito = false;
-								log.error(e.getMessage(), e);
+								log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
 								mdFileTmpBusiness.updateStopArchive(mdFilesTmp.getId(),
 										false, new String[] { e.getMessage() });
 							} catch (Exception e) {
 								esito = false;
-								log.error(e.getMessage(), e);
+								log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
 								mdFileTmpBusiness.updateStopArchive(mdFilesTmp.getId(),
 										false, new String[] { e.getMessage() });
 							}
 						}
 					} catch (SQLException e) {
 						esito = false;
-						log.error(e.getMessage(), e);
+						log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
 					}
 				} else if (!mdFilesTmp.getStato().getId().equals(MDStatoDAO.FINEARCHIVE)){
 					esito = false;
 				}
 			} else {
-				logPublish.error(name+" Il file premis ["+objectIdentifierPremis+"] non è presente in archivio");
+				logPublish.error(name+" ["+objectIdentifierPremis+"]"+" Il file premis ["+objectIdentifierPremis+"] non è presente in archivio");
 				esito = false;
 			}
 		} catch (NamingException e) {
-			log.error(e.getMessage(), e);
+			log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
 			esito = false;
 		} catch (ConfigurationException e) {
-			log.error(e.getMessage(), e);
+			log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
 			esito = false;
+		} finally{
+			logPublish.info(name+" ["+objectIdentifierPremis+"] Fine della geo replica");
 		}
 		return esito;
 	}
 
 	private String[] geoReplica(MDNodi mdNodi, File[] files, MDFilesTmp mdFilesTmp, PremisXsd premisElab, 
-			String application, String objectIdentifierMaster, Documenti documenti) throws HibernateException, NamingException, 
+			String application, String objectIdentifierMaster, Documenti documenti, String objectIdentifierPremis) throws HibernateException, NamingException, 
 			ConfigurationException, SQLException, NoSuchAlgorithmException, IOException{
 		Vector<String> ris = null;
 		Storage storage = null;
@@ -363,14 +367,14 @@ public class OggettoDigitaleGeoReplica {
 			mdArchiveBusiness = new MDArchiveBusiness(hibernateTemplate);
 			mdArchive = mdArchiveBusiness.find(mdFilesTmp, mdNodi);
 			if (mdArchive == null || !mdArchive.getEsito().booleanValue()){
-				storage = checkStorage(mdNodi, documenti);
+				storage = checkStorage(mdNodi, documenti, objectIdentifierPremis);
 				if (storage !=null && (storage.getEsito().equals("OK")
 						||storage.getEsito().equals("DOCNOTFOUND"))){
 					for (int x=0; x<files.length; x++){
 						ris = sendFile(mdNodi,files[x],premisElab, application, objectIdentifierMaster, ris);
 					}
 					if (ris==null){
-						storage = checkStorage(mdNodi, documenti);
+						storage = checkStorage(mdNodi, documenti, objectIdentifierPremis);
 						ris = analizeRisp(storage, mdNodi, premisElab, dStart, files, application, objectIdentifierMaster, ris, true);
 					}
 				} else {
@@ -578,7 +582,7 @@ public class OggettoDigitaleGeoReplica {
 		return documenti;
 	}
 	
-	private Storage checkStorage(MDNodi mdNodi, Documenti documenti){
+	private Storage checkStorage(MDNodi mdNodi, Documenti documenti, String objectIdentifierPremis){
 		CheckStorageMDPortTypeProxy proxy = null;
 		Storage storage = null;
 		
@@ -587,7 +591,7 @@ public class OggettoDigitaleGeoReplica {
 			proxy = new CheckStorageMDPortTypeProxy(mdNodi.getUrlCheckStorage());
 			storage = proxy.checkStorageMDOperation(documenti);
 		} catch (RemoteException e) {
-			log.error(e.getMessage(),e);
+			log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(),e);
 		}
 		
 		return storage;
