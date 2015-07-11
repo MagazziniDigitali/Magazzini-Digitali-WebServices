@@ -39,6 +39,9 @@ public class IndexDocumentMD {
 	/**
 	 * 
 	 */
+	public IndexDocumentMD() {
+	}
+
 	public IndexDocumentMD(String fileName) {
 		this.fileName = fileName;
 	}
@@ -99,30 +102,39 @@ public class IndexDocumentMD {
 		return item;
 	}
 
-	public void send() throws IOException, ConfigurationException, SolrWarning{
+	public void write(File file) throws IOException{
 		FileWriter writer = null;
+		try {
+			writer = new FileWriter(file);
+			request.writeXML(writer);
+		} catch (IOException e) {
+			throw e;
+		} finally {
+			try {
+				if (writer != null){
+					writer.flush();
+					writer.close();
+				}
+			} catch (IOException e) {
+				throw e;
+			}
+		}
+		
+	}
+
+	public void send() throws IOException, ConfigurationException, SolrWarning{
 		File file = null;
 		
 		try {
-			try {
+			try{
 				file = new File(Configuration.getValue("demoni.SolrIndex.tmpPath")+
 						File.separator+
 						fileName+".xml");
-				writer = new FileWriter(file);
-				request.writeXML(writer);
+				write(file);
 			} catch (IOException e) {
 				throw e;
 			} catch (ConfigurationException e) {
 				throw e;
-			} finally {
-				try {
-					if (writer != null){
-						writer.flush();
-						writer.close();
-					}
-				} catch (IOException e) {
-					throw e;
-				}
 			}
 			RSync.send(Configuration.getValue("md.sendRsync.path"), 
 					Configuration.getValue("demone.SolrIndex.rSyncPassword"), 
