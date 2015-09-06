@@ -8,6 +8,7 @@ import it.bncf.magazziniDigitali.solr.exception.SolrWarning;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.CharsetEncoder;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
@@ -20,6 +21,7 @@ import mx.randalf.solr.exception.SolrException;
 import mx.randalf.tools.rsync.RSync;
 import mx.randalf.tools.rsync.exception.RSyncException;
 
+import org.apache.commons.io.output.FileWriterWithEncoding;
 import org.apache.solr.client.solrj.request.AbstractUpdateRequest.ACTION;
 import org.apache.solr.client.solrj.request.UpdateRequest;
 import org.apache.solr.common.SolrInputDocument;
@@ -82,6 +84,12 @@ public class IndexDocumentMD {
 //		}
 	}
 
+	public void clear(){
+		if (request != null){
+			request.clear();
+		}
+	}
+	
 	private SolrInputDocument initItem(String id,
 			Hashtable<String, List<Object>> params,
 			Item items) {
@@ -103,9 +111,11 @@ public class IndexDocumentMD {
 	}
 
 	public void write(File file) throws IOException{
-		FileWriter writer = null;
+//		FileWriter writer = null;
+		FileWriterWithEncoding writer = null;
 		try {
-			writer = new FileWriter(file);
+//			writer = new FileWriter(file);
+			writer = new FileWriterWithEncoding(file, "UTF-8");
 			request.writeXML(writer);
 		} catch (IOException e) {
 			throw e;
