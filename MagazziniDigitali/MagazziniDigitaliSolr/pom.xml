@@ -18,7 +18,7 @@
   	<dependency>
   		<groupId>mx.randalf.solr</groupId>
   		<artifactId>RandalfSolrCore</artifactId>
-  		<version>1.0.9</version>
+  		<version>1.0.10</version>
   	</dependency>
   	<dependency>
   		<groupId>commons-logging</groupId>
@@ -33,7 +33,7 @@
   	<dependency>
   		<groupId>mx.randalf.tools</groupId>
   		<artifactId>RandalfTools</artifactId>
-  		<version>1.0.5</version>
+  		<version>1.0.6</version>
   	</dependency>
   </dependencies>
 </project>

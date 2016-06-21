@@ -6,9 +6,8 @@ package it.bncf.magazziniDigitali.solr;
 import it.bncf.magazziniDigitali.solr.exception.SolrWarning;
 
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.charset.CharsetEncoder;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
@@ -57,31 +56,23 @@ public class IndexDocumentMD {
 	 */
 	public void add(Hashtable<String, List<Object>> params, 
 			Item items) throws SolrException{
-		SolrInputDocument item = null;
 		String id = null;
-//		String query = "";
 
-//		try {
-			id = (String) params.get(Item.ID).get(0);
-//			query = items.ID+":\"" + id+"\"";
-			if (request == null){
-				request = new UpdateRequest();
-				request.setAction(ACTION.OPTIMIZE, false, false);
-			}
-//				request.deleteById(id, (Long) response.getResults().get(0).getFieldValue("_version_"));
-			//Query(query);
-
-			item = initItem(id, params, items);
-
-			if (request == null){
-				request = new UpdateRequest();
-				request.setAction(ACTION.OPTIMIZE, false, false);
-			}
-			request.add(item);
-//		} catch (Exception e) {
-//			log.error(e.getMessage(), e);
-//			throw new SolrException("Solr Server: " + e.getMessage(), e);
-//		}
+		id = (String) params.get(Item.ID).get(0);
+		add(initItem(id, params, items));
+	}
+	public void add(SolrInputDocument item) throws SolrException{
+		if (request == null){
+			request = new UpdateRequest();
+			request.setAction(ACTION.OPTIMIZE, false, false);
+		}
+		if (item.get("_version_") != null){
+			item.remove("_version_");
+		}
+		if (item.get("indexed") != null){
+			item.remove("indexed");
+		}
+		request.add(item);
 	}
 
 	public void clear(){
@@ -115,8 +106,15 @@ public class IndexDocumentMD {
 		FileWriterWithEncoding writer = null;
 		try {
 //			writer = new FileWriter(file);
-			writer = new FileWriterWithEncoding(file, "UTF-8");
-			request.writeXML(writer);
+			if (request != null){
+				if (!file.getParentFile().exists()){
+					if (!file.getParentFile().mkdirs()){
+						throw new FileNotFoundException("Riscontrato un problema nella creazione della cartella ["+file.getParentFile().getAbsolutePath()+"]");
+					}
+				}
+				writer = new FileWriterWithEncoding(file, "UTF-8");
+				request.writeXML(writer);
+			}
 		} catch (IOException e) {
 			throw e;
 		} finally {
