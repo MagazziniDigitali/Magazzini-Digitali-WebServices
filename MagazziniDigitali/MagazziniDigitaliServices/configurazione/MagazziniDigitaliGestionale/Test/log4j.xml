@@ -4,7 +4,7 @@
 
   <appender name="STDOUT" class="org.apache.log4j.DailyRollingFileAppender">
     <param name="DatePattern" value="'.'yyyy-MM-dd"/>
-    <param name="File" value="${catalina.base}/logs/MagazziniDigitali/stdOut.log"/>
+    <param name="File" value="${catalina.base}/logsMD/MagazziniDigitaliGestionale/stdOut.log"/>
     <layout class="org.apache.log4j.PatternLayout">
       <param name="ConversionPattern" value="[%d{ISO8601}] %-5p %c %m %n"/>
     </layout>
@@ -16,7 +16,7 @@
   
   <appender name="STDERR" class="org.apache.log4j.DailyRollingFileAppender">
     <param name="DatePattern" value="'.'yyyy-MM-dd"/>
-    <param name="File" value="${catalina.base}/logs/MagazziniDigitali/stdErr.log"/>
+    <param name="File" value="${catalina.base}/logsMD/MagazziniDigitaliGestionale/stdErr.log"/>
     <layout class="org.apache.log4j.PatternLayout">
       <param name="ConversionPattern" value="[%d{ISO8601}] %-5p %c %m %n"/>
     </layout>
@@ -35,8 +35,8 @@
     <param name="SMTPPort" value="465" />
     <param name="SMTPUsername" value="opendigital.notifica@gmail.com" /> <!-- example@gmail.com -->
     <param name="SMTPPassword" value="G@l@ss1@" /> <!-- passowrd -->
-    <param name="To" value="massimiliano.randazzo@gmail.com"/>
-    <param name="Subject" value="Magazzini Digitali Roma - Modulo Services"/>
+    <param name="To" value="massimiliano.randazzo@bncf.firenze.sbn.it"/>
+    <param name="Subject" value="Magazzini Digitali - Modulo Gestionale (Ambiente di Test)"/>
     <layout class="org.apache.log4j.PatternLayout">
       <param name="ConversionPattern" value="[%d{ISO8601}]%n%n%-5p%n%n%c%n%n%m%n%n"/>
     </layout>
@@ -46,20 +46,38 @@
     </filter>
   </appender>
   
+  <category name="org.apache.jasper.compiler.JspRuntimeContext">
+    <level value="ERROR"/>
+    <appender-ref ref="STDOUT"/>
+    <appender-ref ref="STDERR"/>
+  </category>
+  
   <category name="org.apache">
-    <level value="INFO"/>
+    <level value="ERROR"/>
     <appender-ref ref="STDOUT"/>
     <appender-ref ref="STDERR"/>
   </category>
   
-  <category name="it">
-    <level value="INFO"/>
+  <category name="org.springframework">
+    <level value="ERROR"/>
     <appender-ref ref="STDOUT"/>
     <appender-ref ref="STDERR"/>
   </category>
   
-  <category name="mx">
-    <level value="INFO"/>
+  <category name="org.hibernate">
+    <level value="ERROR"/>
+    <appender-ref ref="STDOUT"/>
+    <appender-ref ref="STDERR"/>
+  </category>
+  
+  <category name="org.spring4gwt">
+    <level value="ERROR"/>
+    <appender-ref ref="STDOUT"/>
+    <appender-ref ref="STDERR"/>
+  </category>
+  
+  <category name="it.bncf.magazziniDigitali">
+    <level value="ERROR"/>
     <appender-ref ref="STDOUT"/>
     <appender-ref ref="STDERR"/>
   </category>

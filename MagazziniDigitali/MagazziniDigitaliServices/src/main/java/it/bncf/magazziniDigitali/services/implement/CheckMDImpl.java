@@ -51,7 +51,7 @@ public class CheckMDImpl {
 					errori = new Errori[1];
 					errori[0] = new Errori();
 					errori[0].setId("-2");
-					errori[0].setMessaggio("L'istituto non risulta validato");
+					errori[0].setMessaggio("L'istituto non risulta validato. La Pwd indicata non è valida controllare");
 					output.setErrori(errori);
 				}
 			} else {

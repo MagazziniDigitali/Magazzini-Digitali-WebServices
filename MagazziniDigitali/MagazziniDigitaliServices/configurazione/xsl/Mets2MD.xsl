@@ -16,26 +16,6 @@
 	Added ISBN and deleted attributes 6/04 jer
 	-->
 	<xsl:template match="/">
-		<!--
-		<xsl:if test="marc:collection">
-			<oai_dc:dcCollection
-				xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
-				<xsl:for-each select="marc:collection">
-					<xsl:for-each select="marc:record">
-						<oai_dc:dc>
-							<xsl:apply-templates select="."/>
-						</oai_dc:dc>
-					</xsl:for-each>
-				</xsl:for-each>
-			</oai_dc:dcCollection>
-		</xsl:if>
-		<xsl:if test="marc:record">
-			<oai_dc:dc
-				xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai_dc/ http://www.openarchives.org/OAI/2.0/oai_dc.xsd">
-				<xsl:apply-templates/>
-			</oai_dc:dc>
-		</xsl:if>
-		-->
 		<xsl:if test="METS:mets">
 			<xsl:for-each select="METS:mets">
 				<md>
@@ -336,8 +316,3 @@
 		</bib>
 	</xsl:template>
 </xsl:stylesheet>
-<!-- Stylus Studio meta-information - (c) 2004-2005. Progress Software Corporation. All rights reserved.
-<metaInformation>
-<scenarios ><scenario default="yes" name="Scenario1" userelativepaths="yes" externalpreview="no" url="..\..\..\..\..\..\..\..\..\..\javadev4\testsets\diacriticu8.xml" htmlbaseurl="" outputurl="" processortype="internal" useresolver="yes" profilemode="0" profiledepth="" profilelength="" urlprofilexml="" commandline="" additionalpath="" additionalclasspath="" postprocessortype="none" postprocesscommandline="" postprocessadditionalpath="" postprocessgeneratedext="" validateoutput="no" validator="internal" customvalidator=""/></scenarios><MapperMetaTag><MapperInfo srcSchemaPathIsRelative="yes" srcSchemaInterpretAsXML="no" destSchemaPath="" destSchemaRoot="" destSchemaPathIsRelative="yes" destSchemaInterpretAsXML="no"/><MapperBlockPosition></MapperBlockPosition><TemplateContext></TemplateContext><MapperFilter side="source"></MapperFilter></MapperMetaTag>
-</metaInformation>
--->

@@ -4,7 +4,8 @@
 
 <web-app> 
   <display-name>Magazzini Digitali - Services</display-name>
-	<context-param>
+  <distributable/>
+  	<context-param>
 		<param-name>version</param-name>
 		<param-value>1.0.2</param-value>
 	</context-param>
