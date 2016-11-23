@@ -1,14 +1,13 @@
 package it.bncf.magazziniDigitali.businessLogic.oggettoDigitale;
 
 import org.apache.log4j.Logger;
-import org.springframework.orm.hibernate3.HibernateTemplate;
 
 public class OggettoDigitalePublishBusiness extends OggettoDigitaleBusiness{
 	
 	public Logger log = Logger.getLogger(OggettoDigitalePublishBusiness.class);
 
-	public OggettoDigitalePublishBusiness(HibernateTemplate hibernateTemplate) {
-		super(hibernateTemplate);
+	public OggettoDigitalePublishBusiness() {
+		super();
 	}
 
 	/**

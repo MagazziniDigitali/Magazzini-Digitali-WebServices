@@ -1,8 +1,5 @@
 package it.bncf.magazziniDigitali.businessLogic.oggettoDigitale;
 
-import it.bncf.magazziniDigitali.businessLogic.registroIngresso.MDRegistroIngressoBusiness;
-import it.bncf.magazziniDigitali.database.entity.MDRegistroIngresso;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -11,28 +8,31 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.Timestamp;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.naming.NamingException;
 
-import mx.randalf.configuration.Configuration;
-import mx.randalf.configuration.exception.ConfigurationException;
-
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
-import org.springframework.orm.hibernate3.HibernateTemplate;
+
+import it.bncf.magazziniDigitali.businessLogic.registroIngresso.MDRegistroIngressoBusiness;
+import it.bncf.magazziniDigitali.configuration.IMDConfiguration;
+import it.bncf.magazziniDigitali.configuration.exception.MDConfigurationException;
+import it.bncf.magazziniDigitali.database.entity.MDRegistroIngresso;
+import mx.randalf.hibernate.exception.HibernateUtilException;
 
 public class OggettoDigitaleCodaBusiness extends OggettoDigitaleBusiness{
 
 	
 	public Logger log = Logger.getLogger(OggettoDigitaleCodaBusiness.class);
 
-	public OggettoDigitaleCodaBusiness(HibernateTemplate hibernateTemplate) {
-		super(hibernateTemplate);
+	public OggettoDigitaleCodaBusiness() {
+		super();
 	}
 
 	/**
@@ -40,7 +40,9 @@ public class OggettoDigitaleCodaBusiness extends OggettoDigitaleBusiness{
 	 * 
 	 * @param application
 	 */
-	public void coda(String application, boolean testMode, Logger logCoda){
+	public void coda(Logger logCoda, 
+			IMDConfiguration<?> configuration)
+					throws MDConfigurationException, SQLException{
 		MDRegistroIngressoBusiness mdRegistroIngresso = null;
 		List<MDRegistroIngresso> rs = null;
 		String data = "";
@@ -54,7 +56,7 @@ public class OggettoDigitaleCodaBusiness extends OggettoDigitaleBusiness{
 			gc.set(Calendar.SECOND, 59);
 			gc.set(Calendar.MILLISECOND, 999);
 			logCoda.debug("Ricerco oggetti da mettere in coda");
-			mdRegistroIngresso = new MDRegistroIngressoBusiness(hibernateTemplate);
+			mdRegistroIngresso = new MDRegistroIngressoBusiness();
 			
 			rs = mdRegistroIngresso.findCoda();
 			if (rs != null && 
@@ -73,34 +75,37 @@ public class OggettoDigitaleCodaBusiness extends OggettoDigitaleBusiness{
 						}
 					}
 					if (elabora){
-						writeFileCoda(data, rs.get(x).getContainerName());
+						writeFileCoda(data, rs.get(x).getContainerName(), configuration);
 						mdRegistroIngresso.coda(rs.get(x).getId());
 					}
 				}
 			}
 		} catch (HibernateException e) {
-			log.error(e.getMessage(), e);
+			throw new SQLException(e.getMessage(),e);
 		} catch (FileNotFoundException e) {
-			log.error(e.getMessage(), e);
+			throw new SQLException(e.getMessage(),e);
 		} catch (NamingException e) {
-			log.error(e.getMessage(), e);
-		} catch (ConfigurationException e) {
-			log.error(e.getMessage(), e);
+			throw new SQLException(e.getMessage(),e);
+		} catch (MDConfigurationException e) {
+			throw e;
 		} catch (IOException e) {
-			log.error(e.getMessage(), e);
+			throw new SQLException(e.getMessage(),e);
 		} catch (IllegalAccessException e) {
-			log.error(e.getMessage(), e);
+			throw new SQLException(e.getMessage(),e);
 		} catch (InvocationTargetException e) {
-			log.error(e.getMessage(), e);
+			throw new SQLException(e.getMessage(),e);
 		} catch (NoSuchMethodException e) {
-			log.error(e.getMessage(), e);
+			throw new SQLException(e.getMessage(),e);
+		} catch (HibernateUtilException e) {
+			throw new SQLException(e.getMessage(),e);
 		}
 	}
 
 	/**
 	 * Metodo utilizzato per scrivere il file Coda
 	 */
-	private void writeFileCoda(String data, String containerName) throws FileNotFoundException, ConfigurationException,
+	private void writeFileCoda(String data, String containerName, IMDConfiguration<?> configuration) 
+			throws FileNotFoundException, MDConfigurationException,
 			IOException{
 		File coda = null;
 		BufferedWriter bw = null;
@@ -111,7 +116,8 @@ public class OggettoDigitaleCodaBusiness extends OggettoDigitaleBusiness{
 		boolean trovato = false;
 		
 		try {
-			coda = new File(Configuration.getValue("demoni.Coda.path")+
+			coda = new File(configuration.getSoftwareConfigString("coda.path")+
+//					Configuration.getValue("demoni.Coda.path")+
 					File.separator+data+".coda");
 			
 			if (coda.exists()){
@@ -143,6 +149,11 @@ public class OggettoDigitaleCodaBusiness extends OggettoDigitaleBusiness{
 			}
 			if (! trovato){
 				try {
+					if (!coda.getParentFile().exists()){
+						if (!coda.getParentFile().mkdirs()){
+							throw new IOException("Riscontrato un problema nella creazione della cartella ["+coda.getParentFile().getAbsolutePath()+"]");
+						}
+					}
 					fw = new FileWriter(coda, true);
 					bw = new BufferedWriter(fw);
 					bw.write(containerName+"\n");
@@ -164,7 +175,7 @@ public class OggettoDigitaleCodaBusiness extends OggettoDigitaleBusiness{
 			}
 		} catch (FileNotFoundException e) {
 			throw e;
-		} catch (ConfigurationException e) {
+		} catch (MDConfigurationException e) {
 			throw e;
 		} catch (IOException e) {
 			throw e;
@@ -177,7 +188,7 @@ public class OggettoDigitaleCodaBusiness extends OggettoDigitaleBusiness{
 	 * @param data
 	 * @return
 	 */
-	private String componiData(Timestamp data){
+	private String componiData(Date data){
 		GregorianCalendar gc = null;
 		String result = "";
 		DecimalFormat df4 = new DecimalFormat("0000");

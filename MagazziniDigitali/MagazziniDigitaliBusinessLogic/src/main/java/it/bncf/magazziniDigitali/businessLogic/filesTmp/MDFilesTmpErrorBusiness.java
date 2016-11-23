@@ -3,17 +3,6 @@
  */
 package it.bncf.magazziniDigitali.businessLogic.filesTmp;
 
-import it.bncf.magazziniDigitali.businessLogic.BusinessLogic;
-import it.bncf.magazziniDigitali.businessLogic.HashTable;
-import it.bncf.magazziniDigitali.businessLogic.stato.MDStatoBusiness;
-import it.bncf.magazziniDigitali.database.dao.MDFilesTmpDAO;
-import it.bncf.magazziniDigitali.database.dao.MDFilesTmpErrorDAO;
-import it.bncf.magazziniDigitali.database.dao.MDStatoDAO;
-import it.bncf.magazziniDigitali.database.entity.MDFilesTmpError;
-import it.bncf.magazziniDigitali.database.entity.MDStato;
-import it.bncf.magazziniDigitali.utils.DateBusiness;
-import it.bncf.magazziniDigitali.utils.Record;
-
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
 import java.util.GregorianCalendar;
@@ -22,12 +11,25 @@ import java.util.Vector;
 
 import javax.naming.NamingException;
 
-import mx.randalf.configuration.exception.ConfigurationException;
-import mx.randalf.hibernate.FactoryDAO;
-
 import org.apache.log4j.Logger;
+import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
 import org.hibernate.criterion.Order;
-import org.springframework.orm.hibernate3.HibernateTemplate;
+import org.hibernate.criterion.Restrictions;
+
+import it.bncf.magazziniDigitali.businessLogic.BusinessLogic;
+import it.bncf.magazziniDigitali.businessLogic.HashTable;
+import it.bncf.magazziniDigitali.businessLogic.stato.MDStatoBusiness;
+import it.bncf.magazziniDigitali.database.dao.MDFilesTmpDAO;
+import it.bncf.magazziniDigitali.database.dao.MDFilesTmpErrorDAO;
+import it.bncf.magazziniDigitali.database.dao.MDStatoDAO;
+import it.bncf.magazziniDigitali.database.entity.MDFilesTmp;
+import it.bncf.magazziniDigitali.database.entity.MDFilesTmpError;
+import it.bncf.magazziniDigitali.database.entity.MDStato;
+import it.bncf.magazziniDigitali.utils.DateBusiness;
+import it.bncf.magazziniDigitali.utils.Record;
+import mx.randalf.hibernate.FactoryDAO;
+import mx.randalf.hibernate.exception.HibernateUtilException;
 
 /**
  * @author massi
@@ -41,33 +43,33 @@ public class MDFilesTmpErrorBusiness extends
 	/**
 	 * @param hibernateTemplate
 	 */
-	public MDFilesTmpErrorBusiness(HibernateTemplate hibernateTemplate) {
-		super(hibernateTemplate);
+	public MDFilesTmpErrorBusiness() {
+		super();
 	}
 
 	/**
 	 * @see it.bncf.magazziniDigitali.businessLogic.BusinessLogic#addRecord(java.io.Serializable)
 	 */
 	@Override
-	protected void addRecord(MDFilesTmpError dati) throws NamingException,
-			ConfigurationException {
+	protected void addRecord(MDFilesTmpError dati) throws HibernateException,
+			HibernateUtilException {
 		
 		try {
 			if (this.records == null) {
 				this.records = new Vector<Record>();
 			}
 			this.records.add(setRecord(dati));
-		} catch (NamingException e) {
+		} catch (HibernateException e) {
 			log.error(e);
 			throw e;
-		} catch (ConfigurationException e) {
+		} catch (HibernateUtilException e) {
 			log.error(e);
 			throw e;
 		}
 	}
 
-	public static Record setRecord(MDFilesTmpError dati) throws NamingException,
-			ConfigurationException {
+	public static Record setRecord(MDFilesTmpError dati) throws HibernateException,
+			HibernateUtilException {
 		Record record = null;
 
 		record = new Record();
@@ -76,7 +78,7 @@ public class MDFilesTmpErrorBusiness extends
 			FactoryDAO.initialize(dati.getIdMdFilesTmp());
 			record.set("MDregistroIngresso", MDFilesTmpBusiness.setRecord(dati.getIdMdFilesTmp()));
 		}
-		record.set("dataIns", DateBusiness.convert(dati.getDataIns()));
+		record.set("dataIns", DateBusiness.convert(new Timestamp(dati.getDataIns().getTime())));
 		if (dati.getType() != null){
 			FactoryDAO.initialize(dati.getType());
 			record.set("type", MDStatoBusiness.setRecord(dati.getType()));
@@ -112,28 +114,24 @@ public class MDFilesTmpErrorBusiness extends
 	@Override
 	protected List<MDFilesTmpError> find(MDFilesTmpErrorDAO tableDao,
 			HashTable<String, Object> dati, List<Order> orders, int page, int pageSize)
-			throws NamingException, ConfigurationException {
-//		List<MDRegistroIngresso> tables;
-//
-//		tables = tableDao.find((String)dati.get("cognome"),
-//				(String) dati.get("nome"), 
-//				(dati.get("idClub")==null?null:
-//				club.findById(Integer.parseInt((String) dati.get("idClub")))), 
-//				orders);
-//		return tables;
-		return null;
-	}
+			throws HibernateException, HibernateUtilException {
+		List<MDFilesTmpError> tables;
 
-	/**
-	 * @see it.bncf.magazziniDigitali.businessLogic.BusinessLogic#setOrder()
-	 */
-	@Override
-	protected List<Order> setOrder() {
-		Vector<Order> orders;
-		orders = new Vector<Order>();
-		orders.add(Order.asc("dataIns"));
-		return orders;
+		tables = tableDao.find((MDFilesTmp)dati.get("idMdFilesTmp"), 
+				orders);
+		return tables;
 	}
+//
+//	/**
+//	 * @see it.bncf.magazziniDigitali.businessLogic.BusinessLogic#setOrder()
+//	 */
+//	@Override
+//	protected List<Order> setOrder() {
+//		Vector<Order> orders;
+//		orders = new Vector<Order>();
+//		orders.add(Order.asc("dataIns"));
+//		return orders;
+//	}
 
 	/**
 	 * @see it.bncf.magazziniDigitali.businessLogic.BusinessLogic#postSave(it.bncf.magazziniDigitali.businessLogic.HashTable, java.io.Serializable)
@@ -141,7 +139,7 @@ public class MDFilesTmpErrorBusiness extends
 	@Override
 	protected void postSave(HashTable<String, Object> dati,
 			MDFilesTmpError table) throws NamingException,
-			ConfigurationException, IllegalAccessException,
+			HibernateUtilException, IllegalAccessException,
 			InvocationTargetException, NoSuchMethodException {
 	}
 
@@ -158,7 +156,7 @@ public class MDFilesTmpErrorBusiness extends
 	 */
 	@Override
 	protected MDFilesTmpErrorDAO newInstanceDao() {
-		return new MDFilesTmpErrorDAO(hibernateTemplate);
+		return new MDFilesTmpErrorDAO();
 	}
 
 	/**
@@ -166,12 +164,12 @@ public class MDFilesTmpErrorBusiness extends
 	 */
 	@Override
 	protected void save(MDFilesTmpError table, HashTable<String, Object> dati)
-			throws NamingException, ConfigurationException {
+			throws HibernateException, HibernateUtilException {
 		MDFilesTmpDAO mdRegistroIngressoDAO=null;
-		MDStatoDAO mdStatoDAO = new MDStatoDAO(hibernateTemplate);
+		MDStatoDAO mdStatoDAO = new MDStatoDAO();
 
 		if (dati.containsKey("idMDFilesTmp")) {
-			mdRegistroIngressoDAO = new MDFilesTmpDAO(hibernateTemplate);
+			mdRegistroIngressoDAO = new MDFilesTmpDAO();
 			table.setIdMdFilesTmp(mdRegistroIngressoDAO.findById((String) dati
 					.get("idMDFilesTmp")));
 		}
@@ -190,6 +188,22 @@ public class MDFilesTmpErrorBusiness extends
 		if (dati.containsKey("msgError")) {
 			table.setMsgError((String) dati.get("msgError"));
 		}
+		if (dati.containsKey("traceError")) {
+			table.setTraceError((String) dati.get("traceError"));
+		}
+	}
+
+	@Override
+	protected Criteria rowsCount(MDFilesTmpErrorDAO tableDao, HashTable<String, Object> dati) {
+		Criteria criteria = null;
+		
+		criteria = tableDao.createCriteria();
+		if (dati != null){
+			if (dati.get("idMdFilesTmp") != null) {
+				criteria.add(Restrictions.eq("idMdFilesTmp", dati.get("idMdFilesTmp")));
+			}
+		}
+		return criteria;
 	}
 
 }

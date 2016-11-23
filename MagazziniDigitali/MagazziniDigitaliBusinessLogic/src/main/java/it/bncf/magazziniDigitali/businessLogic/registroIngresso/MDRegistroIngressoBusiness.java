@@ -3,6 +3,23 @@
  */
 package it.bncf.magazziniDigitali.businessLogic.registroIngresso;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Vector;
+
+import javax.naming.NamingException;
+
+import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
+import org.hibernate.criterion.Order;
+
 import it.bncf.magazziniDigitali.businessLogic.BusinessLogic;
 import it.bncf.magazziniDigitali.businessLogic.HashTable;
 import it.bncf.magazziniDigitali.database.dao.MDRegistroIngressoDAO;
@@ -10,21 +27,7 @@ import it.bncf.magazziniDigitali.database.entity.MDRegistroIngresso;
 import it.bncf.magazziniDigitali.database.entity.MDStato;
 import it.bncf.magazziniDigitali.utils.DateBusiness;
 import it.bncf.magazziniDigitali.utils.Record;
-
-import java.lang.reflect.InvocationTargetException;
-import java.sql.Timestamp;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Vector;
-
-import javax.naming.NamingException;
-
-import mx.randalf.configuration.exception.ConfigurationException;
-
-import org.apache.log4j.Logger;
-import org.hibernate.HibernateException;
-import org.hibernate.criterion.Order;
-import org.springframework.orm.hibernate3.HibernateTemplate;
+import mx.randalf.hibernate.exception.HibernateUtilException;
 
 /**
  * @author massi
@@ -33,21 +36,19 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
 public class MDRegistroIngressoBusiness extends
 		BusinessLogic<MDRegistroIngresso, MDRegistroIngressoDAO, String> {
 
-	private Logger log = Logger.getLogger(getClass());
-
 	/**
 	 * @param hibernateTemplate
 	 */
-	public MDRegistroIngressoBusiness(HibernateTemplate hibernateTemplate) {
-		super(hibernateTemplate);
+	public MDRegistroIngressoBusiness() {
+		super();
 	}
 
 	/* (non-Javadoc)
 	 * @see it.bncf.magazziniDigitali.businessLogic.BusinessLogic#addRecord(java.io.Serializable)
 	 */
 	@Override
-	protected void addRecord(MDRegistroIngresso dati) throws NamingException,
-			ConfigurationException {
+	protected void addRecord(MDRegistroIngresso dati) throws HibernateException,
+			HibernateUtilException{
 
 		try {
 			if (this.records == null) {
@@ -55,18 +56,16 @@ public class MDRegistroIngressoBusiness extends
 			}
 
 			this.records.add(setRecord(dati));
-		} catch (NamingException e) {
-			log.error(e);
+		} catch (HibernateException e) {
 			throw e;
-		} catch (ConfigurationException e) {
-			log.error(e);
+		} catch (HibernateUtilException e) {
 			throw e;
 		}
 
 	}
 
-	public static Record setRecord(MDRegistroIngresso dati) throws NamingException,
-			ConfigurationException {
+	public static Record setRecord(MDRegistroIngresso dati) 
+			throws HibernateException, HibernateUtilException {
 		Record record = null;
 //		Vector<Record> clubs = null;
 //		Iterator<SociClub> iClubs = null;
@@ -133,7 +132,7 @@ public class MDRegistroIngressoBusiness extends
 	@Override
 	protected List<MDRegistroIngresso> find(MDRegistroIngressoDAO tableDao,
 			HashTable<String, Object> dati, List<Order> orders, int page, int pageSize)
-			throws NamingException, ConfigurationException {
+			throws HibernateException, HibernateUtilException {
 //		List<MDRegistroIngresso> tables;
 
 //		tables = tableDao.find(, 
@@ -142,7 +141,7 @@ public class MDRegistroIngressoBusiness extends
 		return null;
 	}
 
-	public List<MDRegistroIngresso> findCoda() throws HibernateException, NamingException, ConfigurationException{
+	public List<MDRegistroIngresso> findCoda() throws HibernateException, HibernateUtilException{
 		MDRegistroIngressoDAO operaDAO;
 		Vector<Order> orders;
 		List<MDRegistroIngresso> result = null;
@@ -160,9 +159,7 @@ public class MDRegistroIngressoBusiness extends
 			result = operaDAO.findCoda(stato, true, orders);
 		} catch (HibernateException e) {
 			throw e;
-		} catch (NamingException e) {
-			throw e;
-		} catch (ConfigurationException e) {
+		} catch (HibernateUtilException e) {
 			throw e;
 		}
 		return result;
@@ -184,27 +181,177 @@ public class MDRegistroIngressoBusiness extends
 	@Override
 	protected void postSave(HashTable<String, Object> dati,
 			MDRegistroIngresso table) throws NamingException,
-			ConfigurationException, IllegalAccessException,
+			HibernateUtilException, IllegalAccessException,
 			InvocationTargetException, NoSuchMethodException {
 		String[] errors = null;
-		HashTable<String, Object> myDati = null;
+		Exception[] exceptionErrors = null;
+//		HashTable<String, Object> myDati = null;
 		MDRegistroIngressoErrorBusiness errorBusiness = null;
 
-		if (dati.containsKey("errors")){
-			errors = (String[]) dati.get("errors");
-			errorBusiness = new MDRegistroIngressoErrorBusiness(hibernateTemplate);
-			for (int x=0; x<errors.length; x++){
-				if (errors[x] != null){
-					myDati = new HashTable<String, Object>();
-					myDati.put("idMDRegistroIngresso", table.getId());
-					myDati.put("type", dati.get("type"));
-					myDati.put("msgError", errors[x]);
-					errorBusiness.save(myDati);
+		try {
+			if (dati.containsKey("errors")){
+				errors = (String[]) dati.get("errors");
+				errorBusiness = new MDRegistroIngressoErrorBusiness();
+				for (int x=0; x<errors.length; x++){
+					printError(errorBusiness, table.getId(), (MDStato) dati.get("type"), errors[x], null);
 				}
 			}
+			if (dati.containsKey("exceptionErrors")){
+				exceptionErrors = (Exception[]) dati.get("exceptionErrors");
+				errorBusiness = new MDRegistroIngressoErrorBusiness();
+				for (int x=0; x<exceptionErrors.length; x++){
+					printError(errorBusiness, table.getId(), (MDStato) dati.get("type"), exceptionErrors[x]);
+				}
+			}
+		} catch (HibernateException e) {
+			throw new HibernateUtilException(e.getMessage(), e);
+		} catch (IllegalArgumentException e) {
+			throw new HibernateUtilException(e.getMessage(), e);
+		} catch (SecurityException e) {
+			throw new HibernateUtilException(e.getMessage(), e);
+		} catch (IOException e) {
+			throw new HibernateUtilException(e.getMessage(), e);
+		}
+//
+//		if (dati.containsKey("errors")){
+//			errors = (String[]) dati.get("errors");
+//			errorBusiness = new MDRegistroIngressoErrorBusiness();
+//			for (int x=0; x<errors.length; x++){
+//				if (errors[x] != null){
+//					myDati = new HashTable<String, Object>();
+//					myDati.put("idMDRegistroIngresso", table.getId());
+//					myDati.put("type", dati.get("type"));
+//					myDati.put("msgError", errors[x]);
+//					errorBusiness.save(myDati);
+//				}
+//			}
+//		}
+	}
+
+	private void printError(MDRegistroIngressoErrorBusiness errorBusiness, String idMDFilesTmp, MDStato mdStato, Exception exception)
+			throws HibernateException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, IOException, HibernateUtilException, NamingException{
+		ByteArrayOutputStream baos = null;
+		PrintStream ps = null;
+		
+		try {
+			baos = new ByteArrayOutputStream();
+			ps = new PrintStream(baos);
+			exception.printStackTrace(ps);
+			
+			baos.flush();
+			
+			printError(errorBusiness, idMDFilesTmp, mdStato, exception.getMessage(), baos.toString());
+
+			if (exception.getCause() != null){
+				printError(errorBusiness, idMDFilesTmp, mdStato, exception.getCause());
+			}
+
+			if (exception.getSuppressed() != null){
+				for (int x=0; x<exception.getSuppressed().length; x++){
+					printError(errorBusiness, idMDFilesTmp, mdStato, exception.getSuppressed()[x]);
+				}
+			}
+		} catch (HibernateException e) {
+			throw e;
+		} catch (IllegalAccessException e) {
+			throw e;
+		} catch (IllegalArgumentException e) {
+			throw e;
+		} catch (InvocationTargetException e) {
+			throw e;
+		} catch (NoSuchMethodException e) {
+			throw e;
+		} catch (SecurityException e) {
+			throw e;
+		} catch (IOException e) {
+			throw e;
+		} catch (HibernateUtilException e) {
+			throw e;
+		} catch (NamingException e) {
+			throw e;
 		}
 	}
 
+	private void printError(MDRegistroIngressoErrorBusiness errorBusiness, String idMDFilesTmp, MDStato type, Throwable cause) 
+			throws HibernateException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+				NoSuchMethodException, SecurityException, IOException, HibernateUtilException, NamingException{
+		ByteArrayOutputStream baos = null;
+		PrintStream ps = null;
+		
+		try {
+			baos = new ByteArrayOutputStream();
+			ps = new PrintStream(baos);
+			cause.printStackTrace(ps);
+			
+			baos.flush();
+			
+			printError(errorBusiness, idMDFilesTmp, type, cause.getMessage(), baos.toString());
+
+			if (cause.getCause() != null){
+				printError(errorBusiness, idMDFilesTmp, type, cause.getCause());
+			}
+
+			if (cause.getSuppressed() != null){
+				for (int x=0; x<cause.getSuppressed().length; x++){
+					printError(errorBusiness, idMDFilesTmp, type, cause.getSuppressed()[x]);
+				}
+			}
+		} catch (HibernateException e) {
+			throw e;
+		} catch (IllegalAccessException e) {
+			throw e;
+		} catch (IllegalArgumentException e) {
+			throw e;
+		} catch (InvocationTargetException e) {
+			throw e;
+		} catch (NoSuchMethodException e) {
+			throw e;
+		} catch (SecurityException e) {
+			throw e;
+		} catch (IOException e) {
+			throw e;
+		} catch (HibernateUtilException e) {
+			throw e;
+		} catch (NamingException e) {
+			throw e;
+		}
+	}
+
+	private void printError(MDRegistroIngressoErrorBusiness errorBusiness, String idMDFilesTmp, MDStato mdStato, String msgError,
+			String traceError) throws HibernateException, IllegalAccessException, IllegalArgumentException, 
+			InvocationTargetException, NoSuchMethodException, SecurityException, HibernateUtilException,
+			NamingException {
+		try {
+			HashTable<String, Object> myDati = null;
+			myDati = new HashTable<String, Object>();
+			myDati.put("idMDFilesTmp", idMDFilesTmp);
+			myDati.put("type", mdStato);
+			myDati.put("msgError", msgError);
+			if (traceError != null){
+				myDati.put("traceError", traceError);
+			}
+			errorBusiness.save(myDati);
+		} catch (HibernateException e) {
+			throw e;
+		} catch (IllegalAccessException e) {
+			throw e;
+		} catch (IllegalArgumentException e) {
+			throw e;
+		} catch (InvocationTargetException e) {
+			throw e;
+		} catch (NoSuchMethodException e) {
+			throw e;
+		} catch (SecurityException e) {
+			throw e;
+		} catch (HibernateUtilException e) {
+			throw e;
+		} catch (NamingException e) {
+			throw e;
+		}
+
+	}
+	
 	/**
 	 * @see it.bncf.magazziniDigitali.businessLogic.BusinessLogic#newInstance()
 	 */
@@ -218,7 +365,7 @@ public class MDRegistroIngressoBusiness extends
 	 */
 	@Override
 	protected MDRegistroIngressoDAO newInstanceDao() {
-		return new MDRegistroIngressoDAO(hibernateTemplate);
+		return new MDRegistroIngressoDAO();
 	}
 
 	/**
@@ -226,7 +373,7 @@ public class MDRegistroIngressoBusiness extends
 	 */
 	@Override
 	protected void save(MDRegistroIngresso table, HashTable<String, Object> dati)
-			throws NamingException, ConfigurationException {
+			throws HibernateException, HibernateUtilException {
 
 		if (dati.containsKey("timestampIngest")) {
 			table.setTimestampIngest((Timestamp) dati.get("timestampIngest"));
@@ -286,8 +433,9 @@ public class MDRegistroIngressoBusiness extends
 		}
 	}
 
-	public void error(String id, MDStato type, String[] registroErrori) throws IllegalAccessException,
-			InvocationTargetException, NoSuchMethodException, NamingException, ConfigurationException{
+	public void error(String id, MDStato type, Exception[] exceptionErrors, String[] registroErrori) throws IllegalAccessException,
+			InvocationTargetException, NoSuchMethodException, NamingException, HibernateException,
+			HibernateUtilException{
 		HashTable<String, Object> dati = null;
 		
 		try {
@@ -295,7 +443,12 @@ public class MDRegistroIngressoBusiness extends
 			dati.put("id", id);
 			dati.put("status", -1);
 			dati.put("type", type);
-			dati.put("errors", registroErrori);
+			if (registroErrori != null){
+				dati.put("errors", registroErrori);
+			}
+			if (registroErrori != null){
+				dati.put("exceptionErrors", exceptionErrors);
+			}
 			save(dati);
 		} catch (IllegalAccessException e) {
 			throw e;
@@ -305,7 +458,9 @@ public class MDRegistroIngressoBusiness extends
 			throw e;
 		} catch (NamingException e) {
 			throw e;
-		} catch (ConfigurationException e) {
+		} catch (HibernateException e) {
+			throw e;
+		} catch (HibernateUtilException e) {
 			throw e;
 		}
 	}
@@ -313,14 +468,14 @@ public class MDRegistroIngressoBusiness extends
 
 	public void pubblicato(String id, GregorianCalendar timeStampPub)
 			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException,
-			NamingException, ConfigurationException{
+			NamingException, HibernateException, HibernateUtilException{
 		HashTable<String, Object> dati = null;
 
 		try {
 			dati = new HashTable<String,Object>();
 			dati.put("id", id);
 			dati.put("status", 2);
-			dati.put("timestampElab", new Timestamp(timeStampPub.getTimeInMillis()));
+			dati.put("timestampPub", new Timestamp(timeStampPub.getTimeInMillis()));
 			save(dati);
 		} catch (IllegalAccessException e) {
 			throw e;
@@ -330,14 +485,16 @@ public class MDRegistroIngressoBusiness extends
 			throw e;
 		} catch (NamingException e) {
 			throw e;
-		} catch (ConfigurationException e) {
+		} catch (HibernateException e) {
+			throw e;
+		} catch (HibernateUtilException e) {
 			throw e;
 		}
 	}
 
 	public void archiviato(String id, GregorianCalendar timeStampElab)
 			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException,
-			NamingException, ConfigurationException{
+			NamingException, HibernateException, HibernateUtilException{
 		HashTable<String, Object> dati = null;
 
 		try {
@@ -354,14 +511,16 @@ public class MDRegistroIngressoBusiness extends
 			throw e;
 		} catch (NamingException e) {
 			throw e;
-		} catch (ConfigurationException e) {
+		} catch (HibernateException e) {
+			throw e;
+		} catch (HibernateUtilException e) {
 			throw e;
 		}
 	}
 
 	public void coda(String id)
 			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException,
-			NamingException, ConfigurationException{
+			NamingException, HibernateException, HibernateUtilException{
 		HashTable<String, Object> dati = null;
 		GregorianCalendar timeStampElab = null;
 
@@ -379,7 +538,9 @@ public class MDRegistroIngressoBusiness extends
 			throw e;
 		} catch (NamingException e) {
 			throw e;
-		} catch (ConfigurationException e) {
+		} catch (HibernateException e) {
+			throw e;
+		} catch (HibernateUtilException e) {
 			throw e;
 		}
 	}
@@ -399,8 +560,9 @@ public class MDRegistroIngressoBusiness extends
 	public void insert(String id, GregorianCalendar timeStampIngest, String agentDepositor, String originalContainerName, String containerName, 
 			String containerFingerPrint,
 			int containerType, String agentMachineIngest,
-			String agentSoftwareIngest, Timestamp timeStampInit)
-			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException, NamingException, ConfigurationException {
+			String agentSoftwareIngest, Date timeStampInit)
+			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException, NamingException, HibernateException,
+			HibernateUtilException {
 		
 		MDRegistroIngressoDAO registroDAO = null;
 		HashTable<String, Object> dati = null;
@@ -408,7 +570,7 @@ public class MDRegistroIngressoBusiness extends
 
 
 		try {
-			registroDAO = new MDRegistroIngressoDAO(hibernateTemplate);
+			registroDAO = new MDRegistroIngressoDAO();
 			containerFingerPrintChain = registroDAO.findLastKey();
 			if (containerFingerPrintChain != null){
 				containerFingerPrintChain = containerFingerPrint+containerFingerPrintChain;
@@ -439,10 +601,17 @@ public class MDRegistroIngressoBusiness extends
 			throw e;
 		} catch (NamingException e) {
 			throw e;
-		} catch (ConfigurationException e) {
+		} catch (HibernateException e) {
+			throw e;
+		} catch (HibernateUtilException e) {
 			throw e;
 		}
 		
+	}
+
+	@Override
+	protected Criteria rowsCount(MDRegistroIngressoDAO tableDao, HashTable<String, Object> dati) {
+		return null;
 	}
 
 

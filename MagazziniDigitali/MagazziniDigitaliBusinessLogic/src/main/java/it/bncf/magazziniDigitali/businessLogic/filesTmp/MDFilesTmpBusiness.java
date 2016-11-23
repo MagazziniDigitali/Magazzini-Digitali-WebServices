@@ -3,23 +3,10 @@
  */
 package it.bncf.magazziniDigitali.businessLogic.filesTmp;
 
-import it.bncf.magazziniDigitali.businessLogic.BusinessLogic;
-import it.bncf.magazziniDigitali.businessLogic.HashTable;
-import it.bncf.magazziniDigitali.businessLogic.istituzione.MDIstituzioneBusiness;
-import it.bncf.magazziniDigitali.businessLogic.nodi.MDNodiBusiness;
-import it.bncf.magazziniDigitali.businessLogic.registroIngresso.MDRegistroIngressoBusiness;
-import it.bncf.magazziniDigitali.businessLogic.stato.MDStatoBusiness;
-import it.bncf.magazziniDigitali.database.dao.MDFilesTmpDAO;
-import it.bncf.magazziniDigitali.database.dao.MDIstituzioneDAO;
-import it.bncf.magazziniDigitali.database.dao.MDNodiDAO;
-import it.bncf.magazziniDigitali.database.dao.MDStatoDAO;
-import it.bncf.magazziniDigitali.database.entity.MDFilesTmp;
-import it.bncf.magazziniDigitali.database.entity.MDIstituzione;
-import it.bncf.magazziniDigitali.database.entity.MDNodi;
-import it.bncf.magazziniDigitali.database.entity.MDStato;
-import it.bncf.magazziniDigitali.utils.DateBusiness;
-import it.bncf.magazziniDigitali.utils.Record;
-
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -31,13 +18,32 @@ import java.util.Vector;
 
 import javax.naming.NamingException;
 
-import mx.randalf.configuration.exception.ConfigurationException;
-import mx.randalf.hibernate.FactoryDAO;
-
 import org.apache.log4j.Logger;
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.criterion.Order;
-import org.springframework.orm.hibernate3.HibernateTemplate;
+import org.hibernate.criterion.Restrictions;
+
+import it.bncf.magazziniDigitali.businessLogic.BusinessLogic;
+import it.bncf.magazziniDigitali.businessLogic.HashTable;
+import it.bncf.magazziniDigitali.businessLogic.istituzione.MDIstituzioneBusiness;
+import it.bncf.magazziniDigitali.businessLogic.nodi.MDNodiBusiness;
+import it.bncf.magazziniDigitali.businessLogic.registroIngresso.MDRegistroIngressoBusiness;
+import it.bncf.magazziniDigitali.businessLogic.stato.MDStatoBusiness;
+import it.bncf.magazziniDigitali.database.dao.MDFilesTmpDAO;
+import it.bncf.magazziniDigitali.database.dao.MDIstituzioneDAO;
+import it.bncf.magazziniDigitali.database.dao.MDNodiDAO;
+import it.bncf.magazziniDigitali.database.dao.MDSoftwareDAO;
+import it.bncf.magazziniDigitali.database.dao.MDStatoDAO;
+import it.bncf.magazziniDigitali.database.entity.MDFilesTmp;
+import it.bncf.magazziniDigitali.database.entity.MDIstituzione;
+import it.bncf.magazziniDigitali.database.entity.MDNodi;
+import it.bncf.magazziniDigitali.database.entity.MDSoftware;
+import it.bncf.magazziniDigitali.database.entity.MDStato;
+import it.bncf.magazziniDigitali.utils.DateBusiness;
+import it.bncf.magazziniDigitali.utils.Record;
+import mx.randalf.hibernate.FactoryDAO;
+import mx.randalf.hibernate.exception.HibernateUtilException;
 
 /**
  * @author massi
@@ -51,145 +57,151 @@ public class MDFilesTmpBusiness extends
 	/**
 	 * @param hibernateTemplate
 	 */
-	public MDFilesTmpBusiness(HibernateTemplate hibernateTemplate) {
-		super(hibernateTemplate);
+	public MDFilesTmpBusiness() {
+		super();
 	}
 
 	/**
 	 * @see it.bncf.magazziniDigitali.businessLogic.BusinessLogic#addRecord(java.io.Serializable)
 	 */
 	@Override
-	protected void addRecord(MDFilesTmp dati) throws NamingException,
-			ConfigurationException {
+	protected void addRecord(MDFilesTmp dati) throws HibernateException,
+			HibernateUtilException {
 		try {
 			if (this.records == null) {
 				this.records = new Vector<Record>();
 			}
 			this.records.add(setRecord(dati));
-		} catch (NamingException e) {
+		} catch (HibernateException e) {
 			log.error(e);
 			throw e;
-		} catch (ConfigurationException e) {
+		} catch (HibernateUtilException e) {
 			log.error(e);
 			throw e;
 		}
 	}
 
-	public static Record setRecord(MDFilesTmp dati) throws NamingException,
-			ConfigurationException {
+	public static Record setRecord(MDFilesTmp dati) throws HibernateException,
+			HibernateUtilException {
 		Record record = null;
 //		Vector<Record> clubs = null;
 //		Iterator<SociClub> iClubs = null;
 
-		record = new Record();
-		record.set("idMDFilesTmp", dati.getId());
+		try {
+			record = new Record();
+			record.set("idMDFilesTmp", dati.getId());
 
-		FactoryDAO.initialize(dati.getIdIstituto());
-		record.set("istituto", MDIstituzioneBusiness.setRecord(dati.getIdIstituto()));
-		record.set("nomeFile", dati.getNomeFile());
-		record.set("sha1", dati.getSha1());
-		record.set("nomeFileMod", DateBusiness.convert(dati.getNomeFileMod()));
-		FactoryDAO.initialize(dati.getStato());
-		record.set("stato", MDStatoBusiness.setRecord(dati.getStato()));
+			FactoryDAO.initialize(dati.getIdIstituto());
+			record.set("istituto", MDIstituzioneBusiness.setRecord(dati.getIdIstituto()));
+			record.set("nomeFile", dati.getNomeFile());
+			record.set("sha1", dati.getSha1());
+			record.set("nomeFileMod", DateBusiness.convert(dati.getNomeFileMod()));
+			FactoryDAO.initialize(dati.getStato());
+			record.set("stato", MDStatoBusiness.setRecord(dati.getStato()));
 
-		if (dati.getTrasfDataStart() != null){
-			record.set("trasfDataStart", DateBusiness.convert(dati.getTrasfDataStart()));
-		}
-		if (dati.getTrasfDataEnd() != null){
-			record.set("trasfDataEnd", DateBusiness.convert(dati.getTrasfDataEnd()));
-		}
-		if (dati.getTrasfEsito() != null){
-			record.set("trasfEsito", dati.getTrasfEsito());
-		}
+			if (dati.getTrasfDataStart() != null){
+				record.set("trasfDataStart", DateBusiness.convert(dati.getTrasfDataStart()));
+			}
+			if (dati.getTrasfDataEnd() != null){
+				record.set("trasfDataEnd", DateBusiness.convert(dati.getTrasfDataEnd()));
+			}
+			if (dati.getTrasfEsito() != null){
+				record.set("trasfEsito", dati.getTrasfEsito());
+			}
 
-		if (dati.getValidDataStart() != null){
-			record.set("validDataStart", DateBusiness.convert(dati.getValidDataStart()));
-		}
-		if (dati.getValidDataEnd() != null){
-			record.set("validDataEnd", DateBusiness.convert(dati.getValidDataEnd()));
-		}
-		if (dati.getValidEsito() != null){
-			record.set("validEsito", dati.getValidEsito());
-		}
+			if (dati.getValidDataStart() != null){
+				record.set("validDataStart", DateBusiness.convert(dati.getValidDataStart()));
+			}
+			if (dati.getValidDataEnd() != null){
+				record.set("validDataEnd", DateBusiness.convert(dati.getValidDataEnd()));
+			}
+			if (dati.getValidEsito() != null){
+				record.set("validEsito", dati.getValidEsito());
+			}
 
-		if (dati.getXmlMimeType() != null){
-			record.set("xmlMimeType", dati.getXmlMimeType());
-		}
+			if (dati.getXmlMimeType() != null){
+				record.set("xmlMimeType", dati.getXmlMimeType());
+			}
 
-		if (dati.getDecompDataStart() != null){
-			record.set("decompDataStart", DateBusiness.convert(dati.getDecompDataStart()));
-		}
-		if (dati.getDecompDataEnd() != null){
-			record.set("decompDataEnd", DateBusiness.convert(dati.getDecompDataEnd()));
-		}
-		if (dati.getDecompEsito() != null){
-			record.set("decompEsito", dati.getDecompEsito());
-		}
+			if (dati.getDecompDataStart() != null){
+				record.set("decompDataStart", DateBusiness.convert(dati.getDecompDataStart()));
+			}
+			if (dati.getDecompDataEnd() != null){
+				record.set("decompDataEnd", DateBusiness.convert(dati.getDecompDataEnd()));
+			}
+			if (dati.getDecompEsito() != null){
+				record.set("decompEsito", dati.getDecompEsito());
+			}
 
-		if (dati.getPublishDataStart() != null){
-			record.set("publishDataStart", DateBusiness.convert(dati.getPublishDataStart()));
-		}
-		if (dati.getPublishDataEnd() != null){
-			record.set("publishDataEnd", DateBusiness.convert(dati.getPublishDataEnd()));
-		}
-		if (dati.getPublishEsito() != null){
-			record.set("publishEsito", dati.getPublishEsito());
-		}
+			if (dati.getPublishDataStart() != null){
+				record.set("publishDataStart", DateBusiness.convert(dati.getPublishDataStart()));
+			}
+			if (dati.getPublishDataEnd() != null){
+				record.set("publishDataEnd", DateBusiness.convert(dati.getPublishDataEnd()));
+			}
+			if (dati.getPublishEsito() != null){
+				record.set("publishEsito", dati.getPublishEsito());
+			}
 
-		if (dati.getCopyPremisDataStart() != null){
-			record.set("copyPremisDataStart", DateBusiness.convert(dati.getCopyPremisDataStart()));
-		}
-		if (dati.getCopyPremisDataEnd() != null){
-			record.set("copyPremisDataEnd", DateBusiness.convert(dati.getCopyPremisDataEnd()));
-		}
-		if (dati.getCopyPremisEsito() != null){
-			record.set("copyPremisEsito", dati.getCopyPremisEsito());
-		}
+			if (dati.getCopyPremisDataStart() != null){
+				record.set("copyPremisDataStart", DateBusiness.convert(dati.getCopyPremisDataStart()));
+			}
+			if (dati.getCopyPremisDataEnd() != null){
+				record.set("copyPremisDataEnd", DateBusiness.convert(dati.getCopyPremisDataEnd()));
+			}
+			if (dati.getCopyPremisEsito() != null){
+				record.set("copyPremisEsito", dati.getCopyPremisEsito());
+			}
 
-		if (dati.getMoveFileDataStart() != null){
-			record.set("moveFileDataStart", DateBusiness.convert(dati.getMoveFileDataStart()));
-		}
-		if (dati.getMoveFileDataEnd() != null){
-			record.set("moveFileDataEnd", DateBusiness.convert(dati.getMoveFileDataEnd()));
-		}
-		if (dati.getMoveFileEsito() != null){
-			record.set("moveFileEsito", dati.getMoveFileEsito());
-		}
+			if (dati.getMoveFileDataStart() != null){
+				record.set("moveFileDataStart", DateBusiness.convert(dati.getMoveFileDataStart()));
+			}
+			if (dati.getMoveFileDataEnd() != null){
+				record.set("moveFileDataEnd", DateBusiness.convert(dati.getMoveFileDataEnd()));
+			}
+			if (dati.getMoveFileEsito() != null){
+				record.set("moveFileEsito", dati.getMoveFileEsito());
+			}
 
-		if (dati.getDeleteLocalData() != null){
-			record.set("deleteLocalData", DateBusiness.convert(dati.getDeleteLocalData()));
-		}
-		if (dati.getDeleteLocalEsito() != null){
-			record.set("deleteLocalEsito", dati.getDeleteLocalEsito());
-		}
+			if (dati.getDeleteLocalData() != null){
+				record.set("deleteLocalData", DateBusiness.convert(dati.getDeleteLocalData()));
+			}
+			if (dati.getDeleteLocalEsito() != null){
+				record.set("deleteLocalEsito", dati.getDeleteLocalEsito());
+			}
 
-		if (dati.getPremisFile() != null){
-			record.set("premisFile", dati.getPremisFile());
-		}
+			if (dati.getPremisFile() != null){
+				record.set("premisFile", dati.getPremisFile());
+			}
 
-		if (dati.getArchiveDataStart() != null){
-			record.set("archiveDataStart", DateBusiness.convert(dati.getArchiveDataStart()));
-		}
-		if (dati.getArchiveDataEnd() != null){
-			record.set("archiveDataEnd", DateBusiness.convert(dati.getArchiveDataEnd()));
-		}
-		if (dati.getArchiveEsito() != null){
-			record.set("archiveEsito", dati.getArchiveEsito());
-		}
+			if (dati.getArchiveDataStart() != null){
+				record.set("archiveDataStart", DateBusiness.convert(dati.getArchiveDataStart()));
+			}
+			if (dati.getArchiveDataEnd() != null){
+				record.set("archiveDataEnd", DateBusiness.convert(dati.getArchiveDataEnd()));
+			}
+			if (dati.getArchiveEsito() != null){
+				record.set("archiveEsito", dati.getArchiveEsito());
+			}
 
-		if (dati.getIdNodo() != null){
-			FactoryDAO.initialize(dati.getIdNodo());
-			record.set("nodo", MDNodiBusiness.setRecord(dati.getIdNodo()));
-		}
+			if (dati.getIdNodo() != null){
+				FactoryDAO.initialize(dati.getIdNodo());
+				record.set("nodo", MDNodiBusiness.setRecord(dati.getIdNodo()));
+			}
 
-		if (dati.getIndexDataStart() != null){
-			record.set("indexDataStart", DateBusiness.convert(dati.getIndexDataStart()));
-		}
-		if (dati.getIndexDataEnd() != null){
-			record.set("indexDataEnd", DateBusiness.convert(dati.getIndexDataEnd()));
-		}
-		if (dati.getIndexEsito() != null){
-			record.set("indexEsito", dati.getIndexEsito());
+			if (dati.getIndexDataStart() != null){
+				record.set("indexDataStart", DateBusiness.convert(dati.getIndexDataStart()));
+			}
+			if (dati.getIndexDataEnd() != null){
+				record.set("indexDataEnd", DateBusiness.convert(dati.getIndexDataEnd()));
+			}
+			if (dati.getIndexEsito() != null){
+				record.set("indexEsito", dati.getIndexEsito());
+			}
+		} catch (HibernateException e) {
+			throw e;
+		} catch (HibernateUtilException e) {
+			throw e;
 		}
 
 		return record;
@@ -221,7 +233,7 @@ public class MDFilesTmpBusiness extends
 	@Override
 	protected List<MDFilesTmp> find(MDFilesTmpDAO tableDao,
 			HashTable<String, Object> dati, List<Order> orders, int page, int pageSize)
-			throws NamingException, ConfigurationException {
+			throws HibernateException, HibernateUtilException {
 		List<MDFilesTmp> tables;
 
 		tableDao.setPage(page);
@@ -233,7 +245,7 @@ public class MDFilesTmpBusiness extends
 	}
 
 	public MDFilesTmp findPremis(String premisFile)
-		throws NamingException, HibernateException, ConfigurationException{
+		throws HibernateException, HibernateUtilException{
 
 		MDFilesTmp ris = null;
 		MDFilesTmpDAO operaDAO;
@@ -260,26 +272,161 @@ public class MDFilesTmpBusiness extends
 	 */
 	@Override
 	protected void postSave(HashTable<String, Object> dati,
-			MDFilesTmp table) throws NamingException,
-			ConfigurationException, IllegalAccessException,
-			InvocationTargetException, NoSuchMethodException {
+			MDFilesTmp table) throws NamingException, HibernateUtilException,
+			IllegalAccessException, InvocationTargetException,
+			NoSuchMethodException {
 		String[] errors = null;
-		HashTable<String, Object> myDati = null;
+		Exception[] exceptionErrors = null;
 		MDFilesTmpErrorBusiness errorBusiness = null;
 
-		if (dati.containsKey("errors")){
-			errors = (String[]) dati.get("errors");
-			errorBusiness = new MDFilesTmpErrorBusiness(hibernateTemplate);
-			for (int x=0; x<errors.length; x++){
-				myDati = new HashTable<String, Object>();
-				myDati.put("idMDFilesTmp", table.getId());
-				myDati.put("type", dati.get("type"));
-				myDati.put("msgError", errors[x]);
-				errorBusiness.save(myDati);
+		try {
+			if (dati.containsKey("errors")){
+				errors = (String[]) dati.get("errors");
+				errorBusiness = new MDFilesTmpErrorBusiness();
+				for (int x=0; x<errors.length; x++){
+					printError(errorBusiness, table.getId(), (MDStato) dati.get("type"), errors[x], null);
+				}
 			}
+			if (dati.containsKey("exceptionErrors")){
+				exceptionErrors = (Exception[]) dati.get("exceptionErrors");
+				errorBusiness = new MDFilesTmpErrorBusiness();
+				for (int x=0; x<exceptionErrors.length; x++){
+					printError(errorBusiness, table.getId(), (MDStato) dati.get("type"), exceptionErrors[x]);
+				}
+			}
+		} catch (HibernateException e) {
+			throw new HibernateUtilException(e.getMessage(), e);
+		} catch (IllegalArgumentException e) {
+			throw new HibernateUtilException(e.getMessage(), e);
+		} catch (SecurityException e) {
+			throw new HibernateUtilException(e.getMessage(), e);
+		} catch (IOException e) {
+			throw new HibernateUtilException(e.getMessage(), e);
+		}
+	}
+	private void printError(MDFilesTmpErrorBusiness errorBusiness, String idMDFilesTmp, MDStato mdStato, Exception exception)
+			throws HibernateException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, IOException, HibernateUtilException, NamingException{
+		ByteArrayOutputStream baos = null;
+		PrintStream ps = null;
+		
+		try {
+			baos = new ByteArrayOutputStream();
+			ps = new PrintStream(baos);
+			exception.printStackTrace(ps);
+			
+			baos.flush();
+			
+			printError(errorBusiness, idMDFilesTmp, mdStato, exception.getMessage(), baos.toString());
+
+			if (exception.getCause() != null){
+				printError(errorBusiness, idMDFilesTmp, mdStato, exception.getCause());
+			}
+
+			if (exception.getSuppressed() != null){
+				for (int x=0; x<exception.getSuppressed().length; x++){
+					printError(errorBusiness, idMDFilesTmp, mdStato, exception.getSuppressed()[x]);
+				}
+			}
+		} catch (HibernateException e) {
+			throw e;
+		} catch (IllegalAccessException e) {
+			throw e;
+		} catch (IllegalArgumentException e) {
+			throw e;
+		} catch (InvocationTargetException e) {
+			throw e;
+		} catch (NoSuchMethodException e) {
+			throw e;
+		} catch (SecurityException e) {
+			throw e;
+		} catch (IOException e) {
+			throw e;
+		} catch (HibernateUtilException e) {
+			throw e;
+		} catch (NamingException e) {
+			throw e;
 		}
 	}
 
+	private void printError(MDFilesTmpErrorBusiness errorBusiness, String idMDFilesTmp, MDStato type, Throwable cause) 
+			throws HibernateException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+				NoSuchMethodException, SecurityException, IOException, HibernateUtilException, NamingException{
+		ByteArrayOutputStream baos = null;
+		PrintStream ps = null;
+		
+		try {
+			baos = new ByteArrayOutputStream();
+			ps = new PrintStream(baos);
+			cause.printStackTrace(ps);
+			
+			baos.flush();
+			
+			printError(errorBusiness, idMDFilesTmp, type, cause.getMessage(), baos.toString());
+
+			if (cause.getCause() != null){
+				printError(errorBusiness, idMDFilesTmp, type, cause.getCause());
+			}
+
+			if (cause.getSuppressed() != null){
+				for (int x=0; x<cause.getSuppressed().length; x++){
+					printError(errorBusiness, idMDFilesTmp, type, cause.getSuppressed()[x]);
+				}
+			}
+		} catch (HibernateException e) {
+			throw e;
+		} catch (IllegalAccessException e) {
+			throw e;
+		} catch (IllegalArgumentException e) {
+			throw e;
+		} catch (InvocationTargetException e) {
+			throw e;
+		} catch (NoSuchMethodException e) {
+			throw e;
+		} catch (SecurityException e) {
+			throw e;
+		} catch (IOException e) {
+			throw e;
+		} catch (HibernateUtilException e) {
+			throw e;
+		} catch (NamingException e) {
+			throw e;
+		}
+	}
+
+	private void printError(MDFilesTmpErrorBusiness errorBusiness, String idMDFilesTmp, MDStato mdStato, String msgError,
+			String traceError) throws HibernateException, IllegalAccessException, IllegalArgumentException, 
+			InvocationTargetException, NoSuchMethodException, SecurityException, HibernateUtilException,
+			NamingException {
+		try {
+			HashTable<String, Object> myDati = null;
+			myDati = new HashTable<String, Object>();
+			myDati.put("idMDFilesTmp", idMDFilesTmp);
+			myDati.put("type", mdStato);
+			myDati.put("msgError", msgError);
+			if (traceError != null){
+				myDati.put("traceError", traceError);
+			}
+			errorBusiness.save(myDati);
+		} catch (HibernateException e) {
+			throw e;
+		} catch (IllegalAccessException e) {
+			throw e;
+		} catch (IllegalArgumentException e) {
+			throw e;
+		} catch (InvocationTargetException e) {
+			throw e;
+		} catch (NoSuchMethodException e) {
+			throw e;
+		} catch (SecurityException e) {
+			throw e;
+		} catch (HibernateUtilException e) {
+			throw e;
+		} catch (NamingException e) {
+			throw e;
+		}
+
+	}
 	/**
 	 * @see it.bncf.magazziniDigitali.businessLogic.BusinessLogic#newInstance()
 	 */
@@ -293,7 +440,7 @@ public class MDFilesTmpBusiness extends
 	 */
 	@Override
 	protected MDFilesTmpDAO newInstanceDao() {
-		return new MDFilesTmpDAO(hibernateTemplate);
+		return new MDFilesTmpDAO();
 	}
 
 	/**
@@ -301,17 +448,27 @@ public class MDFilesTmpBusiness extends
 	 */
 	@Override
 	protected void save(MDFilesTmp table, HashTable<String, Object> dati)
-			throws NamingException, ConfigurationException {
+			throws HibernateException, HibernateUtilException {
 		MDIstituzioneDAO mdIstituzioneDAO = null;
+		MDSoftwareDAO mdSoftwareDAO = null;
 		MDStatoDAO mdStatoDAO = null;
 		MDNodiDAO mdNodiDAO = null;
 
 		if (dati.containsKey("idIstituto")) {
 			if (dati.get("idIstituto") instanceof String){
-				mdIstituzioneDAO = new MDIstituzioneDAO(hibernateTemplate);
+				mdIstituzioneDAO = new MDIstituzioneDAO();
 				table.setIdIstituto(mdIstituzioneDAO.findById((String) dati.get("idIstituto")));
 			} else {
 				table.setIdIstituto((MDIstituzione) dati.get("idIstituto"));
+			}
+		}
+
+		if (dati.containsKey("idSoftware")) {
+			if (dati.get("idSoftware") instanceof String){
+				mdSoftwareDAO = new MDSoftwareDAO();
+				table.setIdSoftware(mdSoftwareDAO.findById((String) dati.get("idSoftware")));
+			} else {
+				table.setIdSoftware((MDSoftware) dati.get("idSoftware"));
 			}
 		}
 		if (dati.containsKey("nomeFile")) {
@@ -325,7 +482,7 @@ public class MDFilesTmpBusiness extends
 		}
 		if (dati.containsKey("stato")) {
 			if (dati.get("stato") instanceof String){
-				mdStatoDAO = new MDStatoDAO(hibernateTemplate);
+				mdStatoDAO = new MDStatoDAO();
 				table.setStato(mdStatoDAO.findById((String) dati.get("stato")));
 			} else {
 				table.setStato((MDStato) dati.get("stato"));
@@ -419,7 +576,7 @@ public class MDFilesTmpBusiness extends
 
 		if (dati.containsKey("idNodo")) {
 			if (dati.get("idNodo") instanceof String){
-				mdNodiDAO = new MDNodiDAO(hibernateTemplate);
+				mdNodiDAO = new MDNodiDAO();
 				table.setIdNodo(mdNodiDAO.findById((String) dati.get("idNodo")));
 			} else {
 				table.setIdNodo((MDNodi) dati.get("idNodo"));
@@ -439,6 +596,18 @@ public class MDFilesTmpBusiness extends
 		if (dati.containsKey("indexPremis")) {
 			table.setIndexPremis((String) dati.get("indexPremis"));
 		}
+		
+		if (dati.containsKey("tarTmpFile")) {
+			table.setTarTmpFile((String) dati.get("tarTmpFile"));
+		}
+		
+		if (dati.containsKey("publishPremis")) {
+			table.setPublishPremis((String) dati.get("publishPremis"));
+		}
+		
+		if (dati.containsKey("geoReplicaPremis")) {
+			table.setGeoReplicaPremis((String) dati.get("geoReplicaPremis"));
+		}
 	}
 
 	/**
@@ -453,12 +622,11 @@ public class MDFilesTmpBusiness extends
 	 * @param pageSize Record per pagine 
 	 * @return Lista dei record trovati
 	 * @throws HibernateException Eccezioni di Hibernate
-	 * @throws NamingException Eccezioni di Naming
-	 * @throws ConfigurationException Eccezioni di Configurazione
+	 * @throws HibernateUtilException
 	 */
 	public List<MDFilesTmp> find(String idMDFilesTmp, MDIstituzione idIstituto,
 			String nomeFile, MDStato[] stato, String sha1, int page, int pageSize) 
-					throws HibernateException, NamingException, ConfigurationException{
+					throws HibernateException, HibernateUtilException{
 		HashTable<String, Object> dati = null;
 		
 		dati = new HashTable<String, Object>();
@@ -487,7 +655,8 @@ public class MDFilesTmpBusiness extends
 	}
 
 	public Vector<Record> findToRecord(String idMDFilesTmp, MDIstituzione idIstituto,
-			String nomeFile, MDStato[] stato, String sha1, int page, int pageSize) throws HibernateException, NamingException, ConfigurationException{
+			String nomeFile, MDStato[] stato, String sha1, int page, int pageSize) 
+					throws HibernateException, HibernateUtilException{
 		HashTable<String, Object> dati = null;
 		
 		dati = new HashTable<String, Object>();
@@ -515,9 +684,9 @@ public class MDFilesTmpBusiness extends
 		return new Vector<Record>(findToRecord(dati, page, pageSize));
 	}
 
-	public Hashtable<String, Integer> findCountByIstituto(MDIstituzione idIstituto) throws HibernateException, NamingException, ConfigurationException{
+	public Hashtable<String, Long> findCountByIstituto(MDIstituzione idIstituto) throws HibernateException, HibernateUtilException{
 		MDFilesTmpDAO operaDAO;
-		Hashtable<String, Integer> ris = null;
+		Hashtable<String, Long> ris = null;
 		
 		operaDAO = newInstanceDao();
 		ris = operaDAO.findCountByIstituto(idIstituto);
@@ -525,16 +694,17 @@ public class MDFilesTmpBusiness extends
 		
 	}
 	
-	public String insertNewRec(MDIstituzione idIstituto, String nomeFile, String sha1, 
+	public String insertNewRec(MDSoftware idSoftware, String nomeFile, String sha1, 
 			Calendar nomeFileMod, MDNodi idNodo) throws SQLException 
 					{
 		String ris = null;
 		HashTable<String, Object> dati=null;
-		MDStatoDAO mdStattoDAO =  new MDStatoDAO(hibernateTemplate);
+		MDStatoDAO mdStattoDAO =  new MDStatoDAO();
 		
 		try {
 			dati = new HashTable<String, Object>();
-			dati.put("idIstituto", idIstituto);
+			dati.put("idIstituto", idSoftware.getIdIstituzione());
+			dati.put("idSoftware", idSoftware);
 			dati.put("nomeFile", nomeFile);
 			dati.put("sha1", sha1);
 			dati.put("nomeFileMod", new Timestamp(nomeFileMod.getTimeInMillis()));
@@ -553,7 +723,9 @@ public class MDFilesTmpBusiness extends
 			throw new SQLException(e.getMessage(), e);
 		} catch (NamingException e) {
 			throw new SQLException(e.getMessage(), e);
-		} catch (ConfigurationException e) {
+		} catch (HibernateException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (HibernateUtilException e) {
 			throw new SQLException(e.getMessage(), e);
 		}
 		return ris;
@@ -566,10 +738,10 @@ public class MDFilesTmpBusiness extends
 	 * @param msgError
 	 * @throws SQLException
 	 */
-	public void updatEndSend(String id, boolean esito, String[] msgError) throws SQLException{
+	public void updatEndSend(String id, boolean esito, Exception[] exceptionErrors, String[] msgError) throws SQLException{
 		String ris = null;
 		HashTable<String, Object> dati=null;
-		MDStatoDAO mdStatoDAO = new MDStatoDAO(hibernateTemplate);
+		MDStatoDAO mdStatoDAO = new MDStatoDAO();
 		
 		try {
 			dati = new HashTable<String, Object>();
@@ -582,7 +754,12 @@ public class MDFilesTmpBusiness extends
 				dati.put("stato", mdStatoDAO.ERRORTRASF());
 				dati.put("trasfEsito", Boolean.FALSE);
 				dati.put("type", mdStatoDAO.ERRORTRASF());
-				dati.put("errors", msgError);
+				if (exceptionErrors != null){
+					dati.put("exceptionErrors", exceptionErrors);
+				}
+				if (msgError != null){
+					dati.put("errors", msgError);
+				}
 			}
 			ris = save(dati);
 			if (ris == null || ris.trim().equals("")){
@@ -596,7 +773,9 @@ public class MDFilesTmpBusiness extends
 			throw new SQLException(e.getMessage(), e);
 		} catch (NamingException e) {
 			throw new SQLException(e.getMessage(), e);
-		} catch (ConfigurationException e) {
+		} catch (HibernateException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (HibernateUtilException e) {
 			throw new SQLException(e.getMessage(), e);
 		}
 	}
@@ -611,7 +790,7 @@ public class MDFilesTmpBusiness extends
 	public void confirmDel(String id, boolean esito, String[] msgError) throws SQLException{
 		String ris = null;
 		HashTable<String, Object> dati=null;
-		MDStatoDAO mdStatoDAO= new MDStatoDAO(hibernateTemplate);
+		MDStatoDAO mdStatoDAO= new MDStatoDAO();
 		
 		try {
 			dati = new HashTable<String, Object>();
@@ -634,9 +813,15 @@ public class MDFilesTmpBusiness extends
 			throw new SQLException(e.getMessage(), e);
 		} catch (NoSuchMethodException e) {
 			throw new SQLException(e.getMessage(), e);
-		} catch (NamingException e) {
+		} catch (HibernateException e) {
 			throw new SQLException(e.getMessage(), e);
-		} catch (ConfigurationException e) {
+		} catch (HibernateUtilException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (IllegalArgumentException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (SecurityException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (NamingException e) {
 			throw new SQLException(e.getMessage(), e);
 		}
 	}
@@ -647,11 +832,11 @@ public class MDFilesTmpBusiness extends
 	 * @param id
 	 * @throws SQLException
 	 */
-	public GregorianCalendar updateStartValidate(String id) throws SQLException{
+	public GregorianCalendar updateStartValidate(String id, File fTar) throws SQLException{
 		String ris = null;
 		HashTable<String, Object> dati=null;
 		GregorianCalendar gc = null;
-		MDStatoDAO mdStatoDAO = new MDStatoDAO(hibernateTemplate);
+		MDStatoDAO mdStatoDAO = new MDStatoDAO();
 		
 		try {
 			gc = new GregorianCalendar();
@@ -660,6 +845,7 @@ public class MDFilesTmpBusiness extends
 			dati.put("id", id);
 			dati.put("stato", mdStatoDAO.INITVALID());
 			dati.put("validDataStart", new Timestamp(gc.getTimeInMillis()));
+			dati.put("tarTmpFile", fTar.getAbsolutePath());
 			ris = save(dati);
 			if (ris == null || ris.trim().equals("")){
 				throw new SQLException("Riscontrato un problema nell'inserimento del record nella tabella");
@@ -672,24 +858,26 @@ public class MDFilesTmpBusiness extends
 			throw new SQLException(e.getMessage(), e);
 		} catch (NamingException e) {
 			throw new SQLException(e.getMessage(), e);
-		} catch (ConfigurationException e) {
+		} catch (HibernateException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (HibernateUtilException e) {
 			throw new SQLException(e.getMessage(), e);
 		}
 		return gc;
 	}
 
 	/**
-	 * Metodo utilizzato per indicare l'inizio della validazione
+	 * Metodo utilizzato per indicare la fine della validazione
 	 * 
 	 * @param id
 	 * @throws SQLException
 	 */
 	public GregorianCalendar updateStopValidate(String id, String xmlMimeType, boolean esito, 
-			String[] msgError, String premisFile) throws SQLException{
+			Exception[] exceptionErrors, String[] msgError, String premisFile) throws SQLException{
 		String ris = null;
 		HashTable<String, Object> dati=null;
 		GregorianCalendar gc = null;
-		MDStatoDAO mdStatoDAO = new MDStatoDAO(hibernateTemplate);
+		MDStatoDAO mdStatoDAO = new MDStatoDAO();
 		
 		try {
 			gc = new GregorianCalendar();
@@ -706,7 +894,12 @@ public class MDFilesTmpBusiness extends
 				dati.put("stato", mdStatoDAO.ERRORVAL());
 				dati.put("validEsito", Boolean.FALSE);
 				dati.put("type", mdStatoDAO.ERRORVAL());
-				dati.put("errors", msgError);
+				if (exceptionErrors != null){
+					dati.put("exceptionErrors", exceptionErrors);
+				}
+				if (msgError != null){
+					dati.put("errors", msgError);
+				}
 			}
 			ris = save(dati);
 			if (ris == null || ris.trim().equals("")){
@@ -720,7 +913,9 @@ public class MDFilesTmpBusiness extends
 			throw new SQLException(e.getMessage(), e);
 		} catch (NamingException e) {
 			throw new SQLException(e.getMessage(), e);
-		} catch (ConfigurationException e) {
+		} catch (HibernateException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (HibernateUtilException e) {
 			throw new SQLException(e.getMessage(), e);
 		}
 		return gc;
@@ -736,7 +931,7 @@ public class MDFilesTmpBusiness extends
 		String ris = null;
 		HashTable<String, Object> dati=null;
 		GregorianCalendar gc = null;
-		MDStatoDAO mdStatoDAO = new MDStatoDAO(hibernateTemplate);
+		MDStatoDAO mdStatoDAO = new MDStatoDAO();
 		
 		try {
 			gc = new GregorianCalendar();
@@ -757,7 +952,9 @@ public class MDFilesTmpBusiness extends
 			throw new SQLException(e.getMessage(), e);
 		} catch (NamingException e) {
 			throw new SQLException(e.getMessage(), e);
-		} catch (ConfigurationException e) {
+		} catch (HibernateException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (HibernateUtilException e) {
 			throw new SQLException(e.getMessage(), e);
 		}
 		return gc;
@@ -770,11 +967,11 @@ public class MDFilesTmpBusiness extends
 	 * @throws SQLException
 	 */
 	public GregorianCalendar updateStopArchive(String id, boolean esito, 
-			String[] msgError) throws SQLException{
+			Exception[] exceptionErrors, String[] msgError, String geoReplicaPremis) throws SQLException{
 		String ris = null;
 		HashTable<String, Object> dati=null;
 		GregorianCalendar gc = null;
-		MDStatoDAO mdStatoDAO = new MDStatoDAO(hibernateTemplate);
+		MDStatoDAO mdStatoDAO = new MDStatoDAO();
 		
 		try {
 			gc = new GregorianCalendar();
@@ -782,6 +979,9 @@ public class MDFilesTmpBusiness extends
 			dati = new HashTable<String, Object>();
 			dati.put("id", id);
 			dati.put("archiveDataEnd", new Timestamp(gc.getTimeInMillis()));
+			if (geoReplicaPremis != null){
+				dati.put("geoReplicaPremis", geoReplicaPremis);
+			}
 			if (esito){
 				dati.put("stato", mdStatoDAO.FINEARCHIVE());
 				dati.put("archiveEsito", Boolean.TRUE);
@@ -789,7 +989,12 @@ public class MDFilesTmpBusiness extends
 				dati.put("stato", mdStatoDAO.ERRORARCHIVE());
 				dati.put("archiveEsito", Boolean.FALSE);
 				dati.put("type", mdStatoDAO.ERRORARCHIVE());
-				dati.put("errors", msgError);
+				if (exceptionErrors != null){
+					dati.put("exceptionErrors", exceptionErrors);
+				}
+				if (msgError != null){
+					dati.put("errors", msgError);
+				}
 			}
 			ris = save(dati);
 			if (ris == null || ris.trim().equals("")){
@@ -803,7 +1008,9 @@ public class MDFilesTmpBusiness extends
 			throw new SQLException(e.getMessage(), e);
 		} catch (NamingException e) {
 			throw new SQLException(e.getMessage(), e);
-		} catch (ConfigurationException e) {
+		} catch (HibernateException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (HibernateUtilException e) {
 			throw new SQLException(e.getMessage(), e);
 		}
 		return gc;
@@ -819,7 +1026,7 @@ public class MDFilesTmpBusiness extends
 		String ris = null;
 		HashTable<String, Object> dati=null;
 		GregorianCalendar gc = null;
-		MDStatoDAO mdStatoDAO = new MDStatoDAO(hibernateTemplate);
+		MDStatoDAO mdStatoDAO = new MDStatoDAO();
 		
 		try {
 			gc = new GregorianCalendar();
@@ -840,7 +1047,9 @@ public class MDFilesTmpBusiness extends
 			throw new SQLException(e.getMessage(), e);
 		} catch (NamingException e) {
 			throw new SQLException(e.getMessage(), e);
-		} catch (ConfigurationException e) {
+		} catch (HibernateException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (HibernateUtilException e) {
 			throw new SQLException(e.getMessage(), e);
 		}
 		return gc;
@@ -856,7 +1065,7 @@ public class MDFilesTmpBusiness extends
 		String ris = null;
 		HashTable<String, Object> dati=null;
 		GregorianCalendar gc = null;
-		MDStatoDAO mdStatoDAO = new MDStatoDAO(hibernateTemplate);
+		MDStatoDAO mdStatoDAO = new MDStatoDAO();
 		
 		try {
 			gc = new GregorianCalendar();
@@ -878,7 +1087,9 @@ public class MDFilesTmpBusiness extends
 			throw new SQLException(e.getMessage(), e);
 		} catch (NamingException e) {
 			throw new SQLException(e.getMessage(), e);
-		} catch (ConfigurationException e) {
+		} catch (HibernateException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (HibernateUtilException e) {
 			throw new SQLException(e.getMessage(), e);
 		}
 		return gc;
@@ -890,12 +1101,13 @@ public class MDFilesTmpBusiness extends
 	 * @param id
 	 * @throws SQLException
 	 */
-	public GregorianCalendar updateStopIndex(String id, boolean esito, 
-			String[] msgError) throws SQLException{
+	public GregorianCalendar updateStopIndex(String id, String indexPremis, boolean esito, 
+			Exception[] exceptionErrors, String[] msgError) throws SQLException{
 		String ris = null;
 		HashTable<String, Object> dati=null;
 		GregorianCalendar gc = null;
-		MDStatoDAO mdStatoDAO = new MDStatoDAO(hibernateTemplate);
+		MDStatoDAO mdStatoDAO = new MDStatoDAO();
+		MDRegistroIngressoBusiness registroBusiness = null;
 		
 		try {
 			gc = new GregorianCalendar();
@@ -903,6 +1115,7 @@ public class MDFilesTmpBusiness extends
 			dati = new HashTable<String, Object>();
 			dati.put("id", id);
 			dati.put("indexDataEnd", new Timestamp(gc.getTimeInMillis()));
+			dati.put("indexPremis", indexPremis);
 			if (esito){
 				dati.put("stato", mdStatoDAO.FINEINDEX());
 				dati.put("indexEsito", Boolean.TRUE);
@@ -910,7 +1123,12 @@ public class MDFilesTmpBusiness extends
 				dati.put("stato", mdStatoDAO.ERRORINDEX());
 				dati.put("indexEsito", Boolean.FALSE);
 				dati.put("type", mdStatoDAO.ERRORINDEX());
-				dati.put("errors", msgError);
+				if (exceptionErrors != null){
+					dati.put("exceptionErrors", exceptionErrors);
+				}
+				if (msgError != null){
+					dati.put("errors", msgError);
+				}
 			}
 			ris = save(dati);
 			if (ris == null || ris.trim().equals("")){
@@ -924,8 +1142,31 @@ public class MDFilesTmpBusiness extends
 			throw new SQLException(e.getMessage(), e);
 		} catch (NamingException e) {
 			throw new SQLException(e.getMessage(), e);
-		} catch (ConfigurationException e) {
+		} catch (HibernateException e) {
 			throw new SQLException(e.getMessage(), e);
+		} catch (HibernateUtilException e) {
+			throw new SQLException(e.getMessage(), e);
+		} finally {
+			try {
+				registroBusiness = new MDRegistroIngressoBusiness();
+				if (esito){
+					registroBusiness.pubblicato(id, gc);
+				} else {
+					registroBusiness.error(id, mdStatoDAO.ERRORPUB(), exceptionErrors, msgError);
+				}
+			} catch (IllegalAccessException e) {
+				throw new SQLException(e.getMessage(), e);
+			} catch (InvocationTargetException e) {
+				throw new SQLException(e.getMessage(), e);
+			} catch (NoSuchMethodException e) {
+				throw new SQLException(e.getMessage(), e);
+			} catch (NamingException e) {
+				throw new SQLException(e.getMessage(), e);
+			} catch (HibernateException e) {
+				throw new SQLException(e.getMessage(), e);
+			} catch (HibernateUtilException e) {
+				throw new SQLException(e.getMessage(), e);
+			}
 		}
 		return gc;
 	}
@@ -940,7 +1181,7 @@ public class MDFilesTmpBusiness extends
 		String ris = null;
 		HashTable<String, Object> dati=null;
 		GregorianCalendar gc = null;
-		MDStatoDAO mdStatoDAO = new MDStatoDAO(hibernateTemplate);
+		MDStatoDAO mdStatoDAO = new MDStatoDAO();
 		
 		try {
 			gc = new GregorianCalendar();
@@ -961,7 +1202,9 @@ public class MDFilesTmpBusiness extends
 			throw new SQLException(e.getMessage(), e);
 		} catch (NamingException e) {
 			throw new SQLException(e.getMessage(), e);
-		} catch (ConfigurationException e) {
+		} catch (HibernateException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (HibernateUtilException e) {
 			throw new SQLException(e.getMessage(), e);
 		}
 		return gc;
@@ -974,10 +1217,10 @@ public class MDFilesTmpBusiness extends
 	 * @throws SQLException
 	 */
 	public void updateDecompress(String id, GregorianCalendar compressStart, GregorianCalendar compressStop, 
-			boolean esito, String[] msgError) throws SQLException{
+			boolean esito, Exception[] exceptionErrors, String[] msgError) throws SQLException{
 		String ris = null;
 		HashTable<String, Object> dati=null;
-		MDStatoDAO mdStatoDAO = new MDStatoDAO(hibernateTemplate);
+		MDStatoDAO mdStatoDAO = new MDStatoDAO();
 		
 		try {
 			
@@ -991,7 +1234,12 @@ public class MDFilesTmpBusiness extends
 				dati.put("stato", mdStatoDAO.ERRORDECOMP());
 				dati.put("validEsito", Boolean.FALSE);
 				dati.put("type", mdStatoDAO.ERRORDECOMP());
-				dati.put("errors", msgError);
+				if (exceptionErrors != null){
+					dati.put("exceptionErrors", exceptionErrors);
+				}
+				if (msgError != null){
+					dati.put("errors", msgError);
+				}
 			}
 			ris = save(dati);
 			if (ris == null || ris.trim().equals("")){
@@ -1005,7 +1253,9 @@ public class MDFilesTmpBusiness extends
 			throw new SQLException(e.getMessage(), e);
 		} catch (NamingException e) {
 			throw new SQLException(e.getMessage(), e);
-		} catch (ConfigurationException e) {
+		} catch (HibernateException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (HibernateUtilException e) {
 			throw new SQLException(e.getMessage(), e);
 		}
 	}
@@ -1017,8 +1267,8 @@ public class MDFilesTmpBusiness extends
 	 * @throws SQLException
 	 */
 	public void updateCopyPremis(String id, GregorianCalendar copyStart, 
-			GregorianCalendar copyStop, boolean esito, String[] msgError, 
-			String agentDepositor, String agentMachineIngest, String agentSoftwareIngest) throws SQLException{
+			GregorianCalendar copyStop, boolean esito, Exception[] exceptionErrors, String[] msgError, 
+			String agentDepositor, MDNodi agentMachineIngest, String agentSoftwareIngest) throws SQLException{
 		String ris = null;
 		HashTable<String, Object> dati=null;
 		MDFilesTmpDAO filesTmpDAO = null;
@@ -1027,7 +1277,7 @@ public class MDFilesTmpBusiness extends
 		int containerType = -1;
 		String containerName=null;
 		int pos = 0;
-		MDStatoDAO mdStatoDAO = new MDStatoDAO(hibernateTemplate);
+		MDStatoDAO mdStatoDAO = new MDStatoDAO();
 		
 		try {
 			
@@ -1041,7 +1291,12 @@ public class MDFilesTmpBusiness extends
 				dati.put("stato", mdStatoDAO.ERRORCOPY());
 				dati.put("copyPremisEsito", Boolean.FALSE);
 				dati.put("type", mdStatoDAO.ERRORCOPY());
-				dati.put("errors", msgError);
+				if (exceptionErrors != null){
+					dati.put("exceptionErrors", exceptionErrors);
+				}
+				if (msgError != null){
+					dati.put("errors", msgError);
+				}
 			}
 			ris = save(dati);
 			if (ris == null || ris.trim().equals("")){
@@ -1055,24 +1310,41 @@ public class MDFilesTmpBusiness extends
 			throw new SQLException(e.getMessage(), e);
 		} catch (NamingException e) {
 			throw new SQLException(e.getMessage(), e);
-		} catch (ConfigurationException e) {
+		} catch (HibernateException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (HibernateUtilException e) {
 			throw new SQLException(e.getMessage(), e);
 		} finally {
 			try {
-				filesTmpDAO = new MDFilesTmpDAO(hibernateTemplate);
+				filesTmpDAO = new MDFilesTmpDAO();
 				filesTmp = filesTmpDAO.findById(id);
 				if (filesTmp !=null){
-					registroBusiness = new MDRegistroIngressoBusiness(hibernateTemplate);
+					registroBusiness = new MDRegistroIngressoBusiness();
 					if (filesTmp.getXmlMimeType().equals("mets")){
 						containerType=5;
+					} else 	if (filesTmp.getXmlMimeType().equals("mag")){
+						containerType=4;
+					} else 	if (filesTmp.getXmlMimeType().equals("metatape")){
+						containerType=3;
+					} else 	if (filesTmp.getXmlMimeType().equals("bagit")){
+						containerType=2;
+					} else 	if (filesTmp.getXmlMimeType().equals("warc")){
+						containerType=1;
+					} else 	if (filesTmp.getXmlMimeType().equals("admtape")){
+						containerType=0;
+					} else {
+						containerType=-1;
 					}
 					containerName = filesTmp.getPremisFile();
+					
+					pos = containerName.lastIndexOf("/");
+					containerName = containerName.substring(pos).replace("/", "");
 					pos = containerName.indexOf(".");
 					containerName = containerName.substring(0, pos);
 					registroBusiness.insert(id, copyStart, agentDepositor, 
 							filesTmp.getNomeFile(), containerName, 
 							filesTmp.getSha1(), containerType, 
-							agentMachineIngest, agentSoftwareIngest, 
+							agentMachineIngest.getId(), agentSoftwareIngest, 
 							filesTmp.getTrasfDataStart());
 				}
 			} catch (HibernateException e) {
@@ -1085,7 +1357,7 @@ public class MDFilesTmpBusiness extends
 				throw new SQLException(e.getMessage(), e);
 			} catch (NamingException e) {
 				throw new SQLException(e.getMessage(), e);
-			} catch (ConfigurationException e) {
+			} catch (HibernateUtilException e) {
 				throw new SQLException(e.getMessage(), e);
 			}
 		}
@@ -1098,11 +1370,11 @@ public class MDFilesTmpBusiness extends
 	 * @throws SQLException
 	 */
 	public void updateMoveFile(String id, GregorianCalendar moveFileStart, GregorianCalendar moveFileStop, 
-			boolean esito, String[] msgError) throws SQLException{
+			boolean esito, Exception[] exceptionErrors, String[] msgError, String publishPremis) throws SQLException{
 		String ris = null;
 		HashTable<String, Object> dati=null;
 		MDRegistroIngressoBusiness registroBusiness = null;
-		MDStatoDAO mdStatoDAO = new MDStatoDAO(hibernateTemplate);
+		MDStatoDAO mdStatoDAO = new MDStatoDAO();
 		
 		try {
 			
@@ -1115,6 +1387,9 @@ public class MDFilesTmpBusiness extends
 				dati.put("moveFileDataEnd", new Timestamp(moveFileStop.getTimeInMillis()));
 				dati.put("publishDataEnd", new Timestamp(moveFileStop.getTimeInMillis()));
 			}
+			if (publishPremis != null){
+				dati.put("publishPremis", publishPremis);
+			}
 			if (esito){
 				dati.put("stato", mdStatoDAO.FINEPUBLISH());
 				dati.put("moveFileEsito", Boolean.TRUE);
@@ -1124,7 +1399,12 @@ public class MDFilesTmpBusiness extends
 				dati.put("moveFileEsito", Boolean.FALSE);
 				dati.put("publishEsito", Boolean.FALSE);
 				dati.put("type", mdStatoDAO.ERRORMOVE());
-				dati.put("errors", msgError);
+				if (exceptionErrors != null){
+					dati.put("exceptionErrors", exceptionErrors);
+				}
+				if (msgError != null){
+					dati.put("errors", msgError);
+				}
 			}
 			ris = save(dati);
 			if (ris == null || ris.trim().equals("")){
@@ -1138,18 +1418,18 @@ public class MDFilesTmpBusiness extends
 			throw new SQLException(e.getMessage(), e);
 		} catch (NamingException e) {
 			throw new SQLException(e.getMessage(), e);
-		} catch (ConfigurationException e) {
+		} catch (HibernateException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (HibernateUtilException e) {
 			throw new SQLException(e.getMessage(), e);
 		} finally {
 			try {
-				registroBusiness = new MDRegistroIngressoBusiness(hibernateTemplate);
+				registroBusiness = new MDRegistroIngressoBusiness();
 				if (esito){
 					registroBusiness.archiviato(id, moveFileStop);
 				} else {
-					registroBusiness.error(id, mdStatoDAO.ERRORMOVE(), msgError);
+					registroBusiness.error(id, mdStatoDAO.ERRORMOVE(), exceptionErrors, msgError);
 				}
-			} catch (HibernateException e) {
-				throw new SQLException(e.getMessage(), e);
 			} catch (IllegalAccessException e) {
 				throw new SQLException(e.getMessage(), e);
 			} catch (InvocationTargetException e) {
@@ -1158,7 +1438,9 @@ public class MDFilesTmpBusiness extends
 				throw new SQLException(e.getMessage(), e);
 			} catch (NamingException e) {
 				throw new SQLException(e.getMessage(), e);
-			} catch (ConfigurationException e) {
+			} catch (HibernateException e) {
+				throw new SQLException(e.getMessage(), e);
+			} catch (HibernateUtilException e) {
 				throw new SQLException(e.getMessage(), e);
 			}
 		}
@@ -1170,12 +1452,13 @@ public class MDFilesTmpBusiness extends
 	 * @param id
 	 * @throws SQLException
 	 */
-	public GregorianCalendar updateStopPublish(String id, boolean esito, String[] msgError) throws SQLException{
+	public GregorianCalendar updateStopPublish(String id, boolean esito, 
+			Exception[] exceptionErrors, String[] msgError, String publishPremis) throws SQLException{
 		String ris = null;
 		HashTable<String, Object> dati=null;
 		GregorianCalendar gc = null;
 		MDRegistroIngressoBusiness registroBusiness = null;
-		MDStatoDAO mdStatoDAO = new MDStatoDAO(hibernateTemplate);
+		MDStatoDAO mdStatoDAO = new MDStatoDAO();
 		
 		try {
 			gc = new GregorianCalendar();
@@ -1183,6 +1466,9 @@ public class MDFilesTmpBusiness extends
 			dati = new HashTable<String, Object>();
 			dati.put("id", id);
 			dati.put("publishDataEnd", new Timestamp(gc.getTimeInMillis()));
+			if (publishPremis != null){
+				dati.put("publishPremis", publishPremis);
+			}
 			if (esito){
 				dati.put("stato", mdStatoDAO.FINEPUBLISH());
 				dati.put("publishEsito", Boolean.TRUE);
@@ -1190,7 +1476,12 @@ public class MDFilesTmpBusiness extends
 				dati.put("stato", mdStatoDAO.ERRORPUB());
 				dati.put("publishEsito", Boolean.FALSE);
 				dati.put("type", mdStatoDAO.ERRORPUB());
-				dati.put("errors", msgError);
+				if (exceptionErrors != null){
+					dati.put("exceptionErrors", exceptionErrors);
+				}
+				if (msgError != null){
+					dati.put("errors", msgError);
+				}
 			}
 			ris = save(dati);
 			if (ris == null || ris.trim().equals("")){
@@ -1204,18 +1495,18 @@ public class MDFilesTmpBusiness extends
 			throw new SQLException(e.getMessage(), e);
 		} catch (NamingException e) {
 			throw new SQLException(e.getMessage(), e);
-		} catch (ConfigurationException e) {
+		} catch (HibernateException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (HibernateUtilException e) {
 			throw new SQLException(e.getMessage(), e);
 		} finally {
 			try {
-				registroBusiness = new MDRegistroIngressoBusiness(hibernateTemplate);
+				registroBusiness = new MDRegistroIngressoBusiness();
 				if (esito){
 					registroBusiness.pubblicato(id, gc);
 				} else {
-					registroBusiness.error(id, mdStatoDAO.ERRORPUB(), msgError);
+					registroBusiness.error(id, mdStatoDAO.ERRORPUB(), exceptionErrors, msgError);
 				}
-			} catch (HibernateException e) {
-				throw new SQLException(e.getMessage(), e);
 			} catch (IllegalAccessException e) {
 				throw new SQLException(e.getMessage(), e);
 			} catch (InvocationTargetException e) {
@@ -1224,11 +1515,29 @@ public class MDFilesTmpBusiness extends
 				throw new SQLException(e.getMessage(), e);
 			} catch (NamingException e) {
 				throw new SQLException(e.getMessage(), e);
-			} catch (ConfigurationException e) {
+			} catch (HibernateException e) {
+				throw new SQLException(e.getMessage(), e);
+			} catch (HibernateUtilException e) {
 				throw new SQLException(e.getMessage(), e);
 			}
 		}
 		return gc;
+	}
+
+	@Override
+	protected Criteria rowsCount(MDFilesTmpDAO tableDao, HashTable<String, Object> dati) {
+		Criteria criteria = null;
+		
+		criteria = tableDao.createCriteria();
+		if (dati != null){
+			if (dati.get("idIstituto") != null) {
+				criteria.add(Restrictions.eq("idIstituto", dati.get("idIstituto")));
+			}
+			if (dati.get("nomeFile") != null) {
+				criteria.add(Restrictions.ilike("nomeFile", "%"+dati.get("nomeFile")+"%"));
+			}
+		}
+		return criteria;
 	}
 
 }

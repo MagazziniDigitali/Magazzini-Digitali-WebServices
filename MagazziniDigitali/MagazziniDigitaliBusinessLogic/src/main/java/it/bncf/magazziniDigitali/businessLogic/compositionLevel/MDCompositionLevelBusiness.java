@@ -1,71 +1,42 @@
 /**
  * 
  */
-package it.bncf.magazziniDigitali.businessLogic.stato;
+package it.bncf.magazziniDigitali.businessLogic.compositionLevel;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import java.util.Vector;
 
 import javax.naming.NamingException;
 
-import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 
 import it.bncf.magazziniDigitali.businessLogic.BusinessLogic;
 import it.bncf.magazziniDigitali.businessLogic.HashTable;
-import it.bncf.magazziniDigitali.database.dao.MDStatoDAO;
-import it.bncf.magazziniDigitali.database.entity.MDStato;
-import it.bncf.magazziniDigitali.utils.Record;
+import it.bncf.magazziniDigitali.database.dao.MDCompositionLevelDAO;
+import it.bncf.magazziniDigitali.database.entity.MDCompositionLevel;
 import mx.randalf.hibernate.exception.HibernateUtilException;
 
 /**
  * @author massi
  *
  */
-public class MDStatoBusiness extends BusinessLogic<MDStato, MDStatoDAO, String> {
-
-	private Logger log = Logger.getLogger(MDStatoBusiness.class);
-
+public class MDCompositionLevelBusiness extends BusinessLogic<MDCompositionLevel, MDCompositionLevelDAO, String> {
+	
 	/**
 	 * @param hibernateTemplate
 	 */
-	public MDStatoBusiness() {
+	public MDCompositionLevelBusiness() {
 		super();
 	}
-
+	
 	/**
 	 * @see it.bncf.magazziniDigitali.businessLogic.BusinessLogic#addRecord(java.io.Serializable)
 	 */
 	@Override
-	protected void addRecord(MDStato dati) throws HibernateException,
-			HibernateUtilException {
-		
-		try {
-			if (this.records == null) {
-				this.records = new Vector<Record>();
-			}
-			this.records.add(setRecord(dati));
-		} catch (HibernateException e) {
-			log.error(e);
-			throw e;
-		} catch (HibernateUtilException e) {
-			log.error(e);
-			throw e;
-		}
-	}
-
-	public static Record setRecord(MDStato dati) throws HibernateException,
-			HibernateUtilException {
-		Record record = null;
-
-		record = new Record();
-		record.set("idStato", dati.getId());
-		record.set("descrizione", dati.getDescrizione());
-
-		return record;
+	protected void addRecord(MDCompositionLevel dati) throws HibernateException, HibernateUtilException {
 	}
 
 	/**
@@ -80,25 +51,34 @@ public class MDStatoBusiness extends BusinessLogic<MDStato, MDStatoDAO, String> 
 	 * @see it.bncf.magazziniDigitali.businessLogic.BusinessLogic#find(mx.randalf.hibernate.GenericHibernateDAO, it.bncf.magazziniDigitali.businessLogic.HashTable, java.util.List)
 	 */
 	@Override
-	protected List<MDStato> find(MDStatoDAO tableDao,
+	protected List<MDCompositionLevel> find(MDCompositionLevelDAO tableDao,
 			HashTable<String, Object> dati, List<Order> orders, int page, int pageSize)
 			throws HibernateException, HibernateUtilException {
-		return null;
+		List<MDCompositionLevel> tables;
+
+		tableDao.setPage(page);
+		tableDao.setPageSize(pageSize);
+		tables = tableDao.find((String)dati.get("key"),
+				orders);
+		return tables;
 	}
 
-	/**
-	 * @see it.bncf.magazziniDigitali.businessLogic.BusinessLogic#setOrder()
-	 */
 	@Override
-	protected List<Order> setOrder() {
-		return null;
+	protected Criteria rowsCount(MDCompositionLevelDAO tableDao, HashTable<String, Object> dati) {
+		Criteria criteria = null;
+		
+		criteria = tableDao.createCriteria();
+		if (dati.get("key") != null) {
+			criteria.add(Restrictions.ilike("key", "%"+dati.get("key")+"%"));
+		}
+		return criteria;
 	}
 
 	/**
 	 * @see it.bncf.magazziniDigitali.businessLogic.BusinessLogic#postSave(it.bncf.magazziniDigitali.businessLogic.HashTable, java.io.Serializable)
 	 */
 	@Override
-	protected void postSave(HashTable<String, Object> dati, MDStato table)
+	protected void postSave(HashTable<String, Object> dati, MDCompositionLevel table)
 			throws NamingException, HibernateUtilException,
 			IllegalAccessException, InvocationTargetException,
 			NoSuchMethodException {
@@ -109,29 +89,30 @@ public class MDStatoBusiness extends BusinessLogic<MDStato, MDStatoDAO, String> 
 	 * @see it.bncf.magazziniDigitali.businessLogic.BusinessLogic#newInstance()
 	 */
 	@Override
-	protected MDStato newInstance() {
-		return new MDStato();
+	protected MDCompositionLevel newInstance() {
+		return new MDCompositionLevel();
 	}
 
 	/**
 	 * @see it.bncf.magazziniDigitali.businessLogic.BusinessLogic#newInstanceDao()
 	 */
 	@Override
-	protected MDStatoDAO newInstanceDao() {
-		return new MDStatoDAO();
+	protected MDCompositionLevelDAO newInstanceDao() {
+		return new MDCompositionLevelDAO();
 	}
 
 	/**
 	 * @see it.bncf.magazziniDigitali.businessLogic.BusinessLogic#save(java.io.Serializable, it.bncf.magazziniDigitali.businessLogic.HashTable)
 	 */
 	@Override
-	protected void save(MDStato table, HashTable<String, Object> dati)
+	protected void save(MDCompositionLevel table, HashTable<String, Object> dati)
 			throws HibernateException, HibernateUtilException {
-	}
+		if (dati.get("key") != null){
+			table.setKey((String) dati.get("key"));
+		}
 
-	@Override
-	protected Criteria rowsCount(MDStatoDAO tableDao, HashTable<String, Object> dati) {
-		return null;
+		if (dati.get("value") != null){
+			table.setValue(((Integer) dati.get("value")));
+		}
 	}
-
 }

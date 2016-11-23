@@ -1,13 +1,5 @@
 package it.bncf.magazziniDigitali.businessLogic.oggettoDigitale;
 
-import it.bncf.magazziniDigitali.businessLogic.filesTmp.MDFilesTmpBusiness;
-import it.bncf.magazziniDigitali.database.dao.MDStatoDAO;
-import it.bncf.magazziniDigitali.database.entity.MDFilesTmp;
-import it.bncf.magazziniDigitali.database.entity.MDIstituzione;
-import it.bncf.magazziniDigitali.database.entity.MDStato;
-import it.bncf.magazziniDigitali.solr.AddDocumentMD;
-import it.bncf.magazziniDigitali.utils.Record;
-
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -20,50 +12,53 @@ import java.util.TreeMap;
 import java.util.Vector;
 import java.util.concurrent.Future;
 
-import javax.naming.NamingException;
-
-import mx.randalf.configuration.Configuration;
-import mx.randalf.configuration.exception.ConfigurationException;
-import mx.randalf.solr.exception.SolrException;
-
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.hibernate.HibernateException;
-import org.springframework.orm.hibernate3.HibernateTemplate;
+
+import it.bncf.magazziniDigitali.businessLogic.filesTmp.MDFilesTmpBusiness;
+import it.bncf.magazziniDigitali.configuration.IMDConfiguration;
+import it.bncf.magazziniDigitali.configuration.exception.MDConfigurationException;
+import it.bncf.magazziniDigitali.database.dao.MDStatoDAO;
+import it.bncf.magazziniDigitali.database.entity.MDFilesTmp;
+import it.bncf.magazziniDigitali.database.entity.MDIstituzione;
+import it.bncf.magazziniDigitali.database.entity.MDStato;
+import it.bncf.magazziniDigitali.solr.AddDocumentMD;
+import it.bncf.magazziniDigitali.utils.Record;
+import mx.randalf.hibernate.exception.HibernateUtilException;
+import mx.randalf.solr.exception.SolrException;
 
 public class OggettoDigitaleBusiness {
 
-
-	protected HibernateTemplate hibernateTemplate;
 	
 	public Logger log = Logger.getLogger(OggettoDigitaleBusiness.class);
 
-	public OggettoDigitaleBusiness(HibernateTemplate hibernateTemplate) {
-		this.hibernateTemplate = hibernateTemplate;
+	public OggettoDigitaleBusiness() {
 	}
 
-	public List<MDFilesTmp> findStatus(String idMDFilesTmp, MDStato[] status, int numRec, List<MDFilesTmp> result)
-				throws HibernateException, NamingException, ConfigurationException {
+	public List<MDFilesTmp> findStatus(String idMDFilesTmp, MDStato[] status, 
+			int numRec, List<MDFilesTmp> result)
+				throws HibernateException, HibernateUtilException {
 		MDFilesTmpBusiness mdFileTmp = null;
 		List<MDFilesTmp> rs = null;
 
 		try {
-			mdFileTmp = new MDFilesTmpBusiness(hibernateTemplate);
+			mdFileTmp = new MDFilesTmpBusiness();
 			rs = mdFileTmp.find(idMDFilesTmp, null, null, status, null,1,numRec);
 			if (rs!=null && rs.size()>0){
 				if (result== null){
 					result = new Vector<MDFilesTmp>();
 				}
-				for (int x=0; x<(rs.size()<numRec?rs.size():numRec); x++){
+				for (int x=0; x<(numRec==0?
+						rs.size():
+							(rs.size()<numRec?rs.size():numRec)); x++){
 					result.add(rs.get(x));
 				}
 			}
 		} catch (HibernateException e) {
 			throw e;
-		} catch (NamingException e) {
-			throw e;
-		} catch (ConfigurationException e) {
+		} catch (HibernateUtilException e) {
 			throw e;
 		}
 		return result;
@@ -78,22 +73,19 @@ public class OggettoDigitaleBusiness {
 	 * @throws FileNotFoundException
 	 * @throws ClassNotFoundException
 	 * @throws SQLException
-	 * @throws ConfigurationException
 	 */
-	public TreeMap<String, Integer> findStatus(MDIstituzione idIstituto)
-			throws HibernateException, NamingException, ConfigurationException {
+	public TreeMap<String, Long> findStatus(MDIstituzione idIstituto)
+			throws HibernateException, HibernateUtilException {
 		MDFilesTmpBusiness mdFileTmp = null;
-		TreeMap<String, Integer> ris = null;
+		TreeMap<String, Long> ris = null;
 
 		try {
-			mdFileTmp = new MDFilesTmpBusiness(hibernateTemplate);
-			ris = new TreeMap<String, Integer>(
+			mdFileTmp = new MDFilesTmpBusiness();
+			ris = new TreeMap<String, Long>(
 					mdFileTmp.findCountByIstituto(idIstituto));
 		} catch (HibernateException e) {
 			throw e;
-		} catch (NamingException e) {
-			throw e;
-		} catch (ConfigurationException e) {
+		} catch (HibernateUtilException e) {
 			throw e;
 		}
 		return ris;
@@ -105,14 +97,14 @@ public class OggettoDigitaleBusiness {
 		Vector<Record> records = null;
 
 		try {
-			mdFileTmp = new MDFilesTmpBusiness(hibernateTemplate);
+			mdFileTmp = new MDFilesTmpBusiness();
 			records = mdFileTmp.findToRecord(null, idIstituto, nomeFile, null, null, 1, 1000);
 //			if (records!= null){
 //				for (MDFilesTmp ai : records) {
 //					addRecord(ai);
 //				}
 //			}
-		} catch (ConfigurationException | HibernateException | NamingException e) {
+		} catch (HibernateException | HibernateUtilException e) {
 			log.error(e.getMessage(), e);
 			throw new SQLException(e.getMessage(), e);
 		}
@@ -127,14 +119,12 @@ public class OggettoDigitaleBusiness {
 	 * @throws FileNotFoundException
 	 * @throws ClassNotFoundException
 	 * @throws SQLException
-	 * @throws ConfigurationException
 	 * @throws SolrException
 	 * @throws SolrServerException
+	 * @throws MDConfigurationException 
 	 */
-	public Hashtable<String, String> checkStatus(String sha1)
-			throws FileNotFoundException, ClassNotFoundException, SQLException,
-			ConfigurationException, SolrException, SolrServerException,
-			HibernateException, NamingException {
+	public Hashtable<String, String> checkStatus(String sha1, IMDConfiguration<?> configuration)
+			throws SolrException, SolrServerException, HibernateException, HibernateUtilException, MDConfigurationException {
 		MDFilesTmpBusiness mdFileTmp = null;
 		List<MDFilesTmp> records = null;
 		Hashtable<String, String> result = null;
@@ -142,7 +132,7 @@ public class OggettoDigitaleBusiness {
 		QueryResponse qr = null;
 
 		try {
-			mdFileTmp = new MDFilesTmpBusiness(hibernateTemplate);
+			mdFileTmp = new MDFilesTmpBusiness();
 			records = mdFileTmp.find(null, null, null, null, sha1, 0, 0);
 
 			if (records != null) {
@@ -158,16 +148,20 @@ public class OggettoDigitaleBusiness {
 					}
 				}
 			} else {
-				admd = new AddDocumentMD(
-						Configuration.getValue("demoni.Publish.solr.URL"),
-						Boolean.parseBoolean(Configuration
-								.getValue("demoni.Publish.solr.Cloud")),
-						Configuration
-								.getValue("demoni.Publish.solr.collection"),
-						Integer.parseInt(Configuration
-								.getValue("demoni.Publish.solr.connectionTimeOut")),
-						Integer.parseInt(Configuration
-								.getValue("demoni.Publish.solr.clientTimeOut")));
+				admd = new AddDocumentMD(configuration.getSoftwareConfigString("solr.URL"),
+//						Configuration.getValue("demoni.Publish.solr.URL"),
+						configuration.getSoftwareConfigBoolean("solr.Cloud"),
+//						Boolean.parseBoolean(Configuration
+//								.getValue("demoni.Publish.solr.Cloud")),
+						configuration.getSoftwareConfigString("solr.collection"),
+//						Configuration
+//								.getValue("demoni.Publish.solr.collection"),
+						configuration.getSoftwareConfigInteger("solr.connectionTimeOut"),
+//						Integer.parseInt(Configuration
+//								.getValue("demoni.Publish.solr.connectionTimeOut")),
+						configuration.getSoftwareConfigInteger("solr.clientTimeOut"));
+//						Integer.parseInt(Configuration
+//								.getValue("demoni.Publish.solr.clientTimeOut")));
 				qr = admd.find("sha1:" + sha1);
 				if (qr != null && qr.getResults() != null
 						&& qr.getResults().getNumFound() > 0) {
@@ -179,17 +173,15 @@ public class OggettoDigitaleBusiness {
 					result.put("stato", MDStatoDAO.FINEPUBLISH);
 				}
 			}
-		} catch (ConfigurationException e) {
-			throw e;
-		} catch (NumberFormatException e) {
-			throw e;
 		} catch (SolrException e) {
 			throw e;
 		} catch (SolrServerException e) {
 			throw e;
 		} catch (HibernateException e) {
 			throw e;
-		} catch (NamingException e) {
+		} catch (HibernateUtilException e) {
+			throw e;
+		} catch (MDConfigurationException e) {
 			throw e;
 		}
 		return result;

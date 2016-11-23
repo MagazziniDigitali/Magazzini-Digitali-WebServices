@@ -7,10 +7,10 @@ import java.io.File;
 import java.util.GregorianCalendar;
 import java.util.Vector;
 
+import it.bncf.magazziniDigitali.configuration.IMDConfiguration;
+import it.bncf.magazziniDigitali.configuration.exception.MDConfigurationException;
 import mx.randalf.archive.check.exception.CheckArchiveException;
 import mx.randalf.archive.info.Xmltype;
-import mx.randalf.configuration.Configuration;
-import mx.randalf.configuration.exception.ConfigurationException;
 
 /**
  * @author massi
@@ -61,18 +61,21 @@ public class ValidateFile {
 	 * 
 	 * @param file
 	 */
-	public void check(File file, File fileTar) {
+	public void check(File file, File fileTar, IMDConfiguration<?> configuration, Boolean deCompEsito, Boolean removeOrigin) {
 		CheckArchiveMD checkArchive = null;
 
 		try {
 			archive = null;
 			xmlType = null;
 			errors = null;
-			checkArchive = new CheckArchiveMD(Configuration.getValue("path.droid"));
+			checkArchive = new CheckArchiveMD(
+					configuration.getSoftwareConfigString("path.droid"), configuration
+//					Configuration.getValue("path.droid")
+					);
 			checkArchive.setUnZip(true);
-			checkArchive.setRemoveOrgin(true);
+			checkArchive.setRemoveOrgin(removeOrigin);
 
-			archive = checkArchive.check(file, fileTar);
+			archive = checkArchive.check(file, fileTar, deCompEsito);
 			if (archive != null) {
 				check((ArchiveMD)archive);
 			} else {
@@ -82,7 +85,7 @@ public class ValidateFile {
 		} catch (CheckArchiveException e) {
 			e.printStackTrace();
 			addError(e.getMessage());
-		} catch (ConfigurationException e) {
+		} catch (MDConfigurationException e) {
 			addError(e.getMessage());
 		} finally {
 			if (checkArchive != null){

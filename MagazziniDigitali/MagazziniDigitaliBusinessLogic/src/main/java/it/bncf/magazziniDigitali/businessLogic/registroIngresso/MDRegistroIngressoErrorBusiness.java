@@ -3,6 +3,19 @@
  */
 package it.bncf.magazziniDigitali.businessLogic.registroIngresso;
 
+import java.lang.reflect.InvocationTargetException;
+import java.sql.Timestamp;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Vector;
+
+import javax.naming.NamingException;
+
+import org.apache.log4j.Logger;
+import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
+import org.hibernate.criterion.Order;
+
 import it.bncf.magazziniDigitali.businessLogic.BusinessLogic;
 import it.bncf.magazziniDigitali.businessLogic.HashTable;
 import it.bncf.magazziniDigitali.database.dao.MDRegistroIngressoDAO;
@@ -13,21 +26,8 @@ import it.bncf.magazziniDigitali.database.entity.MDRegistroIngressoError;
 import it.bncf.magazziniDigitali.database.entity.MDStato;
 import it.bncf.magazziniDigitali.utils.DateBusiness;
 import it.bncf.magazziniDigitali.utils.Record;
-
-import java.lang.reflect.InvocationTargetException;
-import java.sql.Timestamp;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Vector;
-
-import javax.naming.NamingException;
-
-import mx.randalf.configuration.exception.ConfigurationException;
 import mx.randalf.hibernate.FactoryDAO;
-
-import org.apache.log4j.Logger;
-import org.hibernate.criterion.Order;
-import org.springframework.orm.hibernate3.HibernateTemplate;
+import mx.randalf.hibernate.exception.HibernateUtilException;
 
 /**
  * @author massi
@@ -41,16 +41,16 @@ public class MDRegistroIngressoErrorBusiness extends
 	/**
 	 * @param hibernateTemplate
 	 */
-	public MDRegistroIngressoErrorBusiness(HibernateTemplate hibernateTemplate) {
-		super(hibernateTemplate);
+	public MDRegistroIngressoErrorBusiness() {
+		super();
 	}
 
 	/**
 	 * @see it.bncf.magazziniDigitali.businessLogic.BusinessLogic#addRecord(java.io.Serializable)
 	 */
 	@Override
-	protected void addRecord(MDRegistroIngressoError dati) throws NamingException,
-			ConfigurationException {
+	protected void addRecord(MDRegistroIngressoError dati) throws HibernateException,
+			HibernateUtilException {
 
 		try {
 			if (this.records == null) {
@@ -58,18 +58,18 @@ public class MDRegistroIngressoErrorBusiness extends
 			}
 
 			this.records.add(setRecord(dati));
-		} catch (NamingException e) {
+		} catch (HibernateException e) {
 			log.error(e);
 			throw e;
-		} catch (ConfigurationException e) {
+		} catch (HibernateUtilException e) {
 			log.error(e);
 			throw e;
 		}
 
 	}
 
-	public static Record setRecord(MDRegistroIngressoError dati) throws NamingException,
-			ConfigurationException {
+	public static Record setRecord(MDRegistroIngressoError dati) throws HibernateException,
+			HibernateUtilException {
 		Record record = null;
 
 		record = new Record();
@@ -114,7 +114,7 @@ public class MDRegistroIngressoErrorBusiness extends
 	@Override
 	protected List<MDRegistroIngressoError> find(MDRegistroIngressoErrorDAO tableDao,
 			HashTable<String, Object> dati, List<Order> orders, int page, int pageSize)
-			throws NamingException, ConfigurationException {
+			throws HibernateException, HibernateUtilException {
 //		List<MDRegistroIngresso> tables;
 //
 //		tables = tableDao.find((String)dati.get("cognome"),
@@ -143,7 +143,7 @@ public class MDRegistroIngressoErrorBusiness extends
 	@Override
 	protected void postSave(HashTable<String, Object> dati,
 			MDRegistroIngressoError table) throws NamingException,
-			ConfigurationException, IllegalAccessException,
+			HibernateUtilException, IllegalAccessException,
 			InvocationTargetException, NoSuchMethodException {
 	}
 
@@ -160,7 +160,7 @@ public class MDRegistroIngressoErrorBusiness extends
 	 */
 	@Override
 	protected MDRegistroIngressoErrorDAO newInstanceDao() {
-		return new MDRegistroIngressoErrorDAO(hibernateTemplate);
+		return new MDRegistroIngressoErrorDAO();
 	}
 
 	/**
@@ -168,13 +168,13 @@ public class MDRegistroIngressoErrorBusiness extends
 	 */
 	@Override
 	protected void save(MDRegistroIngressoError table, HashTable<String, Object> dati)
-			throws NamingException, ConfigurationException {
+			throws HibernateException, HibernateUtilException {
 		MDRegistroIngressoDAO mdRegistroIngressoDAO=null;
 		MDRegistroIngresso mdRegistroIngresso = null;
 		MDStatoDAO mdStatoDAO = null;
 
 		if (dati.containsKey("idMDRegistroIngresso")) {
-			mdRegistroIngressoDAO = new MDRegistroIngressoDAO(hibernateTemplate);
+			mdRegistroIngressoDAO = new MDRegistroIngressoDAO();
 			mdRegistroIngresso = mdRegistroIngressoDAO.findById((String) dati
 					.get("idMDRegistroIngresso"));
 			if (mdRegistroIngresso==null){
@@ -195,7 +195,7 @@ public class MDRegistroIngressoErrorBusiness extends
 
 		if (dati.containsKey("type")) {
 			if (dati.get("type") instanceof String){
-				mdStatoDAO = new MDStatoDAO(hibernateTemplate);
+				mdStatoDAO = new MDStatoDAO();
 				table.setType(mdStatoDAO.findById((String) dati.get("type")));
 			} else {
 				table.setType((MDStato) dati.get("type"));
@@ -204,6 +204,14 @@ public class MDRegistroIngressoErrorBusiness extends
 		if (dati.containsKey("msgError")) {
 			table.setMsgError((String) dati.get("msgError"));
 		}
+		if (dati.containsKey("traceError")) {
+			table.setTraceError((String) dati.get("traceError"));
+		}
+	}
+
+	@Override
+	protected Criteria rowsCount(MDRegistroIngressoErrorDAO tableDao, HashTable<String, Object> dati) {
+		return null;
 	}
 
 }

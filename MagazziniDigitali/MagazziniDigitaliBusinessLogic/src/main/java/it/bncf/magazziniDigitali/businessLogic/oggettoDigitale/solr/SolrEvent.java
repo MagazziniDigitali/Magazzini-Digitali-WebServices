@@ -3,23 +3,22 @@
  */
 package it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.solr;
 
-import info.lc.xmlns.premis_v2.EventComplexType;
-import info.lc.xmlns.premis_v2.EventIdentifierComplexType;
-import info.lc.xmlns.premis_v2.EventOutcomeInformationComplexType;
-import info.lc.xmlns.premis_v2.LinkingAgentIdentifierComplexType;
-import info.lc.xmlns.premis_v2.LinkingObjectIdentifierComplexType;
-import it.bncf.magazziniDigitali.solr.IndexDocumentMD;
-import it.bncf.magazziniDigitali.solr.ItemMD;
-import it.magazziniDigitali.xsd.premis.PremisXsd;
-
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import mx.randalf.solr.exception.SolrException;
-
 import org.apache.log4j.Logger;
+
+import info.lc.xmlns.premis_v2.EventComplexType;
+import info.lc.xmlns.premis_v2.EventIdentifierComplexType;
+import info.lc.xmlns.premis_v2.EventOutcomeInformationComplexType;
+import info.lc.xmlns.premis_v2.LinkingAgentIdentifierComplexType;
+import info.lc.xmlns.premis_v2.LinkingObjectIdentifierComplexType;
+import it.bncf.magazziniDigitali.solr.AddDocumentMD;
+import it.bncf.magazziniDigitali.solr.ItemMD;
+import it.magazziniDigitali.xsd.premis.PremisXsd;
+import mx.randalf.solr.exception.SolrException;
 
 /**
  * @author massi
@@ -37,7 +36,7 @@ public class SolrEvent {
 		params = new Params();
 	}
 
-	public boolean publishSolr(EventComplexType object, IndexDocumentMD admd) throws SolrException{
+	public boolean publishSolr(EventComplexType object, AddDocumentMD admd) throws SolrException{
 		boolean ris = false;
 		String[] st = null;
 		

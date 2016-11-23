@@ -7,7 +7,7 @@
   </parent>
   <groupId>it.bncf.magazziniDigitali.businessLogic</groupId>
   <artifactId>MagazziniDigitaliBusinessLogic</artifactId>
-  <version>1.0.38</version>
+  <version>2.0.0</version>
   <description>Questo progetto vine utilizzato per la gestione della logica applicativa del programma</description>
   <properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -16,34 +16,24 @@
   </properties>
   <dependencies>
   	<dependency>
-  		<groupId>it.bncf.magazziniDigitali.databaseSchema</groupId>
-  		<artifactId>MagazziniDigitaliDatabaseSchema</artifactId>
-  		<version>1.0.20</version>
-  	</dependency>
-  	<dependency>
   		<groupId>it.bncf.magazziniDigitali.xsd</groupId>
   		<artifactId>MagazziniDigitaliXsd</artifactId>
-  		<version>1.0.7</version>
+  		<version>2.0.0</version>
   	</dependency>
   	<dependency>
   		<groupId>mx.randalf.archive</groupId>
   		<artifactId>RandalfArchive</artifactId>
-  		<version>1.0.8</version>
+  		<version>1.0.9</version>
   	</dependency>
   	<dependency>
   		<groupId>it.bncf.magazziniDigitali.solr</groupId>
   		<artifactId>MagazziniDigitaliSolr</artifactId>
-  		<version>1.0.14</version>
+  		<version>2.0.0</version>
   	</dependency>
   	<dependency>
   		<groupId>mx.randalf.converter.xsl</groupId>
   		<artifactId>RandalfConverterXsl</artifactId>
   		<version>1.0.0</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>it.bncf.magazziniDigitali.utils</groupId>
-  		<artifactId>MagazziniDigitaliUtils</artifactId>
-  		<version>1.0.4</version>
   	</dependency>
   	<dependency>
   		<groupId>
@@ -56,6 +46,33 @@
   		<groupId>mx.randalf.digest</groupId>
   		<artifactId>RandalfDigest</artifactId>
   		<version>1.0.1</version>
+  	</dependency>
+  	<!-- 
+  	<dependency>
+  		<groupId>org.slf4j</groupId>
+  		<artifactId>slf4j-api</artifactId>
+  		<version>1.7.12</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>asm</groupId>
+  		<artifactId>asm</artifactId>
+  		<version>3.3.1</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>cglib</groupId>
+  		<artifactId>cglib</artifactId>
+  		<version>3.1</version>
+  	</dependency>
+  	-->
+  	<dependency>
+  		<groupId>it.bncf.magazziniDigitali.services.client</groupId>
+  		<artifactId>MagazziniDigitaliServicesClient</artifactId>
+  		<version>2.0.0</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>mx.randalf.mag</groupId>
+  		<artifactId>RandalfMag</artifactId>
+  		<version>1.0.13</version>
   	</dependency>
   </dependencies>
   <repositories>

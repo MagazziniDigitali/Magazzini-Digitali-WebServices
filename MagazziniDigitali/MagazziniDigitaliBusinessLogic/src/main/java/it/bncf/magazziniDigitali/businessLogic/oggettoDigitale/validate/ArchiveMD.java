@@ -8,10 +8,10 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.UUID;
 
+import it.bncf.magazziniDigitali.configuration.IMDConfiguration;
+import it.bncf.magazziniDigitali.configuration.exception.MDConfigurationException;
 import mx.randalf.archive.check.ArchiveImp;
 import mx.randalf.archive.info.DigestType;
-import mx.randalf.configuration.Configuration;
-import mx.randalf.configuration.exception.ConfigurationException;
 
 /**
  * @author massi
@@ -19,10 +19,12 @@ import mx.randalf.configuration.exception.ConfigurationException;
  */
 public class ArchiveMD extends ArchiveImp {
 
+	private IMDConfiguration<?> configuration = null;
 	/**
 	 * 
 	 */
-	public ArchiveMD() {
+	public ArchiveMD(IMDConfiguration<?> configuration) {
+		this.configuration = configuration;
 	}
 
 	/**
@@ -31,10 +33,10 @@ public class ArchiveMD extends ArchiveImp {
 	@Override
 	public String getID() {
 		
-		return getIDMD();
+		return getIDMD(configuration);
 	}
 
-	public static String getIDMD() {
+	public static String getIDMD(IMDConfiguration<?> configuration) {
 		UUID uuid = null;
 		String ris = null;
 		GregorianCalendar gc = null;
@@ -44,12 +46,13 @@ public class ArchiveMD extends ArchiveImp {
 		try {
 			uuid = UUID.randomUUID();
 			ris = uuid.toString();
-			ris += Configuration.getValue("demoni.Validate.nodo");
+			ris += configuration.getSoftwareConfigString("validate.nodo");
+//			ris += Configuration.getValue("demoni.Validate.nodo");
 			gc = new GregorianCalendar();
 			ris += df4.format(gc.get(Calendar.YEAR));
 			ris += df2.format(gc.get(Calendar.MONTH)+1);
 			ris += df2.format(gc.get(Calendar.DAY_OF_MONTH));
-		} catch (ConfigurationException e) {
+		} catch (MDConfigurationException e) {
 			e.printStackTrace();
 		}
 		

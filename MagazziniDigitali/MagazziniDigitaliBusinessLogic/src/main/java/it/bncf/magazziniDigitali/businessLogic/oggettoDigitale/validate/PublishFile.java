@@ -13,7 +13,6 @@ public class PublishFile {
 	 * 
 	 */
 	public PublishFile() {
-		// TODO Auto-generated constructor stub
 	}
 
 }

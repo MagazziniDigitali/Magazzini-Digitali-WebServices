@@ -3,15 +3,6 @@
  */
 package it.bncf.magazziniDigitali.businessLogic.archive;
 
-import it.bncf.magazziniDigitali.businessLogic.BusinessLogic;
-import it.bncf.magazziniDigitali.businessLogic.HashTable;
-import it.bncf.magazziniDigitali.database.dao.MDArchiveDAO;
-import it.bncf.magazziniDigitali.database.dao.MDFilesTmpDAO;
-import it.bncf.magazziniDigitali.database.dao.MDNodiDAO;
-import it.bncf.magazziniDigitali.database.entity.MDArchive;
-import it.bncf.magazziniDigitali.database.entity.MDFilesTmp;
-import it.bncf.magazziniDigitali.database.entity.MDNodi;
-
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -20,11 +11,19 @@ import java.util.List;
 
 import javax.naming.NamingException;
 
-import mx.randalf.configuration.exception.ConfigurationException;
-
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.criterion.Order;
-import org.springframework.orm.hibernate3.HibernateTemplate;
+
+import it.bncf.magazziniDigitali.businessLogic.BusinessLogic;
+import it.bncf.magazziniDigitali.businessLogic.HashTable;
+import it.bncf.magazziniDigitali.database.dao.MDArchiveDAO;
+import it.bncf.magazziniDigitali.database.dao.MDFilesTmpDAO;
+import it.bncf.magazziniDigitali.database.dao.MDNodiDAO;
+import it.bncf.magazziniDigitali.database.entity.MDArchive;
+import it.bncf.magazziniDigitali.database.entity.MDFilesTmp;
+import it.bncf.magazziniDigitali.database.entity.MDNodi;
+import mx.randalf.hibernate.exception.HibernateUtilException;
 
 /**
  * @author massi
@@ -36,16 +35,16 @@ public class MDArchiveBusiness extends
 	/**
 	 * @param hibernateTemplate
 	 */
-	public MDArchiveBusiness(HibernateTemplate hibernateTemplate) {
-		super(hibernateTemplate);
+	public MDArchiveBusiness() {
+		super();
 	}
 
 	/**
 	 * @see it.bncf.magazziniDigitali.businessLogic.BusinessLogic#addRecord(java.io.Serializable)
 	 */
 	@Override
-	protected void addRecord(MDArchive dati) throws NamingException,
-			ConfigurationException {
+	protected void addRecord(MDArchive dati) throws HibernateException,
+			HibernateUtilException {
 	}
 
 	/**
@@ -61,7 +60,8 @@ public class MDArchiveBusiness extends
 	@Override
 	protected List<MDArchive> find(MDArchiveDAO tableDao,
 			HashTable<String, Object> dati, List<Order> orders, int firstRecord, int maxRecords)
-			throws NamingException, ConfigurationException {
+			throws HibernateException,
+			HibernateUtilException {
 		return null;
 	}
 
@@ -78,7 +78,7 @@ public class MDArchiveBusiness extends
 	 */
 	@Override
 	protected void postSave(HashTable<String, Object> dati, MDArchive table)
-			throws NamingException, ConfigurationException,
+			throws NamingException, HibernateUtilException,
 			IllegalAccessException, InvocationTargetException,
 			NoSuchMethodException {
 	}
@@ -96,7 +96,7 @@ public class MDArchiveBusiness extends
 	 */
 	@Override
 	protected MDArchiveDAO newInstanceDao() {
-		return new MDArchiveDAO(hibernateTemplate);
+		return new MDArchiveDAO();
 	}
 
 	/**
@@ -104,13 +104,14 @@ public class MDArchiveBusiness extends
 	 */
 	@Override
 	protected void save(MDArchive table, HashTable<String, Object> dati)
-			throws NamingException, ConfigurationException {
+			throws HibernateException,
+			HibernateUtilException {
 		MDFilesTmpDAO mdFilesTmpDAO = null;
 		MDNodiDAO mdNodiDAO = null;
 
 		if (dati.containsKey("idMdFilesTmp")) {
 			if (dati.get("idMdFilesTmp") instanceof String){
-				mdFilesTmpDAO = new MDFilesTmpDAO(hibernateTemplate);
+				mdFilesTmpDAO = new MDFilesTmpDAO();
 				table.setIdMdFilesTmp(mdFilesTmpDAO.findById((String) dati.get("idMdFilesTmp")));
 			} else {
 				table.setIdMdFilesTmp((MDFilesTmp) dati.get("idMdFilesTmp"));
@@ -118,7 +119,7 @@ public class MDArchiveBusiness extends
 		}
 		if (dati.containsKey("idNodo")) {
 			if (dati.get("idNodo") instanceof String){
-				mdNodiDAO = new MDNodiDAO(hibernateTemplate);
+				mdNodiDAO = new MDNodiDAO();
 				table.setIdNodo(mdNodiDAO.findById((String) dati.get("idNodo")));
 			} else {
 				table.setIdNodo((MDNodi) dati.get("idNodo"));
@@ -137,8 +138,8 @@ public class MDArchiveBusiness extends
 	}
 
 	public MDArchive find(MDFilesTmp mdFilesTmp,
-			MDNodi mdNodi) throws NamingException, HibernateException,
-			ConfigurationException {
+			MDNodi mdNodi) throws HibernateException,
+			HibernateUtilException {
 		return this.newInstanceDao().find(mdFilesTmp, mdNodi);
 	}
 
@@ -169,9 +170,16 @@ public class MDArchiveBusiness extends
 			throw new SQLException(e.getMessage(), e);
 		} catch (NamingException e) {
 			throw new SQLException(e.getMessage(), e);
-		} catch (ConfigurationException e) {
+		} catch (HibernateException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (HibernateUtilException e) {
 			throw new SQLException(e.getMessage(), e);
 		}
+	}
+
+	@Override
+	protected Criteria rowsCount(MDArchiveDAO tableDao, HashTable<String, Object> dati) {
+		return null;
 	}
 	
 }
