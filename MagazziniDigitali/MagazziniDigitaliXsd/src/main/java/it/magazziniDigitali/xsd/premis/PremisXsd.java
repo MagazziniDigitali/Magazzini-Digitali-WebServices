@@ -28,6 +28,8 @@ import info.lc.xmlns.premis_v2.RelationshipComplexType;
 import info.lc.xmlns.premis_v2.RightsComplexType;
 import info.lc.xmlns.premis_v2.SignificantPropertiesComplexType;
 import info.lc.xmlns.premis_v2.StorageComplexType;
+import it.bncf.magazziniDigitali.database.entity.MDRigths;
+import it.bncf.magazziniDigitali.database.entity.MDSoftware;
 import it.magazziniDigitali.xsd.premis.exception.PremisXsdException;
 
 import java.io.IOException;
@@ -177,7 +179,7 @@ public class PremisXsd extends ReadXsd<PremisComplexType> {
 	public void addObjectFileContainer(String objectIdentifierValue,
 			String fType, String ext, BigInteger compositionLevel,
 			String digest, Long size, String formatDesignationValue,
-			String originalName, String right, String formatVersion, String puid) {
+			String originalName, MDRigths right, String formatVersion, String puid) {
 		File file = null;
 		SignificantPropertiesComplexType fileType = null;
 		SignificantPropertiesComplexType actualFileName = null;
@@ -224,7 +226,7 @@ public class PremisXsd extends ReadXsd<PremisComplexType> {
 			linkingRightsStatementIdentifier
 					.setLinkingRightsStatementIdentifierType(UUID_MD_RG);
 			linkingRightsStatementIdentifier
-					.setLinkingRightsStatementIdentifierValue(right);
+					.setLinkingRightsStatementIdentifierValue(right.getId());
 			file.getLinkingRightsStatementIdentifier().add(
 					linkingRightsStatementIdentifier);
 		}
@@ -398,7 +400,7 @@ public class PremisXsd extends ReadXsd<PremisComplexType> {
 	public void addEvent(String eventType, Object oStart, Object oStop,
 			String eventDetail,
 			String eventOutcome, String[] eventOutcomeDetails,
-			String linkingAgentIdentifierValue, String linkingSoftwareIdentifierValue,
+			String linkingAgentIdentifierValue, MDSoftware linkingSoftwareIdentifierValue,
 			String objectIdentifierMaster) {
 		EventComplexType event = null;
 		EventIdentifierComplexType eventIdentifier = null;
@@ -492,7 +494,7 @@ public class PremisXsd extends ReadXsd<PremisComplexType> {
 		linkingAgentIdentifier = new LinkingAgentIdentifierComplexType();
 		linkingAgentIdentifier.setLinkingAgentIdentifierType(UUID_MD_AG);
 		linkingAgentIdentifier
-				.setLinkingAgentIdentifierValue(linkingSoftwareIdentifierValue);
+				.setLinkingAgentIdentifierValue(linkingSoftwareIdentifierValue.getId());
 		linkingAgentIdentifier.getLinkingAgentRole().add("software");
 		event.getLinkingAgentIdentifier().add(linkingAgentIdentifier);
 
