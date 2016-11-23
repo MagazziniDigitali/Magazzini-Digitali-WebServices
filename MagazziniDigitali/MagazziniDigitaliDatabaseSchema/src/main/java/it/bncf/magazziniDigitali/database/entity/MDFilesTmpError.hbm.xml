@@ -13,14 +13,18 @@
         <many-to-one name="idMdFilesTmp" class="it.bncf.magazziniDigitali.database.entity.MDFilesTmp" fetch="join">
             <column name="ID_MDFILESTMP" />
         </many-to-one>
-        <property name="dataIns" type="java.sql.Timestamp">
+        <property name="dataIns" type="java.util.Date">
             <column name="DATA_INS" />
         </property>
         <many-to-one name="type" class="it.bncf.magazziniDigitali.database.entity.MDStato" fetch="join">
             <column name="TYPE" />
         </many-to-one>
-        <property name="MsgError" type="java.lang.String">
+        <property name="msgError" type="java.lang.String">
             <column name="MSGERROR" />
         </property>
+        <property name="traceError" type="java.lang.String">
+            <column name="TRACEERROR" />
+        </property>
+        
     </class>
 </hibernate-mapping>

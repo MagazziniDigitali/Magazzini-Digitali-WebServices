@@ -31,6 +31,10 @@ public class MDNodi implements Serializable {
 
 	private String urlCheckStorage;
 
+	private String pathStorage;
+
+	private Integer active;
+
 	public MDNodi() {
 	}
 
@@ -116,6 +120,34 @@ public class MDNodi implements Serializable {
 	 */
 	public void setUrlCheckStorage(String urlCheckStorage) {
 		this.urlCheckStorage = urlCheckStorage;
+	}
+
+	/**
+	 * @return the pathStorage
+	 */
+	public String getPathStorage() {
+		return pathStorage;
+	}
+
+	/**
+	 * @param pathStorage the pathStorage to set
+	 */
+	public void setPathStorage(String pathStorage) {
+		this.pathStorage = pathStorage;
+	}
+
+	/**
+	 * @return the active
+	 */
+	public Integer getActive() {
+		return active;
+	}
+
+	/**
+	 * @param active the active to set
+	 */
+	public void setActive(Integer active) {
+		this.active = active;
 	}
 
 }

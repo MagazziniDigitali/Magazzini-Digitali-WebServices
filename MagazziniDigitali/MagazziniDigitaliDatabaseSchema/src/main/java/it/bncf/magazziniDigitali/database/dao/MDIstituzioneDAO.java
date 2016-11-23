@@ -11,7 +11,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
-import it.bncf.magazziniDigitali.database.entity.MDSoftware;
+import it.bncf.magazziniDigitali.database.entity.MDIstituzione;
 import mx.randalf.hibernate.GenericHibernateDAO;
 import mx.randalf.hibernate.exception.HibernateUtilException;
 
@@ -19,22 +19,22 @@ import mx.randalf.hibernate.exception.HibernateUtilException;
  * @author massi
  *
  */
-public class MDSoftwareDAO extends GenericHibernateDAO<MDSoftware, String> {
+public class MDIstituzioneDAO extends GenericHibernateDAO<MDIstituzione, String> {
 
-	private Logger log =  Logger.getLogger(MDSoftwareDAO.class);
+	private Logger log =Logger.getLogger(MDIstituzioneDAO.class);
 
 	/**
 	 */
-	public MDSoftwareDAO() {
+	public MDIstituzioneDAO() {
 		super();
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<MDSoftware> find(String nome, String login,
-			List<Order> orders) throws HibernateException,
+	public List<MDIstituzione> find(String nome, String login, 
+			List<Order> orders) throws  HibernateException,
 			HibernateUtilException {
 		Criteria criteria = null;
-		List<MDSoftware> result = null;
+		List<MDIstituzione> result = null;
 
 		try {
 			beginTransaction();
@@ -42,8 +42,8 @@ public class MDSoftwareDAO extends GenericHibernateDAO<MDSoftware, String> {
 			if (nome != null) {
 				criteria.add(Restrictions.ilike("nome", "%"+nome+"%"));
 			}
-			if (login != null){
-				criteria.add(Restrictions.eq("login", login));
+			if (login != null) {
+				criteria.add(Restrictions.ilike("login", login));
 			}
 			if (orders != null) {
 				for (Order order : orders) {
@@ -66,4 +66,5 @@ public class MDSoftwareDAO extends GenericHibernateDAO<MDSoftware, String> {
 		}
 		return result;
 	}
+
 }

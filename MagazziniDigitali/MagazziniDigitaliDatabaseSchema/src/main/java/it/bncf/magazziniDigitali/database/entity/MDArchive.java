@@ -4,7 +4,7 @@
 package it.bncf.magazziniDigitali.database.entity;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -26,9 +26,9 @@ public class MDArchive implements Serializable {
 
 	private MDNodi idNodo;
 
-	private Timestamp dataStart;
+	private Date dataStart;
 
-	private Timestamp dataEnd;
+	private Date dataEnd;
 
 	private Boolean esito;
 
@@ -80,28 +80,28 @@ public class MDArchive implements Serializable {
 	/**
 	 * @return the dataStart
 	 */
-	public Timestamp getDataStart() {
+	public Date getDataStart() {
 		return dataStart;
 	}
 
 	/**
 	 * @param dataStart the dataStart to set
 	 */
-	public void setDataStart(Timestamp dataStart) {
+	public void setDataStart(Date dataStart) {
 		this.dataStart = dataStart;
 	}
 
 	/**
 	 * @return the dataEnd
 	 */
-	public Timestamp getDataEnd() {
+	public Date getDataEnd() {
 		return dataEnd;
 	}
 
 	/**
 	 * @param dataEnd the dataEnd to set
 	 */
-	public void setDataEnd(Timestamp dataEnd) {
+	public void setDataEnd(Date dataEnd) {
 		this.dataEnd = dataEnd;
 	}
 

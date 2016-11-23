@@ -3,8 +3,6 @@
  */
 package it.bncf.magazziniDigitali.database.dao;
 
-import org.springframework.orm.hibernate3.HibernateTemplate;
-
 import it.bncf.magazziniDigitali.database.entity.MDRegistroIngressoError;
 import mx.randalf.hibernate.GenericHibernateDAO;
 
@@ -18,8 +16,8 @@ public class MDRegistroIngressoErrorDAO extends
 	/**
 	 * @param hibernateTemplate
 	 */
-	public MDRegistroIngressoErrorDAO(HibernateTemplate hibernateTemplate) {
-		super(hibernateTemplate);
+	public MDRegistroIngressoErrorDAO() {
+		super();
 	}
 
 }

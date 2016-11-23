@@ -3,22 +3,16 @@
  */
 package it.bncf.magazziniDigitali.database.dao;
 
-import it.bncf.magazziniDigitali.database.entity.MDArchive;
-import it.bncf.magazziniDigitali.database.entity.MDFilesTmp;
-import it.bncf.magazziniDigitali.database.entity.MDNodi;
-
-import java.io.FileNotFoundException;
-import java.sql.SQLException;
-
-import javax.naming.NamingException;
-
-import mx.randalf.configuration.exception.ConfigurationException;
-import mx.randalf.hibernate.GenericHibernateDAO;
-
+import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.orm.hibernate3.HibernateTemplate;
+
+import it.bncf.magazziniDigitali.database.entity.MDArchive;
+import it.bncf.magazziniDigitali.database.entity.MDFilesTmp;
+import it.bncf.magazziniDigitali.database.entity.MDNodi;
+import mx.randalf.hibernate.GenericHibernateDAO;
+import mx.randalf.hibernate.exception.HibernateUtilException;
 
 /**
  * @author massi
@@ -26,20 +20,18 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
  */
 public class MDArchiveDAO extends GenericHibernateDAO<MDArchive, String> {
 
+	private Logger log = Logger.getLogger(MDArchiveDAO.class);
+
 	/**
 	 * @param fileDb
-	 * @throws FileNotFoundException
-	 * @throws ClassNotFoundException
-	 * @throws SQLException
-	 * @throws ConfigurationException 
 	 */
-	public MDArchiveDAO(HibernateTemplate hibernateTemplate) {
-		super(hibernateTemplate);
+	public MDArchiveDAO() {
+		super();
 	}
 
 	public MDArchive find(MDFilesTmp mdFilesTmp,
-			MDNodi mdNodi) throws NamingException, HibernateException,
-			ConfigurationException {
+			MDNodi mdNodi) throws HibernateException,
+			HibernateUtilException {
 		Criteria criteria = null;
 		MDArchive result = null;
 
@@ -58,12 +50,13 @@ public class MDArchiveDAO extends GenericHibernateDAO<MDArchive, String> {
 		} catch (HibernateException e) {
 			rollbackTransaction();
 			throw e;
-		} catch (NamingException e) {
+		} catch (HibernateUtilException e) {
 			rollbackTransaction();
 			throw e;
-		} catch (ConfigurationException e) {
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
 			rollbackTransaction();
-			throw e;
+			throw new HibernateUtilException(e.getMessage(), e);
 		}
 		return result;
 	}

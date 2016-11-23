@@ -13,7 +13,7 @@
         <many-to-one name="idMDRegistroIngresso" class="it.bncf.magazziniDigitali.database.entity.MDRegistroIngresso" fetch="join">
             <column name="ID_MDREGISTROINGRESSO" />
         </many-to-one>
-        <property name="dataIns" type="java.sql.Timestamp">
+        <property name="dataIns" type="java.util.Date">
             <column name="DATA_INS" />
         </property>
         <many-to-one name="type" class="it.bncf.magazziniDigitali.database.entity.MDStato" fetch="join">
@@ -22,5 +22,8 @@
         <property name="msgError" type="java.lang.String">
             <column name="MSGERROR" />
         </property>
-    </class>
+        <property name="traceError" type="java.lang.String">
+            <column name="TRACEERROR" />
+        </property>
+	</class>
 </hibernate-mapping>

@@ -14,10 +14,10 @@
         <many-to-one name="idNodo" class="it.bncf.magazziniDigitali.database.entity.MDNodi" fetch="join">
             <column name="ID_NODO" />
         </many-to-one>
-        <property name="dataStart" type="java.sql.Timestamp">
+        <property name="dataStart" type="java.util.Date">
             <column name="DATASTART" />
         </property>
-        <property name="dataEnd" type="java.sql.Timestamp">
+        <property name="dataEnd" type="java.util.Date">
             <column name="DATAEND" />
         </property>
         <property name="esito" type="java.lang.Boolean">

@@ -11,7 +11,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
-import it.bncf.magazziniDigitali.database.entity.MDSoftware;
+import it.bncf.magazziniDigitali.database.entity.MDRigths;
 import mx.randalf.hibernate.GenericHibernateDAO;
 import mx.randalf.hibernate.exception.HibernateUtilException;
 
@@ -19,31 +19,28 @@ import mx.randalf.hibernate.exception.HibernateUtilException;
  * @author massi
  *
  */
-public class MDSoftwareDAO extends GenericHibernateDAO<MDSoftware, String> {
+public class MDRigthsDAO extends GenericHibernateDAO<MDRigths, String> {
 
-	private Logger log =  Logger.getLogger(MDSoftwareDAO.class);
+	private Logger log = Logger.getLogger(MDRigthsDAO.class);
 
 	/**
 	 */
-	public MDSoftwareDAO() {
+	public MDRigthsDAO() {
 		super();
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<MDSoftware> find(String nome, String login,
+	public List<MDRigths> find(String nome,
 			List<Order> orders) throws HibernateException,
 			HibernateUtilException {
 		Criteria criteria = null;
-		List<MDSoftware> result = null;
+		List<MDRigths> result = null;
 
 		try {
 			beginTransaction();
 			criteria = this.createCriteria();
 			if (nome != null) {
 				criteria.add(Restrictions.ilike("nome", "%"+nome+"%"));
-			}
-			if (login != null){
-				criteria.add(Restrictions.eq("login", login));
 			}
 			if (orders != null) {
 				for (Order order : orders) {
@@ -66,4 +63,5 @@ public class MDSoftwareDAO extends GenericHibernateDAO<MDSoftware, String> {
 		}
 		return result;
 	}
+
 }

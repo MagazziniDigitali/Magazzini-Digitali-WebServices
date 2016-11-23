@@ -10,7 +10,7 @@
             <column name="ID" />
             <generator class="assigned" />
         </id>
-        <property name="timestampIngest" type="java.sql.Timestamp">
+        <property name="timestampIngest" type="java.util.Date">
             <column name="TIMESTAMPINGEST" />
         </property>
         <property name="agentDepositor" type="java.lang.String">
@@ -40,19 +40,19 @@
         <property name="status" type="java.lang.Integer">
             <column name="STATUS" />
         </property>
-        <property name="timestampInit" type="java.sql.Timestamp">
+        <property name="timestampInit" type="java.util.Date">
             <column name="TIMESTAMPINIT" />
         </property>
-        <property name="timestampElab" type="java.sql.Timestamp">
+        <property name="timestampElab" type="java.util.Date">
             <column name="TIMESTAMPELAB" />
         </property>
-        <property name="timestampPub" type="java.sql.Timestamp">
+        <property name="timestampPub" type="java.util.Date">
             <column name="TIMESTAMPPUB" />
         </property>
-        <property name="timestampErr" type="java.sql.Timestamp">
+        <property name="timestampErr" type="java.util.Date">
             <column name="TIMESTAMPERR" />
         </property>
-        <property name="timestampCoda" type="java.sql.Timestamp">
+        <property name="timestampCoda" type="java.util.Date">
             <column name="TIMESTAMPCODA" />
         </property>
     </class>

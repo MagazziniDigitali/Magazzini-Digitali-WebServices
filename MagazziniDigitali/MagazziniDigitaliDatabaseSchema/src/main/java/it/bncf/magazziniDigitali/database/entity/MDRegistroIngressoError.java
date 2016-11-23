@@ -4,7 +4,7 @@
 package it.bncf.magazziniDigitali.database.entity;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -24,11 +24,13 @@ public class MDRegistroIngressoError implements Serializable {
 
 	private MDRegistroIngresso idMDRegistroIngresso;
 
-	private Timestamp dataIns;
+	private Date dataIns;
 
 	private MDStato type;
 
 	private String msgError;
+	
+	private String traceError;
 
 	/**
 	 * 
@@ -52,11 +54,11 @@ public class MDRegistroIngressoError implements Serializable {
 		this.idMDRegistroIngresso = idMDRegistroIngresso;
 	}
 
-	public Timestamp getDataIns() {
+	public Date getDataIns() {
 		return dataIns;
 	}
 
-	public void setDataIns(Timestamp dataIns) {
+	public void setDataIns(Date dataIns) {
 		this.dataIns = dataIns;
 	}
 
@@ -74,6 +76,20 @@ public class MDRegistroIngressoError implements Serializable {
 
 	public void setMsgError(String msgError) {
 		this.msgError = msgError;
+	}
+
+	/**
+	 * @return the traceError
+	 */
+	public String getTraceError() {
+		return traceError;
+	}
+
+	/**
+	 * @param traceError the traceError to set
+	 */
+	public void setTraceError(String traceError) {
+		this.traceError = traceError;
 	}
 
 }

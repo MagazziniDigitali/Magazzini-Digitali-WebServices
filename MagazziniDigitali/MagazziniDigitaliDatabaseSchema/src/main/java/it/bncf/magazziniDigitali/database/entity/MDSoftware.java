@@ -15,37 +15,45 @@ import javax.persistence.Table;
  */
 @Entity
 @SuppressWarnings("serial")
-@Table(name="MDIstituzione")
-public class MDIstituzione implements Serializable {
+@Table(name="MDSoftware")
+public class MDSoftware implements Serializable {
 
 	@Id
 	private String id;
 
 	private String nome;
 
-	private String pathTmp;
-
-	private String pathTar;
+	private String login;
 
 	private String password;
 
-	private String url;
+	private String ipAutorizzati;
 
-	private String urlLogo;
+	private MDIstituzione idIstituzione;
+	
+	private String idIstituzioneID;
 
-	private String uuid;
+	private MDRigths idRigths;
 
-	private String machineUuid;
+	private String idRigthsID;
 
-	private String softwareUuid;
+//	private String pathTmp;
+//
+//	private String pathTar;
+//
+//	private String url;
+//
+//	private String urlLogo;
+//
+//	private String uuid;
+//
+//	private String machineUuid;
+//
+//	private String softwareUuid;
+//
+//	private String ipDownload;
 
-	private String rightUuid;
-
-	private String ipAuthentication;
-
-	private String ipDownload;
-
-	public MDIstituzione() {
+	public MDSoftware() {
 	}
 
 	/**
@@ -77,20 +85,6 @@ public class MDIstituzione implements Serializable {
 	}
 
 	/**
-	 * @return the pathTmp
-	 */
-	public String getPathTmp() {
-		return pathTmp;
-	}
-
-	/**
-	 * @param pathTmp the pathTmp to set
-	 */
-	public void setPathTmp(String pathTmp) {
-		this.pathTmp = pathTmp;
-	}
-
-	/**
 	 * @return the password
 	 */
 	public String getPassword() {
@@ -103,130 +97,220 @@ public class MDIstituzione implements Serializable {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+//
+//	/**
+//	 * @return the pathTmp
+//	 */
+//	public String getPathTmp() {
+//		return pathTmp;
+//	}
+//
+//	/**
+//	 * @param pathTmp the pathTmp to set
+//	 */
+//	public void setPathTmp(String pathTmp) {
+//		this.pathTmp = pathTmp;
+//	}
+//
+//	/**
+//	 * @return the url
+//	 */
+//	public String getUrl() {
+//		return url;
+//	}
+//
+//	/**
+//	 * @param url the url to set
+//	 */
+//	public void setUrl(String url) {
+//		this.url = url;
+//	}
+//
+//	/**
+//	 * @return the urlLogo
+//	 */
+//	public String getUrlLogo() {
+//		return urlLogo;
+//	}
+//
+//	/**
+//	 * @param urlLogo the urlLogo to set
+//	 */
+//	public void setUrlLogo(String urlLogo) {
+//		this.urlLogo = urlLogo;
+//	}
+//
+//	/**
+//	 * @return the uuid
+//	 */
+//	public String getUuid() {
+//		return uuid;
+//	}
+//
+//	/**
+//	 * @param uuid the uuid to set
+//	 */
+//	public void setUuid(String uuid) {
+//		this.uuid = uuid;
+//	}
+//
+//	/**
+//	 * @return the machineUuid
+//	 */
+//	public String getMachineUuid() {
+//		return machineUuid;
+//	}
+//
+//	/**
+//	 * @param machineUuid the machineUuid to set
+//	 */
+//	public void setMachineUuid(String machineUuid) {
+//		this.machineUuid = machineUuid;
+//	}
+//
+//	/**
+//	 * @return the softwareUuid
+//	 */
+//	public String getSoftwareUuid() {
+//		return softwareUuid;
+//	}
+//
+//	/**
+//	 * @param softwareUuid the softwareUuid to set
+//	 */
+//	public void setSoftwareUuid(String softwareUuid) {
+//		this.softwareUuid = softwareUuid;
+//	}
+//
+//	/**
+//	 * @return the rightUuid
+//	 */
+//	public String getRightUuid() {
+//		return rightUuid;
+//	}
+//
+//	/**
+//	 * @param rightUuid the rightUuid to set
+//	 */
+//	public void setRightUuid(String rightUuid) {
+//		this.rightUuid = rightUuid;
+//	}
+//
+//	/**
+//	 * @return the ipAuthentication
+//	 */
+//	public String getIpAuthentication() {
+//		return ipAuthentication;
+//	}
+//
+//	/**
+//	 * @param ipAuthentication the ipAuthentication to set
+//	 */
+//	public void setIpAuthentication(String ipAuthentication) {
+//		this.ipAuthentication = ipAuthentication;
+//	}
+//
+//	/**
+//	 * @return the ipDownload
+//	 */
+//	public String getIpDownload() {
+//		return ipDownload;
+//	}
+//
+//	/**
+//	 * @param ipDownload the ipDownload to set
+//	 */
+//	public void setIpDownload(String ipDownload) {
+//		this.ipDownload = ipDownload;
+//	}
+//
+//	/**
+//	 * @return the pathTar
+//	 */
+//	public String getPathTar() {
+//		return pathTar;
+//	}
+//
+//	/**
+//	 * @param pathTar the pathTar to set
+//	 */
+//	public void setPathTar(String pathTar) {
+//		this.pathTar = pathTar;
+//	}
 
 	/**
-	 * @return the url
+	 * @return the ipAutorizzati
 	 */
-	public String getUrl() {
-		return url;
+	public String getIpAutorizzati() {
+		return ipAutorizzati;
 	}
 
 	/**
-	 * @param url the url to set
+	 * @param ipAutorizzati the ipAutorizzati to set
 	 */
-	public void setUrl(String url) {
-		this.url = url;
+	public void setIpAutorizzati(String ipAutorizzati) {
+		this.ipAutorizzati = ipAutorizzati;
 	}
 
 	/**
-	 * @return the urlLogo
+	 * @return the idIstituzione
 	 */
-	public String getUrlLogo() {
-		return urlLogo;
+	public MDIstituzione getIdIstituzione() {
+		return idIstituzione;
 	}
 
 	/**
-	 * @param urlLogo the urlLogo to set
+	 * @param idIstituzione the idIstituzione to set
 	 */
-	public void setUrlLogo(String urlLogo) {
-		this.urlLogo = urlLogo;
+	public void setIdIstituzione(MDIstituzione idIstituzione) {
+		this.idIstituzione = idIstituzione;
+		if (idIstituzione != null){
+			idIstituzioneID = idIstituzione.getId();
+		}
 	}
 
 	/**
-	 * @return the uuid
+	 * @return the idRigths
 	 */
-	public String getUuid() {
-		return uuid;
+	public MDRigths getIdRigths() {
+		return idRigths;
 	}
 
 	/**
-	 * @param uuid the uuid to set
+	 * @param idRigths the idRigths to set
 	 */
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
+	public void setIdRigths(MDRigths idRigths) {
+		this.idRigths = idRigths;
+		if (idRigths != null){
+			idRigthsID =idRigths.getId();
+		}
 	}
 
 	/**
-	 * @return the machineUuid
+	 * @return the idIstituzioneID
 	 */
-	public String getMachineUuid() {
-		return machineUuid;
+	public String getIdIstituzioneID() {
+		return idIstituzioneID;
 	}
 
 	/**
-	 * @param machineUuid the machineUuid to set
+	 * @return the idRigthsID
 	 */
-	public void setMachineUuid(String machineUuid) {
-		this.machineUuid = machineUuid;
+	public String getIdRigthsID() {
+		return idRigthsID;
 	}
 
 	/**
-	 * @return the softwareUuid
+	 * @return the login
 	 */
-	public String getSoftwareUuid() {
-		return softwareUuid;
+	public String getLogin() {
+		return login;
 	}
 
 	/**
-	 * @param softwareUuid the softwareUuid to set
+	 * @param login the login to set
 	 */
-	public void setSoftwareUuid(String softwareUuid) {
-		this.softwareUuid = softwareUuid;
-	}
-
-	/**
-	 * @return the rightUuid
-	 */
-	public String getRightUuid() {
-		return rightUuid;
-	}
-
-	/**
-	 * @param rightUuid the rightUuid to set
-	 */
-	public void setRightUuid(String rightUuid) {
-		this.rightUuid = rightUuid;
-	}
-
-	/**
-	 * @return the ipAuthentication
-	 */
-	public String getIpAuthentication() {
-		return ipAuthentication;
-	}
-
-	/**
-	 * @param ipAuthentication the ipAuthentication to set
-	 */
-	public void setIpAuthentication(String ipAuthentication) {
-		this.ipAuthentication = ipAuthentication;
-	}
-
-	/**
-	 * @return the ipDownload
-	 */
-	public String getIpDownload() {
-		return ipDownload;
-	}
-
-	/**
-	 * @param ipDownload the ipDownload to set
-	 */
-	public void setIpDownload(String ipDownload) {
-		this.ipDownload = ipDownload;
-	}
-
-	/**
-	 * @return the pathTar
-	 */
-	public String getPathTar() {
-		return pathTar;
-	}
-
-	/**
-	 * @param pathTar the pathTar to set
-	 */
-	public void setPathTar(String pathTar) {
-		this.pathTar = pathTar;
+	public void setLogin(String login) {
+		this.login = login;
 	}
 }

@@ -3,15 +3,11 @@
  */
 package it.bncf.magazziniDigitali.database.dao;
 
-import it.bncf.magazziniDigitali.database.entity.MDStato;
-
-import javax.naming.NamingException;
-
-import mx.randalf.configuration.exception.ConfigurationException;
-import mx.randalf.hibernate.GenericHibernateDAO;
-
 import org.hibernate.HibernateException;
-import org.springframework.orm.hibernate3.HibernateTemplate;
+
+import it.bncf.magazziniDigitali.database.entity.MDStato;
+import mx.randalf.hibernate.GenericHibernateDAO;
+import mx.randalf.hibernate.exception.HibernateUtilException;
 
 /**
  * @author massi
@@ -23,8 +19,8 @@ public class MDStatoDAO extends GenericHibernateDAO<MDStato, String> {
 	 * 
 	 * @param hibernateTemplate
 	 */
-	public MDStatoDAO(HibernateTemplate hibernateTemplate) {
-		super(hibernateTemplate);
+	public MDStatoDAO() {
+		super();
 	}
 
 	public static String INITTRASF = "INITTRASF";
@@ -34,10 +30,8 @@ public class MDStatoDAO extends GenericHibernateDAO<MDStato, String> {
 	 * 
 	 * @return
 	 * @throws HibernateException
-	 * @throws NamingException
-	 * @throws ConfigurationException
 	 */
-	public MDStato INITTRASF() throws HibernateException, NamingException, ConfigurationException{
+	public MDStato INITTRASF() throws HibernateException, HibernateUtilException{
 		return this.findById(INITTRASF);
 	}
 
@@ -48,10 +42,8 @@ public class MDStatoDAO extends GenericHibernateDAO<MDStato, String> {
 	 * 
 	 * @return
 	 * @throws HibernateException
-	 * @throws NamingException
-	 * @throws ConfigurationException
 	 */
-	public MDStato FINETRASF() throws HibernateException, NamingException, ConfigurationException{
+	public MDStato FINETRASF() throws HibernateException, HibernateUtilException{
 		return this.findById(FINETRASF);
 	}
 
@@ -60,10 +52,8 @@ public class MDStatoDAO extends GenericHibernateDAO<MDStato, String> {
 	 * 
 	 * @return
 	 * @throws HibernateException
-	 * @throws NamingException
-	 * @throws ConfigurationException
 	 */
-	public MDStato ERROR() throws HibernateException, NamingException, ConfigurationException{
+	public MDStato ERROR() throws HibernateException, HibernateUtilException{
 		return this.findById("ERROR");
 	}
 
@@ -72,10 +62,8 @@ public class MDStatoDAO extends GenericHibernateDAO<MDStato, String> {
 	 * 
 	 * @return
 	 * @throws HibernateException
-	 * @throws NamingException
-	 * @throws ConfigurationException
 	 */
-	public MDStato ERRORTRASF() throws HibernateException, NamingException, ConfigurationException{
+	public MDStato ERRORTRASF() throws HibernateException, HibernateUtilException{
 		return this.findById("ERRORTRASF");
 	}
 
@@ -84,10 +72,8 @@ public class MDStatoDAO extends GenericHibernateDAO<MDStato, String> {
 	 * 
 	 * @return
 	 * @throws HibernateException
-	 * @throws NamingException
-	 * @throws ConfigurationException
 	 */
-	public MDStato ERRORVAL() throws HibernateException, NamingException, ConfigurationException{
+	public MDStato ERRORVAL() throws HibernateException, HibernateUtilException{
 		return this.findById("ERRORVAL");
 	}
 
@@ -96,10 +82,8 @@ public class MDStatoDAO extends GenericHibernateDAO<MDStato, String> {
 	 * 
 	 * @return
 	 * @throws HibernateException
-	 * @throws NamingException
-	 * @throws ConfigurationException
 	 */
-	public MDStato ERRORDECOMP() throws HibernateException, NamingException, ConfigurationException{
+	public MDStato ERRORDECOMP() throws HibernateException, HibernateUtilException{
 		return this.findById("ERRORDECOMP");
 	}
 
@@ -108,10 +92,8 @@ public class MDStatoDAO extends GenericHibernateDAO<MDStato, String> {
 	 * 
 	 * @return
 	 * @throws HibernateException
-	 * @throws NamingException
-	 * @throws ConfigurationException
 	 */
-	public MDStato ERRORCOPY() throws HibernateException, NamingException, ConfigurationException{
+	public MDStato ERRORCOPY() throws HibernateException, HibernateUtilException{
 		return this.findById("ERRORCOPY");
 	}
 
@@ -120,10 +102,8 @@ public class MDStatoDAO extends GenericHibernateDAO<MDStato, String> {
 	 * 
 	 * @return
 	 * @throws HibernateException
-	 * @throws NamingException
-	 * @throws ConfigurationException
 	 */
-	public MDStato ERRORMOVE() throws HibernateException, NamingException, ConfigurationException{
+	public MDStato ERRORMOVE() throws HibernateException, HibernateUtilException{
 		return this.findById("ERRORMOVE");
 	}
 
@@ -132,10 +112,8 @@ public class MDStatoDAO extends GenericHibernateDAO<MDStato, String> {
 	 * 
 	 * @return
 	 * @throws HibernateException
-	 * @throws NamingException
-	 * @throws ConfigurationException
 	 */
-	public MDStato ERRORPUB() throws HibernateException, NamingException, ConfigurationException{
+	public MDStato ERRORPUB() throws HibernateException, HibernateUtilException{
 		return this.findById("ERRORPUB");
 	}
 
@@ -144,10 +122,8 @@ public class MDStatoDAO extends GenericHibernateDAO<MDStato, String> {
 	 * 
 	 * @return
 	 * @throws HibernateException
-	 * @throws NamingException
-	 * @throws ConfigurationException
 	 */
-	public MDStato ERRORDELETE() throws HibernateException, NamingException, ConfigurationException{
+	public MDStato ERRORDELETE() throws HibernateException, HibernateUtilException{
 		return this.findById("ERRORDELETE");
 	}
 
@@ -157,10 +133,8 @@ public class MDStatoDAO extends GenericHibernateDAO<MDStato, String> {
 	 * 
 	 * @return
 	 * @throws HibernateException
-	 * @throws NamingException
-	 * @throws ConfigurationException
 	 */
-	public MDStato ERRORARCHIVE() throws HibernateException, NamingException, ConfigurationException{
+	public MDStato ERRORARCHIVE() throws HibernateException, HibernateUtilException{
 		return this.findById(ERRORARCHIVE);
 	}
 
@@ -171,10 +145,8 @@ public class MDStatoDAO extends GenericHibernateDAO<MDStato, String> {
 	 * 
 	 * @return
 	 * @throws HibernateException
-	 * @throws NamingException
-	 * @throws ConfigurationException
 	 */
-	public MDStato INITVALID() throws HibernateException, NamingException, ConfigurationException{
+	public MDStato INITVALID() throws HibernateException, HibernateUtilException{
 		return this.findById(INITVALID);
 	}
 
@@ -185,10 +157,8 @@ public class MDStatoDAO extends GenericHibernateDAO<MDStato, String> {
 	 * 
 	 * @return
 	 * @throws HibernateException
-	 * @throws NamingException
-	 * @throws ConfigurationException
 	 */
-	public MDStato FINEVALID() throws HibernateException, NamingException, ConfigurationException{
+	public MDStato FINEVALID() throws HibernateException, HibernateUtilException{
 		return this.findById(FINEVALID);
 	}
 
@@ -198,10 +168,8 @@ public class MDStatoDAO extends GenericHibernateDAO<MDStato, String> {
 	 * 
 	 * @return
 	 * @throws HibernateException
-	 * @throws NamingException
-	 * @throws ConfigurationException
 	 */
-	public MDStato INITPUBLISH() throws HibernateException, NamingException, ConfigurationException{
+	public MDStato INITPUBLISH() throws HibernateException, HibernateUtilException{
 		return this.findById(INITPUBLISH);
 	}
 
@@ -212,10 +180,8 @@ public class MDStatoDAO extends GenericHibernateDAO<MDStato, String> {
 	 * 
 	 * @return
 	 * @throws HibernateException
-	 * @throws NamingException
-	 * @throws ConfigurationException
 	 */
-	public MDStato FINEPUBLISH() throws HibernateException, NamingException, ConfigurationException{
+	public MDStato FINEPUBLISH() throws HibernateException, HibernateUtilException{
 		return this.findById(FINEPUBLISH);
 	}
 
@@ -225,10 +191,8 @@ public class MDStatoDAO extends GenericHibernateDAO<MDStato, String> {
 	 * 
 	 * @return
 	 * @throws HibernateException
-	 * @throws NamingException
-	 * @throws ConfigurationException
 	 */
-	public MDStato INITARCHIVE() throws HibernateException, NamingException, ConfigurationException{
+	public MDStato INITARCHIVE() throws HibernateException, HibernateUtilException{
 		return this.findById(INITARCHIVE);
 	}
 
@@ -238,10 +202,8 @@ public class MDStatoDAO extends GenericHibernateDAO<MDStato, String> {
 	 * 
 	 * @return
 	 * @throws HibernateException
-	 * @throws NamingException
-	 * @throws ConfigurationException
 	 */
-	public MDStato FINEARCHIVE() throws HibernateException, NamingException, ConfigurationException{
+	public MDStato FINEARCHIVE() throws HibernateException, HibernateUtilException{
 		return this.findById(FINEARCHIVE);
 	}
 
@@ -251,10 +213,8 @@ public class MDStatoDAO extends GenericHibernateDAO<MDStato, String> {
 	 * 
 	 * @return
 	 * @throws HibernateException
-	 * @throws NamingException
-	 * @throws ConfigurationException
 	 */
-	public MDStato INITINDEX() throws HibernateException, NamingException, ConfigurationException{
+	public MDStato INITINDEX() throws HibernateException, HibernateUtilException{
 		return this.findById(INITINDEX);
 	}
 
@@ -264,10 +224,8 @@ public class MDStatoDAO extends GenericHibernateDAO<MDStato, String> {
 	 * 
 	 * @return
 	 * @throws HibernateException
-	 * @throws NamingException
-	 * @throws ConfigurationException
 	 */
-	public MDStato CHECKINDEX() throws HibernateException, NamingException, ConfigurationException{
+	public MDStato CHECKINDEX() throws HibernateException, HibernateUtilException{
 		return this.findById(CHECKINDEX);
 	}
 
@@ -277,10 +235,8 @@ public class MDStatoDAO extends GenericHibernateDAO<MDStato, String> {
 	 * 
 	 * @return
 	 * @throws HibernateException
-	 * @throws NamingException
-	 * @throws ConfigurationException
 	 */
-	public MDStato FINEINDEX() throws HibernateException, NamingException, ConfigurationException{
+	public MDStato FINEINDEX() throws HibernateException, HibernateUtilException{
 		return this.findById(FINEINDEX);
 	}
 
@@ -290,10 +246,8 @@ public class MDStatoDAO extends GenericHibernateDAO<MDStato, String> {
 	 * 
 	 * @return
 	 * @throws HibernateException
-	 * @throws NamingException
-	 * @throws ConfigurationException
 	 */
-	public MDStato ERRORINDEX() throws HibernateException, NamingException, ConfigurationException{
+	public MDStato ERRORINDEX() throws HibernateException, HibernateUtilException{
 		return this.findById(ERRORINDEX);
 	}
 }

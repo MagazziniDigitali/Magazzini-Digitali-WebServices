@@ -3,21 +3,10 @@
  */
 package it.bncf.magazziniDigitali.database.dao;
 
-import it.bncf.magazziniDigitali.database.entity.MDFilesTmp;
-import it.bncf.magazziniDigitali.database.entity.MDIstituzione;
-import it.bncf.magazziniDigitali.database.entity.MDStato;
-
-import java.io.FileNotFoundException;
-import java.sql.SQLException;
 import java.util.Hashtable;
 import java.util.List;
 
-import javax.naming.NamingException;
-
-import mx.randalf.configuration.exception.ConfigurationException;
-import mx.randalf.hibernate.FactoryDAO;
-import mx.randalf.hibernate.GenericHibernateDAO;
-
+import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.criterion.MatchMode;
@@ -25,7 +14,13 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.orm.hibernate3.HibernateTemplate;
+
+import it.bncf.magazziniDigitali.database.entity.MDFilesTmp;
+import it.bncf.magazziniDigitali.database.entity.MDIstituzione;
+import it.bncf.magazziniDigitali.database.entity.MDStato;
+import mx.randalf.hibernate.FactoryDAO;
+import mx.randalf.hibernate.GenericHibernateDAO;
+import mx.randalf.hibernate.exception.HibernateUtilException;
 
 /**
  * @author massi
@@ -33,22 +28,19 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
  */
 public class MDFilesTmpDAO extends GenericHibernateDAO<MDFilesTmp, String> {
 
+	private Logger log = Logger.getLogger(MDFilesTmpDAO.class);
+
 	/**
-	 * @param fileDb
-	 * @throws FileNotFoundException
-	 * @throws ClassNotFoundException
-	 * @throws SQLException
-	 * @throws ConfigurationException 
 	 */
-	public MDFilesTmpDAO(HibernateTemplate hibernateTemplate) {
-		super(hibernateTemplate);
+	public MDFilesTmpDAO() {
+		super();
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<MDFilesTmp> find(MDIstituzione idIstituto,
 			String nomeFile, MDStato[] stato, String sha1,
-			List<Order> orders) throws NamingException, HibernateException,
-			ConfigurationException {
+			List<Order> orders) throws HibernateException,
+			HibernateUtilException {
 		Criteria criteria = null;
 		List<MDFilesTmp> result = null;
 
@@ -62,7 +54,7 @@ public class MDFilesTmpDAO extends GenericHibernateDAO<MDFilesTmp, String> {
 				criteria.add(Restrictions.eq("sha1", sha1));
 			}
 			if (nomeFile != null) {
-				criteria.add(Restrictions.ilike("nomeFile", nomeFile+"%"));
+				criteria.add(Restrictions.ilike("nomeFile", "%"+nomeFile+"%"));
 			}
 			if (stato != null) {
 				criteria.add(Restrictions.in("stato", stato));
@@ -78,32 +70,34 @@ public class MDFilesTmpDAO extends GenericHibernateDAO<MDFilesTmp, String> {
 		} catch (HibernateException e) {
 			rollbackTransaction();
 			throw e;
-		} catch (NamingException e) {
+		} catch (HibernateUtilException e) {
 			rollbackTransaction();
 			throw e;
-		} catch (ConfigurationException e) {
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
 			rollbackTransaction();
-			throw e;
+			throw new HibernateUtilException(e.getMessage(), e);
 		}
 		return result;
 	}
 
 	@SuppressWarnings("rawtypes")
-	public Hashtable<String, Integer> findCountByIstituto(MDIstituzione idIstituto) 
-			throws NamingException, HibernateException, ConfigurationException {
+	public Hashtable<String, Long> findCountByIstituto(MDIstituzione idIstituto) 
+			throws HibernateException, HibernateUtilException {
 		Criteria criteria = null;
-		Hashtable<String, Integer> ris= null;
+		Hashtable<String, Long> ris= null;
 		List rs = null;
 		Object[] row;
 		ProjectionList projectionList = null;
 
 		try {
-			ris = new Hashtable<String, Integer>();
+			ris = new Hashtable<String, Long>();
 			beginTransaction();
 			criteria = this.createCriteria();
 			
-			
-			criteria.add(Restrictions.eq("idIstituto", idIstituto));
+			if (idIstituto != null){
+				criteria.add(Restrictions.eq("idIstituto", idIstituto));
+			}
 			
 			projectionList = Projections.projectionList();
 			projectionList.add(Projections.groupProperty("stato"));
@@ -118,9 +112,9 @@ public class MDFilesTmpDAO extends GenericHibernateDAO<MDFilesTmp, String> {
 					row = (Object[]) rs.get(x);
 					if (row[0] instanceof MDStato){
 						FactoryDAO.initialize(row[0]);
-						ris.put(((MDStato)row[0]).getId(), (Integer)row[1]);
+						ris.put(((MDStato)row[0]).getId(), (Long)row[1]);
 					} else {
-						ris.put((String)row[0], (Integer)row[1]);
+						ris.put((String)row[0], (Long)row[1]);
 					}
 				}
 			}
@@ -128,18 +122,19 @@ public class MDFilesTmpDAO extends GenericHibernateDAO<MDFilesTmp, String> {
 		} catch (HibernateException e) {
 			rollbackTransaction();
 			throw e;
-		} catch (NamingException e) {
+		} catch (HibernateUtilException e) {
 			rollbackTransaction();
 			throw e;
-		} catch (ConfigurationException e) {
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
 			rollbackTransaction();
-			throw e;
+			throw new HibernateUtilException(e.getMessage(), e);
 		}
 		return ris;
 	}
 
 	public MDFilesTmp findPremis(String premisFile) 
-			throws NamingException, HibernateException, ConfigurationException {
+			throws HibernateException, HibernateUtilException {
 		Criteria criteria = null;
 		Object ris= null;
 
@@ -156,12 +151,13 @@ public class MDFilesTmpDAO extends GenericHibernateDAO<MDFilesTmp, String> {
 		} catch (HibernateException e) {
 			rollbackTransaction();
 			throw e;
-		} catch (NamingException e) {
+		} catch (HibernateUtilException e) {
 			rollbackTransaction();
 			throw e;
-		} catch (ConfigurationException e) {
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
 			rollbackTransaction();
-			throw e;
+			throw new HibernateUtilException(e.getMessage(), e);
 		}
 		return (ris==null?null:(MDFilesTmp)ris);
 	}
