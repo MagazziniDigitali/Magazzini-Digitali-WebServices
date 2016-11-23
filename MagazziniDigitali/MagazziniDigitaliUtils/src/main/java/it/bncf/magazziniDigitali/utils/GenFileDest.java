@@ -5,6 +5,8 @@ package it.bncf.magazziniDigitali.utils;
 
 import java.io.File;
 
+import it.bncf.magazziniDigitali.database.entity.MDNodi;
+
 /**
  * @author massi
  *
@@ -22,13 +24,16 @@ public class GenFileDest {
 	 * 
 	 * @param nomeFile Nome del file da Storizzare
 	 * @return PErsorso assoluto della risorsa
-	 * @throws ConfigurationException
 	 */
-	public static File genFileDest(String path, String nomeFile)  {
-//		String path = null;
+	public static File genFileDest(MDNodi mdNodi, String nomeFile)  {
+		String path = null;
 		String key = null;
 
-		path += File.separator;
+		path = mdNodi.getPathStorage();
+		
+		if (!path.endsWith(File.separator)){
+			path += File.separator;
+		}
 
 		key = nomeFile.replace("-", "");
 
