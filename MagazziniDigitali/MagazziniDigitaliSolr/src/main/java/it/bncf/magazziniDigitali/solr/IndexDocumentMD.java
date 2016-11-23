@@ -3,6 +3,8 @@
  */
 package it.bncf.magazziniDigitali.solr;
 
+import it.bncf.magazziniDigitali.configuration.IMDConfiguration;
+import it.bncf.magazziniDigitali.configuration.exception.MDConfigurationException;
 import it.bncf.magazziniDigitali.solr.exception.SolrWarning;
 
 import java.io.File;
@@ -13,8 +15,8 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
 
-import mx.randalf.configuration.Configuration;
-import mx.randalf.configuration.exception.ConfigurationException;
+//import mx.randalf.configuration.Configuration;
+//import mx.randalf.configuration.exception.ConfigurationException;
 import mx.randalf.solr.Item;
 import mx.randalf.solr.exception.SolrException;
 import mx.randalf.tools.rsync.RSync;
@@ -130,25 +132,34 @@ public class IndexDocumentMD {
 		
 	}
 
-	public void send() throws IOException, ConfigurationException, SolrWarning{
+	public void send(IMDConfiguration<?> configuration) 
+			throws IOException, SolrWarning
+	{
 		File file = null;
 		
 		try {
 			try{
-				file = new File(Configuration.getValue("demoni.SolrIndex.tmpPath")+
+				file = new File(
+						configuration.getSoftwareConfigString("solrIndex.tmpPath")+
+						//Configuration.getValue("demoni.SolrIndex.tmpPath")+
 						File.separator+
 						fileName+".xml");
 				write(file);
 			} catch (IOException e) {
 				throw e;
-			} catch (ConfigurationException e) {
-				throw e;
+			} catch (MDConfigurationException e) {
+				throw new SolrWarning(e.getMessage(), e);
 			}
-			RSync.send(Configuration.getValue("md.sendRsync.path"), 
-					Configuration.getValue("demone.SolrIndex.rSyncPassword"), 
+			RSync.send(configuration.getSoftwareConfigString("rSync.path"),
+//						Configuration.getValue("md.sendRsync.path"), 
+					configuration.getSoftwareConfigString("solrIndex.rSyncPassword"),
+//					Configuration.getValue("demone.SolrIndex.rSyncPassword"), 
 					RSync.checkPath(file), 
-					Configuration.getValue("demoni.SolrIndex.rSync"));
+					configuration.getSoftwareConfigString("solrIndex.rSync"));
+//					Configuration.getValue("demoni.SolrIndex.rSync"));
 		} catch (RSyncException e) {
+			throw new SolrWarning(e.getMessage(), e);
+		} catch (MDConfigurationException e) {
 			throw new SolrWarning(e.getMessage(), e);
 		} finally {
 			if (file != null){
