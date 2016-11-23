@@ -22,7 +22,7 @@ public class EndSendMDServiceLocator extends org.apache.axis.client.Service impl
     }
 
     // Use to get a proxy class for EndSendMDPort
-    private java.lang.String EndSendMDPort_address = "http://localhost:8080/TestWB/services/clientService";
+    private java.lang.String EndSendMDPort_address = "http://localhost:8080/MagazziniDigitaliServices/services/EndSendMDPort";
 
     public java.lang.String getEndSendMDPortAddress() {
         return EndSendMDPort_address;

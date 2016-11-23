@@ -19,7 +19,7 @@ public class ConfirmDelMDImpl {
     	MDFilesTmpBusiness oggettoDigitaleBusiness = null;
 
 		try {
-			oggettoDigitaleBusiness = new MDFilesTmpBusiness(null);
+			oggettoDigitaleBusiness = new MDFilesTmpBusiness();
 
 			oggettoDigitaleBusiness.confirmDel(confirmDelMDInput.getOggettoDigitale().getId(), 
 					true, 

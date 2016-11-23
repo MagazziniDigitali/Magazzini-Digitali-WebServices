@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
   <wb-module deploy-name="MagazziniDigitaliServices">
-        <dependent-module archiveName="MagazziniDigitaliBusinessLogic-1.0.38.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/MagazziniDigitaliBusinessLogic/MagazziniDigitaliBusinessLogic">
+        <dependent-module archiveName="MagazziniDigitaliBusinessLogic-2.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/MagazziniDigitaliBusinessLogic/MagazziniDigitaliBusinessLogic">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="MagazziniDigitaliDatabaseSchema-1.0.20.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/MagazziniDigitaliDatabaseSchema/MagazziniDigitaliDatabaseSchema">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="MagazziniDigitaliDemoniClientServices-1.0.1.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/MagazziniDigitaliDemoniClientServices/MagazziniDigitaliDemoniClientServices">
+        <dependent-module archiveName="MagazziniDigitaliDatabaseSchema-2.0.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/MagazziniDigitaliDatabaseSchema/MagazziniDigitaliDatabaseSchema">
             <dependency-type>uses</dependency-type>
         </dependent-module>
     <property name="context-root" value="MagazziniDigitaliServices"/>

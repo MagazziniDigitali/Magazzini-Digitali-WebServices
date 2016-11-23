@@ -1,19 +1,18 @@
 package it.bncf.magazziniDigitali.services.implement;
 
-import it.depositolegale.www.storage.Documenti;
-import it.depositolegale.www.storage.Storage;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 
+import org.apache.log4j.Logger;
+
+import it.depositolegale.www.storage.Documenti;
+import it.depositolegale.www.storage.Storage;
 import mx.randalf.configuration.Configuration;
 import mx.randalf.configuration.exception.ConfigurationException;
 import mx.randalf.digest.SHA1;
-
-import org.apache.log4j.Logger;
 
 public class CheckStorageMDImpl {
 
@@ -35,7 +34,9 @@ public class CheckStorageMDImpl {
     		sha1 = new SHA1();
     		for (int x=0; x<output.getDocumenti().getDocumento().length; x++){
     			try {
-					file = new File(Configuration.getValue("demoni.Publish.pathStorage")+
+					file = new File(
+//							DepositoLegaleAxisServlet.mdConfiguration.getSoftwareConfigMDNodi("nodo").getPathStorage()+
+							Configuration.getValue("demoni.Publish.pathStorage")+
 							File.separator+
 							output.getDocumenti().getDocumento()[x].getNomeFile());
 					if (file.exists()){
@@ -71,6 +72,10 @@ public class CheckStorageMDImpl {
 							output.getDocumenti().getDocumento()[x].setEsito("NOTFOUND");
 						}
 					}
+//				} catch (MDConfigurationException e) {
+//					log.error(e.getMessage(), e);
+//					output.getDocumenti().getDocumento()[x].setEsito("ERROR");
+//					addError(output);
 				} catch (ConfigurationException e) {
 					log.error(e.getMessage(), e);
 					output.getDocumenti().getDocumento()[x].setEsito("ERROR");

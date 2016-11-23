@@ -1,25 +1,23 @@
 package it.bncf.magazziniDigitali.services.implement;
 
+import java.rmi.RemoteException;
+import java.sql.SQLException;
+
+import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
+
 import it.bncf.magazziniDigitali.businessLogic.filesTmp.MDFilesTmpBusiness;
-import it.bncf.magazziniDigitali.database.dao.MDIstituzioneDAO;
-import it.bncf.magazziniDigitali.database.dao.MDNodiDAO;
-import it.bncf.magazziniDigitali.database.entity.MDIstituzione;
+import it.bncf.magazziniDigitali.configuration.exception.MDConfigurationException;
+import it.bncf.magazziniDigitali.database.dao.MDSoftwareDAO;
 import it.bncf.magazziniDigitali.database.entity.MDNodi;
+import it.bncf.magazziniDigitali.database.entity.MDSoftware;
+import it.bncf.magazziniDigitali.services.axis.DepositoLegaleAxisServlet;
+import it.bncf.magazziniDigitali.services.implement.software.SoftwareTools;
 import it.depositolegale.www.oggettiDigitali.StatoOggettoDigitale_type;
 import it.depositolegale.www.readInfoInput.ReadInfoInput;
 import it.depositolegale.www.readInfoOutput.Errori;
 import it.depositolegale.www.readInfoOutput.ReadInfoOutput;
-
-import java.rmi.RemoteException;
-import java.sql.SQLException;
-
-import javax.naming.NamingException;
-
-import mx.randalf.configuration.Configuration;
-import mx.randalf.configuration.exception.ConfigurationException;
-
-import org.apache.log4j.Logger;
-import org.hibernate.HibernateException;
+import mx.randalf.hibernate.exception.HibernateUtilException;
 
 public class InitSendMDImpl {
 
@@ -29,30 +27,38 @@ public class InitSendMDImpl {
 	}
 
     public static ReadInfoOutput initSendMDOperation(ReadInfoInput input) throws java.rmi.RemoteException {
-    	MDFilesTmpBusiness oggettoDigitaleBusiness = null;
     	ReadInfoOutput output = null;
+    	MDFilesTmpBusiness oggettoDigitaleBusiness = null;
     	String id = null;
     	Errori[] errori = null;
-    	MDIstituzioneDAO mdIstituzioneDAO = null;
-    	MDIstituzione mdIstituzione = null;
-    	MDNodiDAO mdNodiDAO = null;
+//    	MDIstituzioneDAO mdIstituzioneDAO = null;
+//    	MDIstituzione mdIstituzione = null;
+//    	MDNodiDAO mdNodiDAO = null;
+    	MDSoftwareDAO mdSoftwareDAO = null;
+    	MDSoftware mdSoftware = null;
     	MDNodi mdNodi = null;
 
 		output = new ReadInfoOutput();
 
-		output.setIstituto(input.getIstituto());
+		output.setSoftware(input.getSoftware());
 		output.setOggettoDigitale(input.getOggettoDigitale());
 		try {
-			oggettoDigitaleBusiness = new MDFilesTmpBusiness(null);
+			oggettoDigitaleBusiness = new MDFilesTmpBusiness();
 
-			mdIstituzioneDAO = new MDIstituzioneDAO(null);
-
-			mdIstituzione = mdIstituzioneDAO.findById(input.getIstituto().getId());
-			if (mdIstituzione != null && mdIstituzione.getId().equals(input.getIstituto().getId())){
-				mdNodiDAO = new MDNodiDAO(null);
-				mdNodi = mdNodiDAO.findById(Configuration.getValue("nodo"));
+			if (SoftwareTools.checkSoftware(input.getSoftware(), input.getSoftware().getNome())){
+//			mdIstituzioneDAO = new MDIstituzioneDAO();
+//
+//			mdIstituzione = mdIstituzioneDAO.findById(input.getIstituto().getId());
+//			if (mdIstituzione != null && mdIstituzione.getId().equals(input.getIstituto().getId())){
+//				mdNodiDAO = new MDNodiDAO();
+				mdNodi = DepositoLegaleAxisServlet.mdConfiguration.getSoftwareConfigMDNodi("nodo");
+//				mdNodi = mdNodiDAO.findById(
+//						Configuration.getValue("nodo")
+//						);
 				if (mdNodi != null){
-					id = oggettoDigitaleBusiness.insertNewRec(mdIstituzione, 
+					mdSoftwareDAO = new MDSoftwareDAO();
+					mdSoftware = mdSoftwareDAO.findById(input.getSoftware().getId());
+					id = oggettoDigitaleBusiness.insertNewRec(mdSoftware, 
 							input.getOggettoDigitale().getNomeFile(), 
 							input.getOggettoDigitale().getDigest()[0].getDigestValue(), 
 							input.getOggettoDigitale().getUltimaModifica(),
@@ -80,7 +86,7 @@ public class InitSendMDImpl {
 			output.setErrori(errori);
 			log.error(e.getMessage(), e);
 			throw new RemoteException(e.getMessage(), e);
-		} catch (ConfigurationException e) {
+		} catch (MDConfigurationException e) {
 			output.getOggettoDigitale().setStatoOggettoDigitale(StatoOggettoDigitale_type.ERROR);
 			errori = new Errori[1];
 			errori[0] = new Errori("-1",e.getMessage());
@@ -94,7 +100,7 @@ public class InitSendMDImpl {
 			output.setErrori(errori);
 			log.error(e.getMessage(), e);
 			throw new RemoteException(e.getMessage(), e);
-		} catch (NamingException e) {
+		} catch (HibernateUtilException e) {
 			output.getOggettoDigitale().setStatoOggettoDigitale(StatoOggettoDigitale_type.ERROR);
 			errori = new Errori[1];
 			errori[0] = new Errori("-1",e.getMessage());

@@ -20,7 +20,7 @@ public class EndSendMDImpl {
     	String[] errors = null;
 
 		try {
-			oggettoDigitaleBusiness = new MDFilesTmpBusiness(null);
+			oggettoDigitaleBusiness = new MDFilesTmpBusiness();
 
 			if (input.getErrori() != null && 
 					 input.getErrori().length>0){
@@ -31,7 +31,7 @@ public class EndSendMDImpl {
 			}
 			oggettoDigitaleBusiness.updatEndSend(input.getReadInfoOutput().getOggettoDigitale().getId(), 
 					input.isEsito(), 
-					errors);
+					null, errors);
 
 		} catch (SQLException e) {
 			log.error(e.getMessage(), e);

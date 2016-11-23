@@ -32,16 +32,16 @@
       />
       <typeMapping
         xmlns:ns="http://www.depositolegale.it/storage"
-        qname="ns:>>documenti>documento"
-        type="java:it.depositolegale.www.storage.DocumentiDocumento"
+        qname="ns:>storage"
+        type="java:it.depositolegale.www.storage.Storage"
         serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
         deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
         encodingStyle=""
       />
       <typeMapping
         xmlns:ns="http://www.depositolegale.it/storage"
-        qname="ns:>storage"
-        type="java:it.depositolegale.www.storage.Storage"
+        qname="ns:>>documenti>documento"
+        type="java:it.depositolegale.www.storage.DocumentiDocumento"
         serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
         deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
         encodingStyle=""

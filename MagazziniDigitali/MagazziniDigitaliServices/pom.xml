@@ -9,7 +9,7 @@
   </parent>
   <groupId>it.bncf.magazziniDigitali.services</groupId>
   <artifactId>MagazziniDigitaliServices</artifactId>
-  <version>1.0.5</version>
+  <version>2.0.0</version>
   <packaging>war</packaging>
   <name>MagazziniDigitaliServices Maven Webapp</name>
   <url>http://maven.apache.org</url>
@@ -23,13 +23,23 @@
     <dependency>
     	<groupId>it.bncf.magazziniDigitali.businessLogic</groupId>
     	<artifactId>MagazziniDigitaliBusinessLogic</artifactId>
-    	<version>1.0.38</version>
+    	<version>2.0.0</version>
     </dependency>
     <dependency>
     	<groupId>javax.servlet</groupId>
     	<artifactId>javax.servlet-api</artifactId>
     	<version>3.1.0</version>
     	<scope>provided</scope>
+    </dependency>
+    <dependency>
+    	<groupId>javax.mail</groupId>
+    	<artifactId>mailapi</artifactId>
+    	<version>1.4.3</version>
+    </dependency>
+    <dependency>
+    	<groupId>xml-apis</groupId>
+    	<artifactId>xml-apis</artifactId>
+    	<version>1.4.01</version>
     </dependency>
   </dependencies>
   <properties>

@@ -22,7 +22,7 @@ public class InitSendMDServiceLocator extends org.apache.axis.client.Service imp
     }
 
     // Use to get a proxy class for InitSendMDPort
-    private java.lang.String InitSendMDPort_address = "http://localhost:8080/TestWB/services/clientService";
+    private java.lang.String InitSendMDPort_address = "http://localhost:8080/MagazziniDigitaliServices/services/InitSendMDPort";
 
     public java.lang.String getInitSendMDPortAddress() {
         return InitSendMDPort_address;

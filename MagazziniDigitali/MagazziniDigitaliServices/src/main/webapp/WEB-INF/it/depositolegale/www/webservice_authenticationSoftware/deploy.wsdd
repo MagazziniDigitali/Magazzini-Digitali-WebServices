@@ -1,0 +1,114 @@
+<!-- Use this file to deploy some handlers/chains and services      -->
+<!-- Two ways to do this:                                           -->
+<!--   java org.apache.axis.client.AdminClient deploy.wsdd          -->
+<!--      after the axis server is running                          -->
+<!-- or                                                             -->
+<!--   java org.apache.axis.utils.Admin client|server deploy.wsdd   -->
+<!--      from the same directory that the Axis engine runs         -->
+
+<deployment
+    xmlns="http://xml.apache.org/axis/wsdd/"
+    xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+
+  <!-- Services from AuthenticationSoftwareService WSDL service -->
+
+  <service name="AuthenticationSoftwarePort" provider="java:RPC" style="document" use="literal">
+      <parameter name="wsdlTargetNamespace" value="http://www.depositolegale.it/webservice.authenticationSoftware"/>
+      <parameter name="wsdlServiceElement" value="AuthenticationSoftwareService"/>
+      <parameter name="schemaQualified" value="http://www.depositolegale.it/rigths,http://www.depositolegale.it/nodi,http://www.depositolegale.it/errorMsg,http://www.depositolegale.it/istituzione,http://www.depositolegale.it/login,http://www.depositolegale.it/software"/>
+      <parameter name="wsdlServicePort" value="AuthenticationSoftwarePort"/>
+      <parameter name="className" value="it.depositolegale.www.webservice_authenticationSoftware.AuthenticationSoftwareBindSkeleton"/>
+      <parameter name="wsdlPortType" value="AuthenticationSoftwarePortType"/>
+      <parameter name="typeMappingVersion" value="1.2"/>
+      <parameter name="allowedMethods" value="*"/>
+
+      <typeMapping
+        xmlns:ns="http://www.depositolegale.it/rigths"
+        qname="ns:>rigth"
+        type="java:it.depositolegale.www.rigths.Rigth"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.depositolegale.it/software"
+        qname="ns:>softwareConfig"
+        type="java:it.depositolegale.www.software.SoftwareConfig"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.depositolegale.it/nodi"
+        qname="ns:>nodo"
+        type="java:it.depositolegale.www.nodi.Nodo"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.depositolegale.it/errorMsg"
+        qname="ns:>errorMsg"
+        type="java:it.depositolegale.www.errorMsg.ErrorMsg"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.depositolegale.it/istituzione"
+        qname="ns:>istituzione"
+        type="java:it.depositolegale.www.istituzione.Istituzione"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.depositolegale.it/istituzione"
+        qname="ns:>>istituzione>ApiUtente"
+        type="java:it.depositolegale.www.istituzione.IstituzioneApiUtente"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.depositolegale.it/rigths"
+        qname="ns:rightType_type"
+        type="java:it.depositolegale.www.rigths.RightType_type"
+        serializer="org.apache.axis.encoding.ser.EnumSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.EnumDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.depositolegale.it/errorMsg"
+        qname="ns:errorType_type"
+        type="java:it.depositolegale.www.errorMsg.ErrorType_type"
+        serializer="org.apache.axis.encoding.ser.EnumSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.EnumDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.depositolegale.it/login"
+        qname="ns:>authentication"
+        type="java:it.depositolegale.www.login.Authentication"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.depositolegale.it/nodi"
+        qname="ns:>>nodo>rsync"
+        type="java:it.depositolegale.www.nodi.NodoRsync"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.depositolegale.it/software"
+        qname="ns:>software"
+        type="java:it.depositolegale.www.software.Software"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+  </service>
+</deployment>

@@ -22,7 +22,7 @@ public class ConfirmDelMDServiceLocator extends org.apache.axis.client.Service i
     }
 
     // Use to get a proxy class for ConfirmDelMDPort
-    private java.lang.String ConfirmDelMDPort_address = "http://localhost:8080/TestWB/services/clientService";
+    private java.lang.String ConfirmDelMDPort_address = "http://localhost:8080/MagazziniDigitaliServices/services/ConfirmDelMDPort";
 
     public java.lang.String getConfirmDelMDPortAddress() {
         return ConfirmDelMDPort_address;

@@ -35,8 +35,8 @@
     <param name="SMTPPort" value="465" />
     <param name="SMTPUsername" value="opendigital.notifica@gmail.com" /> <!-- example@gmail.com -->
     <param name="SMTPPassword" value="G@l@ss1@" /> <!-- passowrd -->
-    <param name="To" value="massimiliano.randazzo@bncf.firenze.sbn.it"/>
-    <param name="Subject" value="Magazzini Digitali - Modulo Gestionale (Ambiente di Test)"/>
+    <param name="To" value="monitoring@bncf.firenze.sbn.it"/>
+    <param name="Subject" value="Magazzini Digitali Firenze - Modulo Gestionale"/>
     <layout class="org.apache.log4j.PatternLayout">
       <param name="ConversionPattern" value="[%d{ISO8601}]%n%n%-5p%n%n%c%n%n%m%n%n"/>
     </layout>

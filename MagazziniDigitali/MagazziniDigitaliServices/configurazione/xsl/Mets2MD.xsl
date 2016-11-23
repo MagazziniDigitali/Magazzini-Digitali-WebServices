@@ -8,7 +8,10 @@
 	xmlns:METS="http://www.loc.gov/METS/" xmlns:PREMIS="info:lc/xmlns/premis-v2"
 	xsi:schemaLocation="http://www.depositolegale.it/MD http://www.bncf.firenze.sbn.it/SchemaXML/MagazziniDigitali/MD.xsd"
 	exclude-result-prefixes="md">
+	<!-- 
 	<xsl:import href="http://www.loc.gov/standards/marcxml/xslt/MARC21slimUtils.xsl"/>
+	<xsl:include href="http://www.loc.gov/marcxml/xslt/MARC21slimUtils.xsl"/>
+	-->
 	<xsl:output method="xml" indent="yes"/>
 	<!--
 	Fixed 530 Removed type="original" from dc:relation 2010-11-19 tmee
@@ -314,5 +317,21 @@
 
 			<!--</oai_dc:dc>-->
 		</bib>
+	</xsl:template>
+	
+	<xsl:template name="subfieldSelect">
+		<xsl:param name="codes">abcdefghijklmnopqrstuvwxyz</xsl:param>
+		<xsl:param name="delimeter">
+			<xsl:text></xsl:text>
+		</xsl:param>
+		<xsl:variable name="str">
+			<xsl:for-each select="marc:subfield">
+				<xsl:if test="contains($codes, @code)">
+					<xsl:value-of select="text()"/>
+					<xsl:value-of select="$delimeter"/>
+				</xsl:if>
+			</xsl:for-each>
+		</xsl:variable>
+		<xsl:value-of select="substring($str,1,string-length($str)-string-length($delimeter))"/>
 	</xsl:template>
 </xsl:stylesheet>

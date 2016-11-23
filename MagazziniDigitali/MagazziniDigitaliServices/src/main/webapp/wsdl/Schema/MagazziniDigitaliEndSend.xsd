@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.depositolegale.it/endSend" xmlns:readInfoOutput="http://www.depositolegale.it/readInfoOutput" elementFormDefault="qualified" targetNamespace="http://www.depositolegale.it/endSend">
+<?xml version="1.0" encoding="UTF-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.depositolegale.it/endSend" xmlns:readInfoOutput="http://www.depositolegale.it/readInfoOutput" elementFormDefault="qualified" targetNamespace="http://www.depositolegale.it/endSend">
 
     <xs:import namespace="http://www.depositolegale.it/readInfoOutput" schemaLocation="ReadInfoOutput.xsd"/>
     <xs:element name="endSend">
