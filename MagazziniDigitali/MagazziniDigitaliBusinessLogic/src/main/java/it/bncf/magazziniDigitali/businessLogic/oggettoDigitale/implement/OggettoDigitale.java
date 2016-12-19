@@ -27,7 +27,7 @@ public class OggettoDigitale {
 		return 	genFilePremis(pathPremis, type, name, ".premis");
 	}
 	
-	protected String genFilePremis(String pathPremis, String type, String name, String subFix) {
+	public static String genFilePremis(String pathPremis, String type, String name, String subFix) {
 		String result = null;
 		GregorianCalendar gc = null;
 //		String fPremis = null;
@@ -86,7 +86,7 @@ public class OggettoDigitale {
 	 * @param premis Tracciato Premis da analizzare
 	 * @return Valore individuato
 	 */
-	protected String findObjectIdentifierContainer(PremisXsd premis) {
+	protected String findObjectIdentifierContainer(PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?> premis) {
 		String objectIdentifierContainer = null;
 		info.lc.xmlns.premis_v2.File file = null;
 		SignificantPropertiesComplexType significantProprties = null;

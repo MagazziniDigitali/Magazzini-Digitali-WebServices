@@ -23,7 +23,9 @@ public class MDRigths implements Serializable {
 
 	private String nome;
 
-	private String tipo;
+	private MDModalitaAccesso idModalitaAccesso;
+
+	private String idModalitaAccessoID;
 
 	public MDRigths() {
 	}
@@ -56,16 +58,33 @@ public class MDRigths implements Serializable {
 	}
 
 	/**
-	 * @return the tipo
+	 * @return the idModalitaAccesso
 	 */
-	public String getTipo() {
-		return tipo;
+	public MDModalitaAccesso getIdModalitaAccesso() {
+		return idModalitaAccesso;
 	}
 
 	/**
-	 * @param tipo the tipo to set
+	 * @param idModalitaAccesso the idModalitaAccesso to set
 	 */
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
+	public void setIdModalitaAccesso(MDModalitaAccesso idModalitaAccesso) {
+		this.idModalitaAccesso = idModalitaAccesso;
+		if (idModalitaAccesso != null){
+			idModalitaAccessoID = idModalitaAccesso.getId();
+		}
+	}
+
+	/**
+	 * @return the idModalitaAccessoID
+	 */
+	public String getIdModalitaAccessoID() {
+		return idModalitaAccessoID;
+	}
+
+	/**
+	 * @param idModalitaAccessoID the idModalitaAccessoID to set
+	 */
+	public void setIdModalitaAccessoID(String idModalitaAccessoID) {
+		this.idModalitaAccessoID = idModalitaAccessoID;
 	}
 }

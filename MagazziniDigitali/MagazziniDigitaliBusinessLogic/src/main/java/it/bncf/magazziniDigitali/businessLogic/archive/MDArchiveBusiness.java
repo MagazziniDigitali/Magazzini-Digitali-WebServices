@@ -17,6 +17,9 @@ import org.hibernate.criterion.Order;
 
 import it.bncf.magazziniDigitali.businessLogic.BusinessLogic;
 import it.bncf.magazziniDigitali.businessLogic.HashTable;
+import it.bncf.magazziniDigitali.businessLogic.exception.BusinessLogicException;
+import it.bncf.magazziniDigitali.businessLogic.filesTmp.MDFilesTmpBusiness;
+import it.bncf.magazziniDigitali.businessLogic.nodi.MDNodiBusiness;
 import it.bncf.magazziniDigitali.database.dao.MDArchiveDAO;
 import it.bncf.magazziniDigitali.database.dao.MDFilesTmpDAO;
 import it.bncf.magazziniDigitali.database.dao.MDNodiDAO;
@@ -181,5 +184,36 @@ public class MDArchiveBusiness extends
 	protected Criteria rowsCount(MDArchiveDAO tableDao, HashTable<String, Object> dati) {
 		return null;
 	}
-	
+
+	@Override
+	protected String toJson(String key, Object value) throws SecurityException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException, BusinessLogicException {
+		String jsonArray = "";
+		MDFilesTmpBusiness mdFilesTmpBusiness = null;
+		MDNodiBusiness mdNodiBusiness = null;
+		
+		try {
+			if (value instanceof MDFilesTmp){
+				mdFilesTmpBusiness = new MDFilesTmpBusiness();
+				jsonArray = mdFilesTmpBusiness.toJson((MDFilesTmp) value) + "\n";
+			} else if (value instanceof MDNodi){
+				mdNodiBusiness = new MDNodiBusiness();
+				jsonArray = mdNodiBusiness.toJson((MDNodi) value) + "\n";
+			} else {
+				throw new BusinessLogicException(this.getClass().getName()+" - Il formato Key: "+key+" class ["+value.getClass().getName()+"] non gestito");
+			}
+		} catch (SecurityException e) {
+			throw e;
+		} catch (IllegalAccessException e) {
+			throw e;
+		} catch (IllegalArgumentException e) {
+			throw e;
+		} catch (InvocationTargetException e) {
+			throw e;
+		} catch (BusinessLogicException e) {
+			throw e;
+		}
+		return jsonArray;
+	}
+
 }

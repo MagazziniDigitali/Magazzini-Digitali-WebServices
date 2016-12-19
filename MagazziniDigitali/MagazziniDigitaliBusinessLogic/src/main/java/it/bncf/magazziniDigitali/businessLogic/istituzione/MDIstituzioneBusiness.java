@@ -18,8 +18,11 @@ import org.hibernate.criterion.Restrictions;
 
 import it.bncf.magazziniDigitali.businessLogic.BusinessLogic;
 import it.bncf.magazziniDigitali.businessLogic.HashTable;
+import it.bncf.magazziniDigitali.businessLogic.exception.BusinessLogicException;
+import it.bncf.magazziniDigitali.businessLogic.regioni.RegioniBusiness;
 import it.bncf.magazziniDigitali.database.dao.MDIstituzioneDAO;
 import it.bncf.magazziniDigitali.database.entity.MDIstituzione;
+import it.bncf.magazziniDigitali.database.entity.Regioni;
 import it.bncf.magazziniDigitali.utils.Record;
 import mx.randalf.hibernate.exception.HibernateUtilException;
 import mx.randalf.tools.SHA256Tools;
@@ -137,7 +140,7 @@ public class MDIstituzioneBusiness extends BusinessLogic<MDIstituzione, MDIstitu
 
 		tableDao.setPage(page);
 		tableDao.setPageSize(pageSize);
-		tables = tableDao.find((String)dati.get("nome"),(String)dati.get("login"),
+		tables = tableDao.find((String)dati.get("nome"),(String)dati.get("login"), (Integer)dati.get("bibliotecaDepositaria"),
 				orders);
 		return tables;
 	}
@@ -149,6 +152,9 @@ public class MDIstituzioneBusiness extends BusinessLogic<MDIstituzione, MDIstitu
 		criteria = tableDao.createCriteria();
 		if (nome != null) {
 			criteria.add(Restrictions.ilike("nome", "%"+nome+"%"));
+		}
+		if (dati.get("bibliotecaDepositaria") != null) {
+			criteria.add(Restrictions.eq("bibliotecaDepositaria", dati.get("bibliotecaDepositaria")));
 		}
 		return criteria;
 	}
@@ -280,6 +286,26 @@ public class MDIstituzioneBusiness extends BusinessLogic<MDIstituzione, MDIstitu
 			} else {
 				table.setPathTmp(null);
 			}
+
+			if (dati.get("note") != null && 
+					!((String)dati.get("note")).trim().equals("")){
+				table.setNote((String) dati.get("note"));
+			} else {
+				table.setNote(null);
+			}
+
+			if (dati.get("url") != null && 
+					!((String)dati.get("url")).trim().equals("")){
+				table.setUrl((String) dati.get("url"));
+			} else {
+				table.setUrl(null);
+			}
+
+			if (dati.get("idRegione") != null){
+				table.setIdRegione((Regioni) dati.get("idRegione"));
+			} else {
+				table.setIdRegione(null);
+			}
 		} catch (NoSuchAlgorithmException e) {
 			log.error(e.getMessage(),e);
 			throw new HibernateUtilException(e.getMessage(),e);
@@ -305,5 +331,40 @@ public class MDIstituzioneBusiness extends BusinessLogic<MDIstituzione, MDIstitu
 
 	public String getPassword() {
 		return password;
+	}
+
+	/**
+	 * @see it.bncf.magazziniDigitali.businessLogic.BusinessLogic#genID()
+	 */
+	@Override
+	protected String genID() {
+		return super.genID()+"-AG";
+	}
+
+	@Override
+	protected String toJson(String key, Object value) throws SecurityException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException, BusinessLogicException {
+		String jsonArray = "";
+		RegioniBusiness regioniBusiness = null;
+		
+		try {
+			if (value instanceof Regioni){
+				regioniBusiness = new RegioniBusiness();
+				jsonArray = regioniBusiness.toJson((Regioni) value) + "\n";
+			} else {
+				throw new BusinessLogicException(this.getClass().getName()+" - Il formato Key: "+key+" class ["+value.getClass().getName()+"] non gestito");
+			}
+		} catch (SecurityException e) {
+			throw e;
+		} catch (IllegalAccessException e) {
+			throw e;
+		} catch (IllegalArgumentException e) {
+			throw e;
+		} catch (InvocationTargetException e) {
+			throw e;
+		} catch (BusinessLogicException e) {
+			throw e;
+		}
+		return jsonArray;
 	}
 }

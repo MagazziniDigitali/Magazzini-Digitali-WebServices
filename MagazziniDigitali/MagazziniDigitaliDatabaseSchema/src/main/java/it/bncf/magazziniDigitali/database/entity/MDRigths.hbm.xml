@@ -12,8 +12,8 @@
 		<property name="nome" type="java.lang.String">
 			<column name="NOME" />
 		</property>
-		<property name="tipo" type="java.lang.String">
-			<column name="TIPO" />
-		</property>
+        <many-to-one name="idModalitaAccesso" class="it.bncf.magazziniDigitali.database.entity.MDModalitaAccesso" fetch="join">
+            <column name="ID_MODALITAACCESSO" />
+        </many-to-one>
 	</class>
 </hibernate-mapping>

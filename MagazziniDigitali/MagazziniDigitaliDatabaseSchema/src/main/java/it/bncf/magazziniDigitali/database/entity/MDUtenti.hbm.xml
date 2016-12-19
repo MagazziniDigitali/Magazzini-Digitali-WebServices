@@ -30,5 +30,8 @@
         <many-to-one name="idIstituzione" class="it.bncf.magazziniDigitali.database.entity.MDIstituzione" fetch="join">
             <column name="ID_ISTITUZIONE" />
         </many-to-one>
-	</class>
+		<property name="note" type="java.lang.String">
+			<column name="NOTE" />
+		</property>
+        	</class>
 </hibernate-mapping>

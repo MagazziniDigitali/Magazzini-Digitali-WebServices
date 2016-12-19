@@ -18,6 +18,8 @@ import org.hibernate.criterion.Order;
 
 import it.bncf.magazziniDigitali.businessLogic.BusinessLogic;
 import it.bncf.magazziniDigitali.businessLogic.HashTable;
+import it.bncf.magazziniDigitali.businessLogic.exception.BusinessLogicException;
+import it.bncf.magazziniDigitali.businessLogic.stato.MDStatoBusiness;
 import it.bncf.magazziniDigitali.database.dao.MDRegistroIngressoDAO;
 import it.bncf.magazziniDigitali.database.dao.MDRegistroIngressoErrorDAO;
 import it.bncf.magazziniDigitali.database.dao.MDStatoDAO;
@@ -212,6 +214,37 @@ public class MDRegistroIngressoErrorBusiness extends
 	@Override
 	protected Criteria rowsCount(MDRegistroIngressoErrorDAO tableDao, HashTable<String, Object> dati) {
 		return null;
+	}
+
+	@Override
+	protected String toJson(String key, Object value) throws SecurityException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException, BusinessLogicException {
+		String jsonArray = "";
+		MDRegistroIngressoBusiness mdRegistroIngressoBusiness = null;
+		MDStatoBusiness mdStatoBusiness = null;
+		
+		try {
+			if (value instanceof MDRegistroIngresso){
+				mdRegistroIngressoBusiness = new MDRegistroIngressoBusiness();
+				jsonArray = mdRegistroIngressoBusiness.toJson((MDRegistroIngresso) value) + "\n";
+			} else if (value instanceof MDStato){
+				mdStatoBusiness = new MDStatoBusiness();
+				jsonArray = mdStatoBusiness.toJson((MDStato) value) + "\n";
+			} else {
+				throw new BusinessLogicException(this.getClass().getName()+" - Il formato Key: "+key+" class ["+value.getClass().getName()+"] non gestito");
+			}
+		} catch (SecurityException e) {
+			throw e;
+		} catch (IllegalAccessException e) {
+			throw e;
+		} catch (IllegalArgumentException e) {
+			throw e;
+		} catch (InvocationTargetException e) {
+			throw e;
+		} catch (BusinessLogicException e) {
+			throw e;
+		}
+		return jsonArray;
 	}
 
 }

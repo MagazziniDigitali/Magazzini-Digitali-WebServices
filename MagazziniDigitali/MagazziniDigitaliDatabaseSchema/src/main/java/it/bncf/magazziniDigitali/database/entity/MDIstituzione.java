@@ -49,6 +49,14 @@ public class MDIstituzione implements Serializable {
 
 	private String pathTmp;
 
+	private String note;
+
+	private String url;
+
+	private Regioni idRegione;
+
+	private Integer idRegioneID;
+
 	public MDIstituzione() {
 	}
 
@@ -262,5 +270,64 @@ public class MDIstituzione implements Serializable {
 	 */
 	public void setPathTmp(String pathTmp) {
 		this.pathTmp = pathTmp;
+	}
+
+	/**
+	 * @return the note
+	 */
+	public String getNote() {
+		return note;
+	}
+
+	/**
+	 * @param note the note to set
+	 */
+	public void setNote(String note) {
+		this.note = note;
+	}
+
+	/**
+	 * @return the url
+	 */
+	public String getUrl() {
+		return url;
+	}
+
+	/**
+	 * @param url the url to set
+	 */
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	/**
+	 * @return the idRegione
+	 */
+	public Regioni getIdRegione() {
+		return idRegione;
+	}
+
+	/**
+	 * @param idRegione the idRegione to set
+	 */
+	public void setIdRegione(Regioni idRegione) {
+		this.idRegione = idRegione;
+		if (this.idRegione != null){
+			this.idRegioneID = this.idRegione.getId();
+		}
+	}
+
+	/**
+	 * @return the idRegioneID
+	 */
+	public Integer getIdRegioneID() {
+		return idRegioneID;
+	}
+
+	/**
+	 * @param idRegioneID the idRegioneID to set
+	 */
+	public void setIdRegioneID(Integer idRegioneID) {
+		this.idRegioneID = idRegioneID;
 	}
 }

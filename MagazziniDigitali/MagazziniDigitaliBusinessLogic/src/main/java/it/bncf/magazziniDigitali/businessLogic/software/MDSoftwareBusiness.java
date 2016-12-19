@@ -17,6 +17,9 @@ import org.hibernate.criterion.Restrictions;
 
 import it.bncf.magazziniDigitali.businessLogic.BusinessLogic;
 import it.bncf.magazziniDigitali.businessLogic.HashTable;
+import it.bncf.magazziniDigitali.businessLogic.exception.BusinessLogicException;
+import it.bncf.magazziniDigitali.businessLogic.istituzione.MDIstituzioneBusiness;
+import it.bncf.magazziniDigitali.businessLogic.rigths.MDRigthsBusiness;
 import it.bncf.magazziniDigitali.database.dao.MDSoftwareDAO;
 import it.bncf.magazziniDigitali.database.entity.MDIstituzione;
 import it.bncf.magazziniDigitali.database.entity.MDRigths;
@@ -93,7 +96,6 @@ public class MDSoftwareBusiness extends BusinessLogic<MDSoftware, MDSoftwareDAO,
 			throws NamingException, HibernateUtilException,
 			IllegalAccessException, InvocationTargetException,
 			NoSuchMethodException {
-
 	}
 
 	/**
@@ -146,6 +148,12 @@ public class MDSoftwareBusiness extends BusinessLogic<MDSoftware, MDSoftwareDAO,
 				table.setIpAutorizzati(null);
 			}
 
+			if (dati.get("bibliotecaDepositaria") != null){
+				table.setBibliotecaDepositaria((Integer) dati.get("bibliotecaDepositaria"));
+			} else {
+				table.setBibliotecaDepositaria(0);
+			}
+
 			if (dati.get("idIstituzione") != null){
 				table.setIdIstituzione((MDIstituzione) dati.get("idIstituzione"));
 			} else {
@@ -157,6 +165,12 @@ public class MDSoftwareBusiness extends BusinessLogic<MDSoftware, MDSoftwareDAO,
 			} else {
 				table.setIdRigths(null);
 			}
+
+			if (dati.get("note") != null){
+				table.setNote((String) dati.get("note"));
+			} else {
+				table.setNote(null);
+			}
 		} catch (NoSuchAlgorithmException e) {
 			log.error(e.getMessage(),e);
 			throw new HibernateUtilException(e.getMessage(),e);
@@ -165,5 +179,45 @@ public class MDSoftwareBusiness extends BusinessLogic<MDSoftware, MDSoftwareDAO,
 
 	public String getNome() {
 		return nome;
+	}
+
+
+	/**
+	 * @see it.bncf.magazziniDigitali.businessLogic.BusinessLogic#genID()
+	 */
+	@Override
+	protected String genID() {
+		return super.genID()+"-AG";
+	}
+
+	@Override
+	protected String toJson(String key, Object value) throws SecurityException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException, BusinessLogicException {
+		String jsonArray = "";
+		MDIstituzioneBusiness mdIstituzioneBusiness = null;
+		MDRigthsBusiness mdRigthsBusiness = null;
+		
+		try {
+			if (value instanceof MDIstituzione){
+				mdIstituzioneBusiness = new MDIstituzioneBusiness();
+				jsonArray = mdIstituzioneBusiness.toJson((MDIstituzione) value) + "\n";
+			} else if (value instanceof MDRigths){
+				mdRigthsBusiness = new MDRigthsBusiness();
+				jsonArray = mdRigthsBusiness.toJson((MDRigths) value) + "\n";
+			} else {
+				throw new BusinessLogicException(this.getClass().getName()+" - Il formato Key: "+key+" class ["+value.getClass().getName()+"] non gestito");
+			}
+		} catch (SecurityException e) {
+			throw e;
+		} catch (IllegalAccessException e) {
+			throw e;
+		} catch (IllegalArgumentException e) {
+			throw e;
+		} catch (InvocationTargetException e) {
+			throw e;
+		} catch (BusinessLogicException e) {
+			throw e;
+		}
+		return jsonArray;
 	}
 }

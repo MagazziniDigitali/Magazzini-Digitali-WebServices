@@ -15,6 +15,7 @@ import org.hibernate.criterion.Restrictions;
 
 import it.bncf.magazziniDigitali.businessLogic.BusinessLogic;
 import it.bncf.magazziniDigitali.businessLogic.HashTable;
+import it.bncf.magazziniDigitali.businessLogic.exception.BusinessLogicException;
 import it.bncf.magazziniDigitali.database.dao.MDEventDAO;
 import it.bncf.magazziniDigitali.database.entity.MDEvent;
 import mx.randalf.hibernate.exception.HibernateUtilException;
@@ -118,5 +119,11 @@ public class MDEventBusiness extends BusinessLogic<MDEvent, MDEventDAO, String> 
 
 	public String getNome() {
 		return nome;
+	}
+
+	@Override
+	protected String toJson(String key, Object value) throws SecurityException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException, BusinessLogicException {
+		throw new BusinessLogicException(this.getClass().getName()+" - Il formato Key: "+key+" class ["+value.getClass().getName()+"] non gestito");
 	}
 }

@@ -44,7 +44,7 @@ public class OggettoDigitalePublish extends OggettoDigitale{
 
 	private String name = null;
 
-	private PremisXsd premisElab = null;
+	private PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?> premisElab = null;
 	
 	/**
 	 * 
@@ -141,7 +141,7 @@ public class OggettoDigitalePublish extends OggettoDigitale{
 					null,
 					writeFilePremisDB(filePremis, configuration.getSoftwareConfigString("path.premis")));
 			log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
-		} catch (XsdException e) {
+		} catch (PremisXsdException e) {
 			if (premisElab != null) {
 				premisElab.addEvent(
 						"Error",
@@ -225,12 +225,12 @@ public class OggettoDigitalePublish extends OggettoDigitale{
 	private void validate(IMDConfiguration<?> configuration, MDFilesTmpBusiness mdFileTmpBusiness,
 			MDFilesTmp mdFilesTmp, String objectIdentifierPremis, String application, File filePremis) 
 					throws HibernateException, MDConfigurationException, HibernateUtilException,
-						SQLException, XsdException{
+						SQLException, PremisXsdException{
 		File filePremisMaster = null;
 		GregorianCalendar start = null;
 		String fileObj = null;
 		File fObj = null;
-		PremisXsd premisInput = null;
+		PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?> premisInput = null;
 		String objectIdentifierContainer = null;
 		int pos = 0;
 		String ext = null;
@@ -279,7 +279,7 @@ public class OggettoDigitalePublish extends OggettoDigitale{
 									.replace(".tgz", ".tar"));
 				}
 
-				premisInput = new PremisXsd(filePremisMaster);
+				premisInput = PremisXsd.open(filePremisMaster);
 
 				objectIdentifierContainer = findObjectIdentifierContainer(premisInput);
 				
@@ -335,7 +335,7 @@ public class OggettoDigitalePublish extends OggettoDigitale{
 			throw e;
 		} catch (SQLException e) {
 			throw e;
-		} catch (XsdException e) {
+		} catch (PremisXsdException e) {
 			throw e;
 		}
 	}
@@ -354,7 +354,7 @@ public class OggettoDigitalePublish extends OggettoDigitale{
 			validate = new ValidateFile();
 			if (isFileExist(fObj, mdFilesTmp, fObjNew)) {
 
-				premisElab = new PremisXsd();
+				premisElab = PremisXsd.initialize();
 
 				validate.check(filePremisMaster, null, configuration, null, false);
 
@@ -528,7 +528,7 @@ public class OggettoDigitalePublish extends OggettoDigitale{
 	}
 
 	private boolean copyFile(File fInput, File fOutput, MDFilesTmp record,
-			MDFilesTmpBusiness mdFileTmpBusiness, PremisXsd premisElab,
+			MDFilesTmpBusiness mdFileTmpBusiness, PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?> premisElab,
 			String application, String objectIdentifierMaster, MDSoftware idIstituto,
 			String objectIdentifierPremis, IMDConfiguration<?> configuration)
 					throws SQLException, MDConfigurationException 
@@ -629,7 +629,7 @@ public class OggettoDigitalePublish extends OggettoDigitale{
 	}
 
 	private boolean moveFile(File fInput, File fOutput, MDFilesTmp record,
-			MDFilesTmpBusiness mdFileTmp, PremisXsd premisElab,
+			MDFilesTmpBusiness mdFileTmp, PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?> premisElab,
 			String application, String objectIdentifierMaster, String objectIdentifierPremis,
 			IMDConfiguration<?> configuration, File filePremis)
 			throws SQLException, MDConfigurationException 

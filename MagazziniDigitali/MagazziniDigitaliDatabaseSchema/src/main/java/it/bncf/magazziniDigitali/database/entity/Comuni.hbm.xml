@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 22-ott-2014 15.40.53 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+	<class name="it.bncf.magazziniDigitali.database.entity.Comuni"
+		table="comuni">
+		<id name="id" type="java.lang.Integer">
+			<column name="ID" />
+			<generator class="assigned" />
+		</id>
+		<property name="comune" type="java.lang.String">
+			<column name="COMUNE" />
+		</property>
+		<many-to-one name="idProvinca"
+			class="it.bncf.magazziniDigitali.database.entity.Province" fetch="join">
+			<column name="ID_PROVINCIA" />
+		</many-to-one>
+		<property name="prefisso" type="java.lang.Integer">
+			<column name="PREFISSO" />
+		</property>
+		<property name="cap" type="java.lang.String">
+			<column name="CAP" />
+		</property>
+		<property name="codFisco" type="java.lang.String">
+			<column name="CODFISCO" />
+		</property>
+		<property name="abitanti" type="java.lang.Integer">
+			<column name="ABITANTI" />
+		</property>
+		<property name="link" type="java.lang.String">
+			<column name="LINK" />
+		</property>
+	</class>
+</hibernate-mapping>

@@ -278,12 +278,12 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 			String objectIdentifierPremis, IMDConfiguration<?> configuration, String eventDetailDecomp,
 			GregorianCalendar start)
 			throws SQLException, MDConfigurationException, PremisXsdException, XsdException, IOException {
-		PremisXsd premis = null;
+		PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?> premis = null;
 		String objectIdentifierMaster = null;
 		Boolean result = false;
 
 		try {
-			premis = new PremisXsd();
+			premis = PremisXsd.initialize();
 			objectIdentifierMaster = writePremisArchive(validate, objectIdentifierPremis, premis, configuration, mdFilesTmp);
 			if (premis.getActualFileName() != null) {
 				if (mdFilesTmp.getPremisFile() == null || !mdFilesTmp.getPremisFile().trim().equals("")) {
@@ -319,7 +319,7 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 	}
 
 	private Boolean writePremisDeCompress(MDFilesTmpBusiness mdFileTmpBusiness, MDFilesTmp mdFilesTmp,
-			ValidateFile validate, String objectIdentifierPremis, PremisXsd premis, IMDConfiguration<?> configuration,
+			ValidateFile validate, String objectIdentifierPremis, PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?> premis, IMDConfiguration<?> configuration,
 			String eventDetailDecomp, String objectIdentifierMaster)
 			throws SQLException, MDConfigurationException, PremisXsdException, XsdException, IOException {
 		GregorianCalendar startDecomp = null;
@@ -412,7 +412,7 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 		return result;
 	}
 
-	private String writePremisArchive(ValidateFile validate, String objectIdentifierPremis, PremisXsd premis,
+	private String writePremisArchive(ValidateFile validate, String objectIdentifierPremis, PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?> premis,
 			IMDConfiguration<?> configuration, MDFilesTmp mdFilesTmp) throws MDConfigurationException {
 		ArchiveMD archive = null;
 		String objectIdentifierMaster = null;
@@ -454,7 +454,7 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 		return objectIdentifierMaster;
 	}
 
-	private void writePremisSend(PremisXsd premis, MDFilesTmp mdFilesTmp, IMDConfiguration<?> configuration,
+	private void writePremisSend(PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?> premis, MDFilesTmp mdFilesTmp, IMDConfiguration<?> configuration,
 			String objectIdentifierMaster) throws MDConfigurationException {
 //		try {
 			premis.addEvent("send", mdFilesTmp.getTrasfDataStart(), mdFilesTmp.getTrasfDataEnd(), null, "OK", null,
@@ -474,7 +474,7 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 
 	private Boolean writePremisValidate(ValidateFile validate, String objectIdentifierPremis,
 			MDFilesTmpBusiness mdFileTmpBusiness, MDFilesTmp mdFilesTmp, IMDConfiguration<?> configuration,
-			PremisXsd premis, String objectIdentifierMaster, GregorianCalendar start)
+			PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?> premis, String objectIdentifierMaster, GregorianCalendar start)
 			throws SQLException, MDConfigurationException, PremisXsdException, XsdException, IOException {
 		GregorianCalendar stop = null;
 		DateFormat df = null;
@@ -540,7 +540,7 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 		return result;
 	}
 
-	private void addArchive(PremisXsd premis, ArchiveMD archive, String objectIdentifierMaster,
+	private void addArchive(PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?> premis, ArchiveMD archive, String objectIdentifierMaster,
 			IMDConfiguration<?> configuration) throws MDConfigurationException {
 		String objectIdentifierValue = null;
 		BigInteger compositionLevel = null;

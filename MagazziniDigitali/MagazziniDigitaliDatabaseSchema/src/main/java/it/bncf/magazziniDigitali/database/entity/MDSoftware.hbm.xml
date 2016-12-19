@@ -20,40 +20,17 @@
         <property name="ipAutorizzati" type="java.lang.String">
             <column name="IP_AUTORIZZATI" />
         </property>
+		<property name="bibliotecaDepositaria" type="java.lang.Integer">
+			<column name="BIBLIOTECA_DEPOSITARIA" />
+		</property>
         <many-to-one name="idIstituzione" class="it.bncf.magazziniDigitali.database.entity.MDIstituzione" fetch="join">
             <column name="ID_ISTITUZIONE" />
         </many-to-one>
         <many-to-one name="idRigths" class="it.bncf.magazziniDigitali.database.entity.MDRigths" fetch="join">
             <column name="ID_RIGTHS" />
         </many-to-one>
-<!-- 
-        <property name="pathTmp" type="java.lang.String">
-            <column name="PATHTMP" />
+        <property name="note" type="java.lang.String">
+            <column name="NOTE" />
         </property>
-        <property name="pathTar" type="java.lang.String">
-            <column name="PATHTAR" />
-        </property>
-        <property name="url" type="java.lang.String">
-            <column name="URL" />
-        </property>
-        <property name="urlLogo" type="java.lang.String">
-            <column name="URLLOGO" />
-        </property>
-        <property name="uuid" type="java.lang.String">
-            <column name="UUID" />
-        </property>
-        <property name="machineUuid" type="java.lang.String">
-            <column name="MACHINEUUID" />
-        </property>
-        <property name="softwareUuid" type="java.lang.String">
-            <column name="SOFTWAREUUID" />
-        </property>
-        <property name="rightUuid" type="java.lang.String">
-            <column name="RIGHTUUID" />
-        </property>
-        <property name="ipDownload" type="java.lang.String">
-            <column name="IPDOWNLOAD" />
-        </property>
- -->        
-    </class>
+        </class>
 </hibernate-mapping>

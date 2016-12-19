@@ -16,6 +16,7 @@ import org.hibernate.criterion.Order;
 
 import it.bncf.magazziniDigitali.businessLogic.BusinessLogic;
 import it.bncf.magazziniDigitali.businessLogic.HashTable;
+import it.bncf.magazziniDigitali.businessLogic.exception.BusinessLogicException;
 import it.bncf.magazziniDigitali.database.dao.MDStatoDAO;
 import it.bncf.magazziniDigitali.database.entity.MDStato;
 import it.bncf.magazziniDigitali.utils.Record;
@@ -40,9 +41,8 @@ public class MDStatoBusiness extends BusinessLogic<MDStato, MDStatoDAO, String> 
 	 * @see it.bncf.magazziniDigitali.businessLogic.BusinessLogic#addRecord(java.io.Serializable)
 	 */
 	@Override
-	protected void addRecord(MDStato dati) throws HibernateException,
-			HibernateUtilException {
-		
+	protected void addRecord(MDStato dati) throws HibernateException, HibernateUtilException {
+
 		try {
 			if (this.records == null) {
 				this.records = new Vector<Record>();
@@ -57,8 +57,7 @@ public class MDStatoBusiness extends BusinessLogic<MDStato, MDStatoDAO, String> 
 		}
 	}
 
-	public static Record setRecord(MDStato dati) throws HibernateException,
-			HibernateUtilException {
+	public static Record setRecord(MDStato dati) throws HibernateException, HibernateUtilException {
 		Record record = null;
 
 		record = new Record();
@@ -77,12 +76,12 @@ public class MDStatoBusiness extends BusinessLogic<MDStato, MDStatoDAO, String> 
 	}
 
 	/**
-	 * @see it.bncf.magazziniDigitali.businessLogic.BusinessLogic#find(mx.randalf.hibernate.GenericHibernateDAO, it.bncf.magazziniDigitali.businessLogic.HashTable, java.util.List)
+	 * @see it.bncf.magazziniDigitali.businessLogic.BusinessLogic#find(mx.randalf.hibernate.GenericHibernateDAO,
+	 *      it.bncf.magazziniDigitali.businessLogic.HashTable, java.util.List)
 	 */
 	@Override
-	protected List<MDStato> find(MDStatoDAO tableDao,
-			HashTable<String, Object> dati, List<Order> orders, int page, int pageSize)
-			throws HibernateException, HibernateUtilException {
+	protected List<MDStato> find(MDStatoDAO tableDao, HashTable<String, Object> dati, List<Order> orders, int page,
+			int pageSize) throws HibernateException, HibernateUtilException {
 		return null;
 	}
 
@@ -95,13 +94,12 @@ public class MDStatoBusiness extends BusinessLogic<MDStato, MDStatoDAO, String> 
 	}
 
 	/**
-	 * @see it.bncf.magazziniDigitali.businessLogic.BusinessLogic#postSave(it.bncf.magazziniDigitali.businessLogic.HashTable, java.io.Serializable)
+	 * @see it.bncf.magazziniDigitali.businessLogic.BusinessLogic#postSave(it.bncf.magazziniDigitali.businessLogic.HashTable,
+	 *      java.io.Serializable)
 	 */
 	@Override
-	protected void postSave(HashTable<String, Object> dati, MDStato table)
-			throws NamingException, HibernateUtilException,
-			IllegalAccessException, InvocationTargetException,
-			NoSuchMethodException {
+	protected void postSave(HashTable<String, Object> dati, MDStato table) throws NamingException,
+			HibernateUtilException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
 
 	}
 
@@ -122,7 +120,8 @@ public class MDStatoBusiness extends BusinessLogic<MDStato, MDStatoDAO, String> 
 	}
 
 	/**
-	 * @see it.bncf.magazziniDigitali.businessLogic.BusinessLogic#save(java.io.Serializable, it.bncf.magazziniDigitali.businessLogic.HashTable)
+	 * @see it.bncf.magazziniDigitali.businessLogic.BusinessLogic#save(java.io.Serializable,
+	 *      it.bncf.magazziniDigitali.businessLogic.HashTable)
 	 */
 	@Override
 	protected void save(MDStato table, HashTable<String, Object> dati)
@@ -132,6 +131,12 @@ public class MDStatoBusiness extends BusinessLogic<MDStato, MDStatoDAO, String> 
 	@Override
 	protected Criteria rowsCount(MDStatoDAO tableDao, HashTable<String, Object> dati) {
 		return null;
+	}
+
+	@Override
+	protected String toJson(String key, Object value) throws SecurityException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException, BusinessLogicException {
+		throw new BusinessLogicException(this.getClass().getName()+" - Il formato Key: "+key+" class ["+value.getClass().getName()+"] non gestito");
 	}
 
 }

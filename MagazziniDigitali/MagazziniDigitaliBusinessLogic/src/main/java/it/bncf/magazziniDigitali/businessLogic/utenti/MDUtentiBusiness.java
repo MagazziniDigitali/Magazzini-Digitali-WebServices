@@ -17,6 +17,8 @@ import org.hibernate.criterion.Restrictions;
 
 import it.bncf.magazziniDigitali.businessLogic.BusinessLogic;
 import it.bncf.magazziniDigitali.businessLogic.HashTable;
+import it.bncf.magazziniDigitali.businessLogic.exception.BusinessLogicException;
+import it.bncf.magazziniDigitali.businessLogic.istituzione.MDIstituzioneBusiness;
 import it.bncf.magazziniDigitali.database.dao.MDUtentiDAO;
 import it.bncf.magazziniDigitali.database.entity.MDIstituzione;
 import it.bncf.magazziniDigitali.database.entity.MDUtenti;
@@ -30,18 +32,10 @@ import mx.randalf.tools.SHA256Tools;
 public class MDUtentiBusiness extends BusinessLogic<MDUtenti, MDUtentiDAO, String> {
 
 	private Logger log = Logger.getLogger(MDUtentiBusiness.class);
-//
-//	private String idIstituto = null;
-//
-//	private boolean configurata=false;
 
 	private String nome = null;
 
 	private String cognome = null;
-//
-//	private String pathTmp = null;
-//
-//	private String password = null;
 	
 	/**
 	 * @param hibernateTemplate
@@ -49,37 +43,6 @@ public class MDUtentiBusiness extends BusinessLogic<MDUtenti, MDUtentiDAO, Strin
 	public MDUtentiBusiness() {
 		super();
 	}
-//
-//	public MDUtentiBusiness(
-//			String idIstituto) throws HibernateException, NamingException,
-//			ConfigurationException {
-//		super();
-//		MDIstituzioneDAO mdIstituzioneDAO = null;
-//		MDIstituzione mdIstituzione = null;
-//
-//		try {
-//			mdIstituzioneDAO = new MDIstituzioneDAO();
-//
-//			mdIstituzione = mdIstituzioneDAO.findById(idIstituto);
-//
-//			this.idIstituto = idIstituto;
-//			if (mdIstituzione != null && mdIstituzione.getId().equals(idIstituto)) {
-//				configurata = true;
-//				nome = mdIstituzione.getNome();
-////				pathTmp = mdIstituzione.getPathTmp();
-////				password = mdIstituzione.getPassword();
-//			}
-//		} catch (HibernateException e) {
-//			log.error(e.getMessage(), e);
-//			throw e;
-//		} catch (NamingException e) {
-//			log.error(e.getMessage(), e);
-//			throw e;
-//		} catch (ConfigurationException e) {
-//			log.error(e.getMessage(), e);
-//			throw e;
-//		}
-//	}
 	
 	/**
 	 * @see it.bncf.magazziniDigitali.businessLogic.BusinessLogic#addRecord(java.io.Serializable)
@@ -87,40 +50,7 @@ public class MDUtentiBusiness extends BusinessLogic<MDUtenti, MDUtentiDAO, Strin
 	@Override
 	protected void addRecord(MDUtenti dati) throws HibernateException, HibernateUtilException {
 		
-//		try {
-//			if (this.records == null) {
-//				this.records = new Vector<Record>();
-//			}
-//			this.records.add(setRecord(dati));
-//		} catch (NamingException e) {
-//			log.error(e);
-//			throw e;
-//		} catch (ConfigurationException e) {
-//			log.error(e);
-//			throw e;
-//		}
 	}
-
-//	public static Record setRecord(MDUtenti dati) throws NamingException,
-//			ConfigurationException {
-//		Record record = null;
-//
-//		record = new Record();
-//		record.set("idIstituto", dati.getId());
-//		record.set("nome", dati.getNome());
-////		record.set("pathTmp", dati.getPathTmp());
-////		record.set("password", dati.getPassword());
-////		record.set("url", dati.getUrl());
-////		record.set("urlLogo", dati.getUrlLogo());
-////		record.set("uuid", dati.getUuid());
-////		record.set("machineUuid", dati.getMachineUuid());
-////		record.set("softwareUuid", dati.getSoftwareUuid());
-////		record.set("rightUuid", dati.getRightUuid());
-////		record.set("ipAuthentication", dati.getIpAuthentication());
-////		record.set("ipDownload", dati.getIpDownload());
-//
-//		return record;
-//	}
 
 	/**
 	 * @see it.bncf.magazziniDigitali.businessLogic.BusinessLogic#delete(java.io.Serializable)
@@ -239,6 +169,13 @@ public class MDUtentiBusiness extends BusinessLogic<MDUtenti, MDUtentiDAO, Strin
 			} else {
 				table.setIdIstituzione(null);
 			}
+
+			if (dati.get("note") != null && 
+					!((String)dati.get("note")).trim().equals("")){
+				table.setNote((String) dati.get("note"));
+			} else {
+				table.setNote(null);
+			}
 		} catch (NoSuchAlgorithmException e) {
 			log.error(e.getMessage(),e);
 			throw new HibernateUtilException(e.getMessage(),e);
@@ -247,5 +184,40 @@ public class MDUtentiBusiness extends BusinessLogic<MDUtenti, MDUtentiDAO, Strin
 
 	public String getNome() {
 		return nome;
+	}
+
+	/**
+	 * @see it.bncf.magazziniDigitali.businessLogic.BusinessLogic#genID()
+	 */
+	@Override
+	protected String genID() {
+		return super.genID()+"-AG";
+	}
+
+	@Override
+	protected String toJson(String key, Object value) throws SecurityException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException, BusinessLogicException {
+		String jsonArray = "";
+		MDIstituzioneBusiness mdIstituzioneBusiness = null;
+		
+		try {
+			if (value instanceof MDIstituzione){
+				mdIstituzioneBusiness = new MDIstituzioneBusiness();
+				jsonArray = mdIstituzioneBusiness.toJson((MDIstituzione) value) + "\n";
+			} else {
+				throw new BusinessLogicException(this.getClass().getName()+" - Il formato Key: "+key+" class ["+value.getClass().getName()+"] non gestito");
+			}
+		} catch (SecurityException e) {
+			throw e;
+		} catch (IllegalAccessException e) {
+			throw e;
+		} catch (IllegalArgumentException e) {
+			throw e;
+		} catch (InvocationTargetException e) {
+			throw e;
+		} catch (BusinessLogicException e) {
+			throw e;
+		}
+		return jsonArray;
 	}
 }

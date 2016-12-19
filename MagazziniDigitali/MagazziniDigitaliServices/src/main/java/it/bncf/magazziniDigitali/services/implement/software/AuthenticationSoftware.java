@@ -172,7 +172,7 @@ public class AuthenticationSoftware {
 			rigth = new Rigth();
 			rigth.setId(mdRigths.getId());
 			rigth.setNome(mdRigths.getNome());
-			rigth.setType(RightType_type.fromValue(mdRigths.getTipo()));
+			rigth.setType(RightType_type.fromValue(mdRigths.getIdModalitaAccesso().getId()));
 		}
 		return rigth;
 	}

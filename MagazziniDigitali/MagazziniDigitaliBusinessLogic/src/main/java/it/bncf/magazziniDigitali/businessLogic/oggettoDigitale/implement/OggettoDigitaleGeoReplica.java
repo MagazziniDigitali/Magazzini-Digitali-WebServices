@@ -130,7 +130,7 @@ public class OggettoDigitaleGeoReplica extends OggettoDigitale {
 	private boolean initGeoReplica(String objectIdentifierPremis,IMDConfiguration<?> configuration, MDFilesTmp mdFilesTmp, 
 			MDFilesTmpBusiness mdFileTmpBusiness, String application) {
 		File filePremis = null;
-		PremisXsd premisElab = null;
+		PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?> premisElab = null;
 		boolean esito = true;
 
 		trasferito = true;
@@ -139,7 +139,7 @@ public class OggettoDigitaleGeoReplica extends OggettoDigitale {
 					genFilePremis(configuration.getSoftwareConfigString("path.premis"), 
 								"GeoReplica",UUID.randomUUID().toString(),".geoReplica.premis"));
 
-			premisElab = new PremisXsd();
+			premisElab = PremisXsd.initialize();
 			esito = elabGeoReplica(configuration, mdFilesTmp, objectIdentifierPremis, premisElab, mdFileTmpBusiness, filePremis, 
 					application);
 		} catch (MDConfigurationException e) {
@@ -153,7 +153,7 @@ public class OggettoDigitaleGeoReplica extends OggettoDigitale {
 	}
 
 	private boolean elabGeoReplica(IMDConfiguration<?> configuration, MDFilesTmp mdFilesTmp, String objectIdentifierPremis, 
-			PremisXsd premisElab, MDFilesTmpBusiness mdFileTmpBusiness, File filePremis, String application) throws SQLException, MDConfigurationException {
+			PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?> premisElab, MDFilesTmpBusiness mdFileTmpBusiness, File filePremis, String application) throws SQLException, MDConfigurationException {
 		File fileElabPremis = null;
 		File fileElab = null;
 		GregorianCalendar gcStart = null;
@@ -387,9 +387,9 @@ public class OggettoDigitaleGeoReplica extends OggettoDigitale {
 		return esito;
 	}
 
-	private boolean checkFileElabPremis(File fileElabPremis, String objectIdentifierPremis, PremisXsd premisElab, 
-			IMDConfiguration<?> configuration, MDFilesTmpBusiness mdFileTmpBusiness, MDFilesTmp mdFilesTmp, File fileElab,
-			String application, File filePremis) 
+	private boolean checkFileElabPremis(File fileElabPremis, String objectIdentifierPremis, 
+			PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?> premisElab, IMDConfiguration<?> configuration, 
+			MDFilesTmpBusiness mdFileTmpBusiness, MDFilesTmp mdFilesTmp, File fileElab, String application, File filePremis) 
 					throws MDConfigurationException, SQLException, NoSuchAlgorithmException, FileNotFoundException,
 							HibernateException, IOException, HibernateUtilException	{
 		boolean esito = true;
@@ -441,8 +441,8 @@ public class OggettoDigitaleGeoReplica extends OggettoDigitale {
 
 	@SuppressWarnings("unused")
 	private boolean sendNodes(File fileElab, File fileElabPremis, IMDConfiguration<?> configuration, MDFilesTmp mdFilesTmp, 
-			PremisXsd premisElab, String application, String objectIdentifierPremis, MDFilesTmpBusiness mdFileTmpBusiness,
-			File filePremis) 
+			PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?> premisElab, String application, String objectIdentifierPremis, 
+			MDFilesTmpBusiness mdFileTmpBusiness, File filePremis) 
 					throws NoSuchAlgorithmException, FileNotFoundException, HibernateException, IOException,
 						MDConfigurationException, HibernateUtilException, SQLException{
 		MDNodiDAO mdNodiDAO = null;
@@ -509,7 +509,7 @@ public class OggettoDigitaleGeoReplica extends OggettoDigitale {
 		return esito;
 	}
 
-	private String[] geoReplica(MDNodi mdNodi, File[] files, MDFilesTmp mdFilesTmp, PremisXsd premisElab, 
+	private String[] geoReplica(MDNodi mdNodi, File[] files, MDFilesTmp mdFilesTmp, PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?> premisElab, 
 			String application, String objectIdentifierMaster, Documenti documenti, String objectIdentifierPremis,
 			IMDConfiguration<?> configuration) throws HibernateException, HibernateUtilException, SQLException,
 			MDConfigurationException
@@ -563,7 +563,7 @@ public class OggettoDigitaleGeoReplica extends OggettoDigitale {
 		return (ris==null?null:ris.toArray(new String[ris.size()]));
 	}
 
-	private Vector<String> analizeRisp(Storage storage, MDNodi mdNodi, PremisXsd premisElab,
+	private Vector<String> analizeRisp(Storage storage, MDNodi mdNodi, PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?> premisElab,
 			GregorianCalendar dStart, File[] files, String application, String objectIdentifierMaster,
 			Vector<String> ris, boolean testRes, IMDConfiguration<?> configuration) throws MDConfigurationException {
 		String msg = null;
@@ -658,7 +658,7 @@ public class OggettoDigitaleGeoReplica extends OggettoDigitale {
 		return ris;
 	}
 	
-	private Vector<String> sendFile(MDNodi mdNodi, File file, PremisXsd premisElab, 
+	private Vector<String> sendFile(MDNodi mdNodi, File file, PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?> premisElab, 
 			String application, String objectIdentifierMaster, Vector<String> ris, 
 			IMDConfiguration<?> configuration) throws MDConfigurationException {
 		GregorianCalendar dStart = null;
@@ -694,7 +694,7 @@ public class OggettoDigitaleGeoReplica extends OggettoDigitale {
 		return ris;
 	}
 
-	private void addGeoReplica(PremisXsd premisElab, Date dataStart, Date dataEnd,
+	private void addGeoReplica(PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?> premisElab, Date dataStart, Date dataEnd,
 			MDNodi mdNodi, String file, String msgError, String application, String objectIdentifierMaster, 
 			IMDConfiguration<?> configuration) throws MDConfigurationException {
 		GregorianCalendar dStart;
@@ -713,7 +713,7 @@ public class OggettoDigitaleGeoReplica extends OggettoDigitale {
 		}
 	}
 
-	private void addGeoReplica(PremisXsd premisElab, GregorianCalendar dataStart, GregorianCalendar dataEnd,
+	private void addGeoReplica(PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?> premisElab, GregorianCalendar dataStart, GregorianCalendar dataEnd,
 			MDNodi mdNodi, String file, String msgError, String application, String objectIdentifierMaster, 
 			IMDConfiguration<?> configuration) throws MDConfigurationException
 	{

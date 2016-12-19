@@ -37,6 +37,8 @@ public class MDUtenti implements Serializable {
 
 	private String idIstituzioneID;
 
+	private String note;
+
 	public MDUtenti() {
 	}
 
@@ -160,5 +162,19 @@ public class MDUtenti implements Serializable {
 	 */
 	public String getIdIstituzioneID() {
 		return idIstituzioneID;
+	}
+
+	/**
+	 * @return the note
+	 */
+	public String getNote() {
+		return note;
+	}
+
+	/**
+	 * @param note the note to set
+	 */
+	public void setNote(String note) {
+		this.note = note;
 	}
 }

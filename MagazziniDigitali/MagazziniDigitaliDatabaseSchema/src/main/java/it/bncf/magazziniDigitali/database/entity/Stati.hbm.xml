@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 22-ott-2014 15.40.53 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+	<class name="it.bncf.magazziniDigitali.database.entity.Stati"
+		table="stati">
+		<id name="id" type="java.lang.Integer">
+			<column name="ID" />
+			<generator class="assigned" />
+		</id>
+		<property name="nomeStati" type="java.lang.String">
+			<column name="NOME_STATI" />
+		</property>
+		<property name="siglaNumericaStati" type="java.lang.String">
+			<column name="SIGLA_NUMERICA_STATI" />
+		</property>
+		<property name="siglaIso31661Alpha3Stati" type="java.lang.String">
+			<column name="SIGLA_ISO_3166_1_ALPHA_3_STATI" />
+		</property>
+		<property name="siglaIso31661Alpha2Stati" type="java.lang.String">
+			<column name="SIGLA_ISO_3166_1_ALPHA_2_STATI" />
+		</property>
+	</class>
+</hibernate-mapping>

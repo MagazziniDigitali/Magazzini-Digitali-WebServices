@@ -19,6 +19,7 @@ import org.hibernate.criterion.Restrictions;
 
 import it.bncf.magazziniDigitali.businessLogic.BusinessLogic;
 import it.bncf.magazziniDigitali.businessLogic.HashTable;
+import it.bncf.magazziniDigitali.businessLogic.exception.BusinessLogicException;
 import it.bncf.magazziniDigitali.businessLogic.stato.MDStatoBusiness;
 import it.bncf.magazziniDigitali.database.dao.MDFilesTmpDAO;
 import it.bncf.magazziniDigitali.database.dao.MDFilesTmpErrorDAO;
@@ -204,6 +205,37 @@ public class MDFilesTmpErrorBusiness extends
 			}
 		}
 		return criteria;
+	}
+
+	@Override
+	protected String toJson(String key, Object value) throws SecurityException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException, BusinessLogicException {
+		String jsonArray = "";
+		MDFilesTmpBusiness mdFilesTmpBusiness = null;
+		MDStatoBusiness mdStatoBusiness = null;
+		
+		try {
+			if (value instanceof MDFilesTmp){
+				mdFilesTmpBusiness = new MDFilesTmpBusiness();
+				jsonArray = mdFilesTmpBusiness.toJson((MDFilesTmp) value) + "\n";
+			} else if (value instanceof MDStato){
+				mdStatoBusiness = new MDStatoBusiness();
+				jsonArray = mdStatoBusiness.toJson((MDStato) value) + "\n";
+			} else {
+				throw new BusinessLogicException(this.getClass().getName()+" - Il formato Key: "+key+" class ["+value.getClass().getName()+"] non gestito");
+			}
+		} catch (SecurityException e) {
+			throw e;
+		} catch (IllegalAccessException e) {
+			throw e;
+		} catch (IllegalArgumentException e) {
+			throw e;
+		} catch (InvocationTargetException e) {
+			throw e;
+		} catch (BusinessLogicException e) {
+			throw e;
+		}
+		return jsonArray;
 	}
 
 }

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package it.magazziniDigitali.xsd.premis;
+package it.magazziniDigitali.xsd.premis.v2_2;
 
 import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 

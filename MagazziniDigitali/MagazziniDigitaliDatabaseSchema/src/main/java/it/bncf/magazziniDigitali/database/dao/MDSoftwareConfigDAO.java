@@ -13,6 +13,7 @@ import org.hibernate.criterion.Restrictions;
 
 import it.bncf.magazziniDigitali.database.entity.MDSoftware;
 import it.bncf.magazziniDigitali.database.entity.MDSoftwareConfig;
+import mx.randalf.hibernate.FactoryDAO;
 import mx.randalf.hibernate.GenericHibernateDAO;
 import mx.randalf.hibernate.exception.HibernateUtilException;
 
@@ -51,6 +52,24 @@ public class MDSoftwareConfigDAO extends GenericHibernateDAO<MDSoftwareConfig, S
 			}
 			paging(criteria);
 			result = criteria.list();
+			for (int x=0; x<result.size(); x++){
+				if (result.get(x).getIdNodo() != null){
+					FactoryDAO.initialize(result.get(x).getIdNodo());
+				}
+				FactoryDAO.initialize(result.get(x).getIdSoftware());
+				if (result.get(x).getIdSoftware().getIdIstituzione() != null){
+					FactoryDAO.initialize(result.get(x).getIdSoftware().getIdIstituzione());
+					if (result.get(x).getIdSoftware().getIdIstituzione().getIdRegione() != null){
+						FactoryDAO.initialize(result.get(x).getIdSoftware().getIdIstituzione().getIdRegione());
+					}
+				}
+				if (result.get(x).getIdSoftware().getIdRigths() != null){
+					FactoryDAO.initialize(result.get(x).getIdSoftware().getIdRigths());
+					if (result.get(x).getIdSoftware().getIdRigths().getIdModalitaAccesso() != null){
+						FactoryDAO.initialize(result.get(x).getIdSoftware().getIdRigths().getIdModalitaAccesso());
+					}
+				}
+			}
 			commitTransaction();
 		} catch (HibernateException e) {
 			rollbackTransaction();

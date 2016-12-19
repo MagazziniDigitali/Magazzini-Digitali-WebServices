@@ -30,7 +30,7 @@ public class MDIstituzioneDAO extends GenericHibernateDAO<MDIstituzione, String>
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<MDIstituzione> find(String nome, String login, 
+	public List<MDIstituzione> find(String nome, String login, Integer bibliotecaDepositaria, 
 			List<Order> orders) throws  HibernateException,
 			HibernateUtilException {
 		Criteria criteria = null;
@@ -44,6 +44,9 @@ public class MDIstituzioneDAO extends GenericHibernateDAO<MDIstituzione, String>
 			}
 			if (login != null) {
 				criteria.add(Restrictions.ilike("login", login));
+			}
+			if (bibliotecaDepositaria != null) {
+				criteria.add(Restrictions.eq("bibliotecaDepositaria", bibliotecaDepositaria));
 			}
 			if (orders != null) {
 				for (Order order : orders) {
