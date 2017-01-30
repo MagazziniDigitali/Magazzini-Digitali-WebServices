@@ -9,7 +9,7 @@
 <undeployment
     xmlns="http://xml.apache.org/axis/wsdd/">
 
-  <!-- Services from AuthenticationUserLibraryService WSDL service -->
+  <!-- Services from WriteEventNBNService WSDL service -->
 
-  <service name="AuthenticationUserLibraryPort"/>
+  <service name="WriteEventNBNPort"/>
 </undeployment>

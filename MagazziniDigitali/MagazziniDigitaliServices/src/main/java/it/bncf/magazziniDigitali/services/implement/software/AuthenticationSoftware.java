@@ -47,12 +47,17 @@ public class AuthenticationSoftware {
 	}
 
 	public static Software AuthenticationSoftwareOperation(Authentication authentication) throws RemoteException{
+		return AuthenticationSoftwareOperation(authentication, null);
+	}
+
+	public static Software AuthenticationSoftwareOperation(Authentication authentication, String ipClient) throws RemoteException{
 		Software software = null;
 		MDSoftwareBusiness mdSoftwareBusiness = null;
 		HashTable<String, Object> dati = null;
 		List<MDSoftware> mdSoftwares = null;
 		MDSoftware mdSoftware = null;
 		Vector<ErrorMsg> errorMsgs = null;
+		boolean testIp = false;
 		
 		try {
 
@@ -70,7 +75,12 @@ public class AuthenticationSoftware {
 					if (mdSoftware.getPassword().equals(authentication.getPassword())){
 						if (mdSoftware.getIpAutorizzati()!= null &&
 								!mdSoftware.getIpAutorizzati().trim().equals("")){
-							if (ToolsServices.testIP(mdSoftware.getIpAutorizzati())){
+							if (ipClient==null){
+								testIp = ToolsServices.testIP(mdSoftware.getIpAutorizzati());
+							} else {
+								testIp = ToolsServices.testIP(mdSoftware.getIpAutorizzati(), ipClient);
+							}
+							if (testIp){
 								software.setId(mdSoftware.getId());
 								software.setNome(mdSoftware.getNome());
 								software.setIstituzione(IstituzioniTools.genIstituzione(mdSoftware.getIdIstituzione()));

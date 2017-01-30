@@ -38,6 +38,10 @@ public class MDConfiguration extends IMDConfiguration<Software> {
 	 * @throws MDConfigurationException 
 	 * 
 	 */
+	public MDConfiguration(String nomeSW, String fileConfiguration, String ipClient) throws MDConfigurationException {
+		super(nomeSW, fileConfiguration, ipClient, null);
+	}
+
 	public MDConfiguration(String nomeSW, String fileConfiguration) throws MDConfigurationException {
 		super(nomeSW, fileConfiguration);
 	}
@@ -56,7 +60,7 @@ public class MDConfiguration extends IMDConfiguration<Software> {
 	 * @see it.bncf.magazziniDigitali.configuration.IMDConfiguration#readConfiguration()
 	 */
 	@Override
-	protected void readConfiguration() throws MDConfigurationException{
+	protected void readConfiguration(String ipClient) throws MDConfigurationException{
 		Authentication authentication = null;
 		SHA256Tools sha256Tools = null;
 
@@ -69,7 +73,7 @@ public class MDConfiguration extends IMDConfiguration<Software> {
 					sha256Tools.checkSum(
 							Configuration.getValue("software."+nomeSW+".password").getBytes()));
 			software = 
-					AuthenticationSoftware.AuthenticationSoftwareOperation(authentication);
+					AuthenticationSoftware.AuthenticationSoftwareOperation(authentication, ipClient);
 		} catch (NoSuchAlgorithmException e) {
 			throw new MDConfigurationException(e.getMessage(), e);
 		} catch (ConfigurationException e) {

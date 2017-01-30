@@ -7,4 +7,8 @@
     <entry key="software.IA.login">IA_MD</entry>
     <entry key="software.IA.password">m@9@221n1</entry>
 
+    <!-- Configurazione Software Show Object -->
+    <entry key="software.SO.login">SO_MD</entry>
+    <entry key="software.SO.password">m@9@221n1</entry>
+    
 </properties>

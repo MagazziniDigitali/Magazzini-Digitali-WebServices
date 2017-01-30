@@ -1,43 +1,41 @@
 /**
- * ErrorType_type.java
+ * RightsRightsDisseminateRightsDisseminateType.java
  *
  * This file was auto-generated from WSDL
  * by the Apache Axis 1.4 Apr 22, 2006 (06:55:48 PDT) WSDL2Java emitter.
  */
 
-package it.depositolegale.www.errorMsg;
+package it.depositolegale.www.authenticationUserInput;
 
-public class ErrorType_type implements java.io.Serializable {
+public class RightsRightsDisseminateRightsDisseminateType implements java.io.Serializable {
     private java.lang.String _value_;
     private static java.util.HashMap _table_ = new java.util.HashMap();
 
     // Constructor
-    protected ErrorType_type(java.lang.String value) {
+    protected RightsRightsDisseminateRightsDisseminateType(java.lang.String value) {
         _value_ = value;
         _table_.put(_value_,this);
     }
 
-    public static final java.lang.String _LOGINERROR = "LOGINERROR";
-    public static final java.lang.String _PASSWORDERROR = "PASSWORDERROR";
-    public static final java.lang.String _IPERROR = "IPERROR";
-    public static final java.lang.String _ERROR = "ERROR";
-    public static final java.lang.String _SOFTWARE_ERROR = "SOFTWARE_ERROR";
-    public static final java.lang.String _WARNING = "WARNING";
-    public static final ErrorType_type LOGINERROR = new ErrorType_type(_LOGINERROR);
-    public static final ErrorType_type PASSWORDERROR = new ErrorType_type(_PASSWORDERROR);
-    public static final ErrorType_type IPERROR = new ErrorType_type(_IPERROR);
-    public static final ErrorType_type ERROR = new ErrorType_type(_ERROR);
-    public static final ErrorType_type SOFTWARE_ERROR = new ErrorType_type(_SOFTWARE_ERROR);
-    public static final ErrorType_type WARNING = new ErrorType_type(_WARNING);
+    public static final java.lang.String _A = "A";
+    public static final java.lang.String _B = "B";
+    public static final java.lang.String _C = "C";
+    public static final java.lang.String _C1 = "C1";
+    public static final java.lang.String _C2 = "C2";
+    public static final RightsRightsDisseminateRightsDisseminateType A = new RightsRightsDisseminateRightsDisseminateType(_A);
+    public static final RightsRightsDisseminateRightsDisseminateType B = new RightsRightsDisseminateRightsDisseminateType(_B);
+    public static final RightsRightsDisseminateRightsDisseminateType C = new RightsRightsDisseminateRightsDisseminateType(_C);
+    public static final RightsRightsDisseminateRightsDisseminateType C1 = new RightsRightsDisseminateRightsDisseminateType(_C1);
+    public static final RightsRightsDisseminateRightsDisseminateType C2 = new RightsRightsDisseminateRightsDisseminateType(_C2);
     public java.lang.String getValue() { return _value_;}
-    public static ErrorType_type fromValue(java.lang.String value)
+    public static RightsRightsDisseminateRightsDisseminateType fromValue(java.lang.String value)
           throws java.lang.IllegalArgumentException {
-        ErrorType_type enumeration = (ErrorType_type)
+        RightsRightsDisseminateRightsDisseminateType enumeration = (RightsRightsDisseminateRightsDisseminateType)
             _table_.get(value);
         if (enumeration==null) throw new java.lang.IllegalArgumentException();
         return enumeration;
     }
-    public static ErrorType_type fromString(java.lang.String value)
+    public static RightsRightsDisseminateRightsDisseminateType fromString(java.lang.String value)
           throws java.lang.IllegalArgumentException {
         return fromValue(value);
     }
@@ -63,10 +61,10 @@ public class ErrorType_type implements java.io.Serializable {
     }
     // Type metadata
     private static org.apache.axis.description.TypeDesc typeDesc =
-        new org.apache.axis.description.TypeDesc(ErrorType_type.class);
+        new org.apache.axis.description.TypeDesc(RightsRightsDisseminateRightsDisseminateType.class);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("http://www.depositolegale.it/errorMsg", "errorType_type"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("http://www.depositolegale.it/authenticationUserInput", ">>>rights>rightsDisseminate>rightsDisseminateType"));
     }
     /**
      * Return type metadata object

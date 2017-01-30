@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.depositolegale.it/authenticationUserInput" xmlns:login="http://www.depositolegale.it/login" xmlns:software="http://www.depositolegale.it/software" elementFormDefault="qualified" targetNamespace="http://www.depositolegale.it/authenticationUserInput">
+    <xs:import namespace="http://www.depositolegale.it/software" schemaLocation="../Table/MDSoftware.xsd"/>
+    <xs:import namespace="http://www.depositolegale.it/login" schemaLocation="Login.xsd"/>
+    <xs:element name="authenticationUserInput">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="userInput" type="userInput"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="userInput">
+        <xs:sequence>
+            <xs:element name="objectIdentifier">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="objectIdentifierType" type="xs:string"/>
+                        <xs:element name="objectIdentifierValue" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element ref="software:software"/>
+            <xs:element name="ipClient" type="xs:string"/>
+            <xs:element minOccurs="0" name="identifier" type="xs:string"/>
+            <xs:element minOccurs="0" name="actualFileName" type="xs:string"/>
+            <xs:element minOccurs="0" name="originalFileName" type="xs:string"/>
+            <xs:sequence minOccurs="0">
+                <xs:element minOccurs="0" ref="agent"/>
+                <xs:element minOccurs="0" ref="rights"/>
+                <xs:element minOccurs="0" ref="login:authentication"/>
+            </xs:sequence>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="agent">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="agentIdentifier" type="xs:string"/>
+                <xs:element name="agentName" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="rights">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="rightsIdentifier">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="rightsIdentifierType" type="xs:string"/>
+                            <xs:element name="rightsIdentifierValue" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="rightsDisseminate">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="rightsDisseminateType">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:enumeration value="A"/>
+                                        <xs:enumeration value="B"/>
+                                        <xs:enumeration value="C"/>
+                                        <xs:enumeration value="C1"/>
+                                        <xs:enumeration value="C2"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
