@@ -33,6 +33,8 @@ public abstract class IMDConfiguration<S extends Serializable> {
 
 	protected String nomeSW = null;
 
+	protected String ipClient = null;
+
 	protected String sysPassword = null;
 
 	protected String pathProperties = null;
@@ -42,6 +44,18 @@ public abstract class IMDConfiguration<S extends Serializable> {
 	 * Server di Autenticazione del Software
 	 */
 	protected S software;
+
+	/**
+	 * @throws MDConfigurationException 
+	 * 
+	 */
+	public IMDConfiguration(String nomeSW, String fileConfiguration, String ipClient, String sysPassword) 
+			throws MDConfigurationException {
+		this.nomeSW = nomeSW;
+		this.ipClient = ipClient;
+		this.sysPassword = sysPassword;
+		setFileConfiguration(fileConfiguration);
+	}
 
 	/**
 	 * @throws MDConfigurationException 
@@ -112,7 +126,7 @@ public abstract class IMDConfiguration<S extends Serializable> {
 			
 			if (Configuration.isInizialize() &&
 					!isSoftwareInizialize()){
-				readConfiguration();
+				readConfiguration(ipClient);
 			}
 		} catch (ConfigurationException e) {
 			log.error(e.getMessage(), e);
@@ -124,7 +138,11 @@ public abstract class IMDConfiguration<S extends Serializable> {
 
 	protected abstract boolean isSoftwareInizialize();
 
-	protected abstract void readConfiguration() throws MDConfigurationException;
+	protected void readConfiguration() throws MDConfigurationException{
+		readConfiguration(null);
+	}
+
+	protected abstract void readConfiguration(String ipClient) throws MDConfigurationException;
 
 	public abstract MDSoftware getMDSoftware() throws MDConfigurationException;
 
