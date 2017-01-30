@@ -541,4 +541,54 @@ public class PremisV2_2Xsd extends PremisXsd<PremisComplexType, ObjectFactory,
 	protected PremisNPM getNamespacePrefixMapper() {
 		return new PremisNPM();
 	}
+
+	@Override
+	protected String findObjectIdentifierContainer(ObjectComplexType oct) {
+		File file = null;
+		SignificantPropertiesComplexType significantProprties = null;
+		String key = null;
+		String objectIdentifierContainer = null;
+		if (oct instanceof info.lc.xmlns.premis_v2.File) {
+			file = (File) oct;
+			if (file.getSignificantProperties() != null) {
+				for (int y = 0; y < file.getSignificantProperties()
+						.size(); y++) {
+					significantProprties = file
+							.getSignificantProperties().get(y);
+					if (significantProprties.getContent() != null) {
+						for (int z = 0; z < significantProprties
+								.getContent().size(); z++) {
+							key = (String) significantProprties
+									.getContent().get(z).getValue();
+							if (key.equals("ActualFileName")) {
+								if (file.getObjectIdentifier() != null) {
+									for (int a = 0; a < file
+											.getObjectIdentifier()
+											.size(); a++) {
+										if (file.getObjectIdentifier()
+												.get(a)
+												.getObjectIdentifierType()
+												.equals("UUID-MD-OBJ")) {
+											objectIdentifierContainer = file
+													.getObjectIdentifier()
+													.get(a)
+													.getObjectIdentifierValue();
+											break;
+										}
+									}
+									if (objectIdentifierContainer != null) {
+										break;
+									}
+								}
+							}
+						}
+						if (objectIdentifierContainer != null) {
+							break;
+						}
+					}
+				}
+			}
+		}
+		return objectIdentifierContainer;
+	}
 }

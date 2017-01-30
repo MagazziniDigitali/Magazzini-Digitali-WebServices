@@ -160,7 +160,7 @@ public abstract class RightsXsd<C, NPM extends NamespacePrefixMapper, LICT, LOIC
 			st = line.split("<");
 
 			for (int x = 0; x < st.length; x++) {
-				if (st[x].startsWith("premis")) {
+				if (st[x].startsWith("rights")) {
 					if (st[x].indexOf("version=\"2.2\"") > -1) {
 						premisXsd = new RightsV2_2Xsd(file);
 					}

@@ -237,11 +237,27 @@ public abstract class PremisXsd<C, O, OCT, ECT, ACT, RCT, ReCT, SCT, OICT, OCCT,
 		BufferedReader br = null;
 		String line = null;
 		PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?> premisXsd = null;
+		int pos = 0;
+		String line2 = null;
 
 		try {
 			fr = new FileReader(file);
 			br = new  BufferedReader(fr);
-			line = br.readLine();
+			line = br.readLine().trim();
+			if (line.startsWith("<?")){
+				pos = line.indexOf("?>");
+				if (pos >-1){
+					line = line.substring(pos+2);
+				}
+			}
+			if (line.indexOf(">")==-1){
+				while ((line2= br.readLine()) != null){
+					line +=line2;
+					if (line.indexOf(">")>-1){
+						break;
+					}
+				}
+			}
 			if (line != null){
 				premisXsd = check(line, file);
 			}
@@ -302,4 +318,19 @@ public abstract class PremisXsd<C, O, OCT, ECT, ACT, RCT, ReCT, SCT, OICT, OCCT,
 	public String getVersion() {
 		return version;
 	}
+
+	public String findObjectIdentifierContainer(){
+		String result = null;
+		if (this.getObject() != null) {
+			for (int x = 0; x < this.getObject().size(); x++) {
+				result = findObjectIdentifierContainer(this.getObject().get(x));
+				if (result != null) {
+					break;
+				}
+			}
+		}
+		return result;
+	}
+
+	protected abstract String findObjectIdentifierContainer(OCT oct);
 }

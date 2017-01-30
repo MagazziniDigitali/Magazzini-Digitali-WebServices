@@ -361,27 +361,29 @@ public class PremisV3_0Xsd extends PremisXsd<PremisComplexType, ObjectFactory,
 
 		if (formatDesignationValue != null ||
 				puid != null){
-			format = new FormatComplexType();
 	
 			if (formatDesignationValue != null){
 				st = formatDesignationValue.split(",");
 				for (int x = 0; x < st.length; x++) {
+					format = new FormatComplexType();
 					formatDesignation = new FormatDesignationComplexType();
 					formatDesignation.setFormatName(addStringPlusAuthority(st[x]));
 					formatDesignation.setFormatVersion(formatVersion);
 					format.getContent().add(
 							objectFactory.createFormatDesignation(formatDesignation));
+					objectCharacterstics.getFormat().add(format);
 				}
 			}
 	
 			if (puid != null){
+				format = new FormatComplexType();
 				formatRegistry = new FormatRegistryComplexType();
 				formatRegistry.setFormatRegistryName(addStringPlusAuthority("PRONOM"));
 				formatRegistry.setFormatRegistryKey(addStringPlusAuthority(puid));
 				format.getContent().add(objectFactory.createFormatRegistry(formatRegistry));
+				objectCharacterstics.getFormat().add(format);
 			}
 
-			objectCharacterstics.getFormat().add(format);
 		}
 
 		return objectCharacterstics;
@@ -554,7 +556,7 @@ public class PremisV3_0Xsd extends PremisXsd<PremisComplexType, ObjectFactory,
 						for (int y=0; y<file.getSignificantProperties().size(); y++){
 							spct = file.getSignificantProperties().get(y);
 							if (spct.getContent() != null && spct.getContent().size()>0){
-								key = (String) spct.getContent().get(0).getValue();
+								key = ((StringPlusAuthority) spct.getContent().get(0).getValue()).getValue();
 								value = (String) spct.getContent().get(1).getValue();
 								if (key.equals("ActualFileName")){
 									fileName = value;
@@ -575,5 +577,57 @@ public class PremisV3_0Xsd extends PremisXsd<PremisComplexType, ObjectFactory,
 	@Override
 	protected PremisNPM getNamespacePrefixMapper() {
 		return new PremisNPM();
+	}
+
+	@Override
+	protected String findObjectIdentifierContainer(ObjectComplexType oct) {
+		File file = null;
+		SignificantPropertiesComplexType significantProprties = null;
+		String key = null;
+		String objectIdentifierContainer = null;
+		if (oct instanceof File) {
+			file = (File) oct;
+			if (file.getSignificantProperties() != null) {
+				for (int y = 0; y < file.getSignificantProperties()
+						.size(); y++) {
+					significantProprties = file
+							.getSignificantProperties().get(y);
+					if (significantProprties.getContent() != null) {
+						for (int z = 0; z < significantProprties
+								.getContent().size(); z++) {
+							if (significantProprties.getContent().get(z).getValue() instanceof StringPlusAuthority){
+								key = ((StringPlusAuthority) significantProprties
+										.getContent().get(z).getValue()).getValue();
+								if (key.equals("ActualFileName")) {
+									if (file.getObjectIdentifier() != null) {
+										for (int a = 0; a < file
+												.getObjectIdentifier()
+												.size(); a++) {
+											if (((StringPlusAuthority)file.getObjectIdentifier()
+													.get(a)
+													.getObjectIdentifierType()).getValue()
+													.equals("UUID-MD-OBJ")) {
+												objectIdentifierContainer = file
+														.getObjectIdentifier()
+														.get(a)
+														.getObjectIdentifierValue();
+												break;
+											}
+										}
+										if (objectIdentifierContainer != null) {
+											break;
+										}
+									}
+								}
+							}
+						}
+						if (objectIdentifierContainer != null) {
+							break;
+						}
+					}
+				}
+			}
+		}
+		return objectIdentifierContainer;
 	}
 }

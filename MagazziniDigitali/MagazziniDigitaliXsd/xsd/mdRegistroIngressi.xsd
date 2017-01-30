@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://www.depositolegale.it/rgistroIngresso"
+    xmlns="http://www.depositolegale.it/rgistroIngresso" xmlns:premis="http://www.loc.gov/premis/v3">
+    <xs:import namespace="http://www.loc.gov/premis/v3"
+        schemaLocation="https://www.loc.gov/standards/premis/premis.xsd"/>
+    <xs:element name="mdRegistroIngressi">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="id"/>
+                <xs:element ref="timeStampIngest"/>
+                <xs:element ref="agentDepositor"/>
+                <xs:element ref="originalContainerName"/>
+                <xs:element ref="containerName"/>
+                <xs:element ref="containerFingerPrint"/>
+                <xs:element minOccurs="0" ref="containerFingerPrintChain"/>
+                <xs:element ref="containerType"/>
+                <xs:element ref="agentMachineIngest"/>
+                <xs:element ref="agentSoftwareIngest"/>
+                <xs:element ref="status"/>
+                <xs:element ref="timestampInit"/>
+                <xs:element ref="timestampElab"/>
+                <xs:element ref="timestampCoda"/>
+                <xs:element ref="timestampPub"/>
+                <xs:element minOccurs="0" ref="timestampErr"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="id" type="premis:objectIdentifierComplexType">
+        <xs:annotation>
+            <xs:documentation xml:lang="it">Identificativo UUID del Registro di Ingresso</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="timeStampIngest" type="xs:dateTimeStamp"/>
+    <xs:element name="agentDepositor" type="premis:linkingAgentIdentifierComplexType"/>
+    <xs:element name="originalContainerName" type="premis:originalNameComplexType">
+        <xs:annotation>
+            <xs:documentation xml:lang="it">Nome dell'oggetto Originale inviato da Depositante</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="containerName" type="premis:originalNameComplexType">
+        <xs:annotation>
+            <xs:documentation xml:lang="it">Chiave UUID assegnata come nome dell'oggetto all'interno dello Storage</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="containerFingerPrint" type="xs:string"/>
+    <xs:element name="containerFingerPrintChain" type="xs:string"/>
+    <xs:element name="containerType">
+        <xs:simpleType>
+            <xs:restriction base="xs:integer">
+                <xs:enumeration value="-1">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="it">Errore non definito</xs:documentation>
+                    </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="0">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="it">admtape</xs:documentation>
+                    </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="1">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="it">warc</xs:documentation>
+                    </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="2">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="it">bagit</xs:documentation>
+                    </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="3">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="it">metatape</xs:documentation>
+                    </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="4">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="it">mag</xs:documentation>
+                    </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="5">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="it">mets</xs:documentation>
+                    </xs:annotation>
+                </xs:enumeration>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    <xs:element name="agentMachineIngest" type="premis:linkingAgentIdentifierComplexType"/>
+    <xs:element name="agentSoftwareIngest" type="premis:linkingAgentIdentifierComplexType"/>
+    <xs:element name="status">
+        <xs:simpleType>
+            <xs:restriction base="xs:integer">
+                <xs:enumeration value="1">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="it">Inizio elaborazione</xs:documentation>
+                    </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="2">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="it">Pubblicato</xs:documentation>
+                    </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="-1">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="it">Errore</xs:documentation>
+                    </xs:annotation>
+                </xs:enumeration>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    <xs:element name="timestampInit" type="xs:dateTimeStamp"/>
+    <xs:element name="timestampElab" type="xs:dateTimeStamp"/>
+    <xs:element name="timestampCoda" type="xs:dateTimeStamp"/>
+    <xs:element name="timestampPub" type="xs:dateTimeStamp"/>
+    <xs:element name="timestampErr" type="xs:dateTimeStamp"/>
+</xs:schema>

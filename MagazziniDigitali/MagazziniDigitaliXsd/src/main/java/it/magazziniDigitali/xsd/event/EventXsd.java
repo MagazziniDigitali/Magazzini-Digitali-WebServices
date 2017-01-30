@@ -1,22 +1,21 @@
 /**
  * 
  */
-package it.magazziniDigitali.xsd.agent;
+package it.magazziniDigitali.xsd.event;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
 import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 
-import it.magazziniDigitali.xsd.agent.v2_2.AgentV2_2Xsd;
-import it.magazziniDigitali.xsd.agent.v3_0.AgentV3_0Xsd;
+import it.magazziniDigitali.xsd.event.v2_2.EventV2_2Xsd;
+import it.magazziniDigitali.xsd.event.v3_0.EventV3_0Xsd;
 import it.magazziniDigitali.xsd.premis.exception.PremisXsdException;
 import mx.randalf.xsd.ReadXsd;
 import mx.randalf.xsd.exception.XsdException;
@@ -25,16 +24,15 @@ import mx.randalf.xsd.exception.XsdException;
  * @author massi
  *
  */
-public abstract class AgentXsd<C, NPM extends NamespacePrefixMapper,
-		AI, S, ECT, LRSICT> 
-		extends ReadXsd<C>{
+public abstract class EventXsd<E, NPM extends NamespacePrefixMapper,
+		EI, S, LO> 
+		extends ReadXsd<E>{
 
-//	public static String UUID_MD_AG_ID = "UUID-MD-AG-ID";
-//	public static String UUID_MD_RG_ID = "UUID-MD-RG-ID";
-	public static String URI="URI";
-	public static String USER="user";
+	public static String CODICENBN="codiceNBN";
 
-	protected C agent = null;
+	public static String URLORIGINAL="urlOriginal";
+	
+	protected E event = null;
 
 	protected File file = null;
 
@@ -45,7 +43,7 @@ public abstract class AgentXsd<C, NPM extends NamespacePrefixMapper,
 	/**
 	 * 
 	 */
-	public AgentXsd() {
+	public EventXsd() {
 		init();
 	}
 
@@ -58,14 +56,14 @@ public abstract class AgentXsd<C, NPM extends NamespacePrefixMapper,
 	 * @throws XsdException
 	 */
 	@SuppressWarnings("unchecked")
-	public AgentXsd(File file) throws XsdException {
+	public EventXsd(File file) throws XsdException {
 		Object obj = null;
 		
 		obj = read(file);
 		if (obj instanceof JAXBElement){
-			agent = ((JAXBElement<C>)obj).getValue();
+			event = ((JAXBElement<E>)obj).getValue();
 		} else {
-			agent = (C) obj;
+			event = (E) obj;
 		}
 		this.file = file;
 		init();
@@ -87,7 +85,7 @@ public abstract class AgentXsd<C, NPM extends NamespacePrefixMapper,
 						"E' necessario indicare il nome del file con cui salvare i dati");
 			}
 			fLock = new java.io.File(file.getAbsolutePath() + ".lock");
-			write(agent, file, getNamespacePrefixMapper(), null, null, schemaLocation);
+			write(event, file, getNamespacePrefixMapper(), null, null, schemaLocation);
 			if (isLocked) {
 				fLock.createNewFile();
 			} else if (fLock.exists()) {
@@ -108,15 +106,15 @@ public abstract class AgentXsd<C, NPM extends NamespacePrefixMapper,
 
 	protected abstract NPM getNamespacePrefixMapper();
 
-	public static AgentXsd<?, ?, ?, ?, ?, ?> initialize(){
-		return new AgentV3_0Xsd();
+	public static EventXsd<?, ?, ?, ?, ?> initialize(){
+		return new EventV3_0Xsd();
 	}
 
-	public static AgentXsd<?, ?, ?, ?, ?, ?> open(File file) throws PremisXsdException{
+	public static EventXsd<?, ?, ?, ?, ?> open(File file) throws PremisXsdException{
 		FileReader fr = null;
 		BufferedReader br = null;
 		String line = null;
-		AgentXsd<?, ?, ?, ?, ?, ?> premisXsd = null;
+		EventXsd<?, ?, ?, ?, ?> premisXsd = null;
 
 		try {
 			fr = new FileReader(file);
@@ -152,20 +150,20 @@ public abstract class AgentXsd<C, NPM extends NamespacePrefixMapper,
 		return premisXsd;
 	}
 
-	private static AgentXsd<?, ?, ?, ?, ?, ?> check(String line, File file) throws XsdException{
+	private static EventXsd<?, ?, ?, ?, ?> check(String line, File file) throws XsdException{
 		String[] st = null;
-		AgentXsd<?, ?, ?, ?, ?, ?> premisXsd = null;
+		EventXsd<?, ?, ?, ?, ?> premisXsd = null;
 
 		try {
 			st = line.split("<");
 
 			for (int x=0; x<st.length; x++){
-				if (st[x].startsWith("agent")){
+				if (st[x].startsWith("event")){
 					if (st[x].indexOf("version=\"2.2\"")>-1){
-						premisXsd = new AgentV2_2Xsd(file);
+						premisXsd = new EventV2_2Xsd(file);
 					}
 					if (st[x].indexOf("version=\"3.0\"")>-1){
-						premisXsd = new AgentV3_0Xsd(file);
+						premisXsd = new EventV3_0Xsd(file);
 					}
 					break;
 				}
@@ -188,29 +186,27 @@ public abstract class AgentXsd<C, NPM extends NamespacePrefixMapper,
 	 * 
 	 * @return Lista oggetti presenti
 	 */
-	public abstract List<AI> getAgentIdentifier();
+	public abstract EI getEventIdentifier();
 
-	public abstract void addAgentIdentifier(String agentIdentifierType, String agentIdentifierValue);
+	public abstract void setEventIdentifier(String eventIdentifierType, String eventIdentifierValue);
 
-	public abstract List<S> getAgentName();
+	public abstract S getEventType();
 	
-	public abstract void addAgentName(String value);
+	public abstract void setEventType(String value);
 	
-	public abstract S getAgentType();
+	public abstract String getEventDateTime();
 	
-	public abstract void setAgentType(String value);
+	public abstract void setEventDateTime(String value);
 
-	public abstract List<String> getAgentNote();
+	public abstract List<LO> getLinkingObjectIdentifier();
 	
-	public abstract void addAgentNote(String value);
+	public abstract void addLinkingObjectIdentifier(String linkingObjectIdentifierType, 
+			String linkingObjectIdentifierValue);
 
-	public abstract List<ECT> getAgentExtension();
-
-	public abstract void addAgentExtensionDepositante(String value);
-
-	protected abstract void addAgentExtension(Serializable value);
-
-	public abstract List<LRSICT> getLinkingRightsStatementIdentifier();
-
-	public abstract void addLinkingRightsStatementIdentifier(String value);
+	/**
+	 * @return the event
+	 */
+	public E getEvent() {
+		return event;
+	}
 }
