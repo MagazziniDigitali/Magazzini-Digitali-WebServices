@@ -153,18 +153,34 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 				// fPremis = null;
 
 				// calcolo il file da validare
-				FactoryDAO.initialize(mdFilesTmp.getIdSoftware());
-				if (configuration.getMDSoftware().getIdIstituzione().getPathTmp() == null
-						|| configuration.getMDSoftware().getIdIstituzione().getPathTmp().equals("")) {
-					throw new ClientMDException("Non è stata indicata la Path Temporanea per L'istituto");
+				if (mdFilesTmp.getIdSoftware() != null){
+					FactoryDAO.initialize(mdFilesTmp.getIdSoftware());
+					FactoryDAO.initialize(mdFilesTmp.getIdSoftware().getIdIstituzione());
+					if (mdFilesTmp.getIdSoftware().getIdIstituzione().getPathTmp() == null
+							|| mdFilesTmp.getIdSoftware().getIdIstituzione().getPathTmp().equals("")) {
+						throw new ClientMDException("Non è stata indicata la Path Temporanea per L'istituto");
+					}
+					fileObj = mdFilesTmp.getIdSoftware().getIdIstituzione().getPathTmp(); // TODO:
+																								// da
+																								// aggiustaremdFilesTmp.getIdSoftware().getPathTmp();
+				} else {
+					FactoryDAO.initialize(mdFilesTmp.getIdIstituto());
+					if (mdFilesTmp.getIdIstituto().getPathTmp() == null
+							|| mdFilesTmp.getIdIstituto().getPathTmp().equals("")) {
+						throw new ClientMDException("Non è stata indicata la Path Temporanea per L'istituto");
+					}
+					fileObj = mdFilesTmp.getIdIstituto().getPathTmp(); // TODO:
+																	// da
+																	// aggiustaremdFilesTmp.getIdSoftware().getPathTmp();
 				}
-				fileObj = configuration.getMDSoftware().getIdIstituzione().getPathTmp(); // TODO:
-																							// da
-																							// aggiustaremdFilesTmp.getIdSoftware().getPathTmp();
 				fileObj += File.separator;
 				fileObj += mdFilesTmp.getNomeFile();
 				fObj = new File(fileObj);
 
+				if (!fObj.getName().endsWith(".tgz") &&
+						!fObj.getName().endsWith(".tar.gz")){
+					validate.setDecompressRequired(false);
+				}
 				if (mdFilesTmp.getTarTmpFile() == null) {
 					fileTar = configuration.getSoftwareConfigString("path.tar"); // TODO:
 																					// da
@@ -286,7 +302,7 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 			premis = PremisXsd.initialize();
 			objectIdentifierMaster = writePremisArchive(validate, objectIdentifierPremis, premis, configuration, mdFilesTmp);
 			if (premis.getActualFileName() != null) {
-				if (mdFilesTmp.getPremisFile() == null || !mdFilesTmp.getPremisFile().trim().equals("")) {
+				if (mdFilesTmp.getPremisFile() == null || mdFilesTmp.getPremisFile().trim().equals("")) {
 					filePremis = new File(
 							genFilePremis(
 									configuration.getSoftwareConfigString("path.premis"), 
@@ -299,7 +315,8 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 				}
 			}
 			writePremisSend(premis, mdFilesTmp, configuration, objectIdentifierMaster);
-			if (writePremisDeCompress(mdFileTmpBusiness, mdFilesTmp, validate, objectIdentifierPremis, premis,
+			if (!validate.isDecompressRequired() ||
+					writePremisDeCompress(mdFileTmpBusiness, mdFilesTmp, validate, objectIdentifierPremis, premis,
 					configuration, eventDetailDecomp, objectIdentifierMaster)) {
 				result = writePremisValidate(validate, objectIdentifierPremis, mdFileTmpBusiness, mdFilesTmp,
 						configuration, premis, objectIdentifierMaster, start);
@@ -371,10 +388,14 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 							objectIdentifierMaster);
 					result = true;
 				} else {
-					startDecomp = new GregorianCalendar();
-					startDecomp.setTimeInMillis(mdFilesTmp.getDecompDataStart().getTime());
-					stopDecomp = new GregorianCalendar();
-					stopDecomp.setTimeInMillis(mdFilesTmp.getDecompDataEnd().getTime());
+					if (mdFilesTmp.getDecompDataStart() != null){
+						startDecomp = new GregorianCalendar();
+						startDecomp.setTimeInMillis(mdFilesTmp.getDecompDataStart().getTime());
+					}
+					if (mdFilesTmp.getDecompDataEnd() != null){
+						stopDecomp = new GregorianCalendar();
+						stopDecomp.setTimeInMillis(mdFilesTmp.getDecompDataEnd().getTime());
+					}
 					if (mdFilesTmp.getDecompEsito()){
 						logValidate.info(name + " [" + objectIdentifierPremis + "]" + " Tempo di decompressione da "
 								+ (startDecomp == null ? "none" : df.format(startDecomp.getTime())) + " a "
@@ -416,6 +437,7 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 			IMDConfiguration<?> configuration, MDFilesTmp mdFilesTmp) throws MDConfigurationException {
 		ArchiveMD archive = null;
 		String objectIdentifierMaster = null;
+		int pos = 0;
 
 		try {
 			if (validate.getArchive() != null) {
@@ -425,7 +447,15 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 				} else {
 					archive = (ArchiveMD) validate.getArchive().getArchive().get(0);
 				}
-				objectIdentifierMaster = archive.getID();
+				if (mdFilesTmp.getPremisFile() == null || mdFilesTmp.getPremisFile().trim().equals("")) {
+					objectIdentifierMaster = archive.getID();
+				} else {
+					objectIdentifierMaster = mdFilesTmp.getPremisFile();
+					pos = objectIdentifierMaster.lastIndexOf("/");
+					objectIdentifierMaster = objectIdentifierMaster.substring(pos).replace("/", "");
+					pos = objectIdentifierMaster.indexOf(".");
+					objectIdentifierMaster = objectIdentifierMaster.substring(pos).replace(".", "");
+				}
 				premis.addObjectFileContainer(objectIdentifierMaster, archive.getXmltype().value(),
 						archive.getType().getExt(), new BigInteger("0"), archive.getDigest(DigestType.SHA_1),
 						archive.getType().getSize(), archive.getMimetype(), archive.getNome(),
@@ -442,7 +472,7 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 									+ " Archivi analizzati su " + archive.getArchive().size());
 						}
 						addArchive(premis, (ArchiveMD) archive.getArchive().get(y), objectIdentifierMaster,
-								configuration);
+								configuration, validate, "");
 					}
 					logValidate.info(name + " [" + objectIdentifierPremis + "]" + " Fine analisi degli Archivi "
 							+ archive.getArchive().size());
@@ -541,7 +571,7 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 	}
 
 	private void addArchive(PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?> premis, ArchiveMD archive, String objectIdentifierMaster,
-			IMDConfiguration<?> configuration) throws MDConfigurationException {
+			IMDConfiguration<?> configuration, ValidateFile validate, String folder) throws MDConfigurationException {
 		String objectIdentifierValue = null;
 		BigInteger compositionLevel = null;
 		String digest = null;
@@ -554,45 +584,56 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 		String relationshipSubType = null;
 
 		try {
-			objectIdentifierValue = archive.getID();
-
-			compositionLevel = new BigInteger("0");
-			if (archive.getMimetype() != null && configuration.getCompositionLevel(archive.getMimetype().split(",")[0])
-			// Configuration.getValue("demoni.Validate.compositionLevel",
-			// archive.getMimetype().split(",")[0])
-			!= null) {
-				compositionLevel = configuration.getCompositionLevel(archive.getMimetype().split(",")[0]);
-				// new BigInteger(Configuration.getValue(
-				// "demoni.Validate.compositionLevel", archive.getMimetype()
-				// .split(",")[0]));
+			if (checkValidateArchive(archive, validate)){
+				objectIdentifierValue = archive.getID();
+	
+				compositionLevel = new BigInteger("0");
+				if (archive.getMimetype() != null && configuration.getCompositionLevel(archive.getMimetype().split(",")[0])
+				// Configuration.getValue("demoni.Validate.compositionLevel",
+				// archive.getMimetype().split(",")[0])
+				!= null) {
+					compositionLevel = configuration.getCompositionLevel(archive.getMimetype().split(",")[0]);
+					// new BigInteger(Configuration.getValue(
+					// "demoni.Validate.compositionLevel", archive.getMimetype()
+					// .split(",")[0]));
+				}
+	
+				digest = archive.getDigest(DigestType.SHA_1);
+				size = archive.getType().getSize();
+				formatDesignationValue = archive.getMimetype();
+				originalName = ((folder != null && !folder.trim().equals(""))?folder+File.separator:"") + archive.getNome();
+				contentLocationValue = archive.getType().getContentLocation();
+				if (archive.getType().getFormat() != null) {
+					formatVersion = archive.getType().getFormat().getVersion();
+				}
+				if (archive.getType().getPUID() != null) {
+					puid = archive.getType().getPUID();
+				}
+	
+				if ((archive.getType().getExt() != null && 
+						(archive.getType().getExt().equals("xml") ||
+								archive.getType().getExt().equals("premis"))) && 
+						(archive.getXmltype() != null && 
+							(archive.getXmltype().equals(Xmltype.MAG) || 
+									archive.getXmltype().equals(Xmltype.METS) || 
+									archive.getXmltype().equals(Xmltype.PREMIS) || 
+									archive.getXmltype().equals(Xmltype.AGENT) || 
+									archive.getXmltype().equals(Xmltype.BAGIT) || 
+									archive.getXmltype().equals(Xmltype.RIGHTS) || 
+									archive.getXmltype().equals(Xmltype.EVENT) || 
+									archive.getXmltype().equals(Xmltype.WARC)))) {
+					relationshipSubType = "R";
+				} else {
+					relationshipSubType = "1";
+				}
+				premis.addObjectFile(objectIdentifierValue, compositionLevel, digest, size, formatDesignationValue,
+						originalName, contentLocationValue, formatVersion, puid, relationshipSubType,
+						objectIdentifierMaster);
 			}
-
-			digest = archive.getDigest(DigestType.SHA_1);
-			size = archive.getType().getSize();
-			formatDesignationValue = archive.getMimetype();
-			originalName = archive.getNome();
-			contentLocationValue = archive.getType().getContentLocation();
-			if (archive.getType().getFormat() != null) {
-				formatVersion = archive.getType().getFormat().getVersion();
-			}
-			if (archive.getType().getPUID() != null) {
-				puid = archive.getType().getPUID();
-			}
-
-			if ((archive.getType().getExt() != null && archive.getType().getExt().equals("xml")) && 
-					(archive.getXmltype() != null && 
-						(archive.getXmltype().equals(Xmltype.MAG) || archive.getXmltype().equals(Xmltype.METS)))) {
-				relationshipSubType = "R";
-			} else {
-				relationshipSubType = "1";
-			}
-			premis.addObjectFile(objectIdentifierValue, compositionLevel, digest, size, formatDesignationValue,
-					originalName, contentLocationValue, formatVersion, puid, relationshipSubType,
-					objectIdentifierMaster);
-
 			if (archive.getArchive() != null && archive.getArchive().size() > 0) {
 				for (int x = 0; x < archive.getArchive().size(); x++) {
-					addArchive(premis, (ArchiveMD) archive.getArchive().get(x), objectIdentifierMaster, configuration);
+					addArchive(premis, (ArchiveMD) archive.getArchive().get(x), objectIdentifierMaster, configuration, validate,
+							((folder != null && !folder.trim().equals(""))?folder+File.separator:"") + archive.getNome());
 				}
 			}
 		} catch (MDConfigurationException e) {
@@ -600,4 +641,31 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 		}
 	}
 
+	private boolean checkValidateArchive(ArchiveMD archive, ValidateFile validate){
+		boolean result =true;
+		String nome = "";
+		int pos = 0;
+
+		if (archive.getNome().startsWith(".")){
+			result= false;
+		} else if (archive.getTypeObject().equalsIgnoreCase("Folder")){
+			result = false;
+		} else if (validate.getXmlType() != null &&
+				validate.getXmlType().equals(Xmltype.BAGIT)){
+			nome = archive.getNome().trim().toLowerCase();
+			pos = nome.indexOf(".");
+			nome = nome.substring(pos+1);
+			pos = nome.indexOf(".");
+			if (pos >-1){
+				nome = nome.substring(pos+1);
+				if (nome.equals("metadata.json") ||
+						nome.equals("siegfried.json") ||
+						nome.equals("txt")){
+					result = false;
+				}
+			}
+		}
+				
+		return result;
+	}
 }

@@ -13,7 +13,7 @@ import java.util.Vector;
  * @author massi
  *
  */
-class Params {
+public class Params {
 	private Hashtable<String, List<Object>> params;
 	
 	public Params(){

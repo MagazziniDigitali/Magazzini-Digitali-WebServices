@@ -16,6 +16,7 @@ import gov.loc.premis.v3.RelatedObjectIdentifierComplexType;
 import gov.loc.premis.v3.RelationshipComplexType;
 import gov.loc.premis.v3.SignificantPropertiesComplexType;
 import gov.loc.premis.v3.StorageComplexType;
+import gov.loc.premis.v3.StringPlusAuthority;
 import it.bncf.magazziniDigitali.configuration.IMDConfiguration;
 import it.bncf.magazziniDigitali.solr.AddDocumentMD;
 import it.bncf.magazziniDigitali.solr.ItemMD;
@@ -31,9 +32,11 @@ public class SolrObjectFileAnalyze3_0 extends SolrObjectFileAnalyze<File, Object
 	public SolrObjectFileAnalyze3_0() {
 	}
 
-	public boolean publishSolr(File object, AddDocumentMD admd, java.io.File pathTar, IMDConfiguration<?> configuration) throws SolrException{
+	public boolean publishSolr(File object, AddDocumentMD admd, java.io.File pathTar, IMDConfiguration<?> configuration, 
+			boolean elabTarPremis, String name, Logger logPublish, String objectIdentifierPremis) throws SolrException{
 		boolean ris = false;
-		String[] st = null;
+		java.io.File fTxt = null;
+		boolean isValid = false;
 		
 		try {
 			params.getParams().clear();
@@ -53,45 +56,64 @@ public class SolrObjectFileAnalyze3_0 extends SolrObjectFileAnalyze<File, Object
 			}
 
 			if (object.getObjectCharacteristics() != null){
-				publicSolrObjectCharacteristics(object.getObjectCharacteristics());
+				if (publicSolrObjectCharacteristics(object.getObjectCharacteristics())){
+					isValid = true;
+				}
 			}
 
 			if (object.getOriginalName() != null){
+				isValid = true;
 				params.add(ItemMD.ORIGINALFILENAME, object.getOriginalName().getValue());
 				filename = object.getOriginalName().getValue();
+				if (elabTarPremis){
+					checkIdMadre();
+				}
 			}
 
 			if (object.getLinkingRightsStatementIdentifier() != null){
-				publicSolrLinkingRights(object.getLinkingRightsStatementIdentifier());
+				if (publicSolrLinkingRights(object.getLinkingRightsStatementIdentifier())){
+					isValid = true;
+				}
 			}
 
 			if (object.getStorage() != null){
-				publicSolrStorage(object.getStorage());
+				if (publicSolrStorage(object.getStorage())){
+					isValid = true;
+				}
 			}
 
 			if (object.getRelationship() != null){
-				publicSolrRelationship(object.getRelationship());
+				if (publicSolrRelationship(object.getRelationship())){
+					isValid = true;
+				}
 			}
 			
 			if (mimeType != null && mimeType.equals("text/plain")){
 				if (size>0){
+					isValid = true;
 					publicSolrOcr(pathTar);
 				}
 			}else if (mimeType != null && mimeType.equals("application/x-tar")){
-				st = configuration.getSoftwareConfigString("solrIndex.nodi").split(",");
-//				st = Configuration.getValue("demoni.SolrIndex.nodi").split(",");
-				for (int x=0; x<st.length; x++){
-					params.add(ItemMD.NODO,st[x]);
+				isValid = true;
+				insertNodi();
+			}
+			if ((fileType != null && fileType.equals("bagit"))) {
+				isValid = true;
+				if (filename.endsWith(".pdf")){
+					fTxt = new java.io.File(pathTar.getAbsolutePath() + java.io.File.separator + filename+".txt");
+					if (fTxt.exists()){
+						publicSolrOcr(fTxt.getAbsolutePath());
+					}
 				}
 			}
-			admd.add(params.getParams(), new ItemMD());
-			if ((filename != null && filename.endsWith(".xml"))){
-				if ((fileType != null && fileType.equals("mets"))){
-					publicSolrMets(pathTar, admd, configuration);
-				} else if ((fileType != null && fileType.equals("mag"))){
-					publicSolrMag(pathTar, admd, configuration);
+			if (isValid){
+				admd.add(params.getParams(), new ItemMD());
+	
+				if (!elabTarPremis){
+					checkAllegati(pathTar, admd, configuration,  name,  logPublish,  objectIdentifierPremis);
 				}
 			}
+
 			ris = true;
 		} catch (SolrException e) {
 			throw e;
@@ -106,7 +128,7 @@ public class SolrObjectFileAnalyze3_0 extends SolrObjectFileAnalyze<File, Object
 		ObjectIdentifierComplexType objectIdentifier;
 		for (int x=0; x<objectIdentifiers.size(); x++){
 			objectIdentifier = objectIdentifiers.get(x);
-			if (objectIdentifier.getObjectIdentifierType().equals(PremisXsd.UUID_MD_OBJ)){
+			if (objectIdentifier.getObjectIdentifierType().getValue().equals(PremisXsd.UUID_MD_OBJ)){
 				params.add(ItemMD.ID, objectIdentifier.getObjectIdentifierValue());
 				params.add(ItemMD.OBJECTIDENTIFIER, objectIdentifier.getObjectIdentifierValue());
 				this.objectIdentifier = objectIdentifier.getObjectIdentifierValue();
@@ -119,12 +141,12 @@ public class SolrObjectFileAnalyze3_0 extends SolrObjectFileAnalyze<File, Object
 		SignificantPropertiesComplexType object;
 		for (int x=0;x<objects.size(); x++){
 			object = objects.get(x);
-			if (object.getContent().get(0).getValue().equals("FileType")){
+			if (((StringPlusAuthority)object.getContent().get(0).getValue()).getValue().equals("FileType")){
 				params.add(ItemMD.TIPOCONTENITORE, (String) object.getContent().get(1).getValue());
 				params.add(ItemMD.FILETYPE, (String) object.getContent().get(1).getValue());
 				fileType = (String) object.getContent().get(1).getValue();
 			}
-			if (object.getContent().get(0).getValue().equals("ActualFileName")){
+			if (((StringPlusAuthority)object.getContent().get(0).getValue()).getValue().equals("ActualFileName")){
 				params.add(ItemMD.ACTUALFILENAME, (String) object.getContent().get(1).getValue());
 				params.add(ItemMD.TIPOOGGETTO, ItemMD.TIPOOGGETTO_CONTENITORE);
 			}
@@ -132,106 +154,141 @@ public class SolrObjectFileAnalyze3_0 extends SolrObjectFileAnalyze<File, Object
 		
 	}
 	
-	protected void publicSolrObjectCharacteristics(List<ObjectCharacteristicsComplexType> objects){
+	protected boolean publicSolrObjectCharacteristics(List<ObjectCharacteristicsComplexType> objects){
 		ObjectCharacteristicsComplexType object = null;
+		boolean isValid = false;
 		for (int x=0;x<objects.size(); x++){
 			object = objects.get(x);
 			if (object.getCompositionLevel()!= null){
-				params.add(ItemMD.COMPOSITIONLEVEL, object.getCompositionLevel().toString());
+				params.add(ItemMD.COMPOSITIONLEVEL, object.getCompositionLevel().getValue().toString());
 			}
 			if (object.getFixity()!= null &&
 					object.getFixity().size()>0){
-				if (object.getFixity().get(0).getMessageDigestAlgorithm().equals("SHA-1")){
+				isValid = true;
+				if (object.getFixity().get(0).getMessageDigestAlgorithm().getValue().equals("SHA-1")){
 					params.add(ItemMD.SHA1, object.getFixity().get(0).getMessageDigest());
 				}
 			}
 			if (object.getSize()!= null){
+				isValid = true;
 				params.add(ItemMD.SIZE, object.getSize());
 				size = object.getSize();
 			}
 			if (object.getFormat()!= null){
-				publicSolrFormat(object.getFormat());
+				if (publicSolrFormat(object.getFormat())){
+					isValid = true;
+				}
 			}
 		}
+		return isValid;
 	}
 
-	protected void publicSolrFormat(List<FormatComplexType> objects){
+	protected boolean publicSolrFormat(List<FormatComplexType> objects){
 		FormatComplexType object = null;
+		boolean isValid = false;
+
 		for (int y=0; y<objects.size(); y++){
 			object = objects.get(y);
 			if (object.getContent() != null){
 				for(int x=0; x<object.getContent().size(); x++){
 					if (object.getContent().get(x).getValue() instanceof FormatDesignationComplexType){
-						publicSolrFormatDesignationComplexType((FormatDesignationComplexType)object.getContent().get(x).getValue());
+						if (publicSolrFormatDesignationComplexType((FormatDesignationComplexType)object.getContent().get(x).getValue())){
+							isValid = true;
+						}
 					} else if (object.getContent().get(x).getValue() instanceof FormatRegistryComplexType){
-						publicSolrFormatRegistryComplexType((FormatRegistryComplexType)object.getContent().get(x).getValue());
+						if (publicSolrFormatRegistryComplexType((FormatRegistryComplexType)object.getContent().get(x).getValue())){
+							isValid = true;
+						}
 					} 
 				}
 			}
 		}
+		return isValid;
 	}
 
-	protected void publicSolrFormatRegistryComplexType(FormatRegistryComplexType object){
-		if (object.getFormatRegistryName().equals("PRONOM")){
+	protected boolean publicSolrFormatRegistryComplexType(FormatRegistryComplexType object){
+		boolean isValid = false;
+		if (object.getFormatRegistryName().getValue().equals("PRONOM")){
+			isValid = true;
 			params.add(ItemMD.PROMON, object.getFormatRegistryKey().getValue());
 		}
+		return isValid;
 	}
 
-	protected void publicSolrFormatDesignationComplexType(FormatDesignationComplexType object){
+	protected boolean publicSolrFormatDesignationComplexType(FormatDesignationComplexType object){
 		params.add(ItemMD.MIMETYPE, object.getFormatName().getValue());
 		mimeType =object.getFormatName().getValue();
+		return true;
 	}
 
-	protected void publicSolrLinkingRights(List<LinkingRightsStatementIdentifierComplexType> objects){
+	protected boolean publicSolrLinkingRights(List<LinkingRightsStatementIdentifierComplexType> objects){
 		LinkingRightsStatementIdentifierComplexType object = null;
+		boolean isValid = false;
 		for (int x=0;x<objects.size(); x++){
 			object = objects.get(x);
-			if (object.getLinkingRightsStatementIdentifierType().equals(PremisXsd.UUID_MD_RG)){
+			if (object.getLinkingRightsStatementIdentifierType().getValue().equals(PremisXsd.UUID_MD_RG)){
 				params.add(ItemMD.RIGHTS, object.getLinkingRightsStatementIdentifierValue());
+				isValid = true;
 			}
 		}
+		return isValid;
 	}
 
-	protected void publicSolrStorage(List<StorageComplexType> objects){
+	protected boolean publicSolrStorage(List<StorageComplexType> objects){
 		StorageComplexType object = null;
+		boolean isValid = false;
 		for (int x=0;x<objects.size(); x++){
 			object = objects.get(x);
 			if (object.getContent() != null){
 				for (int y=0; y <object.getContent().size(); y++){
 					if (object.getContent().get(y).getValue() instanceof ContentLocationComplexType){
-						publicSolrContentLocation((ContentLocationComplexType) object.getContent().get(y).getValue());
+						if (publicSolrContentLocation((ContentLocationComplexType) object.getContent().get(y).getValue())){
+							isValid = true;
+						}
 					}
 				}
 			}
 		}
+		return isValid;
 	}
 
-	protected void publicSolrContentLocation(ContentLocationComplexType object){
-		if (object.getContentLocationType().equals("tarindex") && object.getContentLocationValue() != null){
+	protected boolean publicSolrContentLocation(ContentLocationComplexType object){
+		boolean isValid = false;
+		if (object.getContentLocationType().getValue().equals("tarindex") && object.getContentLocationValue() != null){
 			params.add(ItemMD.TARINDEX, object.getContentLocationValue());
+			isValid = true;
 		}
+		return isValid;
 	}
 
-	protected void publicSolrRelationship(List<RelationshipComplexType> objects){
+	protected boolean publicSolrRelationship(List<RelationshipComplexType> objects){
 		RelationshipComplexType object = null;
+		boolean isValid = false;
 		for (int x=0;x<objects.size(); x++){
 			object = objects.get(x);
 			if (object.getRelationshipType() != null){
 				params.add(ItemMD.RELATIONSHIPTYPE, object.getRelationshipType().getValue());
+				isValid = true;
 			}
 			if (object.getRelatedObjectIdentifier() != null){
-				publicSolrRelatedObjectIdentification(object.getRelatedObjectIdentifier());
+				if (publicSolrRelatedObjectIdentification(object.getRelatedObjectIdentifier())){
+					isValid = true;
+				}
 			}
 		}
+		return isValid;
 	}
 
-	protected void publicSolrRelatedObjectIdentification(List<RelatedObjectIdentifierComplexType> objects){
+	protected boolean publicSolrRelatedObjectIdentification(List<RelatedObjectIdentifierComplexType> objects){
 		RelatedObjectIdentifierComplexType object = null;
+		boolean isValid = false;
 		for (int x=0;x<objects.size(); x++){
 			object = objects.get(x);
-			if (object.getRelatedObjectIdentifierType().equals(PremisXsd.UUID_MD)){
+			if (object.getRelatedObjectIdentifierType().getValue().equals(PremisXsd.UUID_MD)){
 				params.add(ItemMD._ROOT_, object.getRelatedObjectIdentifierValue());
+				isValid = true;
 			}
 		}
+		return isValid;
 	}
 }

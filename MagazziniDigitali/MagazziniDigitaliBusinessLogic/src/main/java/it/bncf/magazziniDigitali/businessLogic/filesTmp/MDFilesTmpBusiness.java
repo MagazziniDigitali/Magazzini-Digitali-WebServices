@@ -407,6 +407,9 @@ public class MDFilesTmpBusiness extends
 			myDati.put("type", mdStato);
 			myDati.put("msgError", msgError);
 			if (traceError != null){
+				if (traceError.length()>10000){
+					traceError = traceError.substring(0, 10000);
+				}
 				myDati.put("traceError", traceError);
 			}
 			errorBusiness.save(myDati);
@@ -1322,15 +1325,20 @@ public class MDFilesTmpBusiness extends
 				filesTmp = filesTmpDAO.findById(id);
 				if (filesTmp !=null){
 					registroBusiness = new MDRegistroIngressoBusiness();
-					if (filesTmp.getXmlMimeType().equals("mets")){
+
+					
+					if (filesTmp.getXmlMimeType().equals("mets")){ 				// *     &lt;enumeration value="mets"/>
 						containerType=5;
-					} else 	if (filesTmp.getXmlMimeType().equals("mag")){
+					} else 	if (filesTmp.getXmlMimeType().equals("mag")){		// *     &lt;enumeration value="mag"/>
 						containerType=4;
-					} else 	if (filesTmp.getXmlMimeType().equals("metatape")){
+					} else 	if (filesTmp.getXmlMimeType().equals("metatape") ||	
+							filesTmp.getXmlMimeType().equals("premis") ||		// *     &lt;enumeration value="premis"/>
+							filesTmp.getXmlMimeType().equals("agent") ||		// *     &lt;enumeration value="agent"/>
+							filesTmp.getXmlMimeType().equals("rights")){		// *     &lt;enumeration value="rights"/>
 						containerType=3;
-					} else 	if (filesTmp.getXmlMimeType().equals("bagit")){
+					} else 	if (filesTmp.getXmlMimeType().equals("bagit")){		// *     &lt;enumeration value="bagit"/>
 						containerType=2;
-					} else 	if (filesTmp.getXmlMimeType().equals("warc")){
+					} else 	if (filesTmp.getXmlMimeType().equals("warc")){		// *     &lt;enumeration value="warc"/>
 						containerType=1;
 					} else 	if (filesTmp.getXmlMimeType().equals("admtape")){
 						containerType=0;

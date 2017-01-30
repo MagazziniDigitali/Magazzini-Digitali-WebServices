@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 
 import gov.loc.premis.v3.EventComplexType;
 import gov.loc.premis.v3.ObjectComplexType;
+import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.solr.SolrEvent3_0;
 import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.solr.SolrObjectFileAnalyze3_0;
 import it.bncf.magazziniDigitali.configuration.IMDConfiguration;
 import it.bncf.magazziniDigitali.solr.AddDocumentMD;
@@ -31,7 +32,7 @@ public class IndexPremis3_0 extends IndexPremis<PremisV3_0Xsd, ObjectComplexType
 
 	@Override
 	protected void checkObject(List<ObjectComplexType> objects, Logger logPublish, String objectIdentifierPremis,
-			AddDocumentMD admd, File pathTar, IMDConfiguration<?> configuration) throws SolrException {
+			AddDocumentMD admd, File pathTar, IMDConfiguration<?> configuration, boolean elabTarPremis) throws SolrException {
 		SolrObjectFileAnalyze3_0 sof = null;
 		ObjectComplexType object = null;
 		
@@ -48,7 +49,7 @@ public class IndexPremis3_0 extends IndexPremis<PremisV3_0Xsd, ObjectComplexType
 					}
 					object = objects.get(x);
 					if (object instanceof gov.loc.premis.v3.File) {
-						sof.publishSolr((gov.loc.premis.v3.File) object, admd, pathTar, configuration);
+						sof.publishSolr((gov.loc.premis.v3.File) object, admd, pathTar, configuration, elabTarPremis,  name,  logPublish,  objectIdentifierPremis);
 					}
 				}
 				logPublish.info(name + " [" + objectIdentifierPremis + "]" + " Fine preIndicizzare oggetti");
@@ -62,8 +63,28 @@ public class IndexPremis3_0 extends IndexPremis<PremisV3_0Xsd, ObjectComplexType
 	@Override
 	protected void checkEvent(List<EventComplexType> events, Logger logPublish, String objectIdentifierPremis,
 			AddDocumentMD admd) throws SolrException {
-		// TODO Auto-generated method stub
+		SolrEvent3_0 se = null;
+		EventComplexType event = null;
 		
+		try {
+			if (events != null && events.size() > 0) {
+				logPublish.info(
+						name + " [" + objectIdentifierPremis + "]" + " Eventi da preIndicizzare " + events.size());
+				se = new SolrEvent3_0();
+				for (int x = 0; x < events.size(); x++) {
+					if ((x % 100) == 0) {
+						logPublish.info(
+								name + " [" + objectIdentifierPremis + "]" + " Eventi " + x + "/" + events.size());
+						System.gc();
+					}
+					event = events.get(x);
+					se.publishSolr(event, admd);
+				}
+				logPublish.info(name + " [" + objectIdentifierPremis + "]" + " Fine preIndicizzare eventi");
+			}
+		} catch (SolrException e) {
+			throw e;
+		}
 	}
 
 }

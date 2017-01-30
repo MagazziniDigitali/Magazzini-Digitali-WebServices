@@ -50,6 +50,11 @@ public class ValidateFile {
 	private GregorianCalendar gcUnzipStop = null;
 
 	/**
+	 * Variabile utilizzata per indicare se è richiesta la decompressione
+	 */
+	private boolean decompressRequired = true;
+
+	/**
 	 * Costruttore
 	 * 
 	 */
@@ -75,7 +80,7 @@ public class ValidateFile {
 			checkArchive.setUnZip(true);
 			checkArchive.setRemoveOrgin(removeOrigin);
 
-			archive = checkArchive.check(file, fileTar, deCompEsito);
+			archive = checkArchive.check(file, fileTar, deCompEsito, decompressRequired);
 			if (archive != null) {
 				check((ArchiveMD)archive);
 			} else {
@@ -86,6 +91,8 @@ public class ValidateFile {
 			e.printStackTrace();
 			addError(e.getMessage());
 		} catch (MDConfigurationException e) {
+			addError(e.getMessage());
+		} catch (Exception e) {
 			addError(e.getMessage());
 		} finally {
 			if (checkArchive != null){
@@ -109,15 +116,23 @@ public class ValidateFile {
 						+ archive.getType().getMsgError());
 			}
 		}
-		if (archive.checkMimetype("application/xml") &&
-				archive.getXmltype() != null) {
-			xmlType = archive.getXmltype();
-		}
+		checkXmlType(archive);
 		if (archive.getArchive() != null && archive.getArchive().size() > 0) {
 			for (int x = 0; x < archive.getArchive().size(); x++) {
 				check((ArchiveMD)archive.getArchive().get(x));
 			}
 		}
+	}
+
+	private void checkXmlType(ArchiveMD archive){
+		if (archive.checkMimetype("application/xml") &&
+				archive.getXmltype() != null) {
+			xmlType = archive.getXmltype();
+		} else if (archive.getXmltype() != null &&
+				archive.getXmltype().value().equals(Xmltype.BAGIT.value())){
+			xmlType = archive.getXmltype();
+		}
+		
 	}
 
 	/**
@@ -178,5 +193,19 @@ public class ValidateFile {
 
 	public GregorianCalendar getGcUnzipStop() {
 		return gcUnzipStop;
+	}
+
+	/**
+	 * @return the decompressRequired
+	 */
+	public boolean isDecompressRequired() {
+		return decompressRequired;
+	}
+
+	/**
+	 * @param decompressRequired the decompressRequired to set
+	 */
+	public void setDecompressRequired(boolean decompressRequired) {
+		this.decompressRequired = decompressRequired;
 	}
 }

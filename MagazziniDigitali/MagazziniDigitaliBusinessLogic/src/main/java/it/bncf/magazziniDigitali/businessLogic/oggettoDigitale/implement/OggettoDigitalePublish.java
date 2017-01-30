@@ -73,7 +73,7 @@ public class OggettoDigitalePublish extends OggettoDigitale{
 			mdFilesTmp = mdFileTmpDao.findById(objectIdentifierPremis);
 			
 			if (mdFilesTmp.getPublishPremis() == null || 
-					!mdFilesTmp.getPublishPremis().trim().equals("")) {
+					mdFilesTmp.getPublishPremis().trim().equals("")) {
 				filePremis = new File(
 						genFilePremis(
 								configuration.getSoftwareConfigString("path.premis"), 

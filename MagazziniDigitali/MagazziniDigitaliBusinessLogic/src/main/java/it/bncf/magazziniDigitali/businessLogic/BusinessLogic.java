@@ -356,7 +356,13 @@ public abstract class BusinessLogic<T extends Serializable, D extends GenericHib
 						!m[i].getName().equalsIgnoreCase("getHibernateLazyInitializer")
 						) {
 					if (m[i].getParameterTypes().length==0){
-						value = m[i].invoke(table);
+						value = null;
+						try{
+							value = m[i].invoke(table);
+						} catch (Exception e){
+							System.out.println(table.getClass().getName()+" - "+m[i]);
+							e.printStackTrace();
+						}
 						if (value != null) {
 
 							key = m[i].getName();

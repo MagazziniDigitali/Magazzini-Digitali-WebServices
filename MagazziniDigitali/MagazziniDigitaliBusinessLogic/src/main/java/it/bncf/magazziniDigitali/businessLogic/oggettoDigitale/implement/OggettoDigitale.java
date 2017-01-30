@@ -8,7 +8,6 @@ import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import info.lc.xmlns.premis_v2.SignificantPropertiesComplexType;
 import it.magazziniDigitali.xsd.premis.PremisXsd;
 
 /**
@@ -87,60 +86,7 @@ public class OggettoDigitale {
 	 * @return Valore individuato
 	 */
 	protected String findObjectIdentifierContainer(PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?> premis) {
-		String objectIdentifierContainer = null;
-		info.lc.xmlns.premis_v2.File file = null;
-		SignificantPropertiesComplexType significantProprties = null;
-		String key = null;
 
-		if (premis.getObject() != null) {
-			for (int x = 0; x < premis.getObject().size(); x++) {
-				if (premis.getObject().get(x) instanceof info.lc.xmlns.premis_v2.File) {
-					file = (info.lc.xmlns.premis_v2.File) premis.getObject()
-							.get(x);
-					if (file.getSignificantProperties() != null) {
-						for (int y = 0; y < file.getSignificantProperties()
-								.size(); y++) {
-							significantProprties = file
-									.getSignificantProperties().get(y);
-							if (significantProprties.getContent() != null) {
-								for (int z = 0; z < significantProprties
-										.getContent().size(); z++) {
-									key = (String) significantProprties
-											.getContent().get(z).getValue();
-									if (key.equals("ActualFileName")) {
-										if (file.getObjectIdentifier() != null) {
-											for (int a = 0; a < file
-													.getObjectIdentifier()
-													.size(); a++) {
-												if (file.getObjectIdentifier()
-														.get(a)
-														.getObjectIdentifierType()
-														.equals("UUID-MD-OBJ")) {
-													objectIdentifierContainer = file
-															.getObjectIdentifier()
-															.get(a)
-															.getObjectIdentifierValue();
-													break;
-												}
-											}
-											if (objectIdentifierContainer != null) {
-												break;
-											}
-										}
-									}
-								}
-								if (objectIdentifierContainer != null) {
-									break;
-								}
-							}
-						}
-						if (objectIdentifierContainer != null) {
-							break;
-						}
-					}
-				}
-			}
-		}
-		return objectIdentifierContainer;
+		return premis.findObjectIdentifierContainer();
 	}
 }

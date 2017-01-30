@@ -1,6 +1,7 @@
 package it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.solr;
 
 import java.util.List;
+import java.util.Vector;
 
 import org.purl.dc.elements._1.SimpleLiteral;
 
@@ -20,6 +21,20 @@ public class SolrObjectFile {
 				for(int y=0; y<sValues.size(); y++){
 					params.add(key, sValues.get(y));
 				}
+			}
+		}
+	}
+
+	protected void read(String key, String value) {
+		if (value != null){
+			params.add(key, value);
+		}
+	}
+
+	protected void read(String key, Vector<String> values){
+		if (values != null){
+			for(int x=0; x<values.size(); x++){
+				params.add(key, (String)values.get(x));
 			}
 		}
 	}

@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 
 import info.lc.xmlns.premis_v2.EventComplexType;
 import info.lc.xmlns.premis_v2.ObjectComplexType;
-import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.solr.SolrEvent;
+import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.solr.SolrEvent2_2;
 import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.solr.SolrObjectFileAnalyze2_2;
 import it.bncf.magazziniDigitali.configuration.IMDConfiguration;
 import it.bncf.magazziniDigitali.solr.AddDocumentMD;
@@ -32,7 +32,7 @@ public class IndexPremis2_2 extends IndexPremis<PremisV2_2Xsd, ObjectComplexType
 
 	@Override
 	protected void checkObject(List<ObjectComplexType> objects, Logger logPublish, String objectIdentifierPremis, AddDocumentMD admd,
-			File pathTar, IMDConfiguration<?> configuration) throws SolrException{
+			File pathTar, IMDConfiguration<?> configuration, boolean elabTarPremis) throws SolrException{
 		SolrObjectFileAnalyze2_2 sof = null;
 		ObjectComplexType object = null;
 		
@@ -49,7 +49,7 @@ public class IndexPremis2_2 extends IndexPremis<PremisV2_2Xsd, ObjectComplexType
 					}
 					object = objects.get(x);
 					if (object instanceof info.lc.xmlns.premis_v2.File) {
-						sof.publishSolr((info.lc.xmlns.premis_v2.File) object, admd, pathTar, configuration);
+						sof.publishSolr((info.lc.xmlns.premis_v2.File) object, admd, pathTar, configuration, elabTarPremis,  name,  logPublish,  objectIdentifierPremis);
 					}
 				}
 				logPublish.info(name + " [" + objectIdentifierPremis + "]" + " Fine preIndicizzare oggetti");
@@ -63,14 +63,14 @@ public class IndexPremis2_2 extends IndexPremis<PremisV2_2Xsd, ObjectComplexType
 	@Override
 	protected void checkEvent(List<EventComplexType> events, Logger logPublish, String objectIdentifierPremis, AddDocumentMD admd) 
 			throws SolrException {
-		SolrEvent se = null;
+		SolrEvent2_2 se = null;
 		EventComplexType event = null;
 		
 		try {
 			if (events != null && events.size() > 0) {
 				logPublish.info(
 						name + " [" + objectIdentifierPremis + "]" + " Eventi da preIndicizzare " + events.size());
-				se = new SolrEvent();
+				se = new SolrEvent2_2();
 				for (int x = 0; x < events.size(); x++) {
 					if ((x % 100) == 0) {
 						logPublish.info(

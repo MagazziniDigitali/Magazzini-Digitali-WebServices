@@ -333,6 +333,9 @@ public class MDRegistroIngressoBusiness extends BusinessLogic<MDRegistroIngresso
 			myDati.put("type", mdStato);
 			myDati.put("msgError", msgError);
 			if (traceError != null) {
+				if (traceError.length()>10000){
+					traceError = traceError.substring(0, 10000);
+				}
 				myDati.put("traceError", traceError);
 			}
 			errorBusiness.save(myDati);

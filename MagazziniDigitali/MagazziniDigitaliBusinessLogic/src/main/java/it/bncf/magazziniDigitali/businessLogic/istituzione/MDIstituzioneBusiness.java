@@ -24,6 +24,7 @@ import it.bncf.magazziniDigitali.database.dao.MDIstituzioneDAO;
 import it.bncf.magazziniDigitali.database.entity.MDIstituzione;
 import it.bncf.magazziniDigitali.database.entity.Regioni;
 import it.bncf.magazziniDigitali.utils.Record;
+import mx.randalf.hibernate.FactoryDAO;
 import mx.randalf.hibernate.exception.HibernateUtilException;
 import mx.randalf.tools.SHA256Tools;
 
@@ -140,7 +141,11 @@ public class MDIstituzioneBusiness extends BusinessLogic<MDIstituzione, MDIstitu
 
 		tableDao.setPage(page);
 		tableDao.setPageSize(pageSize);
-		tables = tableDao.find((String)dati.get("nome"),(String)dati.get("login"), (Integer)dati.get("bibliotecaDepositaria"),
+		tables = tableDao.find((String)dati.get("nome"),
+				(String)dati.get("login"), 
+				(Integer)dati.get("bibliotecaDepositaria"),
+				(Integer)dati.get("istitutoCentrale"),
+				(Regioni)dati.get("idRegione"),
 				orders);
 		return tables;
 	}
@@ -350,6 +355,7 @@ public class MDIstituzioneBusiness extends BusinessLogic<MDIstituzione, MDIstitu
 		try {
 			if (value instanceof Regioni){
 				regioniBusiness = new RegioniBusiness();
+				FactoryDAO.initialize(value);
 				jsonArray = regioniBusiness.toJson((Regioni) value) + "\n";
 			} else {
 				throw new BusinessLogicException(this.getClass().getName()+" - Il formato Key: "+key+" class ["+value.getClass().getName()+"] non gestito");
@@ -364,6 +370,10 @@ public class MDIstituzioneBusiness extends BusinessLogic<MDIstituzione, MDIstitu
 			throw e;
 		} catch (BusinessLogicException e) {
 			throw e;
+		} catch (HibernateException e) {
+			throw new BusinessLogicException(e.getMessage(),e);
+		} catch (HibernateUtilException e) {
+			throw new BusinessLogicException(e.getMessage(), e);
 		}
 		return jsonArray;
 	}
