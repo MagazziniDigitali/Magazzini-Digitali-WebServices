@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 22-ott-2014 15.34.38 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="it.bncf.magazziniDigitali.database.entity.MDTicket" table="MDTicket">
+        <id name="id" type="java.lang.String">
+            <column name="ID" />
+            <generator class="assigned" />
+        </id>
+        <property name="objectIdentifier" type="java.lang.String">
+            <column name="OBJECTIDENTIFIER" />
+        </property>
+        <property name="dataStart" type="java.sql.Timestamp">
+            <column name="DATA_START" />
+        </property>
+        <property name="dataEnd" type="java.sql.Timestamp">
+            <column name="DATA_END" />
+        </property>
+        <property name="modalitaAccesso" type="java.lang.String">
+            <column name="MODALITA_ACCESSO" />
+        </property>
+		<property name="idRights" type="java.lang.String">
+			<column name="ID_RIGHTS" />
+		</property>
+        <many-to-one name="idIstituzione" class="it.bncf.magazziniDigitali.database.entity.MDIstituzione" fetch="join">
+            <column name="ID_ISTITUZIONE" />
+        </many-to-one>
+        <property name="loginUtente" type="java.lang.String">
+            <column name="LOGIN_UTENTE" />
+        </property>
+        <property name="ipClient" type="java.lang.String">
+            <column name="IPCLIENT" />
+        </property>
+        <property name="actualFileName" type="java.lang.String">
+            <column name="ACTUALFILENAME" />
+        </property>
+        <property name="originalFileName" type="java.lang.String">
+            <column name="ORIGINALFILENAME" />
+        </property>
+    </class>
+</hibernate-mapping>

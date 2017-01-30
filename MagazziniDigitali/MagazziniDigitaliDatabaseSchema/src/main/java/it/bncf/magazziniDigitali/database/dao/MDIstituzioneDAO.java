@@ -12,6 +12,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import it.bncf.magazziniDigitali.database.entity.MDIstituzione;
+import it.bncf.magazziniDigitali.database.entity.Regioni;
 import mx.randalf.hibernate.GenericHibernateDAO;
 import mx.randalf.hibernate.exception.HibernateUtilException;
 
@@ -30,7 +31,8 @@ public class MDIstituzioneDAO extends GenericHibernateDAO<MDIstituzione, String>
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<MDIstituzione> find(String nome, String login, Integer bibliotecaDepositaria, 
+	public List<MDIstituzione> find(String nome, String login, Integer bibliotecaDepositaria, Integer istitutoCentrale, 
+			Regioni idRegione, 
 			List<Order> orders) throws  HibernateException,
 			HibernateUtilException {
 		Criteria criteria = null;
@@ -47,6 +49,12 @@ public class MDIstituzioneDAO extends GenericHibernateDAO<MDIstituzione, String>
 			}
 			if (bibliotecaDepositaria != null) {
 				criteria.add(Restrictions.eq("bibliotecaDepositaria", bibliotecaDepositaria));
+			}
+			if (istitutoCentrale != null) {
+				criteria.add(Restrictions.eq("istitutoCentrale", istitutoCentrale));
+			}
+			if (idRegione != null) {
+				criteria.add(Restrictions.eq("idRegione", idRegione));
 			}
 			if (orders != null) {
 				for (Order order : orders) {
