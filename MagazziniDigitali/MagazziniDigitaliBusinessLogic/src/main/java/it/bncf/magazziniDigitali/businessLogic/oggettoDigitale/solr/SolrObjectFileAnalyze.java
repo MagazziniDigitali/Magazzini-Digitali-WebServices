@@ -27,7 +27,7 @@ import mx.randalf.xsd.exception.XsdException;
  *
  */
 public abstract class SolrObjectFileAnalyze<F, OICT, SPCT, OCCT, FCT, LRSICT, FRCT, FDCT, SCT, CLCT, RCT, ROICT>
-		extends SolrObjectFileTtl {
+		extends SolrObjectFileRegistro {
 
 	private Logger log = Logger.getLogger(getClass());
 
@@ -100,6 +100,8 @@ public abstract class SolrObjectFileAnalyze<F, OICT, SPCT, OCCT, FCT, LRSICT, FR
 					publicSolrMets(pathTar, admd, configuration);
 				} else if ((fileType != null && fileType.equals("mag"))) {
 					publicSolrMag(pathTar, admd, configuration);
+				} else if ((fileType != null && fileType.equals("registro"))) {
+					publicSolrRegistro(pathTar, admd, configuration);
 				}
 			} else if(filename.endsWith(".premis")){
 				if (fileType != null){

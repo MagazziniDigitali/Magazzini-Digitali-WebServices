@@ -8,6 +8,9 @@ encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/authenti
 encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/authenticationUserInput/UserInput.java=UTF-8
 encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/authenticationUserInput/UserInputObjectIdentifier.java=UTF-8
 encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/authenticationUserOutput/AuthenticationUserOutput.java=UTF-8
+encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/checkTicket/CheckTicket.java=UTF-8
+encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/checkTicketOutput/CheckTicketOutput.java=UTF-8
+encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/checkTicketOutput/CheckTicketOutputTipo.java=UTF-8
 encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/endSend/EndSend.java=UTF-8
 encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/errorMsg/ErrorMsg.java=UTF-8
 encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/errorMsg/ErrorType_type.java=UTF-8
@@ -86,6 +89,12 @@ encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/webservi
 encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/webservice_checkStorageMD/CheckStorageMDPortType.java=UTF-8
 encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/webservice_checkStorageMD/CheckStorageMDService.java=UTF-8
 encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/webservice_checkStorageMD/CheckStorageMDServiceLocator.java=UTF-8
+encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/webservice_checkTicket/CheckTicketBindImpl.java=UTF-8
+encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/webservice_checkTicket/CheckTicketBindSkeleton.java=UTF-8
+encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/webservice_checkTicket/CheckTicketBindStub.java=UTF-8
+encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/webservice_checkTicket/CheckTicketPortType.java=UTF-8
+encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/webservice_checkTicket/CheckTicketService.java=UTF-8
+encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/webservice_checkTicket/CheckTicketServiceLocator.java=UTF-8
 encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/webservice_confirmDelMD/ConfirmDelMDBindImpl.java=UTF-8
 encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/webservice_confirmDelMD/ConfirmDelMDBindSkeleton.java=UTF-8
 encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/webservice_confirmDelMD/ConfirmDelMDBindStub.java=UTF-8
@@ -111,4 +120,5 @@ encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/webservi
 encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/webservice_writeEventNBN/WriteEventNBNService.java=UTF-8
 encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/webservice_writeEventNBN/WriteEventNBNServiceLocator.java=UTF-8
 encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/writeEventNBN/WriteEventNBN.java=UTF-8
-encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/writeEventNBN/WriteEventNBNEsito.java=UTF-8
+encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/writeEventNBNOutput/WriteEventNBNOutput.java=UTF-8
+encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/writeEventNBNOutput/WriteEventNBNOutputEsito.java=UTF-8

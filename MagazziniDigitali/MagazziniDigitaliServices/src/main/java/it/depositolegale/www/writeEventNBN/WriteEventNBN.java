@@ -16,10 +16,6 @@ public class WriteEventNBN  implements java.io.Serializable {
 
     private java.util.Calendar dataInizioElab;
 
-    private it.depositolegale.www.writeEventNBN.WriteEventNBNEsito esito;
-
-    private it.depositolegale.www.errorMsg.ErrorMsg[] errorMsg;
-
     public WriteEventNBN() {
     }
 
@@ -27,15 +23,11 @@ public class WriteEventNBN  implements java.io.Serializable {
            it.depositolegale.www.software.Software software,
            java.lang.String codiceNBN,
            java.lang.String urlOriginale,
-           java.util.Calendar dataInizioElab,
-           it.depositolegale.www.writeEventNBN.WriteEventNBNEsito esito,
-           it.depositolegale.www.errorMsg.ErrorMsg[] errorMsg) {
+           java.util.Calendar dataInizioElab) {
            this.software = software;
            this.codiceNBN = codiceNBN;
            this.urlOriginale = urlOriginale;
            this.dataInizioElab = dataInizioElab;
-           this.esito = esito;
-           this.errorMsg = errorMsg;
     }
 
 
@@ -118,54 +110,6 @@ public class WriteEventNBN  implements java.io.Serializable {
         this.dataInizioElab = dataInizioElab;
     }
 
-
-    /**
-     * Gets the esito value for this WriteEventNBN.
-     * 
-     * @return esito
-     */
-    public it.depositolegale.www.writeEventNBN.WriteEventNBNEsito getEsito() {
-        return esito;
-    }
-
-
-    /**
-     * Sets the esito value for this WriteEventNBN.
-     * 
-     * @param esito
-     */
-    public void setEsito(it.depositolegale.www.writeEventNBN.WriteEventNBNEsito esito) {
-        this.esito = esito;
-    }
-
-
-    /**
-     * Gets the errorMsg value for this WriteEventNBN.
-     * 
-     * @return errorMsg
-     */
-    public it.depositolegale.www.errorMsg.ErrorMsg[] getErrorMsg() {
-        return errorMsg;
-    }
-
-
-    /**
-     * Sets the errorMsg value for this WriteEventNBN.
-     * 
-     * @param errorMsg
-     */
-    public void setErrorMsg(it.depositolegale.www.errorMsg.ErrorMsg[] errorMsg) {
-        this.errorMsg = errorMsg;
-    }
-
-    public it.depositolegale.www.errorMsg.ErrorMsg getErrorMsg(int i) {
-        return this.errorMsg[i];
-    }
-
-    public void setErrorMsg(int i, it.depositolegale.www.errorMsg.ErrorMsg _value) {
-        this.errorMsg[i] = _value;
-    }
-
     private java.lang.Object __equalsCalc = null;
     public synchronized boolean equals(java.lang.Object obj) {
         if (!(obj instanceof WriteEventNBN)) return false;
@@ -189,13 +133,7 @@ public class WriteEventNBN  implements java.io.Serializable {
               this.urlOriginale.equals(other.getUrlOriginale()))) &&
             ((this.dataInizioElab==null && other.getDataInizioElab()==null) || 
              (this.dataInizioElab!=null &&
-              this.dataInizioElab.equals(other.getDataInizioElab()))) &&
-            ((this.esito==null && other.getEsito()==null) || 
-             (this.esito!=null &&
-              this.esito.equals(other.getEsito()))) &&
-            ((this.errorMsg==null && other.getErrorMsg()==null) || 
-             (this.errorMsg!=null &&
-              java.util.Arrays.equals(this.errorMsg, other.getErrorMsg())));
+              this.dataInizioElab.equals(other.getDataInizioElab())));
         __equalsCalc = null;
         return _equals;
     }
@@ -218,20 +156,6 @@ public class WriteEventNBN  implements java.io.Serializable {
         }
         if (getDataInizioElab() != null) {
             _hashCode += getDataInizioElab().hashCode();
-        }
-        if (getEsito() != null) {
-            _hashCode += getEsito().hashCode();
-        }
-        if (getErrorMsg() != null) {
-            for (int i=0;
-                 i<java.lang.reflect.Array.getLength(getErrorMsg());
-                 i++) {
-                java.lang.Object obj = java.lang.reflect.Array.get(getErrorMsg(), i);
-                if (obj != null &&
-                    !obj.getClass().isArray()) {
-                    _hashCode += obj.hashCode();
-                }
-            }
         }
         __hashCodeCalc = false;
         return _hashCode;
@@ -267,21 +191,6 @@ public class WriteEventNBN  implements java.io.Serializable {
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "dateTime"));
         elemField.setMinOccurs(0);
         elemField.setNillable(false);
-        typeDesc.addFieldDesc(elemField);
-        elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("esito");
-        elemField.setXmlName(new javax.xml.namespace.QName("http://www.depositolegale.it/writeEventNBN", "esito"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.depositolegale.it/writeEventNBN", ">>writeEventNBN>esito"));
-        elemField.setMinOccurs(0);
-        elemField.setNillable(false);
-        typeDesc.addFieldDesc(elemField);
-        elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("errorMsg");
-        elemField.setXmlName(new javax.xml.namespace.QName("http://www.depositolegale.it/errorMsg", "errorMsg"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.depositolegale.it/errorMsg", "errorMsg"));
-        elemField.setMinOccurs(0);
-        elemField.setNillable(false);
-        elemField.setMaxOccursUnbounded(true);
         typeDesc.addFieldDesc(elemField);
     }
 

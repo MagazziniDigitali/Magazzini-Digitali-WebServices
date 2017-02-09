@@ -8,12 +8,16 @@
     xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:writeEventNBNType="http://www.depositolegale.it/writeEventNBN"
+    xmlns:writeEventNBNOutputType="http://www.depositolegale.it/writeEventNBNOutput"
     xmlns:ws="http://www.depositolegale.it/webservice.writeEventNBN">
 
     <!-- definizione dei tipi di dato utilizzati... questo dovrebbe ricordarvi qualcosa ;) -->
     <wsdl:types>
         <xs:schema xmlns:writeEventNBNType="http://www.depositolegale.it/writeEventNBN">
             <xs:import namespace="http://www.depositolegale.it/writeEventNBN" schemaLocation="./Schema/Tools/WriteEventNBN.xsd"/>
+        </xs:schema>
+        <xs:schema xmlns:writeEventNBNOutputType="http://www.depositolegale.it/writeEventNBNOutput">
+            <xs:import namespace="http://www.depositolegale.it/writeEventNBNOutput" schemaLocation="./Schema/Tools/WriteEventNBNOutput.xsd"/>
         </xs:schema>
     </wsdl:types>
     
@@ -22,7 +26,7 @@
         <wsdl:part name="WriteEventNBNInput" element="writeEventNBNType:writeEventNBN"/>
     </wsdl:message>
     <wsdl:message name="WriteEventNBNOutput">
-        <wsdl:part name="WriteEventNBNOutput" element="writeEventNBNType:writeEventNBN"/>
+        <wsdl:part name="WriteEventNBNOutput" element="writeEventNBNOutputType:writeEventNBNOutput"/>
     </wsdl:message>
     <!-- naturalmente può esistere più di un elemento message 
      all'interno del documento -->

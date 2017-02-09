@@ -276,14 +276,15 @@ public class OggettoDigitalePublish extends OggettoDigitale{
 							+ File.separator
 							+ fObj.getName()
 									.replace(".tar.gz", ".tar")
-									.replace(".tgz", ".tar"));
+									.replace(".tgz", ".tar")
+									.replace(".warc.gz", ".warc"));
 				}
 
 				premisInput = PremisXsd.open(filePremisMaster);
 
 				objectIdentifierContainer = findObjectIdentifierContainer(premisInput);
 				
-				pos = fObj.getName().indexOf(".");
+				pos = fObj.getName().lastIndexOf(".");
 				ext = fObj.getName().substring(pos);
 
 				fNodo = new File(configuration.getSoftwareConfigMDNodi("nodo").getPathStorage()+File.separator+"storage.id");

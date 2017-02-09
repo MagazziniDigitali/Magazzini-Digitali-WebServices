@@ -8,17 +8,12 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 
-import antlr.debug.Event;
 import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.implement.indexSolr.IndexEvent;
 import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.implement.indexSolr.IndexEvent2_2;
 import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.implement.indexSolr.IndexEvent3_0;
-import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.implement.indexSolr.IndexRights;
-import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.implement.indexSolr.IndexRights2_2;
-import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.implement.indexSolr.IndexRights3_0;
 import it.bncf.magazziniDigitali.solr.AddDocumentMD;
 import it.magazziniDigitali.xsd.event.EventXsd;
 import it.magazziniDigitali.xsd.premis.exception.PremisXsdException;
-import it.magazziniDigitali.xsd.rights.RightsXsd;
 import mx.randalf.solr.exception.SolrException;
 
 /**

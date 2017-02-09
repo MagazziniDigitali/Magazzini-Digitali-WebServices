@@ -1,35 +1,37 @@
 /**
- * WriteEventNBNEsito.java
+ * CheckTicketOutputTipo.java
  *
  * This file was auto-generated from WSDL
  * by the Apache Axis 1.4 Apr 22, 2006 (06:55:48 PDT) WSDL2Java emitter.
  */
 
-package it.depositolegale.www.writeEventNBN;
+package it.depositolegale.www.checkTicketOutput;
 
-public class WriteEventNBNEsito implements java.io.Serializable {
+public class CheckTicketOutputTipo implements java.io.Serializable {
     private java.lang.String _value_;
     private static java.util.HashMap _table_ = new java.util.HashMap();
 
     // Constructor
-    protected WriteEventNBNEsito(java.lang.String value) {
+    protected CheckTicketOutputTipo(java.lang.String value) {
         _value_ = value;
         _table_.put(_value_,this);
     }
 
-    public static final java.lang.String _OK = "OK";
-    public static final java.lang.String _KO = "KO";
-    public static final WriteEventNBNEsito OK = new WriteEventNBNEsito(_OK);
-    public static final WriteEventNBNEsito KO = new WriteEventNBNEsito(_KO);
+    public static final java.lang.String _WARC = "WARC";
+    public static final java.lang.String _PDF = "PDF";
+    public static final java.lang.String _EBOOK = "EBOOK";
+    public static final CheckTicketOutputTipo WARC = new CheckTicketOutputTipo(_WARC);
+    public static final CheckTicketOutputTipo PDF = new CheckTicketOutputTipo(_PDF);
+    public static final CheckTicketOutputTipo EBOOK = new CheckTicketOutputTipo(_EBOOK);
     public java.lang.String getValue() { return _value_;}
-    public static WriteEventNBNEsito fromValue(java.lang.String value)
+    public static CheckTicketOutputTipo fromValue(java.lang.String value)
           throws java.lang.IllegalArgumentException {
-        WriteEventNBNEsito enumeration = (WriteEventNBNEsito)
+        CheckTicketOutputTipo enumeration = (CheckTicketOutputTipo)
             _table_.get(value);
         if (enumeration==null) throw new java.lang.IllegalArgumentException();
         return enumeration;
     }
-    public static WriteEventNBNEsito fromString(java.lang.String value)
+    public static CheckTicketOutputTipo fromString(java.lang.String value)
           throws java.lang.IllegalArgumentException {
         return fromValue(value);
     }
@@ -55,10 +57,10 @@ public class WriteEventNBNEsito implements java.io.Serializable {
     }
     // Type metadata
     private static org.apache.axis.description.TypeDesc typeDesc =
-        new org.apache.axis.description.TypeDesc(WriteEventNBNEsito.class);
+        new org.apache.axis.description.TypeDesc(CheckTicketOutputTipo.class);
 
     static {
-        typeDesc.setXmlType(new javax.xml.namespace.QName("http://www.depositolegale.it/writeEventNBN", ">>writeEventNBN>esito"));
+        typeDesc.setXmlType(new javax.xml.namespace.QName("http://www.depositolegale.it/checkTicketOutput", ">>checkTicketOutput>tipo"));
     }
     /**
      * Return type metadata object

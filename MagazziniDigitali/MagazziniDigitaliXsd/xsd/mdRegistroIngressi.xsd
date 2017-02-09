@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
-    targetNamespace="http://www.depositolegale.it/rgistroIngresso"
-    xmlns="http://www.depositolegale.it/rgistroIngresso" xmlns:premis="http://www.loc.gov/premis/v3">
+    targetNamespace="http://www.depositolegale.it/registroIngressi"
+    xmlns="http://www.depositolegale.it/registroIngressi" xmlns:premis="http://www.loc.gov/premis/v3">
     <xs:import namespace="http://www.loc.gov/premis/v3"
         schemaLocation="https://www.loc.gov/standards/premis/premis.xsd"/>
     <xs:element name="mdRegistroIngressi">
@@ -31,7 +31,7 @@
             <xs:documentation xml:lang="it">Identificativo UUID del Registro di Ingresso</xs:documentation>
         </xs:annotation>
     </xs:element>
-    <xs:element name="timeStampIngest" type="xs:dateTimeStamp"/>
+    <xs:element name="timeStampIngest" type="xs:dateTime"/>
     <xs:element name="agentDepositor" type="premis:linkingAgentIdentifierComplexType"/>
     <xs:element name="originalContainerName" type="premis:originalNameComplexType">
         <xs:annotation>
@@ -109,9 +109,9 @@
             </xs:restriction>
         </xs:simpleType>
     </xs:element>
-    <xs:element name="timestampInit" type="xs:dateTimeStamp"/>
-    <xs:element name="timestampElab" type="xs:dateTimeStamp"/>
-    <xs:element name="timestampCoda" type="xs:dateTimeStamp"/>
-    <xs:element name="timestampPub" type="xs:dateTimeStamp"/>
-    <xs:element name="timestampErr" type="xs:dateTimeStamp"/>
+    <xs:element name="timestampInit" type="xs:dateTime"/>
+    <xs:element name="timestampElab" type="xs:dateTime"/>
+    <xs:element name="timestampCoda" type="xs:dateTime"/>
+    <xs:element name="timestampPub" type="xs:dateTime"/>
+    <xs:element name="timestampErr" type="xs:dateTime"/>
 </xs:schema>

@@ -51,6 +51,8 @@ public class MDRegistroIngresso implements Serializable {
 	private Date timestampErr;
 
 	private Date timestampCoda;
+
+	private Date timestampExport;
 	
 	/**
 	 * 
@@ -190,5 +192,19 @@ public class MDRegistroIngresso implements Serializable {
 	 */
 	public void setTimestampCoda(Date timestampCoda) {
 		this.timestampCoda = timestampCoda;
+	}
+
+	/**
+	 * @return the timestampExport
+	 */
+	public Date getTimestampExport() {
+		return timestampExport;
+	}
+
+	/**
+	 * @param timestampExport the timestampExport to set
+	 */
+	public void setTimestampExport(Date timestampExport) {
+		this.timestampExport = timestampExport;
 	}
 }

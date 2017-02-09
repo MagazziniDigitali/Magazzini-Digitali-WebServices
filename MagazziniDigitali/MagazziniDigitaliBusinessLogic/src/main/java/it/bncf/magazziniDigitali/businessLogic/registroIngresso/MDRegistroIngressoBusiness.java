@@ -167,6 +167,21 @@ public class MDRegistroIngressoBusiness extends BusinessLogic<MDRegistroIngresso
 		return result;
 	}
 
+	public List<MDRegistroIngresso> findExport() throws HibernateException, HibernateUtilException {
+		MDRegistroIngressoDAO operaDAO;
+		List<MDRegistroIngresso> result = null;
+
+		try {
+			operaDAO = newInstanceDao();
+			result = operaDAO.findExport();
+		} catch (HibernateException e) {
+			throw e;
+		} catch (HibernateUtilException e) {
+			throw e;
+		}
+		return result;
+	}
+
 	/**
 	 * @see it.bncf.magazziniDigitali.businessLogic.BusinessLogic#setOrder()
 	 */
@@ -439,6 +454,10 @@ public class MDRegistroIngressoBusiness extends BusinessLogic<MDRegistroIngresso
 		if (dati.containsKey("timestampCoda")) {
 			table.setTimestampCoda((Timestamp) dati.get("timestampCoda"));
 		}
+
+		if (dati.containsKey("timestampExport")) {
+			table.setTimestampExport((Timestamp) dati.get("timestampExport"));
+		}
 	}
 
 	public void error(String id, MDStato type, Exception[] exceptionErrors, String[] registroErrori)
@@ -483,6 +502,32 @@ public class MDRegistroIngressoBusiness extends BusinessLogic<MDRegistroIngresso
 			dati.put("id", id);
 			dati.put("status", 2);
 			dati.put("timestampPub", new Timestamp(timeStampPub.getTimeInMillis()));
+			save(dati);
+		} catch (IllegalAccessException e) {
+			throw e;
+		} catch (InvocationTargetException e) {
+			throw e;
+		} catch (NoSuchMethodException e) {
+			throw e;
+		} catch (NamingException e) {
+			throw e;
+		} catch (HibernateException e) {
+			throw e;
+		} catch (HibernateUtilException e) {
+			throw e;
+		}
+	}
+
+	public void export(String id, GregorianCalendar timeStampPub)
+			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException, NamingException,
+			HibernateException, HibernateUtilException {
+		HashTable<String, Object> dati = null;
+
+		try {
+			dati = new HashTable<String, Object>();
+			dati.put("id", id);
+			dati.put("status", 3);
+			dati.put("timestampExport", new Timestamp(timeStampPub.getTimeInMillis()));
 			save(dati);
 		} catch (IllegalAccessException e) {
 			throw e;
@@ -582,7 +627,7 @@ public class MDRegistroIngressoBusiness extends BusinessLogic<MDRegistroIngresso
 
 			dati = new HashTable<String, Object>();
 			dati.put("id", id);
-			dati.put("status", 1);
+//			dati.put("status", 1);
 			dati.put("timestampIngest", new Timestamp(timeStampIngest.getTimeInMillis()));
 			dati.put("agentDepositor", agentDepositor);
 			dati.put("originalContainerName", originalContainerName);

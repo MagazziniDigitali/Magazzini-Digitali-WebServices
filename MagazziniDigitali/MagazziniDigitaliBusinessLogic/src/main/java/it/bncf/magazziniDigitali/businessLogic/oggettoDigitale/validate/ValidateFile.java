@@ -7,6 +7,9 @@ import java.io.File;
 import java.util.GregorianCalendar;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
+import org.jfree.util.Log;
+
 import it.bncf.magazziniDigitali.configuration.IMDConfiguration;
 import it.bncf.magazziniDigitali.configuration.exception.MDConfigurationException;
 import mx.randalf.archive.check.exception.CheckArchiveException;
@@ -17,6 +20,8 @@ import mx.randalf.archive.info.Xmltype;
  * 
  */
 public class ValidateFile {
+
+	private Logger log = Logger.getLogger(ValidateFile.class);
 
 	/**
 	 * Variabile utilizzata per gestire la lista degli Errori
@@ -88,11 +93,13 @@ public class ValidateFile {
 						+ file.getAbsolutePath() + "]");
 			}
 		} catch (CheckArchiveException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			addError(e.getMessage());
 		} catch (MDConfigurationException e) {
+			log.error(e.getMessage(), e);
 			addError(e.getMessage());
 		} catch (Exception e) {
+			log.error(e.getMessage(), e);
 			addError(e.getMessage());
 		} finally {
 			if (checkArchive != null){
@@ -129,7 +136,8 @@ public class ValidateFile {
 				archive.getXmltype() != null) {
 			xmlType = archive.getXmltype();
 		} else if (archive.getXmltype() != null &&
-				archive.getXmltype().value().equals(Xmltype.BAGIT.value())){
+				(archive.getXmltype().value().equals(Xmltype.BAGIT.value()) ||
+						archive.getXmltype().value().equals(Xmltype.WARC.value()))){
 			xmlType = archive.getXmltype();
 		}
 		

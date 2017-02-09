@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.depositolegale.it/checkTicket" xmlns:software="http://www.depositolegale.it/software" elementFormDefault="qualified" targetNamespace="http://www.depositolegale.it/checkTicket">
+    <xs:import namespace="http://www.depositolegale.it/software" schemaLocation="../Table/MDSoftware.xsd"/>
+    <xs:element name="checkTicket">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="software:software"/>
+                <xs:element name="ticket" type="xs:string"/>
+                <xs:element name="ipClient" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

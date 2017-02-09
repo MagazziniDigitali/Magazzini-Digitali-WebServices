@@ -18,7 +18,8 @@ import it.bncf.magazziniDigitali.services.axis.DepositoLegaleAxisServlet;
 import it.bncf.magazziniDigitali.services.implement.software.SoftwareTools;
 import it.depositolegale.www.errorMsg.ErrorMsg;
 import it.depositolegale.www.errorMsg.ErrorType_type;
-import it.depositolegale.www.writeEventNBN.WriteEventNBNEsito;
+import it.depositolegale.www.writeEventNBNOutput.WriteEventNBNOutput;
+import it.depositolegale.www.writeEventNBNOutput.WriteEventNBNOutputEsito;
 import it.magazziniDigitali.xsd.event.EventXsd;
 import it.magazziniDigitali.xsd.premis.PremisXsd;
 import mx.randalf.hibernate.exception.HibernateUtilException;
@@ -37,7 +38,7 @@ public class WriteEventNBN {
 	public WriteEventNBN() {
 	}
 
-	public static it.depositolegale.www.writeEventNBN.WriteEventNBN WriteEventNBNOperation(it.depositolegale.www.writeEventNBN.WriteEventNBN input){
+	public static WriteEventNBNOutput WriteEventNBNOperation(it.depositolegale.www.writeEventNBN.WriteEventNBN input){
 		EventXsd<?, ?, ?, ?, ?> eventXsd = null;
 		File filePremis = null;
 		String eventDateTime = null;
@@ -48,6 +49,7 @@ public class WriteEventNBN {
 		GregorianCalendar stop = new GregorianCalendar();
 		String agId = null;
 		Vector<ErrorMsg> errorMsgs = null;
+		WriteEventNBNOutput output = null;
 
 		errorMsgs = new Vector<ErrorMsg>();
 		try {
@@ -55,7 +57,9 @@ public class WriteEventNBN {
 											input.getSoftware().getAuthentication().getLogin())){
 				if (input.getCodiceNBN() != null &&
 						input.getUrlOriginale() != null ){
-					
+					output = new WriteEventNBNOutput();
+					output.setWriteEventNBN(input);
+
 					agId = UUID.randomUUID().toString()+"-EV";
 					eventXsd = EventXsd.initialize();
 					
@@ -119,12 +123,12 @@ public class WriteEventNBN {
 			log.error(e.getMessage(), e);
 		}finally {
 			if (errorMsgs.size()>0){
-				input.setEsito(WriteEventNBNEsito.KO);
-				input.setErrorMsg(errorMsgs.toArray(new ErrorMsg[errorMsgs.size()]));
+				output.setEsito(WriteEventNBNOutputEsito.KO);
+				output.setErrorMsg(errorMsgs.toArray(new ErrorMsg[errorMsgs.size()]));
 			} else {
-				input.setEsito(WriteEventNBNEsito.OK);
+				output.setEsito(WriteEventNBNOutputEsito.OK);
 			}
 		}
-		return input;
+		return output;
 	}
 }

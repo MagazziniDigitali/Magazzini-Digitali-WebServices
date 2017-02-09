@@ -55,5 +55,8 @@
         <property name="timestampCoda" type="java.util.Date">
             <column name="TIMESTAMPCODA" />
         </property>
-    </class>
+        <property name="timestampExport" type="java.util.Date">
+            <column name="TIMESTAMPEXPORT" />
+        </property>
+        </class>
 </hibernate-mapping>

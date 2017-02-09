@@ -9,6 +9,8 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
 
+import javax.xml.datatype.XMLGregorianCalendar;
+
 /**
  * @author massi
  *
@@ -32,6 +34,13 @@ public class Params {
 		params.put(key, values);
 	}
 
+	public void add(String key, XMLGregorianCalendar value){
+		Date date = null;
+		
+		date = new Date(value.toGregorianCalendar().getTimeInMillis());
+		add(key, date);
+	}
+
 	public void add(String key, Date value){
 		List<Object> values = null;
 		
@@ -52,7 +61,7 @@ public class Params {
 		} else {
 			values= params.get(key);
 		}
-		values.add(value);
+		values.add(value.toString());
 		params.put(key, values);
 	}
 

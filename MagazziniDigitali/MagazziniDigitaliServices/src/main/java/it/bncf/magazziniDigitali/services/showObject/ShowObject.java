@@ -189,7 +189,7 @@ public class ShowObject extends HttpServlet {
 				while ((tae = (TarArchiveEntry) tais.getNextEntry()) != null) {
 					if (tae.getName().equals(originalFileName)) {
 						System.out.println(tae.getName());
-						if (tae.getName().endsWith(".pdf")) {
+						if (tae.getName().toLowerCase().endsWith(".pdf")) {
 
 							res.setHeader("Expires", "0");
 							res.setHeader("Cache-Control", "must-revalidate, post-check=0, pre-check=0");

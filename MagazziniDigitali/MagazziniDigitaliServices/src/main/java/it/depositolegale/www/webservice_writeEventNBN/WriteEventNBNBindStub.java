@@ -27,9 +27,9 @@ public class WriteEventNBNBindStub extends org.apache.axis.client.Stub implement
         oper.setName("WriteEventNBNOperation");
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://www.depositolegale.it/writeEventNBN", "writeEventNBN"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.depositolegale.it/writeEventNBN", ">writeEventNBN"), it.depositolegale.www.writeEventNBN.WriteEventNBN.class, false, false);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("http://www.depositolegale.it/writeEventNBN", ">writeEventNBN"));
-        oper.setReturnClass(it.depositolegale.www.writeEventNBN.WriteEventNBN.class);
-        oper.setReturnQName(new javax.xml.namespace.QName("http://www.depositolegale.it/writeEventNBN", "writeEventNBN"));
+        oper.setReturnType(new javax.xml.namespace.QName("http://www.depositolegale.it/writeEventNBNOutput", ">writeEventNBNOutput"));
+        oper.setReturnClass(it.depositolegale.www.writeEventNBNOutput.WriteEventNBNOutput.class);
+        oper.setReturnQName(new javax.xml.namespace.QName("http://www.depositolegale.it/writeEventNBNOutput", "writeEventNBNOutput"));
         oper.setStyle(org.apache.axis.constants.Style.DOCUMENT);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
         _operations[0] = oper;
@@ -142,12 +142,19 @@ public class WriteEventNBNBindStub extends org.apache.axis.client.Stub implement
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("http://www.depositolegale.it/writeEventNBN", ">>writeEventNBN>esito");
+            qName = new javax.xml.namespace.QName("http://www.depositolegale.it/writeEventNBNOutput", ">>writeEventNBNOutput>esito");
             cachedSerQNames.add(qName);
-            cls = it.depositolegale.www.writeEventNBN.WriteEventNBNEsito.class;
+            cls = it.depositolegale.www.writeEventNBNOutput.WriteEventNBNOutputEsito.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(enumsf);
             cachedDeserFactories.add(enumdf);
+
+            qName = new javax.xml.namespace.QName("http://www.depositolegale.it/writeEventNBNOutput", ">writeEventNBNOutput");
+            cachedSerQNames.add(qName);
+            cls = it.depositolegale.www.writeEventNBNOutput.WriteEventNBNOutput.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
 
             qName = new javax.xml.namespace.QName("http://www.depositolegale.it/writeEventNBN", ">writeEventNBN");
             cachedSerQNames.add(qName);
@@ -222,7 +229,7 @@ public class WriteEventNBNBindStub extends org.apache.axis.client.Stub implement
         }
     }
 
-    public it.depositolegale.www.writeEventNBN.WriteEventNBN writeEventNBNOperation(it.depositolegale.www.writeEventNBN.WriteEventNBN writeEventNBNInput) throws java.rmi.RemoteException {
+    public it.depositolegale.www.writeEventNBNOutput.WriteEventNBNOutput writeEventNBNOperation(it.depositolegale.www.writeEventNBN.WriteEventNBN writeEventNBNInput) throws java.rmi.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -246,9 +253,9 @@ public class WriteEventNBNBindStub extends org.apache.axis.client.Stub implement
         else {
             extractAttachments(_call);
             try {
-                return (it.depositolegale.www.writeEventNBN.WriteEventNBN) _resp;
+                return (it.depositolegale.www.writeEventNBNOutput.WriteEventNBNOutput) _resp;
             } catch (java.lang.Exception _exception) {
-                return (it.depositolegale.www.writeEventNBN.WriteEventNBN) org.apache.axis.utils.JavaUtils.convert(_resp, it.depositolegale.www.writeEventNBN.WriteEventNBN.class);
+                return (it.depositolegale.www.writeEventNBNOutput.WriteEventNBNOutput) org.apache.axis.utils.JavaUtils.convert(_resp, it.depositolegale.www.writeEventNBNOutput.WriteEventNBNOutput.class);
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {

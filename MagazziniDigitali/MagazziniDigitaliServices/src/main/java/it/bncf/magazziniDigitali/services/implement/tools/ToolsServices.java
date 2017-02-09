@@ -1,6 +1,9 @@
 package it.bncf.magazziniDigitali.services.implement.tools;
 
+import java.util.Iterator;
+
 import org.apache.axis.MessageContext;
+import org.apache.catalina.connector.RequestFacade;
 
 public class ToolsServices {
 
@@ -14,10 +17,27 @@ public class ToolsServices {
 	public static String getRemoteIP(){
 		MessageContext mc = null;
 		String ipRemoto = null;
+		RequestFacade rf = null;
+//		Iterator<String> names = null;
+//		String name = null;
 
 		mc = MessageContext.getCurrentContext();
 		if (mc!=null){
-			ipRemoto = (String) mc.getProperty("remoteaddr");
+//			names = mc.getAllPropertyNames();
+//			while (names.hasNext()){
+//				name = names.next();
+//				System.out.println(name+": "+mc.getProperty(name));
+//			}
+			rf = (RequestFacade) mc.getProperty("transport.http.servletRequest");
+			ipRemoto = rf.getHeader("X-FORWARDED-FOR");
+			if (ipRemoto == null) {
+				ipRemoto = rf.getRemoteAddr();
+			}
+
+//			System.out.println(mc.getProperty("transport.http.servletRequest").getClass().getName());
+			if (ipRemoto == null) {
+				ipRemoto = (String) mc.getProperty("remoteaddr");
+			}
 		}
 		return ipRemoto;
 	}

@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.depositolegale.it/writeEventNBN" xmlns:error="http://www.depositolegale.it/errorMsg" xmlns:login="http://www.depositolegale.it/login" xmlns:software="http://www.depositolegale.it/software" elementFormDefault="qualified" targetNamespace="http://www.depositolegale.it/writeEventNBN">
+<?xml version="1.0" encoding="UTF-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.depositolegale.it/writeEventNBN" xmlns:login="http://www.depositolegale.it/login" xmlns:software="http://www.depositolegale.it/software" elementFormDefault="qualified" targetNamespace="http://www.depositolegale.it/writeEventNBN">
     <xs:import namespace="http://www.depositolegale.it/software" schemaLocation="../Table/MDSoftware.xsd"/>
-    <xs:import namespace="http://www.depositolegale.it/errorMsg" schemaLocation="ErrorMsg.xsd"/>
     <xs:element name="writeEventNBN">
         <xs:complexType>
             <xs:sequence>
@@ -8,15 +7,6 @@
                 <xs:element name="codiceNBN" type="xs:string"/>
                 <xs:element name="urlOriginale" type="xs:string"/>
                 <xs:element minOccurs="0" name="dataInizioElab" type="xs:dateTime"/>
-                <xs:element minOccurs="0" name="esito">
-                    <xs:simpleType>
-                        <xs:restriction base="xs:string">
-                            <xs:enumeration value="OK"/>
-                            <xs:enumeration value="KO"/>
-                        </xs:restriction>
-                    </xs:simpleType>
-                </xs:element>
-                <xs:element maxOccurs="unbounded" minOccurs="0" ref="error:errorMsg"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>

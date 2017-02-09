@@ -15,7 +15,7 @@
   <service name="WriteEventNBNPort" provider="java:RPC" style="document" use="literal">
       <parameter name="wsdlTargetNamespace" value="http://www.depositolegale.it/webservice.writeEventNBN"/>
       <parameter name="wsdlServiceElement" value="WriteEventNBNService"/>
-      <parameter name="schemaQualified" value="http://www.depositolegale.it/rigths,http://www.depositolegale.it/nodi,http://www.depositolegale.it/errorMsg,http://www.depositolegale.it/istituzione,http://www.depositolegale.it/login,http://www.depositolegale.it/writeEventNBN,http://www.depositolegale.it/software,http://www.depositolegale.it/loginUtenti"/>
+      <parameter name="schemaQualified" value="http://www.depositolegale.it/rigths,http://www.depositolegale.it/nodi,http://www.depositolegale.it/errorMsg,http://www.depositolegale.it/istituzione,http://www.depositolegale.it/login,http://www.depositolegale.it/writeEventNBN,http://www.depositolegale.it/writeEventNBNOutput,http://www.depositolegale.it/software,http://www.depositolegale.it/loginUtenti"/>
       <parameter name="wsdlServicePort" value="WriteEventNBNPort"/>
       <parameter name="className" value="it.depositolegale.www.webservice_writeEventNBN.WriteEventNBNBindSkeleton"/>
       <parameter name="wsdlPortType" value="WriteEventNBNPortType"/>
@@ -71,19 +71,19 @@
         encodingStyle=""
       />
       <typeMapping
+        xmlns:ns="http://www.depositolegale.it/writeEventNBNOutput"
+        qname="ns:>>writeEventNBNOutput>esito"
+        type="java:it.depositolegale.www.writeEventNBNOutput.WriteEventNBNOutputEsito"
+        serializer="org.apache.axis.encoding.ser.EnumSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.EnumDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
         xmlns:ns="http://www.depositolegale.it/writeEventNBN"
         qname="ns:>writeEventNBN"
         type="java:it.depositolegale.www.writeEventNBN.WriteEventNBN"
         serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
         deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.depositolegale.it/writeEventNBN"
-        qname="ns:>>writeEventNBN>esito"
-        type="java:it.depositolegale.www.writeEventNBN.WriteEventNBNEsito"
-        serializer="org.apache.axis.encoding.ser.EnumSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.EnumDeserializerFactory"
         encodingStyle=""
       />
       <typeMapping
@@ -106,6 +106,14 @@
         xmlns:ns="http://www.depositolegale.it/login"
         qname="ns:>authentication"
         type="java:it.depositolegale.www.login.Authentication"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.depositolegale.it/writeEventNBNOutput"
+        qname="ns:>writeEventNBNOutput"
+        type="java:it.depositolegale.www.writeEventNBNOutput.WriteEventNBNOutput"
         serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
         deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
         encodingStyle=""

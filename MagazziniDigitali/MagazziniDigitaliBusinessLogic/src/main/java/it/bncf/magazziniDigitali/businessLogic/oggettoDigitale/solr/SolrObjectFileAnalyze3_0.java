@@ -65,6 +65,10 @@ public class SolrObjectFileAnalyze3_0 extends SolrObjectFileAnalyze<File, Object
 				isValid = true;
 				params.add(ItemMD.ORIGINALFILENAME, object.getOriginalName().getValue());
 				filename = object.getOriginalName().getValue();
+				if (filename.trim().toLowerCase().startsWith("http://") ||
+						filename.trim().toLowerCase().startsWith("https://")){
+					params.add(ItemMD.URL, filename);
+				}
 				if (elabTarPremis){
 					checkIdMadre();
 				}

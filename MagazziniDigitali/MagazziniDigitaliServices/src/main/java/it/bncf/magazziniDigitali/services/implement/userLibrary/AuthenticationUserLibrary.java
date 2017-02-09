@@ -85,6 +85,7 @@ public class AuthenticationUserLibrary {
 							input.getUserInput().getRights() != null &&
 							input.getUserInput().getAuthentication() != null){
 						// verifico le credenziali e costruisco il ticket per soddisfare la richiesta
+						output.setRights(input.getUserInput().getRights());
 						output.setUrl(genTicket(input.getUserInput(), 
 								input.getUserInput().getRights(),
 								input.getUserInput().getActualFileName(),

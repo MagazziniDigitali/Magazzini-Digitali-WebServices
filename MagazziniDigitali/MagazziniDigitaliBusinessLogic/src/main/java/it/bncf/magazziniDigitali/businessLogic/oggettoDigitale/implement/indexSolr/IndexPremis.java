@@ -50,7 +50,9 @@ public abstract class IndexPremis<PX extends PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?
 							+ pathTar.getAbsolutePath() + "]");
 				}
 			}
-			Tar.decompress(fObj, pathTar);
+			if (fObj.getName().toLowerCase().endsWith(".tar")){
+				Tar.decompress(fObj, pathTar);
+			}
 			admd = new AddDocumentMD(configuration.getSoftwareConfigString("solr.URL"),
 					configuration.getSoftwareConfigBoolean("solr.Cloud"),
 					configuration.getSoftwareConfigString("solr.collection"),

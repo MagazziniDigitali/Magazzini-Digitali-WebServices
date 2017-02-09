@@ -26,6 +26,7 @@ public class ItemMD extends ItemDC{
 	public static String TIPOOGGETTO_EVENTO="evento";
 	public static String TIPOOGGETTO_AGENTE="agente";
 	public static String TIPOOGGETTO_DIRITTI="diritti";
+	public static String TIPOOGGETTO_REGISTRO="registro";
 
 	/**
 	 * Campo relativo al documento dell'opera che verrà utilizzato per le ricerche
@@ -72,6 +73,21 @@ public class ItemMD extends ItemDC{
 	public static String RIGHTSSTATUTEJURISDICTION="rightsStatuteJurisdiction";
 	public static String RIGHTSSTATUTECITATION="rightsStatuteCitation";
 
+	public static String AGENTMACHINE = "agentMachine";
+	
+	// Registro Ingresso
+	public static String REGISTRO_ID = "registroId";
+	public static String REGISTRO_TIMESTAMPINGEST = "registroTimeStampIngest";
+	public static String REGISTRO_CONTAINERFINGERPRINT = "registroContainerFingerPrint";
+	public static String REGISTRO_CONTAINERFINGERPRINTCHAIN = "registroContainerFingerPrintChain";
+	public static String REGISTRO_CONTAINERTYPE = "registroContainerType";
+	public static String REGISTRO_STATUS = "registroStatus";
+	public static String REGISTRO_TIMESTAMPINIT = "registroTimeStampInit";
+	public static String REGISTRO_TIMESTAMPELAB = "registroTimeStampElab";
+	public static String REGISTRO_TIMESTAMPCODA = "registroTimeStampCoda";
+	public static String REGISTRO_TIMESTAMPPUB = "registroTimeStampPub";
+	public static String REGISTRO_TIMESTAMPERR = "registroTimeStampErr";
+	
 	/**
 	 * 
 	 */
@@ -111,6 +127,21 @@ public class ItemMD extends ItemDC{
 		addColumn(RIGHTSSTATUTEJURISDICTION, true, true, true, true, true);
 		addColumn(RIGHTSSTATUTECITATION, true, true, true, true, true);
 		addColumn(NBN, true, true, true, true, true);
+
+		addColumn(AGENTMACHINE, true, true, true, true, true);
+		
+		// Registro Ingresso
+		addColumn(REGISTRO_ID, true, true, true, true, true);
+		addColumn(REGISTRO_TIMESTAMPINGEST, true, true, true, true, true);
+		addColumn(REGISTRO_CONTAINERFINGERPRINT, true, true, true, true, true);
+		addColumn(REGISTRO_CONTAINERFINGERPRINTCHAIN, true, true, true, true, true);
+		addColumn(REGISTRO_CONTAINERTYPE, true, true, true, true, true);
+		addColumn(REGISTRO_STATUS, true, true, true, true, true);
+		addColumn(REGISTRO_TIMESTAMPINIT, true, true, true, true, true);
+		addColumn(REGISTRO_TIMESTAMPELAB, true, true, true, true, true);
+		addColumn(REGISTRO_TIMESTAMPCODA, true, true, true, true, true);
+		addColumn(REGISTRO_TIMESTAMPPUB, true, true, true, true, true);
+		addColumn(REGISTRO_TIMESTAMPERR, true, true, true, true, true);
 	}
 
 }

@@ -33,8 +33,8 @@ public class WriteEventNBNBindSkeleton implements it.depositolegale.www.webservi
         _params = new org.apache.axis.description.ParameterDesc [] {
             new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://www.depositolegale.it/writeEventNBN", "writeEventNBN"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.depositolegale.it/writeEventNBN", ">writeEventNBN"), it.depositolegale.www.writeEventNBN.WriteEventNBN.class, false, false), 
         };
-        _oper = new org.apache.axis.description.OperationDesc("writeEventNBNOperation", _params, new javax.xml.namespace.QName("http://www.depositolegale.it/writeEventNBN", "writeEventNBN"));
-        _oper.setReturnType(new javax.xml.namespace.QName("http://www.depositolegale.it/writeEventNBN", ">writeEventNBN"));
+        _oper = new org.apache.axis.description.OperationDesc("writeEventNBNOperation", _params, new javax.xml.namespace.QName("http://www.depositolegale.it/writeEventNBNOutput", "writeEventNBNOutput"));
+        _oper.setReturnType(new javax.xml.namespace.QName("http://www.depositolegale.it/writeEventNBNOutput", ">writeEventNBNOutput"));
         _oper.setElementQName(new javax.xml.namespace.QName("", "WriteEventNBNOperation"));
         _oper.setSoapAction("");
         _myOperationsList.add(_oper);
@@ -51,9 +51,9 @@ public class WriteEventNBNBindSkeleton implements it.depositolegale.www.webservi
     public WriteEventNBNBindSkeleton(it.depositolegale.www.webservice_writeEventNBN.WriteEventNBNPortType impl) {
         this.impl = impl;
     }
-    public it.depositolegale.www.writeEventNBN.WriteEventNBN writeEventNBNOperation(it.depositolegale.www.writeEventNBN.WriteEventNBN writeEventNBNInput) throws java.rmi.RemoteException
+    public it.depositolegale.www.writeEventNBNOutput.WriteEventNBNOutput writeEventNBNOperation(it.depositolegale.www.writeEventNBN.WriteEventNBN writeEventNBNInput) throws java.rmi.RemoteException
     {
-        it.depositolegale.www.writeEventNBN.WriteEventNBN ret = impl.writeEventNBNOperation(writeEventNBNInput);
+        it.depositolegale.www.writeEventNBNOutput.WriteEventNBNOutput ret = impl.writeEventNBNOperation(writeEventNBNInput);
         return ret;
     }
 

@@ -10,7 +10,7 @@ package it.depositolegale.www.webservice_writeEventNBN;
 import it.bncf.magazziniDigitali.services.implement.writeEventNBN.WriteEventNBN;
 
 public class WriteEventNBNBindImpl implements it.depositolegale.www.webservice_writeEventNBN.WriteEventNBNPortType{
-    public it.depositolegale.www.writeEventNBN.WriteEventNBN writeEventNBNOperation(it.depositolegale.www.writeEventNBN.WriteEventNBN writeEventNBNInput) throws java.rmi.RemoteException {
+    public it.depositolegale.www.writeEventNBNOutput.WriteEventNBNOutput writeEventNBNOperation(it.depositolegale.www.writeEventNBN.WriteEventNBN writeEventNBNInput) throws java.rmi.RemoteException {
         return WriteEventNBN.WriteEventNBNOperation(writeEventNBNInput);
     }
 

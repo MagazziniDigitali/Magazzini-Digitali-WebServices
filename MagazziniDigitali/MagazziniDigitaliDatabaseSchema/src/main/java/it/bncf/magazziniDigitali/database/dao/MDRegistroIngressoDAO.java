@@ -4,6 +4,9 @@
 package it.bncf.magazziniDigitali.database.dao;
 
 import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -94,6 +97,46 @@ public class MDRegistroIngressoDAO extends GenericHibernateDAO<MDRegistroIngress
 					criteria.addOrder(order);
 				}
 			}
+			paging(criteria);
+			result = criteria.list();
+			commitTransaction();
+		} catch (HibernateException e) {
+			rollbackTransaction();
+			throw e;
+		} catch (HibernateUtilException e) {
+			rollbackTransaction();
+			throw e;
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			rollbackTransaction();
+			throw new HibernateUtilException(e.getMessage(), e);
+		}
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<MDRegistroIngresso> findExport() throws HibernateException,
+			HibernateUtilException {
+		Criteria criteria = null;
+		List<MDRegistroIngresso> result = null;
+		GregorianCalendar gc = null;
+		
+		try {
+			beginTransaction();
+			criteria = this.createCriteria();
+
+			criteria.add(Restrictions.eq("status", 2));
+			criteria.add(Restrictions.isNull("timestampExport"));
+			
+			gc = new GregorianCalendar();
+			gc.add(Calendar.DAY_OF_MONTH, -1);
+			gc.set(Calendar.HOUR_OF_DAY, 23);
+			gc.set(Calendar.MINUTE, 59);
+			gc.set(Calendar.SECOND, 59);
+			gc.set(Calendar.MILLISECOND, 999);
+			criteria.add(Restrictions.le("timestampPub", new Date(gc.getTimeInMillis())));
+			
+			criteria.addOrder(Order.asc("timestampPub"));
 			paging(criteria);
 			result = criteria.list();
 			commitTransaction();

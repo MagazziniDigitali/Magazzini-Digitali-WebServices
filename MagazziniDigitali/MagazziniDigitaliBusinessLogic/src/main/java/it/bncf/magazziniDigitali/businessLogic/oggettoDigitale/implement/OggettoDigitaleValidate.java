@@ -178,7 +178,8 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 				fObj = new File(fileObj);
 
 				if (!fObj.getName().endsWith(".tgz") &&
-						!fObj.getName().endsWith(".tar.gz")){
+						!fObj.getName().endsWith(".tar.gz") &&
+						!fObj.getName().endsWith(".warc.gz")){
 					validate.setDecompressRequired(false);
 				}
 				if (mdFilesTmp.getTarTmpFile() == null) {
@@ -189,7 +190,11 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 					fileTar += File.separator;
 					fileTar += configuration.getMDSoftware().getIdIstituzione().getId();
 					fileTar += File.separator;
-					fileTar += mdFilesTmp.getNomeFile().replace(".tar.gz", ".tar").replace(".tgz", ".tar");
+					fileTar += mdFilesTmp.
+							getNomeFile().
+							replace(".tar.gz", ".tar").
+							replace(".tgz", ".tar").
+							replace(".warc.gz", ".warc");
 				} else {
 					fileTar = mdFilesTmp.getTarTmpFile();
 				}
@@ -438,11 +443,17 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 		ArchiveMD archive = null;
 		String objectIdentifierMaster = null;
 		int pos = 0;
+		boolean isWarc = false;
 
 		try {
 			if (validate.getArchive() != null) {
 				logValidate.info(name + " [" + objectIdentifierPremis + "]" + " Analizzo gli archivi");
-				if (validate.getArchive().checkMimetype("application/x-tar")) {
+				if (validate.getArchive().getType() != null &&
+						validate.getArchive().getType().getExt() != null &&
+						validate.getArchive().getType().getExt().equalsIgnoreCase("warc")){
+					isWarc = true;
+				}
+				if (validate.getArchive().checkMimetype("application/x-tar") || isWarc) {
 					archive = validate.getArchive();
 				} else {
 					archive = (ArchiveMD) validate.getArchive().getArchive().get(0);
@@ -454,7 +465,7 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 					pos = objectIdentifierMaster.lastIndexOf("/");
 					objectIdentifierMaster = objectIdentifierMaster.substring(pos).replace("/", "");
 					pos = objectIdentifierMaster.indexOf(".");
-					objectIdentifierMaster = objectIdentifierMaster.substring(pos).replace(".", "");
+					objectIdentifierMaster = objectIdentifierMaster.substring(0,pos).replace(".", "");
 				}
 				premis.addObjectFileContainer(objectIdentifierMaster, archive.getXmltype().value(),
 						archive.getType().getExt(), new BigInteger("0"), archive.getDigest(DigestType.SHA_1),
@@ -472,7 +483,7 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 									+ " Archivi analizzati su " + archive.getArchive().size());
 						}
 						addArchive(premis, (ArchiveMD) archive.getArchive().get(y), objectIdentifierMaster,
-								configuration, validate, "");
+								configuration, validate, "", isWarc);
 					}
 					logValidate.info(name + " [" + objectIdentifierPremis + "]" + " Fine analisi degli Archivi "
 							+ archive.getArchive().size());
@@ -571,7 +582,7 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 	}
 
 	private void addArchive(PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?> premis, ArchiveMD archive, String objectIdentifierMaster,
-			IMDConfiguration<?> configuration, ValidateFile validate, String folder) throws MDConfigurationException {
+			IMDConfiguration<?> configuration, ValidateFile validate, String folder, boolean isWarc) throws MDConfigurationException {
 		String objectIdentifierValue = null;
 		BigInteger compositionLevel = null;
 		String digest = null;
@@ -584,7 +595,7 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 		String relationshipSubType = null;
 
 		try {
-			if (checkValidateArchive(archive, validate)){
+			if (checkValidateArchive(archive, validate, isWarc)){
 				objectIdentifierValue = archive.getID();
 	
 				compositionLevel = new BigInteger("0");
@@ -601,7 +612,8 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 				digest = archive.getDigest(DigestType.SHA_1);
 				size = archive.getType().getSize();
 				formatDesignationValue = archive.getMimetype();
-				originalName = ((folder != null && !folder.trim().equals(""))?folder+File.separator:"") + archive.getNome();
+				originalName = (archive.getProtocol() != null?archive.getProtocol():"")+
+						((folder != null && !folder.trim().equals(""))?folder+File.separator:"") + archive.getNome();
 				contentLocationValue = archive.getType().getContentLocation();
 				if (archive.getType().getFormat() != null) {
 					formatVersion = archive.getType().getFormat().getVersion();
@@ -633,7 +645,7 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 			if (archive.getArchive() != null && archive.getArchive().size() > 0) {
 				for (int x = 0; x < archive.getArchive().size(); x++) {
 					addArchive(premis, (ArchiveMD) archive.getArchive().get(x), objectIdentifierMaster, configuration, validate,
-							((folder != null && !folder.trim().equals(""))?folder+File.separator:"") + archive.getNome());
+							((folder != null && !folder.trim().equals(""))?folder+File.separator:"") + archive.getNome(), isWarc);
 				}
 			}
 		} catch (MDConfigurationException e) {
@@ -641,7 +653,7 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 		}
 	}
 
-	private boolean checkValidateArchive(ArchiveMD archive, ValidateFile validate){
+	private boolean checkValidateArchive(ArchiveMD archive, ValidateFile validate, boolean isWarc){
 		boolean result =true;
 		String nome = "";
 		int pos = 0;
@@ -663,6 +675,11 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 						nome.equals("txt")){
 					result = false;
 				}
+			}
+		} else if (isWarc){
+			if (archive.getMimetype() == null || 
+					!archive.getMimetype().equalsIgnoreCase("application/pdf")){
+				result = false;
 			}
 		}
 				
