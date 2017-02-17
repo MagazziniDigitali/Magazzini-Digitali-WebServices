@@ -24,9 +24,9 @@ import mx.randalf.solr.exception.SolrException;
  */
 public class ModificaSolr {
 
-	String url = "zookeeper-01.bncf.lan:2181,zookeeper-02.bncf.lan:2181,zookeeper-03.bncf.lan:2181/bncfroot";
-	boolean cloud = true;
-	String collection = "mdTest2";
+	String url = "http://md-solr01.test.bncf.lan:8983/solr/mdTest";
+	boolean cloud = false;
+	String collection = "mdTest";
 	int connectionTimeout = 60000;
 	int clientTimeout = 100000;
 	/**

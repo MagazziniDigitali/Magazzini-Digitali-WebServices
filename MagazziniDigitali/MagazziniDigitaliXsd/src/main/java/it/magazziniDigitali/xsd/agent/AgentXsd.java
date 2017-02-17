@@ -163,10 +163,11 @@ public abstract class AgentXsd<C, NPM extends NamespacePrefixMapper,
 				if (st[x].startsWith("agent")){
 					if (st[x].indexOf("version=\"2.2\"")>-1){
 						premisXsd = new AgentV2_2Xsd(file);
-					}
-					if (st[x].indexOf("version=\"3.0\"")>-1){
+					} else if (st[x].indexOf("version=\"3.0\"")>-1){
 						premisXsd = new AgentV3_0Xsd(file);
-					}
+					} else if (st[x].indexOf("version=\"")==-1){
+						premisXsd = new AgentV3_0Xsd(file);
+					} 
 					break;
 				}
 			}

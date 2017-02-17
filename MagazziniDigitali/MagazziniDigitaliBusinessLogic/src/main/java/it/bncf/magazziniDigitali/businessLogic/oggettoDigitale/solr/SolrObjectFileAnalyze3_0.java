@@ -146,9 +146,28 @@ public class SolrObjectFileAnalyze3_0 extends SolrObjectFileAnalyze<File, Object
 		for (int x=0;x<objects.size(); x++){
 			object = objects.get(x);
 			if (((StringPlusAuthority)object.getContent().get(0).getValue()).getValue().equals("FileType")){
-				params.add(ItemMD.TIPOCONTENITORE, (String) object.getContent().get(1).getValue());
-				params.add(ItemMD.FILETYPE, (String) object.getContent().get(1).getValue());
 				fileType = (String) object.getContent().get(1).getValue();
+				switch (fileType) {
+				case "premis":
+					params.add(ItemMD.TIPOCONTENITORE, "admtape");
+					break;
+				case "agent":
+					params.add(ItemMD.TIPOCONTENITORE, "admtape");
+					break;
+				case "rights":
+					params.add(ItemMD.TIPOCONTENITORE, "admtape");
+					break;
+				case "event":
+					params.add(ItemMD.TIPOCONTENITORE, "admtape");
+					break;
+				case "registro":
+					params.add(ItemMD.TIPOCONTENITORE, "admtape");
+					break;
+				default:
+					params.add(ItemMD.TIPOCONTENITORE, fileType);
+					break;
+				}
+				params.add(ItemMD.FILETYPE, fileType);
 			}
 			if (((StringPlusAuthority)object.getContent().get(0).getValue()).getValue().equals("ActualFileName")){
 				params.add(ItemMD.ACTUALFILENAME, (String) object.getContent().get(1).getValue());

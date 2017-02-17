@@ -77,8 +77,8 @@ public class MDTicketBusiness extends BusinessLogic<MDTicket, MDTicketDAO, Strin
 		Criteria criteria = null;
 
 		criteria = tableDao.createCriteria();
-		if (nome != null) {
-			criteria.add(Restrictions.ilike("nome", "%" + nome + "%"));
+		if (dati.get("objectIdentifier") != null) {
+			criteria.add(Restrictions.eq("objectIdentifier", (String)dati.get("objectIdentifier")));
 		}
 		return criteria;
 	}

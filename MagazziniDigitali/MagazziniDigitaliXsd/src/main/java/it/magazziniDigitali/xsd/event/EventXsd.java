@@ -161,8 +161,9 @@ public abstract class EventXsd<E, NPM extends NamespacePrefixMapper,
 				if (st[x].startsWith("event")){
 					if (st[x].indexOf("version=\"2.2\"")>-1){
 						premisXsd = new EventV2_2Xsd(file);
-					}
-					if (st[x].indexOf("version=\"3.0\"")>-1){
+					} else if (st[x].indexOf("version=\"3.0\"")>-1){
+						premisXsd = new EventV3_0Xsd(file);
+					} else if (st[x].indexOf("version=\"")==-1){
 						premisXsd = new EventV3_0Xsd(file);
 					}
 					break;

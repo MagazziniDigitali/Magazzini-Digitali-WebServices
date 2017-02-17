@@ -6,6 +6,7 @@
 	xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns="http://www.depositolegale.it/MD" xmlns:premis="info:lc/xmlns/premis-v2"
 	xmlns:METS="http://www.loc.gov/METS/" xmlns:PREMIS="info:lc/xmlns/premis-v2"
+	xmlns:xlin="http://www.w3.org/1999/xlink"
 	xsi:schemaLocation="http://www.depositolegale.it/MD http://www.bncf.firenze.sbn.it/SchemaXML/MagazziniDigitali/MD.xsd"
 	exclude-result-prefixes="md">
 	<!-- 
@@ -25,7 +26,19 @@
 					<xsl:for-each select="METS:dmdSec">
 						<xsl:for-each select="METS:mdWrap">
 							<xsl:for-each select="METS:xmlData">
+								<xsl:for-each select="node()">
+									<xsl:if test="name(.)='record'">
+										<xsl:for-each select="node()">
+											<xsl:if test="name(.)='metadata'">
+												<xsl:apply-templates select="oai_dc:dc"/>
+											</xsl:if>
+										</xsl:for-each>
+									</xsl:if>
+								</xsl:for-each>
 								<xsl:for-each select="marc:record">
+									<xsl:apply-templates select="."/>
+								</xsl:for-each>
+								<xsl:for-each select="oai_dc:record">
 									<xsl:apply-templates select="."/>
 								</xsl:for-each>
 							</xsl:for-each>
@@ -44,9 +57,25 @@
 							</xsl:for-each>
 						</xsl:for-each>
 					</xsl:for-each>
+					<xsl:for-each select="METS:fileSec">
+						<xsl:for-each select="METS:fileGrp">
+							<xsl:for-each select="METS:file">
+								<xsl:variable name="date" select="METS:FLocat/@xlin:href"/>
+								<xsl:if test="starts-with($date,'http://') or starts-with($date,'https://')">
+									<url><xsl:value-of select="$date"/></url>
+								</xsl:if>
+							</xsl:for-each>
+						</xsl:for-each>
+					</xsl:for-each>
 				</md>
 			</xsl:for-each>
 		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="oai_dc:dc//*" >
+		<xsl:value-of select="concat('&lt;',name(),'&gt;')" disable-output-escaping="yes"/>
+		<xsl:apply-templates/>
+		<xsl:value-of select="concat('&lt;/',name(),'&gt;')" disable-output-escaping="yes"/>
 	</xsl:template>
 	<xsl:template match="PREMIS:agent">
 		<premis:agent>

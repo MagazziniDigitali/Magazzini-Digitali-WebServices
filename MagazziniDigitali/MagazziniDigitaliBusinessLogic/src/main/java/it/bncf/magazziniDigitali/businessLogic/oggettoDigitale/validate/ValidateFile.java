@@ -8,7 +8,6 @@ import java.util.GregorianCalendar;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
-import org.jfree.util.Log;
 
 import it.bncf.magazziniDigitali.configuration.IMDConfiguration;
 import it.bncf.magazziniDigitali.configuration.exception.MDConfigurationException;

@@ -29,6 +29,7 @@ encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/loginUte
 encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/loginUtenti/AuthenticationUtentiSoftwareRigth.java=UTF-8
 encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/nodi/Nodo.java=UTF-8
 encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/nodi/NodoRsync.java=UTF-8
+encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/numberView/NumberView.java=UTF-8
 encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/oggettiDigitali/Digest.java=UTF-8
 encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/oggettiDigitali/Digest_type.java=UTF-8
 encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/oggettiDigitali/OggettoDigitale.java=UTF-8
@@ -52,6 +53,12 @@ encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/storage/
 encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/storage/StorageEsito.java=UTF-8
 encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/utenti/DatiUtente.java=UTF-8
 encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/utenti/Utenti.java=UTF-8
+encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/webservice/numberView/NumberViewBindImpl.java=UTF-8
+encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/webservice/numberView/NumberViewBindSkeleton.java=UTF-8
+encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/webservice/numberView/NumberViewBindStub.java=UTF-8
+encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/webservice/numberView/NumberViewPortType.java=UTF-8
+encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/webservice/numberView/NumberViewService.java=UTF-8
+encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/webservice/numberView/NumberViewServiceLocator.java=UTF-8
 encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/webservice_authenticationIstituzione/AuthenticationIstituzioneBindImpl.java=UTF-8
 encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/webservice_authenticationIstituzione/AuthenticationIstituzioneBindSkeleton.java=UTF-8
 encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/webservice_authenticationIstituzione/AuthenticationIstituzioneBindStub.java=UTF-8

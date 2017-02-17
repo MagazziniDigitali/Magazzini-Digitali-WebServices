@@ -1331,18 +1331,18 @@ public class MDFilesTmpBusiness extends
 						containerType=5;
 					} else 	if (filesTmp.getXmlMimeType().equals("mag")){		// *     &lt;enumeration value="mag"/>
 						containerType=4;
-					} else 	if (filesTmp.getXmlMimeType().equals("metatape") ||	
-							filesTmp.getXmlMimeType().equals("premis") ||		// *     &lt;enumeration value="premis"/>
-							filesTmp.getXmlMimeType().equals("agent") ||		// *     &lt;enumeration value="agent"/>
-							filesTmp.getXmlMimeType().equals("rights") ||		// *     &lt;enumeration value="agent"/>
-							filesTmp.getXmlMimeType().equals("event")){		// *     &lt;enumeration value="rights"/>
+					} else 	if (filesTmp.getXmlMimeType().equals("metatape")){
 						containerType=3;
 					} else 	if (filesTmp.getXmlMimeType().equals("bagit")){		// *     &lt;enumeration value="bagit"/>
 						containerType=2;
 					} else 	if (filesTmp.getXmlMimeType().equals("warc")){		// *     &lt;enumeration value="warc"/>
 						containerType=1;
 					} else 	if (filesTmp.getXmlMimeType().equals("admtape") ||	
-							filesTmp.getXmlMimeType().equals("registro")		// *     &lt;enumeration value="registro"/>
+							filesTmp.getXmlMimeType().equals("registro") ||		// *     &lt;enumeration value="registro"/>
+							filesTmp.getXmlMimeType().equals("premis") ||		// *     &lt;enumeration value="premis"/>
+							filesTmp.getXmlMimeType().equals("agent") ||		// *     &lt;enumeration value="agent"/>
+							filesTmp.getXmlMimeType().equals("rights") ||		// *     &lt;enumeration value="rights"/>
+							filesTmp.getXmlMimeType().equals("event")			// *     &lt;enumeration value="event"/>
 							){
 						containerType=0;
 					} else {

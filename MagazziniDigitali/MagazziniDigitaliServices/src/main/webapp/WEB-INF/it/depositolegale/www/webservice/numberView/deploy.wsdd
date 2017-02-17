@@ -1,0 +1,34 @@
+<!-- Use this file to deploy some handlers/chains and services      -->
+<!-- Two ways to do this:                                           -->
+<!--   java org.apache.axis.client.AdminClient deploy.wsdd          -->
+<!--      after the axis server is running                          -->
+<!-- or                                                             -->
+<!--   java org.apache.axis.utils.Admin client|server deploy.wsdd   -->
+<!--      from the same directory that the Axis engine runs         -->
+
+<deployment
+    xmlns="http://xml.apache.org/axis/wsdd/"
+    xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+
+  <!-- Services from NumberViewService WSDL service -->
+
+  <service name="NumberViewPort" provider="java:RPC" style="document" use="literal">
+      <parameter name="wsdlTargetNamespace" value="http://www.depositolegale.it/webservice/numberView"/>
+      <parameter name="wsdlServiceElement" value="NumberViewService"/>
+      <parameter name="schemaQualified" value="http://www.depositolegale.it/numberView"/>
+      <parameter name="wsdlServicePort" value="NumberViewPort"/>
+      <parameter name="className" value="it.depositolegale.www.webservice.numberView.NumberViewBindSkeleton"/>
+      <parameter name="wsdlPortType" value="NumberViewPortType"/>
+      <parameter name="typeMappingVersion" value="1.2"/>
+      <parameter name="allowedMethods" value="*"/>
+
+      <typeMapping
+        xmlns:ns="http://www.depositolegale.it/numberView"
+        qname="ns:>numberView"
+        type="java:it.depositolegale.www.numberView.NumberView"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+  </service>
+</deployment>

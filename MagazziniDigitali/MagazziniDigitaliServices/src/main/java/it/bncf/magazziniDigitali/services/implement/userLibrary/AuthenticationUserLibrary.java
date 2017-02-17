@@ -167,7 +167,7 @@ public class AuthenticationUserLibrary {
 				idTicket = mdTicketBusiness.save(dati);
 				
 				url = appendUri(DepositoLegaleAxisServlet.mdConfiguration.getSoftwareConfigString("ticket.dockerUrl"),
-						"idTicket="+idTicket);
+						"ticket="+idTicket);
 			} else {
 				throw new AuthenticationUserLibraryException("Utente e password non validi riprovare");
 			}
@@ -358,8 +358,12 @@ public class AuthenticationUserLibrary {
 						}
 						output.getUserInput().setOriginalFileName(originalFileName);
 						if (!solrDocument.containsKey("rights_show")){
-							if (solrDocument.containsKey("_root_")){
-								response = findDocumentMD.find("id", (String)solrDocument.getFieldValue("_root_"));
+							if (solrDocument.containsKey("_root_") || solrDocument.containsKey("padre")){
+								if (solrDocument.containsKey("_root_")){
+									response = findDocumentMD.find("id", (String)solrDocument.getFieldValue("_root_"));
+								} else {
+									response = findDocumentMD.find("id", (String)solrDocument.getFieldValue("padre"));
+								}
 								if (response != null){
 									if (response.getNumFound()==0){
 										throw new AuthenticationUserLibraryException("Non risulta l'oggetto richiesto in archivio");
