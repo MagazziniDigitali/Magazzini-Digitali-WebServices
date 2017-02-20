@@ -23,6 +23,8 @@ public class MDStato implements Serializable {
 
 	private String descrizione;
 
+	private Integer sequenza;
+
 	public MDStato() {
 	}
 
@@ -52,5 +54,19 @@ public class MDStato implements Serializable {
 	 */
 	public void setDescrizione(String descrizione) {
 		this.descrizione = descrizione;
+	}
+
+	/**
+	 * @return the sequenza
+	 */
+	public Integer getSequenza() {
+		return sequenza;
+	}
+
+	/**
+	 * @param sequenza the sequenza to set
+	 */
+	public void setSequenza(Integer sequenza) {
+		this.sequenza = sequenza;
 	}
 }

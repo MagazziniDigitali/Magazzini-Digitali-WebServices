@@ -113,6 +113,11 @@ public class SolrObjectFileMets extends SolrObjectFileMag{
 							}
 						}
 					}
+					if (md.getUrl() != null){
+						for (int x=0; x<md.getUrl().size(); x++){
+							params.add(ItemMD.URL, md.getUrl().get(x));
+						}
+					}
 				}
 //					params.add(ItemMD.KEYWORDSDOC, baos.toString());
 				admd.add(params.getParams(), new ItemMD());

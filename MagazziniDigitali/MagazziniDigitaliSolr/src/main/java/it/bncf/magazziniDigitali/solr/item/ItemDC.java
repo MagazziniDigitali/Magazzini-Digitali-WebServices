@@ -143,7 +143,7 @@ public class ItemDC extends ItemEvent{
 	public ItemDC() {
 		super();
 		addColumn(TIPODOCUMENTO, true, true, true, true, true);
-		addColumn(BID, false, true, true, true, false);
+		addColumn(BID, true, true, true, true, true);
 		addColumn(BNI, true, true, true, true, true);
 		addColumn(TITOLO, true, true, true, true, true);
 		addColumn(AUTORE, true, true, true, true, true);

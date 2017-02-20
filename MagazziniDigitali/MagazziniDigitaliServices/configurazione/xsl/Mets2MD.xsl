@@ -28,11 +28,13 @@
 							<xsl:for-each select="METS:xmlData">
 								<xsl:for-each select="node()">
 									<xsl:if test="name(.)='record'">
-										<xsl:for-each select="node()">
-											<xsl:if test="name(.)='metadata'">
-												<xsl:apply-templates select="oai_dc:dc"/>
-											</xsl:if>
-										</xsl:for-each>
+										<bib>
+											<xsl:for-each select="node()">
+												<xsl:if test="name(.)='metadata'">
+													<xsl:apply-templates select="oai_dc:dc"/>
+												</xsl:if>
+											</xsl:for-each>
+										</bib>
 									</xsl:if>
 								</xsl:for-each>
 								<xsl:for-each select="marc:record">

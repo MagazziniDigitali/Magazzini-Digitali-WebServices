@@ -374,6 +374,9 @@ public abstract class BusinessLogic<T extends Serializable, D extends GenericHib
 							primo = false;
 							jsonArray += "\"" + key + "\": ";
 							if (value instanceof String) {
+								if (((String) value).indexOf("\"")>-1){
+									value = ((String) value).replace("\"", "\\\"");
+								}
 								jsonArray += "\"" + value + "\"";
 							} else if (value instanceof Integer) {
 								jsonArray += "\"" + ((Integer) value).toString() + "\"";

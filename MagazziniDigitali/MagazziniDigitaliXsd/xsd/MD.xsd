@@ -11,6 +11,7 @@
             <xs:sequence>
                 <xs:element name="bib" type="bib"> </xs:element>
                 <xs:element maxOccurs="unbounded" minOccurs="0" ref="premis:agent"/>
+                <xs:element maxOccurs="unbounded" minOccurs="0" name="url" type="xs:string"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
