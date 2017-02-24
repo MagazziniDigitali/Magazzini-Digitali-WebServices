@@ -62,6 +62,11 @@ public class CheckTicketImpl {
 										url = appendUri(DepositoLegaleAxisServlet.mdConfiguration.getSoftwareConfigString("ticket.internalUrl"),
 												"idTicket="+input.getTicket());
 										output.setUrl(url);
+									} else if (originalFileName.toLowerCase().trim().endsWith("epub")){
+										output.setTipo(CheckTicketOutputTipo.EBOOK);
+										url = appendUri(DepositoLegaleAxisServlet.mdConfiguration.getSoftwareConfigString("ticket.internalUrl"),
+												"idTicket="+input.getTicket());
+										output.setUrl(url);
 									} else {
 										errorMsg.add(new ErrorMsg(ErrorType_type.ERROR,"Il ticket [" + 
 												input.getTicket() + 

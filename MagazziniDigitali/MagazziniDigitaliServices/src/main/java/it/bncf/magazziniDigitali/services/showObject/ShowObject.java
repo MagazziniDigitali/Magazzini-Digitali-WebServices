@@ -188,7 +188,7 @@ public class ShowObject extends HttpServlet {
 				tais = (TarArchiveInputStream) new ArchiveStreamFactory().createArchiveInputStream("tar", fis);
 				while ((tae = (TarArchiveEntry) tais.getNextEntry()) != null) {
 					if (tae.getName().equals(originalFileName)) {
-						System.out.println(tae.getName());
+//						System.out.println(tae.getName());
 						if (tae.getName().toLowerCase().endsWith(".pdf")) {
 
 							res.setHeader("Expires", "0");
@@ -199,7 +199,18 @@ public class ShowObject extends HttpServlet {
 							IOUtils.copy(tais, res.getOutputStream());
 							// res.getOutputStream().close();
 							trovato = true;
+						} else if (tae.getName().toLowerCase().endsWith(".epub")) {
+
+							res.setHeader("Expires", "0");
+							res.setHeader("Cache-Control", "must-revalidate, post-check=0, pre-check=0");
+							res.setHeader("Pragma", "public");
+
+							res.setContentType("application/epub+zip");
+							IOUtils.copy(tais, res.getOutputStream());
+							// res.getOutputStream().close();
+							trovato = true;
 						}
+						
 						break;
 					}
 				}

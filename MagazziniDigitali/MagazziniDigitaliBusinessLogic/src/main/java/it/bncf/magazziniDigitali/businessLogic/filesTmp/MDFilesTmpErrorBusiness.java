@@ -118,6 +118,8 @@ public class MDFilesTmpErrorBusiness extends
 			throws HibernateException, HibernateUtilException {
 		List<MDFilesTmpError> tables;
 
+		tableDao.setPage(page);
+		tableDao.setPageSize(pageSize);
 		tables = tableDao.find((MDFilesTmp)dati.get("idMdFilesTmp"), 
 				orders);
 		return tables;

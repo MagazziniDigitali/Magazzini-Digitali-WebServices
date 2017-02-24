@@ -1549,6 +1549,9 @@ public class MDFilesTmpBusiness extends
 			if (dati.get("nomeFile") != null) {
 				criteria.add(Restrictions.ilike("nomeFile", "%"+dati.get("nomeFile")+"%"));
 			}
+			if (dati.get("stato") != null) {
+				criteria.add(Restrictions.in("stato", (MDStato[])dati.get("stato")));
+			}
 		}
 		return criteria;
 	}

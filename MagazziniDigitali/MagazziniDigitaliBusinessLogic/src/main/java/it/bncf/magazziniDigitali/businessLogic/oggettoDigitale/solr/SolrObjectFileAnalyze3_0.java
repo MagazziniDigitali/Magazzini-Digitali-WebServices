@@ -103,7 +103,7 @@ public class SolrObjectFileAnalyze3_0 extends SolrObjectFileAnalyze<File, Object
 			}
 			if ((fileType != null && fileType.equals("bagit"))) {
 				isValid = true;
-				if (filename.endsWith(".pdf")){
+				if (filename.endsWith(".pdf") || filename.endsWith(".epub")){
 					fTxt = new java.io.File(pathTar.getAbsolutePath() + java.io.File.separator + filename+".txt");
 					if (fTxt.exists()){
 						publicSolrOcr(fTxt.getAbsolutePath());

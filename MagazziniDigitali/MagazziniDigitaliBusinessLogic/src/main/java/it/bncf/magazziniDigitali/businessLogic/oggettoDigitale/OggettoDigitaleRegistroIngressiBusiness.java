@@ -32,7 +32,6 @@ import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.exception.Oggetto
 import it.bncf.magazziniDigitali.businessLogic.registroIngresso.MDRegistroIngressoBusiness;
 import it.bncf.magazziniDigitali.configuration.IMDConfiguration;
 import it.bncf.magazziniDigitali.configuration.exception.MDConfigurationException;
-import it.bncf.magazziniDigitali.database.dao.MDRegistroIngressoDAO;
 import it.bncf.magazziniDigitali.database.entity.MDRegistroIngresso;
 import it.depositolegale.registroIngressi.MdRegistroIngressi;
 import it.magazziniDigitali.xsd.premis.PremisXsd;
@@ -129,7 +128,8 @@ public class OggettoDigitaleRegistroIngressiBusiness extends OggettoDigitaleBusi
 				public boolean accept(File pathname) {
 					boolean result = false;
 					File fTgz = null;
-					if (pathname.getName().startsWith("RegistroIngresso-")){
+					if (pathname.getName().startsWith("RegistroIngresso-") && 
+							pathname.isDirectory()){
 						fTgz = new File(pathname.getAbsolutePath()+".tgz");
 						if (!fTgz.exists()){
 							result = true;

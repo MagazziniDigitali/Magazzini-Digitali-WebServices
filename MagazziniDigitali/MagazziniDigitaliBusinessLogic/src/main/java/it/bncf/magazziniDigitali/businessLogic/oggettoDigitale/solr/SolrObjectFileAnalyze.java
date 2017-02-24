@@ -27,7 +27,7 @@ import mx.randalf.xsd.exception.XsdException;
  *
  */
 public abstract class SolrObjectFileAnalyze<F, OICT, SPCT, OCCT, FCT, LRSICT, FRCT, FDCT, SCT, CLCT, RCT, ROICT>
-		extends SolrObjectFileRegistro {
+		extends SolrObjectFileDC {
 
 	private Logger log = Logger.getLogger(getClass());
 
@@ -116,11 +116,23 @@ public abstract class SolrObjectFileAnalyze<F, OICT, SPCT, OCCT, FCT, LRSICT, FR
 					}
 				}
 			} else if ((fileType != null && fileType.equals("bagit"))) {
-				if (filename.endsWith(".pdf")){
-					fTtl = new File(pathTar.getAbsolutePath()+File.separator+filename.replace(".pdf", ".ttl"));
-					
+				if (filename.endsWith(".pdf") || filename.endsWith(".epub")){
+					if (filename.endsWith(".pdf")){
+						fTtl = new File(pathTar.getAbsolutePath()+File.separator+filename.replace(".pdf", ".ttl"));
+					} else {
+						fTtl = new File(pathTar.getAbsolutePath()+File.separator+filename.replace(".epub", ".ttl"));
+					}
 					if (fTtl.exists()){
 						publicSolrTtl(fTtl, admd);
+					} else {
+						if (filename.endsWith(".pdf")){
+							fTtl = new File(pathTar.getAbsolutePath()+File.separator+filename.replace(".pdf", ".xml"));
+						} else {
+							fTtl = new File(pathTar.getAbsolutePath()+File.separator+filename.replace(".epub", ".xml"));
+						}
+						if (fTtl.exists()){
+							publicSolrDc(fTtl, admd);
+						}
 					}
 				}
 			}

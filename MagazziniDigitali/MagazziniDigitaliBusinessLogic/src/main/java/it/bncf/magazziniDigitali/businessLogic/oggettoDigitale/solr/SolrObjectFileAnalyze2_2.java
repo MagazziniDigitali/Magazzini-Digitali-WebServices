@@ -23,7 +23,8 @@ import it.magazziniDigitali.xsd.premis.PremisXsd;
 import mx.randalf.solr.exception.SolrException;
 
 public class SolrObjectFileAnalyze2_2 extends
-		SolrObjectFileAnalyze<File, ObjectIdentifierComplexType, SignificantPropertiesComplexType, ObjectCharacteristicsComplexType, FormatComplexType, LinkingRightsStatementIdentifierComplexType, FormatRegistryComplexType, FormatDesignationComplexType, StorageComplexType, ContentLocationComplexType, RelationshipComplexType, RelatedObjectIdentificationComplexType> {
+		SolrObjectFileAnalyze<File, ObjectIdentifierComplexType, SignificantPropertiesComplexType, 
+		ObjectCharacteristicsComplexType, FormatComplexType, LinkingRightsStatementIdentifierComplexType, FormatRegistryComplexType, FormatDesignationComplexType, StorageComplexType, ContentLocationComplexType, RelationshipComplexType, RelatedObjectIdentificationComplexType> {
 
 	private Logger log = Logger.getLogger(SolrObjectFileAnalyze2_2.class);
 
@@ -101,7 +102,7 @@ public class SolrObjectFileAnalyze2_2 extends
 			}
 			if ((fileType != null && fileType.equals("bagit"))) {
 				isValid = true;
-				if (filename.endsWith(".pdf")) {
+				if (filename.endsWith(".pdf") || filename.endsWith(".epub")) {
 					fTxt = new java.io.File(pathTar.getAbsolutePath() + java.io.File.separator + filename + ".txt");
 					if (fTxt.exists()) {
 						publicSolrOcr(fTxt.getAbsolutePath());
