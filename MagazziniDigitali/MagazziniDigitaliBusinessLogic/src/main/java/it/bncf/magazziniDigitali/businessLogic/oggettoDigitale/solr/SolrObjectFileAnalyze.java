@@ -95,17 +95,16 @@ public abstract class SolrObjectFileAnalyze<F, OICT, SPCT, OCCT, FCT, LRSICT, FR
 		File fTtl = null;
 		
 		if (filename != null){
-			if ( filename.endsWith(".xml")) {
-				if ((fileType != null && fileType.equals("mets"))) {
-					publicSolrMets(pathTar, admd, configuration);
-				} else if ((fileType != null && fileType.equals("mag"))) {
-					publicSolrMag(pathTar, admd, configuration);
-				} else if ((fileType != null && fileType.equals("registro"))) {
-					publicSolrRegistro(pathTar, admd, configuration);
-				}
-			} else if(filename.endsWith(".premis")){
+			if ( filename.endsWith(".xml") ||
+					filename.endsWith(".premis")) {
 				if (fileType != null){
-					if (fileType.equals("premis")) {
+					if ((fileType != null && fileType.equals("mets"))) {
+						publicSolrMets(pathTar, admd, configuration);
+					} else if ((fileType != null && fileType.equals("mag"))) {
+						publicSolrMag(pathTar, admd, configuration);
+					} else if ((fileType != null && fileType.equals("registro"))) {
+						publicSolrRegistro(pathTar, admd, configuration);
+					} else if (fileType.equals("premis")) {
 						publicSolrPremis(pathTar, admd, configuration, name, logPublish, objectIdentifierPremis);
 					} else if (fileType.equals("agent")){
 						publicSolrAgent(pathTar, admd, name);

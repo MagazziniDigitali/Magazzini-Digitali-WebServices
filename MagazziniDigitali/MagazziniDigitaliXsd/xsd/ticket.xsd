@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.depositolegale.it/Ticket"
+    targetNamespace="http://www.depositolegale.it/Ticket" elementFormDefault="qualified"
+    xmlns:premis="http://www.loc.gov/premis/v3">
+
+    <xs:import namespace="http://www.loc.gov/premis/v3"
+        schemaLocation="https://www.loc.gov/standards/premis/premis.xsd"/>
+    <xs:element name="ticket">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="premis:linkingRightsStatementIdentifier"/>
+                <xs:element name="ipClient" type="xs:string"/>
+                <xs:element minOccurs="0" name="loginUtente" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

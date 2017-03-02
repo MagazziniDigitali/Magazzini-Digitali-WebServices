@@ -42,6 +42,8 @@ public class MDTicket implements Serializable {
 
 	private String originalFileName;
 
+	private Timestamp dataExport;
+
 	public MDTicket() {
 	}
 
@@ -197,5 +199,19 @@ public class MDTicket implements Serializable {
 	 */
 	public void setOriginalFileName(String originalFileName) {
 		this.originalFileName = originalFileName;
+	}
+
+	/**
+	 * @return the dataExport
+	 */
+	public Timestamp getDataExport() {
+		return dataExport;
+	}
+
+	/**
+	 * @param dataExport the dataExport to set
+	 */
+	public void setDataExport(Timestamp dataExport) {
+		this.dataExport = dataExport;
 	}
 }

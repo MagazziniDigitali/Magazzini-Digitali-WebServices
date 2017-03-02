@@ -68,19 +68,19 @@ public class IndexPremis2_2 extends IndexPremis<PremisV2_2Xsd, ObjectComplexType
 		
 		try {
 			if (events != null && events.size() > 0) {
-				logPublish.info(
+				logPublish.debug(
 						name + " [" + objectIdentifierPremis + "]" + " Eventi da preIndicizzare " + events.size());
 				se = new SolrEvent2_2();
 				for (int x = 0; x < events.size(); x++) {
 					if ((x % 100) == 0) {
-						logPublish.info(
+						logPublish.debug(
 								name + " [" + objectIdentifierPremis + "]" + " Eventi " + x + "/" + events.size());
 						System.gc();
 					}
 					event = events.get(x);
 					se.publishSolr(event, admd);
 				}
-				logPublish.info(name + " [" + objectIdentifierPremis + "]" + " Fine preIndicizzare eventi");
+				logPublish.debug(name + " [" + objectIdentifierPremis + "]" + " Fine preIndicizzare eventi");
 			}
 		} catch (SolrException e) {
 			throw e;

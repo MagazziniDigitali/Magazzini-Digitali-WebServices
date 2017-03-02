@@ -14,5 +14,8 @@
         <property name="sequenza" type="java.lang.Integer">
             <column name="SEQUENZA" />
         </property>
-    </class>
+        <property name="optGroup" type="java.lang.String">
+            <column name="OPTGROUP" />
+        </property>
+        </class>
 </hibernate-mapping>

@@ -37,6 +37,8 @@ public abstract class PremisXsd<C, O, OCT, ECT, ACT, RCT, ReCT, SCT, OICT, OCCT,
 	public static String UUID_MD_AG = "UUID-MD-AG";
 	public static String SOFTWARE="software";
 	public static String DEPOSITANTE="depositante";
+	public static String DEPOSITARIO="depositario";
+	public static String BIBLIOTECHE="biblioteche";
 
 	protected C premis = null;
 

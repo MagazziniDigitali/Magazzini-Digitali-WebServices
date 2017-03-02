@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 
 import javax.xml.bind.JAXBElement;
@@ -31,6 +32,10 @@ public abstract class EventXsd<E, NPM extends NamespacePrefixMapper,
 	public static String CODICENBN="codiceNBN";
 
 	public static String URLORIGINAL="urlOriginal";
+	
+	public static String NBN = "nbn";
+
+	public static String USERAUTHENTICATION="userAuthentication";
 	
 	protected E event = null;
 
@@ -203,6 +208,11 @@ public abstract class EventXsd<E, NPM extends NamespacePrefixMapper,
 	
 	public abstract void addLinkingObjectIdentifier(String linkingObjectIdentifierType, 
 			String linkingObjectIdentifierValue);
+	
+	public abstract void addLinkingAgentIdentifier(String linkingObjectIdentifierType, 
+			String linkingObjectIdentifierValue, String linkingAgentRole);
+	
+	public abstract void addEventDetailInformationExtension(Serializable extensionComplexType);
 
 	/**
 	 * @return the event

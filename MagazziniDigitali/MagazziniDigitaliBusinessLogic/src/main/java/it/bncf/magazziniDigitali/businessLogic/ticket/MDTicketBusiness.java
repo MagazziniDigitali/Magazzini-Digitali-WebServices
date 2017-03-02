@@ -5,6 +5,7 @@ package it.bncf.magazziniDigitali.businessLogic.ticket;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.naming.NamingException;
@@ -157,6 +158,10 @@ public class MDTicketBusiness extends BusinessLogic<MDTicket, MDTicketDAO, Strin
 		if (dati.get("originalFileName") != null) {
 			table.setOriginalFileName((String) dati.get("originalFileName"));
 		}
+
+		if (dati.get("dataExport") != null) {
+			table.setDataExport((Timestamp) dati.get("dataExport"));
+		}
 	}
 
 	public String getNome() {
@@ -193,5 +198,45 @@ public class MDTicketBusiness extends BusinessLogic<MDTicket, MDTicketDAO, Strin
 			throw e;
 		}
 		return jsonArray;
+	}
+
+	public List<MDTicket> findExport() throws HibernateException, HibernateUtilException {
+		MDTicketDAO operaDAO;
+		List<MDTicket> result = null;
+
+		try {
+			operaDAO = newInstanceDao();
+			result = operaDAO.findExport();
+		} catch (HibernateException e) {
+			throw e;
+		} catch (HibernateUtilException e) {
+			throw e;
+		}
+		return result;
+	}
+
+	public void export(String id, GregorianCalendar dataExport) 
+			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException, NamingException,
+					HibernateException, HibernateUtilException {
+		HashTable<String, Object> dati = null;
+
+		try {
+			dati = new HashTable<String, Object>();
+			dati.put("id", id);
+			dati.put("dataExport", new Timestamp(dataExport.getTimeInMillis()));
+			save(dati);
+		} catch (IllegalAccessException e) {
+			throw e;
+		} catch (InvocationTargetException e) {
+			throw e;
+		} catch (NoSuchMethodException e) {
+			throw e;
+		} catch (NamingException e) {
+			throw e;
+		} catch (HibernateException e) {
+			throw e;
+		} catch (HibernateUtilException e) {
+			throw e;
+		}
 	}
 }

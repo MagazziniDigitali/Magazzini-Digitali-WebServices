@@ -8,13 +8,16 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import gov.loc.premis.v3.EventComplexType;
+import gov.loc.premis.v3.EventDetailInformationComplexType;
 import gov.loc.premis.v3.EventIdentifierComplexType;
 import gov.loc.premis.v3.EventOutcomeInformationComplexType;
+import gov.loc.premis.v3.ExtensionComplexType;
 import gov.loc.premis.v3.LinkingAgentIdentifierComplexType;
 import gov.loc.premis.v3.LinkingObjectIdentifierComplexType;
 import gov.loc.premis.v3.StringPlusAuthority;
 import it.bncf.magazziniDigitali.solr.AddDocumentMD;
 import it.bncf.magazziniDigitali.solr.ItemMD;
+import it.depositolegale.ticket.Ticket;
 import it.magazziniDigitali.xsd.premis.PremisXsd;
 import mx.randalf.solr.exception.SolrException;
 
@@ -60,9 +63,7 @@ public class SolrEvent3_0 extends SolrEvent<EventComplexType, LinkingObjectIdent
 			}
 
 			if (object.getEventDetailInformation() != null){
-				for (int x=0; x<object.getEventDetailInformation().size(); x++){
-					params.add(ItemMD.EVENTDETAIL, object.getEventDetailInformation().get(x).getEventDetail());
-				}
+				publicSolrEventDetailInformation(object.getEventDetailInformation());
 			}
 
 			if (object.getEventOutcomeInformation() != null){
@@ -87,6 +88,55 @@ public class SolrEvent3_0 extends SolrEvent<EventComplexType, LinkingObjectIdent
 		return ris;
 	}
 
+	private void publicSolrEventDetailInformation(List<EventDetailInformationComplexType> eventDetailInformation) {
+		for(int x=0; x<eventDetailInformation.size(); x++){
+			if (eventDetailInformation.get(x).getEventDetailExtension()!=null){
+				publicSolrEventDetailExtension(eventDetailInformation.get(x).getEventDetailExtension());
+			}
+			if (eventDetailInformation.get(x).getEventDetail() != null){
+				params.add(ItemMD.EVENTDETAIL, eventDetailInformation.get(x).getEventDetail());
+			}
+		}
+	}
+
+	private void publicSolrEventDetailExtension(List<ExtensionComplexType> eventDetailExtension) {
+		for (int x=0; x<eventDetailExtension.size(); x++) {
+			if (eventDetailExtension.get(x).getAny()!= null){
+				publicSolrEventDetailExtensionAny(eventDetailExtension.get(x).getAny());
+			}
+		}
+
+	}
+
+	private void publicSolrEventDetailExtensionAny(List<Object> any) {
+		for (int x=0; x<any.size(); x++){
+			if (any.get(x) instanceof Ticket){
+				publicSolrEventDetailExtensionAnyTicket((Ticket)any.get(x));
+			}
+		}
+	}
+
+	private void publicSolrEventDetailExtensionAnyTicket(Ticket ticket) {
+
+		if (ticket.
+				getLinkingRightsStatementIdentifier().
+				getLinkingRightsStatementIdentifierType().
+				getValue().equals(PremisXsd.UUID_MD_RG)){
+			if (ticket.
+					getLinkingRightsStatementIdentifier().
+					getLinkingRightsStatementIdentifierValue() != null &&
+				!ticket.
+					getLinkingRightsStatementIdentifier().
+					getLinkingRightsStatementIdentifierValue().trim().equals("")){
+				params.add(ItemMD.RIGHTOBJECTIDENTIFIER,  ticket.getLinkingRightsStatementIdentifier().getLinkingRightsStatementIdentifierValue());
+			}
+		}
+		params.add(ItemMD.EVENTIPCLIENT, ticket.getIpClient());
+		if (ticket.getLoginUtente() != null){
+			params.add(ItemMD.EVENTLOGINUTENTE, ticket.getLoginUtente());
+		}
+	}
+
 	@Override
 	protected void publicSolrLinkingObjectIdentifier(List<LinkingObjectIdentifierComplexType> values) {
 		LinkingObjectIdentifierComplexType value;
@@ -108,10 +158,13 @@ public class SolrEvent3_0 extends SolrEvent<EventComplexType, LinkingObjectIdent
 		for (int x=0; x<values.size(); x++){
 			value =values.get(x);
 			
-			if (value.getLinkingAgentRole().get(0).getValue().equals("software")){
+			if (value.getLinkingAgentRole().get(0).getValue().equals(PremisXsd.SOFTWARE)){
 				params.add(ItemMD.AGENTSOFTWARE, value.getLinkingAgentIdentifierValue());
-			} else if (value.getLinkingAgentRole().get(0).getValue().equals("depositante")){
+			} else if (value.getLinkingAgentRole().get(0).getValue().equals(PremisXsd.DEPOSITANTE)){
 				params.add(ItemMD.AGENTDEPOSITANTE, value.getLinkingAgentIdentifierValue());
+			} else if (value.getLinkingAgentRole().get(0).getValue().equals(PremisXsd.DEPOSITARIO) ||
+					value.getLinkingAgentRole().get(0).getValue().equals(PremisXsd.BIBLIOTECHE)){
+				params.add(ItemMD.AGENTBIBLIOTECHE, value.getLinkingAgentIdentifierValue());
 			} 
 		}
 	}

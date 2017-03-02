@@ -64,7 +64,7 @@ public class WriteEventNBN {
 					eventXsd = EventXsd.initialize();
 					
 					eventXsd.setEventIdentifier(PremisXsd.UUID_MD_EV, agId);
-					eventXsd.setEventType("nbn");
+					eventXsd.setEventType(EventXsd.NBN);
 					if (input.getDataInizioElab() != null){
 						start.setTimeInMillis(input.getDataInizioElab().getTimeInMillis());
 					}

@@ -3,10 +3,12 @@
  */
 package it.magazziniDigitali.xsd.event.v2_2;
 
+import java.io.Serializable;
 import java.util.List;
 
 import info.lc.xmlns.premis_v2.EventComplexType;
 import info.lc.xmlns.premis_v2.EventIdentifierComplexType;
+import info.lc.xmlns.premis_v2.LinkingAgentIdentifierComplexType;
 import info.lc.xmlns.premis_v2.LinkingObjectIdentifierComplexType;
 import it.magazziniDigitali.xsd.event.EventXsd;
 import it.magazziniDigitali.xsd.premis.v2_2.PremisNPM;
@@ -114,5 +116,23 @@ public class EventV2_2Xsd extends EventXsd<EventComplexType, PremisNPM,
 		loict.setLinkingObjectIdentifierType(linkingObjectIdentifierType);
 		loict.setLinkingObjectIdentifierValue(linkingObjectIdentifierValue);
 		event.getLinkingObjectIdentifier().add(loict);
+	}
+
+	@Override
+	public void addLinkingAgentIdentifier(String linkingAgentIdentifierType, 
+			String linkingAgentIdentifierValue, String linkingAgentRole) {
+		LinkingAgentIdentifierComplexType laict = null;
+		
+		laict = new LinkingAgentIdentifierComplexType();
+		laict.setLinkingAgentIdentifierType(linkingAgentIdentifierType);
+		laict
+				.setLinkingAgentIdentifierValue(linkingAgentIdentifierValue);
+		laict.getLinkingAgentRole().add(linkingAgentRole);
+
+		event.getLinkingAgentIdentifier().add(laict);
+	}
+
+	@Override
+	public void addEventDetailInformationExtension(Serializable extensionComplexType) {
 	}
 }

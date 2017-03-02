@@ -43,6 +43,15 @@ public class ItemEvent extends ItemObject{
 	public static String AGENTSOFTWARE="agentSoftware";
 
 	/**
+	 * Campo relativo al documento dell'opera che verrà utilizzato per le ricerche
+	 */
+	public static String AGENTBIBLIOTECHE="agentBiblioteche";
+
+	public static String EVENTIPCLIENT="eventIpClient";
+
+	public static String EVENTLOGINUTENTE="eventLoginUtente";
+	
+	/**
 	 * 
 	 */
 	public ItemEvent() {
@@ -54,6 +63,9 @@ public class ItemEvent extends ItemObject{
 		addColumn(EVENTOUTCOME, false, true, true, true, true);
 		addColumn(AGENTDEPOSITANTE, false, true, true, true, true);
 		addColumn(AGENTSOFTWARE, true, true, true, true, true);
+		addColumn(AGENTBIBLIOTECHE, true, true, true, true, true);
+		addColumn(EVENTIPCLIENT, true, true, true, true, true);
+		addColumn(EVENTLOGINUTENTE, true, true, true, true, true);
 	}
 
 }

@@ -30,6 +30,8 @@ public class PremisNPM extends NamespacePrefixMapper {
 			value = "";
 		} else if (namespaceUri.equals("http://www.w3.org/1999/xlink")){
 			value = "xlink";
+		} else if (namespaceUri.equals("http://www.depositolegale.it/Ticket")){
+			value = "ticket";
 		} else {
 			System.out.println("namespaceUri: "+namespaceUri+"\tsuggestion: "+suggestion+"\trequirePrefix: "+requirePrefix);
 		}

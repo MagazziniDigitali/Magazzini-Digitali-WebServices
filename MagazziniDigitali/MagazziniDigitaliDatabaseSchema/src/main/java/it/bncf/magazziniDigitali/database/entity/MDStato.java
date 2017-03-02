@@ -24,6 +24,8 @@ public class MDStato implements Serializable {
 	private String descrizione;
 
 	private Integer sequenza;
+	
+	private String optGroup;
 
 	public MDStato() {
 	}
@@ -68,5 +70,19 @@ public class MDStato implements Serializable {
 	 */
 	public void setSequenza(Integer sequenza) {
 		this.sequenza = sequenza;
+	}
+
+	/**
+	 * @return the optGroup
+	 */
+	public String getOptGroup() {
+		return optGroup;
+	}
+
+	/**
+	 * @param optGroup the optGroup to set
+	 */
+	public void setOptGroup(String optGroup) {
+		this.optGroup = optGroup;
 	}
 }

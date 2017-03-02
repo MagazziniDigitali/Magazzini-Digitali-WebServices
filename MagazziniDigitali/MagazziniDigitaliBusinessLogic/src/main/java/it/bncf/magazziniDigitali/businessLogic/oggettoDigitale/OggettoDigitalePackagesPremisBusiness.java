@@ -44,7 +44,7 @@ public class OggettoDigitalePackagesPremisBusiness extends OggettoDigitaleBusine
 		File[] fAnni = null;
 
 		gc = new GregorianCalendar();
-		gc.add(Calendar.DAY_OF_MONTH, -2);
+		gc.add(Calendar.DAY_OF_MONTH, -1);
 		gc.set(Calendar.HOUR_OF_DAY, 23);
 		gc.set(Calendar.MINUTE, 59);
 		gc.set(Calendar.SECOND, 59);

@@ -28,11 +28,11 @@ public class IndexEvent3_0 extends IndexEvent<EventV3_0Xsd> {
 		
 		try {
 			if (events != null) {
-				log.info(
+				log.debug(
 						name + " [" + events.getEventIdentifier().getEventIdentifierValue() + "]" + " Eventi da preIndicizzare ");
 				se = new SolrEvent3_0();
 				se.publishSolr(events.getEvent(), admd);
-				log.info(name + " [" + events.getEventIdentifier().getEventIdentifierValue() + "]" + " Fine preIndicizzare eventi");
+				log.debug(name + " [" + events.getEventIdentifier().getEventIdentifierValue() + "]" + " Fine preIndicizzare eventi");
 			}
 		} catch (SolrException e) {
 			throw e;
