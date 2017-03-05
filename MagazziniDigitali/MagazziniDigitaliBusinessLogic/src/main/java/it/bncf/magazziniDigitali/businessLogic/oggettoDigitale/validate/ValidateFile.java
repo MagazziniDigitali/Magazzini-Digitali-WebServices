@@ -8,11 +8,17 @@ import java.util.GregorianCalendar;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
 
+import it.bncf.magazziniDigitali.businessLogic.utenti.MDUtentiBusiness;
 import it.bncf.magazziniDigitali.configuration.IMDConfiguration;
 import it.bncf.magazziniDigitali.configuration.exception.MDConfigurationException;
+import it.bncf.magazziniDigitali.database.entity.MDIstituzione;
+import it.bncf.magazziniDigitali.database.entity.MDUtenti;
 import mx.randalf.archive.check.exception.CheckArchiveException;
 import mx.randalf.archive.info.Xmltype;
+import mx.randalf.hibernate.FactoryDAO;
+import mx.randalf.hibernate.exception.HibernateUtilException;
 
 /**
  * @author massi
@@ -26,6 +32,11 @@ public class ValidateFile {
 	 * Variabile utilizzata per gestire la lista degli Errori
 	 */
 	private Vector<String> errors = null;
+
+	/**
+	 * Variabile utilizzata per gestire la lista delle eccezioni degli Errori
+	 */
+	private Vector<Exception> exceptionErrors = null;
 
 	/**
 	 * Variabile utilizzata per indicare il tipo di file Xml presente nel
@@ -57,6 +68,11 @@ public class ValidateFile {
 	 * Variabile utilizzata per indicare se è richiesta la decompressione
 	 */
 	private boolean decompressRequired = true;
+
+	/**
+	 * Variabile utilizzata per indicare l'istituzione Depositante se presente nel tracciato consegnato
+	 */
+	private MDIstituzione idDepositante = null;
 
 	/**
 	 * Costruttore
@@ -93,13 +109,13 @@ public class ValidateFile {
 			}
 		} catch (CheckArchiveException e) {
 			log.error(e.getMessage(), e);
-			addError(e.getMessage());
+			addError(e);
 		} catch (MDConfigurationException e) {
 			log.error(e.getMessage(), e);
-			addError(e.getMessage());
+			addError(e);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-			addError(e.getMessage());
+			addError(e);
 		} finally {
 			if (checkArchive != null){
 				gcUnzipStart = checkArchive.getGcUnzipStart();
@@ -121,6 +137,9 @@ public class ValidateFile {
 				addError(archive.getNome() + " => "
 						+ archive.getType().getMsgError());
 			}
+		}
+		if (archive.getIdDepositante() != null){
+			setIdDepositante(archive.getIdDepositante());
 		}
 		checkXmlType(archive);
 		if (archive.getArchive() != null && archive.getArchive().size() > 0) {
@@ -154,13 +173,21 @@ public class ValidateFile {
 		errors.add(error);
 	}
 
+	private void addError(Exception error) {
+		if (exceptionErrors == null) {
+			exceptionErrors = new Vector<Exception>();
+		}
+		exceptionErrors.add(error);
+	}
+
 	/**
 	 * Metodo utilizzato per indicare la presenza degli errori
 	 * 
 	 * @return
 	 */
 	public boolean isErrors() {
-		return (errors != null && errors.size() > 0);
+		return ((errors != null && errors.size() > 0) ||
+				(exceptionErrors != null && exceptionErrors.size() > 0));
 	}
 
 	/**
@@ -171,6 +198,19 @@ public class ValidateFile {
 	public String[] getErrors() {
 		if (errors != null && errors.size() > 0) {
 			return errors.toArray(new String[errors.size()]);
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Metodo utilizzato per restituite la lista degli errori riscontrati
+	 * 
+	 * @return
+	 */
+	public Exception[] getExceptionErrors() {
+		if (exceptionErrors != null && exceptionErrors.size() > 0) {
+			return exceptionErrors.toArray(new Exception[exceptionErrors.size()]);
 		} else {
 			return null;
 		}
@@ -214,5 +254,44 @@ public class ValidateFile {
 	 */
 	public void setDecompressRequired(boolean decompressRequired) {
 		this.decompressRequired = decompressRequired;
+	}
+
+	private void setIdDepositante(String idDepositante) {
+		MDUtentiBusiness mdUtentiBusiness = null;
+		MDUtenti mdUtenti = null;
+		
+		try {
+			if (idDepositante != null){
+				mdUtentiBusiness = new MDUtentiBusiness();
+				mdUtenti = mdUtentiBusiness.findById(idDepositante);
+				if (mdUtenti!= null){
+					if (mdUtenti.getIdIstituzione() != null){
+						FactoryDAO.initialize(mdUtenti.getIdIstituzione());
+					
+						if (mdUtenti.getIdIstituzione().getBibliotecaDepositaria()!=0){
+							addError("L'istituto indicato nel file bag-info.txt non è di tipo depositante");
+						} else {
+							this.idDepositante = mdUtenti.getIdIstituzione();
+							
+						}
+					} else {
+						addError("L'utente ["+mdUtenti.getCognome()+" "+mdUtenti.getNome()+"] indicato nel bag-info.txt non risulta collegato ad alcun istituzione");
+					}
+				} else {
+					addError("L'utente indicato nel file bag-info.txt non risulta centisto nel sistema");
+				}
+			}
+		} catch (HibernateException e) {
+			addError(e);
+		} catch (HibernateUtilException e) {
+			addError(e);
+		}
+	}
+
+	/**
+	 * @return the idDepositante
+	 */
+	public MDIstituzione getIdDepositante() {
+		return idDepositante;
 	}
 }

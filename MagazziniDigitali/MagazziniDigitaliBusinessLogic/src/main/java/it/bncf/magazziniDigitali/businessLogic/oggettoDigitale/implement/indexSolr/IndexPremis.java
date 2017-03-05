@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.validate.TarMD;
 import it.bncf.magazziniDigitali.configuration.IMDConfiguration;
 import it.bncf.magazziniDigitali.solr.AddDocumentMD;
 import it.bncf.magazziniDigitali.solr.exception.SolrWarning;
@@ -39,6 +40,7 @@ public abstract class IndexPremis<PX extends PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?
 		boolean ris = false;
 		AddDocumentMD admd = null;
 		File pathTar = null;
+		Tar tar = null;
 
 		try {
 			pathTar = new File(configuration.getSoftwareConfigString("solrIndex.tmpPath") +
@@ -51,7 +53,8 @@ public abstract class IndexPremis<PX extends PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?
 				}
 			}
 			if (fObj.getName().toLowerCase().endsWith(".tar")){
-				Tar.decompress(fObj, pathTar);
+				tar = new TarMD();
+				tar.decompress(fObj, pathTar);
 			}
 			admd = new AddDocumentMD(configuration.getSoftwareConfigString("solr.URL"),
 					configuration.getSoftwareConfigBoolean("solr.Cloud"),

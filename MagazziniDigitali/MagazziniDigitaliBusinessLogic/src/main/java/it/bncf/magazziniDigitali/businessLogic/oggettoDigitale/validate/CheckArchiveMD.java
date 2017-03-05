@@ -10,7 +10,7 @@ import mx.randalf.archive.check.CheckArchive;
  * @author massi
  *
  */
-public class CheckArchiveMD extends CheckArchive<ArchiveMD> {
+public class CheckArchiveMD extends CheckArchive<ArchiveMD, TarMD> {
 	private IMDConfiguration<?> configuration = null;
 	
 	public CheckArchiveMD(String fileDroid, IMDConfiguration<?> configuration) {
@@ -21,6 +21,11 @@ public class CheckArchiveMD extends CheckArchive<ArchiveMD> {
 	@Override
 	public ArchiveMD initArchive() {
 		return new ArchiveMD(configuration);
+	}
+
+	@Override
+	public TarMD initTar() {
+		return new TarMD();
 	}
 
 }

@@ -102,10 +102,13 @@ public class SolrEvent2_2 extends SolrEvent<EventComplexType, LinkingObjectIdent
 		for (int x=0; x<values.size(); x++){
 			value =values.get(x);
 			
-			if (value.getLinkingAgentRole().get(0).equals("software")){
+			if (value.getLinkingAgentRole().get(0).equals(PremisXsd.SOFTWARE)){
 				params.add(ItemMD.AGENTSOFTWARE, value.getLinkingAgentIdentifierValue());
-			} else if (value.getLinkingAgentRole().get(0).equals("depositante")){
+			} else if (value.getLinkingAgentRole().get(0).equals(PremisXsd.DEPOSITANTE)){
 				params.add(ItemMD.AGENTDEPOSITANTE, value.getLinkingAgentIdentifierValue());
+			} else if (value.getLinkingAgentRole().get(0).equals(PremisXsd.DEPOSITARIO) ||
+					value.getLinkingAgentRole().get(0).equals(PremisXsd.BIBLIOTECHE)){
+				params.add(ItemMD.AGENTBIBLIOTECHE, value.getLinkingAgentIdentifierValue());
 			} 
 		}
 	}

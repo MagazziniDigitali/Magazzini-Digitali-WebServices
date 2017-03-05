@@ -1596,4 +1596,34 @@ public class MDFilesTmpBusiness extends
 		return jsonArray;
 	}
 
+	public void updateIdDepositante(String id, MDIstituzione idIstituto) throws SQLException {
+		HashTable<String, Object> dati=null;
+
+		try {
+			if (id != null && idIstituto != null){
+				dati = new HashTable<String, Object>();
+				dati.put("id", id);
+				dati.put("idIstituto", idIstituto);
+				save(dati);
+			}
+		} catch (HibernateException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (IllegalAccessException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (IllegalArgumentException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (InvocationTargetException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (NoSuchMethodException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (SecurityException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (HibernateUtilException e) {
+			throw new SQLException(e.getMessage(), e);
+		} catch (NamingException e) {
+			throw new SQLException(e.getMessage(), e);
+		}
+
+	}
+
 }

@@ -8,6 +8,7 @@ import java.io.FileFilter;
 
 import org.apache.log4j.Logger;
 
+import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.validate.TarMD;
 import it.bncf.magazziniDigitali.configuration.IMDConfiguration;
 import it.bncf.magazziniDigitali.solr.AddDocumentMD;
 import it.bncf.magazziniDigitali.solr.exception.SolrWarning;
@@ -37,6 +38,7 @@ public abstract class IndexEvent<PX extends EventXsd<?, ?, ?, ?, ?>> {
 		boolean ris = false;
 		AddDocumentMD admd = null;
 		File pathTar = null;
+		Tar tar = null;
 
 		try {
 			pathTar = new File(configuration.getSoftwareConfigString("solrIndex.tmpPath") +
@@ -47,7 +49,8 @@ public abstract class IndexEvent<PX extends EventXsd<?, ?, ?, ?, ?>> {
 							+ pathTar.getAbsolutePath() + "]");
 				}
 			}
-			Tar.decompress(fObj, pathTar);
+			tar = new TarMD();
+			tar.decompress(fObj, pathTar);
 			admd = new AddDocumentMD(configuration.getSoftwareConfigString("solr.URL"),
 					configuration.getSoftwareConfigBoolean("solr.Cloud"),
 					configuration.getSoftwareConfigString("solr.collection"),

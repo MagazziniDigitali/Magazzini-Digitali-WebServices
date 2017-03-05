@@ -23,6 +23,7 @@ import it.bncf.magazziniDigitali.configuration.exception.MDConfigurationExceptio
 import it.bncf.magazziniDigitali.database.dao.MDFilesTmpDAO;
 import it.bncf.magazziniDigitali.database.dao.MDStatoDAO;
 import it.bncf.magazziniDigitali.database.entity.MDFilesTmp;
+import it.bncf.magazziniDigitali.database.entity.MDIstituzione;
 import it.magazziniDigitali.xsd.premis.PremisXsd;
 import it.magazziniDigitali.xsd.premis.exception.PremisXsdException;
 import mx.randalf.archive.info.DigestType;
@@ -319,7 +320,7 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 									mdFilesTmp.getPremisFile()));
 				}
 			}
-			writePremisSend(premis, mdFilesTmp, configuration, objectIdentifierMaster);
+			writePremisSend(premis, mdFileTmpBusiness, mdFilesTmp, configuration, objectIdentifierMaster, validate.getIdDepositante());
 			if (!validate.isDecompressRequired() ||
 					writePremisDeCompress(mdFileTmpBusiness, mdFilesTmp, validate, objectIdentifierPremis, premis,
 					configuration, eventDetailDecomp, objectIdentifierMaster)) {
@@ -495,11 +496,15 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 		return objectIdentifierMaster;
 	}
 
-	private void writePremisSend(PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?> premis, MDFilesTmp mdFilesTmp, IMDConfiguration<?> configuration,
-			String objectIdentifierMaster) throws MDConfigurationException {
-//		try {
+	private void writePremisSend(PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?> premis, MDFilesTmpBusiness mdFileTmpBusiness, MDFilesTmp mdFilesTmp, IMDConfiguration<?> configuration,
+			String objectIdentifierMaster, MDIstituzione idDepositante) throws SQLException {
+
+		try {
+			if (idDepositante != null){
+				mdFileTmpBusiness.updateIdDepositante(mdFilesTmp.getId(), idDepositante);
+			}
 			premis.addEvent("send", mdFilesTmp.getTrasfDataStart(), mdFilesTmp.getTrasfDataEnd(), null, "OK", null,
-					mdFilesTmp.getIdSoftware().getIdIstituzione().getId(), // TODO:
+					(idDepositante != null?idDepositante.getId():mdFilesTmp.getIdSoftware().getIdIstituzione().getId()), // TODO:
 																				// DA
 																				// VERIFICARE
 																				// da
@@ -508,9 +513,9 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 					mdFilesTmp.getIdSoftware(), // TODO: da aggiustare
 													// mdFilesTmp.getIdSoftware().getSoftwareUuid(),
 					objectIdentifierMaster);
-//		} catch (MDConfigurationException e) {
-//			throw e;
-//		}
+		} catch (SQLException e) {
+			throw e;
+		}
 	}
 
 	private Boolean writePremisValidate(ValidateFile validate, String objectIdentifierPremis,
@@ -526,7 +531,7 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 			if (validate.isErrors()) {
 				logValidate
 						.error(name + " [" + objectIdentifierPremis + "]" + " Riscontrato un errore nella validazione");
-				stop = mdFileTmpBusiness.updateStopValidate(mdFilesTmp.getId(), null, false, null, validate.getErrors(),
+				stop = mdFileTmpBusiness.updateStopValidate(mdFilesTmp.getId(), null, false, validate.getExceptionErrors(), validate.getErrors(),
 						writeFilePremisDB(filePremis, configuration.getSoftwareConfigString("path.premis")));
 				premis.addEvent("validation", start, stop, null, "KO", validate.getErrors(), null,
 						configuration.getMDSoftware(),
@@ -672,6 +677,7 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 				nome = nome.substring(pos+1);
 				if (nome.equals("metadata.json") ||
 						nome.equals("siegfried.json") ||
+						nome.equals("tika.json") ||
 						nome.equals("txt")){
 					result = false;
 				}
