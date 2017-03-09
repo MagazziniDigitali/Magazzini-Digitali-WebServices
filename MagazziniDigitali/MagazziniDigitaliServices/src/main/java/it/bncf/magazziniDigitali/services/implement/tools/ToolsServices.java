@@ -1,7 +1,5 @@
 package it.bncf.magazziniDigitali.services.implement.tools;
 
-import java.util.Iterator;
-
 import org.apache.axis.MessageContext;
 import org.apache.catalina.connector.RequestFacade;
 

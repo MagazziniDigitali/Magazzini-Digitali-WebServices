@@ -41,5 +41,11 @@
         <property name="dataExport" type="java.sql.Timestamp">
             <column name="DATA_EXPORT" />
         </property>
+        <property name="mimeType" type="java.lang.String">
+            <column name="MIMETYPE" />
+        </property>
+        <property name="tipoOggetto" type="java.lang.String">
+            <column name="TIPOOGGETTO" />
+        </property>
     </class>
 </hibernate-mapping>

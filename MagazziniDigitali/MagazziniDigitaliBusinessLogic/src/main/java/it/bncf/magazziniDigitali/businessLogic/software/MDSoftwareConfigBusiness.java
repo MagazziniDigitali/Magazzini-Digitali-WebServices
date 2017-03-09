@@ -127,14 +127,10 @@ public class MDSoftwareConfigBusiness extends BusinessLogic<MDSoftwareConfig, MD
 
 		if (dati.get("value") != null) {
 			table.setValue((String) dati.get("value"));
-		} else {
-			table.setValue(null);
 		}
 
 		if (dati.get("idNodo") != null) {
 			table.setIdNodo((MDNodi) dati.get("idNodo"));
-		} else {
-			table.setIdNodo(null);
 		}
 	}
 

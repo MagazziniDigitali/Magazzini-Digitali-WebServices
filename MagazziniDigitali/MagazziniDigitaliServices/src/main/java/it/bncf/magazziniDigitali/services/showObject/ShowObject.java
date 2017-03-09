@@ -36,6 +36,7 @@ import it.bncf.magazziniDigitali.businessLogic.ticket.MDTicketBusiness;
 import it.bncf.magazziniDigitali.configuration.exception.MDConfigurationException;
 import it.bncf.magazziniDigitali.database.entity.MDTicket;
 import it.bncf.magazziniDigitali.services.axis.MDConfiguration;
+import it.bncf.magazziniDigitali.services.implement.userLibrary.AuthenticationUserLibrary;
 import it.bncf.magazziniDigitali.utils.GenFileDest;
 import mx.randalf.hibernate.exception.HibernateUtilException;
 
@@ -124,15 +125,12 @@ public class ShowObject extends HttpServlet {
 			mdTicketBusiness = new MDTicketBusiness();
 			mdTicket = mdTicketBusiness.findById(ticket);
 			if (mdTicket != null) {
-				if (
-						(mdTicket.getModalitaAccesso().equals("B") && 
-								mdTicket.getIpClient().equals(getRemoteAddr(req))) ||
-						(mdTicket.getModalitaAccesso().equals("C") && 
-								mdConfiguration.getSoftwareConfigString("docker.ip").equals(getRemoteAddr(req)))) {
+				if (checkIP(mdTicket, req, mdConfiguration)) {
 					gc = new GregorianCalendar();
 					if (mdTicket.getDataStart().getTime() < gc.getTimeInMillis()) {
 						if (mdTicket.getDataEnd().getTime() >= gc.getTimeInMillis()) {
-							findObject(req, res, mdTicket.getActualFileName(), mdTicket.getOriginalFileName(), mdConfiguration);
+							findObject(req, res, mdTicket.getActualFileName(), mdTicket.getOriginalFileName(), 
+									mdConfiguration, mdTicket);
 						} else {
 							showMsgError(res, "Il ticket [" + ticket + "] risulta essere scaduto rifare la richiesta");
 						}
@@ -161,6 +159,32 @@ public class ShowObject extends HttpServlet {
 
 	}
 
+	private boolean checkIP(MDTicket mdTicket, HttpServletRequest req, MDConfiguration mdConfiguration) throws ServletException{
+		boolean result = false;
+		String remoteAddr =  null;
+		
+		try {
+			remoteAddr = getRemoteAddr(req).trim();
+
+			if (mdTicket.getModalitaAccesso().equals("A")){
+				result = mdTicket.getIpClient().trim().equals(remoteAddr);
+			} else if (mdTicket.getModalitaAccesso().equals("B")){
+				result = mdTicket.getIpClient().trim().equals(remoteAddr);
+			} else if (mdTicket.getModalitaAccesso().equals("C")){
+				if (mdTicket.getTipoOggetto().equals("contenitore")){
+					result = mdTicket.getIpClient().trim().equals(remoteAddr);
+				} else if (!AuthenticationUserLibrary.checkMimeTypeBib(mdTicket.getMimeType())){
+					result = mdTicket.getIpClient().trim().equals(remoteAddr);
+				} else {
+					result = mdConfiguration.getSoftwareConfigString("docker.ip").equals(remoteAddr);
+				}
+			}
+		} catch (MDConfigurationException e) {
+			throw new ServletException(e.getMessage(), e);
+		}
+		return result;
+	}
+
 	private String getRemoteAddr(HttpServletRequest req) {
 		String ipAddress = null;
 
@@ -172,46 +196,54 @@ public class ShowObject extends HttpServlet {
 	}
 
 	private void findObject(HttpServletRequest req, HttpServletResponse res, String actualFileName,
-			String originalFileName, MDConfiguration mdConfiguration) throws ServletException {
+			String originalFileName, MDConfiguration mdConfiguration, MDTicket mdTicket) throws ServletException {
 		
 		File fTar = null;
 		FileInputStream fis = null;
 		TarArchiveInputStream tais = null;
 		TarArchiveEntry tae = null;
 		boolean trovato = false;
+		String fileName = null;
 
 		try {
 
 			fTar = GenFileDest.genFileDest(mdConfiguration.getSoftwareConfigMDNodi("validate.nodo"), actualFileName);
+
 			if (fTar.exists()) {
+				
+				if (originalFileName.indexOf("/")>-1){
+					fileName = originalFileName.substring(originalFileName.indexOf("/")+1);
+				} else {
+					fileName = originalFileName;
+				}
 				fis = new FileInputStream(fTar);
-				tais = (TarArchiveInputStream) new ArchiveStreamFactory().createArchiveInputStream("tar", fis);
-				while ((tae = (TarArchiveEntry) tais.getNextEntry()) != null) {
-					if (tae.getName().equals(originalFileName)) {
-//						System.out.println(tae.getName());
-						if (tae.getName().toLowerCase().endsWith(".pdf")) {
+				if (mdTicket.getTipoOggetto().equals("contenitore")){
+					res.setHeader("Expires", "0");
+					res.setHeader("Cache-Control", "must-revalidate, post-check=0, pre-check=0");
+					res.setHeader("Pragma", "public");
 
+					res.setContentType(mdTicket.getMimeType());
+				    res.setHeader("Content-disposition", "attachment; filename="+ fileName);
+					IOUtils.copy(fis, res.getOutputStream());
+
+					trovato = true;
+				} else {
+					tais = (TarArchiveInputStream) new ArchiveStreamFactory().createArchiveInputStream("tar", fis);
+					while ((tae = (TarArchiveEntry) tais.getNextEntry()) != null) {
+						if (tae.getName().equals(originalFileName)) {
+	//						System.out.println(tae.getName());
 							res.setHeader("Expires", "0");
 							res.setHeader("Cache-Control", "must-revalidate, post-check=0, pre-check=0");
 							res.setHeader("Pragma", "public");
 
-							res.setContentType("application/pdf");
+							res.setContentType(mdTicket.getMimeType());
+						    res.setHeader("Content-disposition", "attachment; filename="+ fileName);
 							IOUtils.copy(tais, res.getOutputStream());
 							// res.getOutputStream().close();
 							trovato = true;
-						} else if (tae.getName().toLowerCase().endsWith(".epub")) {
-
-							res.setHeader("Expires", "0");
-							res.setHeader("Cache-Control", "must-revalidate, post-check=0, pre-check=0");
-							res.setHeader("Pragma", "public");
-
-							res.setContentType("application/epub+zip");
-							IOUtils.copy(tais, res.getOutputStream());
-							// res.getOutputStream().close();
-							trovato = true;
+							
+							break;
 						}
-						
-						break;
 					}
 				}
 				if (!trovato) {
@@ -226,6 +258,17 @@ public class ShowObject extends HttpServlet {
 			throw new ServletException(e.getMessage(), e);
 		} catch (ArchiveException e) {
 			throw new ServletException(e.getMessage(), e);
+		} finally {
+			try {
+				if (fis != null){
+					fis.close();
+				}
+				if (tais != null){
+					tais.close();
+				}
+			} catch (IOException e) {
+				throw new ServletException(e.getMessage(), e);
+			}
 		}
 	}
 

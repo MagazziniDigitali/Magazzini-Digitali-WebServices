@@ -44,6 +44,10 @@ public class MDTicket implements Serializable {
 
 	private Timestamp dataExport;
 
+	private String mimeType;
+
+	private String tipoOggetto;
+
 	public MDTicket() {
 	}
 
@@ -213,5 +217,33 @@ public class MDTicket implements Serializable {
 	 */
 	public void setDataExport(Timestamp dataExport) {
 		this.dataExport = dataExport;
+	}
+
+	/**
+	 * @return the mimeType
+	 */
+	public String getMimeType() {
+		return mimeType;
+	}
+
+	/**
+	 * @param mimeType the mimeType to set
+	 */
+	public void setMimeType(String mimeType) {
+		this.mimeType = mimeType;
+	}
+
+	/**
+	 * @return the tipoOggetto
+	 */
+	public String getTipoOggetto() {
+		return tipoOggetto;
+	}
+
+	/**
+	 * @param tipoOggetto the tipoOggetto to set
+	 */
+	public void setTipoOggetto(String tipoOggetto) {
+		this.tipoOggetto = tipoOggetto;
 	}
 }

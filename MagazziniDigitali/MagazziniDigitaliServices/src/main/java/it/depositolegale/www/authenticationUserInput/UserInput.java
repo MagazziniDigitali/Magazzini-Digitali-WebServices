@@ -26,6 +26,14 @@ public class UserInput  implements java.io.Serializable {
 
     private it.depositolegale.www.login.Authentication authentication;
 
+    private java.lang.String mimeType;
+
+    private java.lang.String tipoOggetto;
+
+    private java.lang.String depositante;
+
+    private java.lang.String typeAuth;
+
     public UserInput() {
     }
 
@@ -38,7 +46,11 @@ public class UserInput  implements java.io.Serializable {
            java.lang.String originalFileName,
            it.depositolegale.www.authenticationUserInput.Agent agent,
            it.depositolegale.www.authenticationUserInput.Rights rights,
-           it.depositolegale.www.login.Authentication authentication) {
+           it.depositolegale.www.login.Authentication authentication,
+           java.lang.String mimeType,
+           java.lang.String tipoOggetto,
+           java.lang.String depositante,
+           java.lang.String typeAuth) {
            this.objectIdentifier = objectIdentifier;
            this.software = software;
            this.ipClient = ipClient;
@@ -48,6 +60,10 @@ public class UserInput  implements java.io.Serializable {
            this.agent = agent;
            this.rights = rights;
            this.authentication = authentication;
+           this.mimeType = mimeType;
+           this.tipoOggetto = tipoOggetto;
+           this.depositante = depositante;
+           this.typeAuth = typeAuth;
     }
 
 
@@ -230,6 +246,86 @@ public class UserInput  implements java.io.Serializable {
         this.authentication = authentication;
     }
 
+
+    /**
+     * Gets the mimeType value for this UserInput.
+     * 
+     * @return mimeType
+     */
+    public java.lang.String getMimeType() {
+        return mimeType;
+    }
+
+
+    /**
+     * Sets the mimeType value for this UserInput.
+     * 
+     * @param mimeType
+     */
+    public void setMimeType(java.lang.String mimeType) {
+        this.mimeType = mimeType;
+    }
+
+
+    /**
+     * Gets the tipoOggetto value for this UserInput.
+     * 
+     * @return tipoOggetto
+     */
+    public java.lang.String getTipoOggetto() {
+        return tipoOggetto;
+    }
+
+
+    /**
+     * Sets the tipoOggetto value for this UserInput.
+     * 
+     * @param tipoOggetto
+     */
+    public void setTipoOggetto(java.lang.String tipoOggetto) {
+        this.tipoOggetto = tipoOggetto;
+    }
+
+
+    /**
+     * Gets the depositante value for this UserInput.
+     * 
+     * @return depositante
+     */
+    public java.lang.String getDepositante() {
+        return depositante;
+    }
+
+
+    /**
+     * Sets the depositante value for this UserInput.
+     * 
+     * @param depositante
+     */
+    public void setDepositante(java.lang.String depositante) {
+        this.depositante = depositante;
+    }
+
+
+    /**
+     * Gets the typeAuth value for this UserInput.
+     * 
+     * @return typeAuth
+     */
+    public java.lang.String getTypeAuth() {
+        return typeAuth;
+    }
+
+
+    /**
+     * Sets the typeAuth value for this UserInput.
+     * 
+     * @param typeAuth
+     */
+    public void setTypeAuth(java.lang.String typeAuth) {
+        this.typeAuth = typeAuth;
+    }
+
     private java.lang.Object __equalsCalc = null;
     public synchronized boolean equals(java.lang.Object obj) {
         if (!(obj instanceof UserInput)) return false;
@@ -268,7 +364,19 @@ public class UserInput  implements java.io.Serializable {
               this.rights.equals(other.getRights()))) &&
             ((this.authentication==null && other.getAuthentication()==null) || 
              (this.authentication!=null &&
-              this.authentication.equals(other.getAuthentication())));
+              this.authentication.equals(other.getAuthentication()))) &&
+            ((this.mimeType==null && other.getMimeType()==null) || 
+             (this.mimeType!=null &&
+              this.mimeType.equals(other.getMimeType()))) &&
+            ((this.tipoOggetto==null && other.getTipoOggetto()==null) || 
+             (this.tipoOggetto!=null &&
+              this.tipoOggetto.equals(other.getTipoOggetto()))) &&
+            ((this.depositante==null && other.getDepositante()==null) || 
+             (this.depositante!=null &&
+              this.depositante.equals(other.getDepositante()))) &&
+            ((this.typeAuth==null && other.getTypeAuth()==null) || 
+             (this.typeAuth!=null &&
+              this.typeAuth.equals(other.getTypeAuth())));
         __equalsCalc = null;
         return _equals;
     }
@@ -306,6 +414,18 @@ public class UserInput  implements java.io.Serializable {
         }
         if (getAuthentication() != null) {
             _hashCode += getAuthentication().hashCode();
+        }
+        if (getMimeType() != null) {
+            _hashCode += getMimeType().hashCode();
+        }
+        if (getTipoOggetto() != null) {
+            _hashCode += getTipoOggetto().hashCode();
+        }
+        if (getDepositante() != null) {
+            _hashCode += getDepositante().hashCode();
+        }
+        if (getTypeAuth() != null) {
+            _hashCode += getTypeAuth().hashCode();
         }
         __hashCodeCalc = false;
         return _hashCode;
@@ -374,6 +494,34 @@ public class UserInput  implements java.io.Serializable {
         elemField.setFieldName("authentication");
         elemField.setXmlName(new javax.xml.namespace.QName("http://www.depositolegale.it/login", "authentication"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.depositolegale.it/login", ">authentication"));
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("mimeType");
+        elemField.setXmlName(new javax.xml.namespace.QName("http://www.depositolegale.it/authenticationUserInput", "mimeType"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("tipoOggetto");
+        elemField.setXmlName(new javax.xml.namespace.QName("http://www.depositolegale.it/authenticationUserInput", "tipoOggetto"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("depositante");
+        elemField.setXmlName(new javax.xml.namespace.QName("http://www.depositolegale.it/authenticationUserInput", "depositante"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("typeAuth");
+        elemField.setXmlName(new javax.xml.namespace.QName("http://www.depositolegale.it/authenticationUserInput", "typeAuth"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
         elemField.setMinOccurs(0);
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);

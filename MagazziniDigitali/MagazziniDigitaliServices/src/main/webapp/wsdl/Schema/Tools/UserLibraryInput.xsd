@@ -28,6 +28,10 @@
                 <xs:element minOccurs="0" ref="rights"/>
                 <xs:element minOccurs="0" ref="login:authentication"/>
             </xs:sequence>
+            <xs:element minOccurs="0" name="mimeType" type="xs:string"/>
+            <xs:element minOccurs="0" name="tipoOggetto" type="xs:string"/>
+            <xs:element minOccurs="0" name="depositante" type="xs:string"/>
+            <xs:element minOccurs="0" name="typeAuth" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
     <xs:element name="agent">

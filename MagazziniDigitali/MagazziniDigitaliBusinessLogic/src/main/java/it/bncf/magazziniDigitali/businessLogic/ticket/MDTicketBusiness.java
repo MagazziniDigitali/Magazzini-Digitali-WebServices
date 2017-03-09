@@ -139,8 +139,6 @@ public class MDTicketBusiness extends BusinessLogic<MDTicket, MDTicketDAO, Strin
 
 		if (dati.get("idIstituzione") != null) {
 			table.setIdIstituzione((MDIstituzione) dati.get("idIstituzione"));
-		} else {
-			table.setIdIstituzione(null);
 		}
 
 		if (dati.get("loginUtente") != null) {
@@ -161,6 +159,14 @@ public class MDTicketBusiness extends BusinessLogic<MDTicket, MDTicketDAO, Strin
 
 		if (dati.get("dataExport") != null) {
 			table.setDataExport((Timestamp) dati.get("dataExport"));
+		}
+
+		if (dati.get("mimeType") != null) {
+			table.setMimeType((String) dati.get("mimeType"));
+		}
+
+		if (dati.get("tipoOggetto") != null) {
+			table.setTipoOggetto((String) dati.get("tipoOggetto"));
 		}
 	}
 
