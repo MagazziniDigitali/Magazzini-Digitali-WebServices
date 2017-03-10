@@ -8,7 +8,7 @@
 	</parent>
 	<groupId>it.bncf.magazziniDigitali.businessLogic</groupId>
 	<artifactId>MagazziniDigitaliBusinessLogic</artifactId>
-	<version>2.0.10</version>
+	<version>2.0.11</version>
 	<description>Questo progetto vine utilizzato per la gestione della logica applicativa del programma</description>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -24,7 +24,7 @@
 		<dependency>
 			<groupId>mx.randalf.archive</groupId>
 			<artifactId>RandalfArchive</artifactId>
-			<version>1.0.13</version>
+			<version>1.0.14</version>
 		</dependency>
 		<dependency>
 			<groupId>it.bncf.magazziniDigitali.solr</groupId>
@@ -61,7 +61,7 @@
 		<dependency>
 			<groupId>mx.randalf.mets</groupId>
 			<artifactId>RandalfMets</artifactId>
-			<version>1.0.0</version>
+			<version>1.0.2</version>
 		</dependency>
 	</dependencies>
 	<repositories>

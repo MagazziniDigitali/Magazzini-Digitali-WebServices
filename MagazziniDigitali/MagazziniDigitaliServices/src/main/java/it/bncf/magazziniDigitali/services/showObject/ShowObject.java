@@ -237,7 +237,17 @@ public class ShowObject extends HttpServlet {
 							res.setHeader("Pragma", "public");
 
 							res.setContentType(mdTicket.getMimeType());
-						    res.setHeader("Content-disposition", "attachment; filename="+ fileName);
+							
+							if (mdTicket.getModalitaAccesso().equals("A") ||
+									mdTicket.getModalitaAccesso().equals("B") ||
+									(mdTicket.getModalitaAccesso().equals("C") &&
+											(mdTicket.getTipoOggetto().equals("contenitore") ||
+													!AuthenticationUserLibrary.checkMimeTypeBib(mdTicket.getMimeType()))
+											)
+									){
+							    res.setHeader("Content-disposition", "attachment; filename="+ fileName);
+							}
+
 							IOUtils.copy(tais, res.getOutputStream());
 							// res.getOutputStream().close();
 							trovato = true;
