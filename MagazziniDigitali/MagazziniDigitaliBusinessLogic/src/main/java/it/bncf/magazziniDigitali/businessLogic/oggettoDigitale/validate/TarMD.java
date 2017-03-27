@@ -7,6 +7,7 @@ import java.io.File;
 
 import it.magazziniDigitali.xsd.agent.AgentXsd;
 import it.magazziniDigitali.xsd.event.EventXsd;
+import it.magazziniDigitali.xsd.metadata.MetadataXsd;
 import it.magazziniDigitali.xsd.premis.PremisXsd;
 import it.magazziniDigitali.xsd.premis.exception.PremisXsdException;
 import it.magazziniDigitali.xsd.registroIngressi.RegistroIngressiXsd;
@@ -44,6 +45,7 @@ public class TarMD extends Tar {
 		RightsXsd<?, ?, ?, ?, ?, ?, ?, ?, ?, ?> rightsXsd = null;
 		EventXsd<?, ?, ?, ?, ?> eventXsd = null;
 		RegistroIngressiXsd registroIngressiXsd = null;
+		MetadataXsd metadataXsd = null;
 
 		try {
 			switch (type) {
@@ -78,6 +80,13 @@ public class TarMD extends Tar {
 				registroIngressiXsd.check(fXml);
 				break;
 
+			case "metadata":
+				metadataXsd = new MetadataXsd();
+				metadataXsd.check(fXml);
+				break;
+
+			default:
+				throw new XsdException("Formato xml non supportqato");
 			}
 		} catch (XsdException e) {
 			throw e;

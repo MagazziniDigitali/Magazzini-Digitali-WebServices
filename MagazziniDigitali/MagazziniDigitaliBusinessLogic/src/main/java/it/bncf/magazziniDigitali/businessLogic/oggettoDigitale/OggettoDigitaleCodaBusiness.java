@@ -19,6 +19,7 @@ import javax.naming.NamingException;
 
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
+import org.quartz.JobExecutionContext;
 
 import it.bncf.magazziniDigitali.businessLogic.registroIngresso.MDRegistroIngressoBusiness;
 import it.bncf.magazziniDigitali.configuration.IMDConfiguration;
@@ -41,7 +42,7 @@ public class OggettoDigitaleCodaBusiness extends OggettoDigitaleBusiness{
 	 * @param application
 	 */
 	public void coda(Logger logCoda, 
-			IMDConfiguration<?> configuration)
+			IMDConfiguration<?> configuration, JobExecutionContext context)
 					throws MDConfigurationException, SQLException{
 		MDRegistroIngressoBusiness mdRegistroIngresso = null;
 		List<MDRegistroIngresso> rs = null;
@@ -50,11 +51,46 @@ public class OggettoDigitaleCodaBusiness extends OggettoDigitaleBusiness{
 		GregorianCalendar gc = null;
 		try {
 			gc = new GregorianCalendar();
-			gc.add(Calendar.DAY_OF_MONTH, -1);
-			gc.set(Calendar.HOUR_OF_DAY, 23);
-			gc.set(Calendar.MINUTE, 59);
-			gc.set(Calendar.SECOND, 59);
-			gc.set(Calendar.MILLISECOND, 999);
+
+			if (context.getJobDetail().getJobDataMap().containsKey("addGG")){
+				if (context.getJobDetail().getJobDataMap().getInt("addGG")!=0){
+					gc.add(Calendar.DAY_OF_MONTH, context.getJobDetail().getJobDataMap().getInt("addGG"));
+				}
+			} else {
+				gc.add(Calendar.DAY_OF_MONTH, -1);
+			}
+
+			if (context.getJobDetail().getJobDataMap().containsKey("setHour")){
+				if (context.getJobDetail().getJobDataMap().getInt("setHour")!=0){
+					gc.set(Calendar.HOUR_OF_DAY, context.getJobDetail().getJobDataMap().getInt("setHour"));
+				}
+			} else {
+				gc.set(Calendar.HOUR_OF_DAY, 23);
+			}
+
+			if (context.getJobDetail().getJobDataMap().containsKey("setMinute")){
+				if (context.getJobDetail().getJobDataMap().getInt("setMinute")!=0){
+					gc.set(Calendar.MINUTE, context.getJobDetail().getJobDataMap().getInt("setMinute"));
+				}
+			} else {
+				gc.set(Calendar.MINUTE, 59);
+			}
+
+			if (context.getJobDetail().getJobDataMap().containsKey("setSecond")){
+				if (context.getJobDetail().getJobDataMap().getInt("setSecond")!=0){
+					gc.set(Calendar.SECOND, context.getJobDetail().getJobDataMap().getInt("setSecond"));
+				}
+			} else {
+				gc.set(Calendar.SECOND, 59);
+			}
+
+			if (context.getJobDetail().getJobDataMap().containsKey("setMillisecond")){
+				if (context.getJobDetail().getJobDataMap().getInt("setMillisecond")!=0){
+					gc.set(Calendar.MILLISECOND, context.getJobDetail().getJobDataMap().getInt("setMillisecond"));
+				}
+			} else {
+				gc.set(Calendar.MILLISECOND, 999);
+			}
 			logCoda.debug("Ricerco oggetti da mettere in coda");
 			mdRegistroIngresso = new MDRegistroIngressoBusiness();
 			
@@ -116,9 +152,7 @@ public class OggettoDigitaleCodaBusiness extends OggettoDigitaleBusiness{
 		boolean trovato = false;
 		
 		try {
-			coda = new File(configuration.getSoftwareConfigString("coda.path")+
-//					Configuration.getValue("demoni.Coda.path")+
-					File.separator+data+".coda");
+			coda = genFileCoda(data, configuration, 0);
 			
 			if (coda.exists()){
 				try {
@@ -180,6 +214,26 @@ public class OggettoDigitaleCodaBusiness extends OggettoDigitaleBusiness{
 		} catch (IOException e) {
 			throw e;
 		}
+	}
+
+	private File genFileCoda(String data, IMDConfiguration<?> configuration, int conta) throws MDConfigurationException {
+		File coda = null;
+		File codaElab = null;
+		DecimalFormat df4 = new DecimalFormat("0000");
+		
+		try {
+			coda = new File(configuration.getSoftwareConfigString("coda.path")+
+					File.separator+data+(conta>0?"_"+df4.format(conta):"")+".coda");
+			if (coda.exists()){
+				codaElab = new File(coda.getAbsolutePath()+".elab");
+				if (codaElab.exists()){
+					coda = genFileCoda(data, configuration, conta+1);
+				}
+			}
+		} catch (MDConfigurationException e) {
+			throw e;
+		}
+		return coda;
 	}
 
 	/**

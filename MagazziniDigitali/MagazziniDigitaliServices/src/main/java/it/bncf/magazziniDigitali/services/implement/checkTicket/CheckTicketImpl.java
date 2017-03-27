@@ -85,11 +85,11 @@ public class CheckTicketImpl {
 						} else {
 							errorMsg.add(new ErrorMsg(ErrorType_type.ERROR,"La stazione chiamante del ticket [" + 
 									input.getTicket() + 
-									"] non corrisponde alla stazione richiedente"));
+									"] Formato di materiale non supportato"));
 						}
 					} else {
 						errorMsg.add(new ErrorMsg(ErrorType_type.ERROR,"Il client ticket [" + input.getTicket() + 
-								"] non risulta presente in base dati"));
+								"] non corrisponde alla stazione richiedente"));
 					}
 				} else {
 					errorMsg.add(new ErrorMsg(ErrorType_type.ERROR,"Il ticket [" + input.getTicket() + 

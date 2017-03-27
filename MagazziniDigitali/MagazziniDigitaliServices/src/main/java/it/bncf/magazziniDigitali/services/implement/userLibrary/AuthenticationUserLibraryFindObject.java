@@ -49,11 +49,13 @@ public class AuthenticationUserLibraryFindObject extends AuthenticationUserLibra
 		FindDocumentMD findDocumentMD = null;
 		SolrDocumentList response = null;
 		SolrDocument solrDocument = null;
-		SolrDocument solrDocumentPadre = null;
+		SolrDocument solrFile = null;
+		SolrDocument solrContenitore = null;
 		Rights rights = null;
 		String key = "";
 		String actualFileName = null;
 		String originalFileName = null;
+		String tipoOggetto = null;
 
 		try {
 			findDocumentMD = new FindDocumentMD(
@@ -85,17 +87,51 @@ public class AuthenticationUserLibraryFindObject extends AuthenticationUserLibra
 
 						if (solrDocument.getFieldValues("tipoOggetto_show") != null
 								&& !solrDocument.getFieldValues("tipoOggetto_show").isEmpty()) {
-							output.getUserInput().setTipoOggetto(
-									(String) solrDocument.getFieldValues("tipoOggetto_show").iterator().next());
+							tipoOggetto = (String) solrDocument.getFieldValues("tipoOggetto_show").iterator().next();
+							output.getUserInput().setTipoOggetto(tipoOggetto);
 						} else {
 							throw new AuthenticationUserLibraryException(
 									"Non risulta indicata la tipologia di documento");
 						}
 
-						if (solrDocument.getFieldValues("mimeType_show") != null
-								&& !solrDocument.getFieldValues("mimeType_show").isEmpty()) {
+						if (tipoOggetto.equalsIgnoreCase("documento")){
+							solrFile = findPadre(findDocumentMD, solrDocument);
+							if (!solrDocument.containsKey("rights_show")){
+								solrContenitore = findPadre(findDocumentMD, solrFile);
+								if (!solrContenitore.containsKey("rights_show")) {
+									throw new AuthenticationUserLibraryException(
+											"Non risulta le indormazioni relative al Diritto dell'oggetto");
+								}
+							} else {
+								solrContenitore = solrFile;
+							}
+						} else if (tipoOggetto.equalsIgnoreCase("file")) {
+							solrFile = solrDocument;
+							if (!solrDocument.containsKey("rights_show")){
+								solrContenitore = findPadre(findDocumentMD, solrFile);
+								if (!solrContenitore.containsKey("rights_show")) {
+									throw new AuthenticationUserLibraryException(
+											"Non risulta le indormazioni relative al Diritto dell'oggetto");
+								}
+							} else {
+								solrContenitore = solrFile;
+							}
+						} else if (tipoOggetto.equalsIgnoreCase("contenitore")) {
+							solrFile = solrDocument;
+							if (!solrDocument.containsKey("rights_show")){
+								solrContenitore = findPadre(findDocumentMD, solrFile);
+								if (!solrContenitore.containsKey("rights_show")) {
+									throw new AuthenticationUserLibraryException(
+											"Non risulta le indormazioni relative al Diritto dell'oggetto");
+								}
+							} else {
+								solrContenitore = solrFile;
+							}
+						}
+						if (solrFile.getFieldValues("mimeType_show") != null
+								&& !solrFile.getFieldValues("mimeType_show").isEmpty()) {
 							output.getUserInput().setMimeType(
-									(String) solrDocument.getFieldValues("mimeType_show").iterator().next());
+									(String) solrFile.getFieldValues("mimeType_show").iterator().next());
 						} else {
 							throw new AuthenticationUserLibraryException(
 									"Non risulta indicata il MimeType del documento");
@@ -111,42 +147,11 @@ public class AuthenticationUserLibraryFindObject extends AuthenticationUserLibra
 
 						output.getUserInput().setOriginalFileName(originalFileName);
 
-						if (!solrDocument.containsKey("rights_show")) {
-							if (solrDocument.containsKey("_root_") || solrDocument.containsKey("padre")) {
-								if (solrDocument.containsKey("_root_")) {
-									response = findDocumentMD.find("id", (String) solrDocument.getFieldValue("_root_"));
-								} else {
-									response = findDocumentMD.find("id", (String) solrDocument.getFieldValue("padre"));
-								}
-								if (response != null) {
-									if (response.getNumFound() == 0) {
-										throw new AuthenticationUserLibraryException(
-												"Non risulta l'oggetto richiesto in archivio");
-									} else if (response.getNumFound() > 1) {
-										throw new AuthenticationUserLibraryException(
-												"Non risulta troppi oggetti per la richiesta effettuata");
-									} else {
-										solrDocumentPadre = response.get(0);
-										if (!solrDocumentPadre.containsKey("rights_show")) {
-											throw new AuthenticationUserLibraryException(
-													"Non risulta le indormazioni relative al Diritto dell'oggetto");
-										}
-									}
-								} else {
-									throw new AuthenticationUserLibraryException(
-											"Non risulta l'oggetto richiesto in archivio");
-								}
-							} else {
-								throw new AuthenticationUserLibraryException(
-										"Non risulta le informazioni relative alla risorsa padre");
-							}
-						}
-
-						if (solrDocumentPadre != null) {
-							rights = initRigths(solrDocumentPadre.getFieldValues("rights_show"));
-							if (solrDocumentPadre.getFieldValues("actualFileName_show") != null
-									&& !solrDocumentPadre.getFieldValues("actualFileName_show").isEmpty()) {
-								actualFileName = (String) solrDocumentPadre.getFieldValues("actualFileName_show")
+						if (solrContenitore != null) {
+							rights = initRigths(solrContenitore.getFieldValues("rights_show"));
+							if (solrContenitore.getFieldValues("actualFileName_show") != null
+									&& !solrContenitore.getFieldValues("actualFileName_show").isEmpty()) {
+								actualFileName = (String) solrContenitore.getFieldValues("actualFileName_show")
 										.iterator().next();
 							}
 						} else {
@@ -160,7 +165,7 @@ public class AuthenticationUserLibraryFindObject extends AuthenticationUserLibra
 						output.getUserInput().setActualFileName(actualFileName);
 
 						checkRights(input, output, rights, actualFileName, originalFileName, solrDocument,
-								solrDocumentPadre, findDocumentMD);
+								solrContenitore, findDocumentMD);
 					}
 				} else {
 					throw new AuthenticationUserLibraryException("Non risulta l'oggetto richiesto in archivio");
@@ -189,6 +194,43 @@ public class AuthenticationUserLibraryFindObject extends AuthenticationUserLibra
 		}
 	}
 
+	private static SolrDocument findPadre(FindDocumentMD findDocumentMD, SolrDocument solrFiglio) throws SolrServerException, AuthenticationUserLibraryException{
+		SolrDocumentList response = null;
+		SolrDocument solrPadre = null;
+
+		try {
+			if (solrFiglio.containsKey("_root_") || solrFiglio.containsKey("padre")) {
+				if (solrFiglio.containsKey("_root_")) {
+					response = findDocumentMD.find("id", (String) solrFiglio.getFieldValue("_root_"));
+				} else {
+					response = findDocumentMD.find("id", (String) solrFiglio.getFieldValue("padre"));
+				}
+				if (response != null) {
+					if (response.getNumFound() == 0) {
+						throw new AuthenticationUserLibraryException(
+								"Non risulta l'oggetto richiesto in archivio");
+					} else if (response.getNumFound() > 1) {
+						throw new AuthenticationUserLibraryException(
+								"Non risulta troppi oggetti per la richiesta effettuata");
+					} else {
+						solrPadre = response.get(0);
+					}
+				} else {
+					throw new AuthenticationUserLibraryException(
+							"Non risulta l'oggetto richiesto in archivio");
+				}
+			} else {
+				throw new AuthenticationUserLibraryException(
+						"Non risulta le informazioni relative alla risorsa padre");
+			}
+		} catch (SolrServerException e) {
+			throw e;
+		} catch (AuthenticationUserLibraryException e) {
+			throw e;
+		}
+		return solrPadre;
+	}
+	
 	private static Rights initRigths(Collection<Object> rightss) throws AuthenticationUserLibraryException {
 		Iterator<Object> values = null;
 		String value = null;

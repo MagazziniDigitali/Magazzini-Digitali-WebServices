@@ -78,22 +78,10 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 			log.error(name + " [" + objectIdentifierPremis + "]" + " " + e.getMessage(), e);
 		} catch (HibernateUtilException e) {
 			log.error(name + " [" + objectIdentifierPremis + "]" + " " + e.getMessage(), e);
-			// } catch (ConfigurationException e) {
-			// log.error(name
-			// +" ["+objectIdentifierPremis+"]"
-			// + " "+e.getMessage(), e);
 		}
 
 		try {
 			ris = checkFileArchive(mdFileTmpBusiness, mdFilesTmp, configuration, objectIdentifierPremis, ris);
-			// } catch (ConfigurationException e) {
-			// mdFileTmpBusiness
-			// .updateStopValidate(mdFilesTmp.getId(), null,
-			// false, new String[] { e.getMessage() },
-			// fPremis);
-			// log.error(name
-			// +" ["+objectIdentifierPremis+"] "
-			// +e.getMessage(), e);
 		} catch (SQLException e) {
 			mdFileTmpBusiness.updateStopValidate(mdFilesTmp.getId(), null, false, new Exception[] { e },
 					null, writeFilePremisDB(filePremis, configuration.getSoftwareConfigString("path.premis")));
@@ -161,18 +149,14 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 							|| mdFilesTmp.getIdSoftware().getIdIstituzione().getPathTmp().equals("")) {
 						throw new ClientMDException("Non è stata indicata la Path Temporanea per L'istituto");
 					}
-					fileObj = mdFilesTmp.getIdSoftware().getIdIstituzione().getPathTmp(); // TODO:
-																								// da
-																								// aggiustaremdFilesTmp.getIdSoftware().getPathTmp();
+					fileObj = mdFilesTmp.getIdSoftware().getIdIstituzione().getPathTmp(); 
 				} else {
 					FactoryDAO.initialize(mdFilesTmp.getIdIstituto());
 					if (mdFilesTmp.getIdIstituto().getPathTmp() == null
 							|| mdFilesTmp.getIdIstituto().getPathTmp().equals("")) {
 						throw new ClientMDException("Non è stata indicata la Path Temporanea per L'istituto");
 					}
-					fileObj = mdFilesTmp.getIdIstituto().getPathTmp(); // TODO:
-																	// da
-																	// aggiustaremdFilesTmp.getIdSoftware().getPathTmp();
+					fileObj = mdFilesTmp.getIdIstituto().getPathTmp();
 				}
 				fileObj += File.separator;
 				fileObj += mdFilesTmp.getNomeFile();
@@ -184,10 +168,7 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 					validate.setDecompressRequired(false);
 				}
 				if (mdFilesTmp.getTarTmpFile() == null) {
-					fileTar = configuration.getSoftwareConfigString("path.tar"); // TODO:
-																					// da
-																					// aggiustare
-																					// mdFilesTmp.getIdSoftware().getPathTar();
+					fileTar = configuration.getSoftwareConfigString("path.tar"); 
 					fileTar += File.separator;
 					fileTar += configuration.getMDSoftware().getIdIstituzione().getId();
 					fileTar += File.separator;
@@ -206,10 +187,6 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 				eventDetailDecomp = fObj.getName() + " => " + fileTar;
 				if (!fObj.exists()) {
 					removeOrigin=false;
-					// fObj = new File(fObj.getParentFile()
-					// .getAbsolutePath()
-					// + File.separator
-					// + fileTar);
 					fObj = fTar;
 				}
 				if (fObj.exists()) {
@@ -471,8 +448,7 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 				premis.addObjectFileContainer(objectIdentifierMaster, archive.getXmltype().value(),
 						archive.getType().getExt(), new BigInteger("0"), archive.getDigest(DigestType.SHA_1),
 						archive.getType().getSize(), archive.getMimetype(), archive.getNome(),
-						mdFilesTmp.getIdSoftware().getIdRigths() // TODO: da aggiustare
-													// mdFilesTmp.getIdSoftware().getRightUuid()
+						mdFilesTmp.getIdSoftware().getIdRigths() 
 						, archive.getType().getFormat().getVersion(), archive.getType().getPUID());
 
 				if (archive.getArchive() != null && archive.getArchive().size() > 0) {
@@ -504,14 +480,8 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 				mdFileTmpBusiness.updateIdDepositante(mdFilesTmp.getId(), idDepositante);
 			}
 			premis.addEvent("send", mdFilesTmp.getTrasfDataStart(), mdFilesTmp.getTrasfDataEnd(), null, "OK", null,
-					(idDepositante != null?idDepositante.getId():mdFilesTmp.getIdSoftware().getIdIstituzione().getId()), // TODO:
-																				// DA
-																				// VERIFICARE
-																				// da
-																				// aggiustare
-																				// mdFilesTmp.getIdSoftware().getUuid()
-					mdFilesTmp.getIdSoftware(), // TODO: da aggiustare
-													// mdFilesTmp.getIdSoftware().getSoftwareUuid(),
+					(idDepositante != null?idDepositante.getId():mdFilesTmp.getIdSoftware().getIdIstituzione().getId()), 
+					mdFilesTmp.getIdSoftware(), 
 					objectIdentifierMaster);
 		} catch (SQLException e) {
 			throw e;

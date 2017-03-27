@@ -19,7 +19,7 @@ import mx.randalf.hibernate.exception.HibernateUtilException;
  * @author massi
  *
  */
-public class AuthenticationUserLibrary extends AuthenticationUserLibraryFindObject{
+public class AuthenticationUserLibrary extends AuthenticationUserLibraryFindObject {
 
 	private static Logger log = Logger.getLogger(AuthenticationUserLibrary.class);
 
@@ -43,8 +43,7 @@ public class AuthenticationUserLibrary extends AuthenticationUserLibraryFindObje
 						&& input.getUserInput().getObjectIdentifier().getObjectIdentifierType() != null
 						&& input.getUserInput().getObjectIdentifier().getObjectIdentifierValue() != null
 						&& input.getUserInput().getIpClient() != null) {
-					if (// input.getUserInput().getAgent() != null &&
-					input.getUserInput().getRights() != null && input.getUserInput().getAuthentication() != null) {
+					if (input.getUserInput().getRights() != null && input.getUserInput().getAuthentication() != null) {
 						// verifico le credenziali e costruisco il ticket per
 						// soddisfare la richiesta
 						output.setRights(input.getUserInput().getRights());

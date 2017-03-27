@@ -10,7 +10,6 @@ import java.util.UUID;
 
 import it.bncf.magazziniDigitali.configuration.IMDConfiguration;
 import it.bncf.magazziniDigitali.configuration.exception.MDConfigurationException;
-import it.bncf.magazziniDigitali.database.entity.MDIstituzione;
 import mx.randalf.archive.check.ArchiveImp;
 import mx.randalf.archive.info.DigestType;
 

@@ -306,6 +306,7 @@ public class MDFilesTmpBusiness extends
 			throw new HibernateUtilException(e.getMessage(), e);
 		}
 	}
+
 	private void printError(MDFilesTmpErrorBusiness errorBusiness, String idMDFilesTmp, MDStato mdStato, Exception exception)
 			throws HibernateException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, IOException, HibernateUtilException, NamingException{
@@ -432,6 +433,7 @@ public class MDFilesTmpBusiness extends
 		}
 
 	}
+
 	/**
 	 * @see it.bncf.magazziniDigitali.businessLogic.BusinessLogic#newInstance()
 	 */

@@ -61,12 +61,17 @@ public class AuthenticationUserLibraryGenTicket {
 			} else if (rights.getRightsDisseminate().getRightsDisseminateType()
 					.equals(RightsRightsDisseminateRightsDisseminateType.C)) {
 				if (checkLogin(userInput, rights)) {
-					if (checkMimeTypeBib(userInput.getMimeType())){
-						url = genTicket(userInput, rights, actualFileName, originalFileName,
-								DepositoLegaleAxisServlet.mdConfiguration.getSoftwareConfigString("ticket.dockerUrl"));
-					} else {
+					if (userInput.getTypeAuth().equalsIgnoreCase("editore")){
 						url = genTicket(userInput, rights, actualFileName, originalFileName,
 								DepositoLegaleAxisServlet.mdConfiguration.getSoftwareConfigString("ticket.externalUrl"));
+					} else {
+						if (checkMimeTypeBib(userInput.getMimeType())){
+							url = genTicket(userInput, rights, actualFileName, originalFileName,
+									DepositoLegaleAxisServlet.mdConfiguration.getSoftwareConfigString("ticket.dockerUrl"));
+						} else {
+							url = genTicket(userInput, rights, actualFileName, originalFileName,
+									DepositoLegaleAxisServlet.mdConfiguration.getSoftwareConfigString("ticket.externalUrl"));
+						}
 					}
 				} else {
 					throw new AuthenticationUserLibraryException("Utente e password non validi riprovare");

@@ -54,8 +54,8 @@ public class SolrObjectFileDC extends SolrObjectFileRegistro {
 				
 				output = read(fName);
 				if (output.indexOf("xmlns=")== -1){
-					output = output.replace("<metadata", 
-							"<metadata xmlns=\"http://www.depositolegale.it/metadata\" xsi:schemaLocation=\"http://www.depositolegale.it/metadata metadata.xsd\"");
+//					output = output.replace("<metadata", 
+//							"<metadata xmlns=\"http://www.depositolegale.it/metadata\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.depositolegale.it/metadata metadata.xsd\"");
 				}
 				
 				metadata = metadataXsd.read(output);
