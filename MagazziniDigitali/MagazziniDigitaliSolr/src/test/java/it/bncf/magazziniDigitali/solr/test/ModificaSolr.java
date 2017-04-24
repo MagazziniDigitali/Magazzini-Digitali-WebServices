@@ -7,12 +7,10 @@ import java.io.IOException;
 import java.util.Vector;
 
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.request.UpdateRequest;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocumentList;
 
 import it.bncf.magazziniDigitali.solr.AddDocumentMD;
-import it.bncf.magazziniDigitali.solr.FindDocumentMD;
 import it.bncf.magazziniDigitali.solr.ItemMD;
 import mx.randalf.solr.Item;
 import mx.randalf.solr.Params;
