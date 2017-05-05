@@ -176,6 +176,20 @@ public class MDUtentiBusiness extends BusinessLogic<MDUtenti, MDUtentiDAO, Strin
 			} else {
 				table.setNote(null);
 			}
+
+			if (dati.get("codiceFiscale") != null && 
+					!((String)dati.get("codiceFiscale")).trim().equals("")){
+				table.setCodiceFiscale((String) dati.get("codiceFiscale"));
+			} else {
+				table.setCodiceFiscale(null);
+			}
+
+			if (dati.get("email") != null && 
+					!((String)dati.get("email")).trim().equals("")){
+				table.setEmail(((String) dati.get("email")).trim().toLowerCase());
+			} else {
+				table.setEmail(null);
+			}
 		} catch (NoSuchAlgorithmException e) {
 			log.error(e.getMessage(),e);
 			throw new HibernateUtilException(e.getMessage(),e);

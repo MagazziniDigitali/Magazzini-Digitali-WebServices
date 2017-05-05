@@ -33,5 +33,11 @@
 		<property name="note" type="java.lang.String">
 			<column name="NOTE" />
 		</property>
-        	</class>
+		<property name="codiceFiscale" type="java.lang.String">
+			<column name="CODICEFISCALE" />
+		</property>
+		<property name="email" type="java.lang.String">
+			<column name="EMAIL" />
+		</property>
+					</class>
 </hibernate-mapping>

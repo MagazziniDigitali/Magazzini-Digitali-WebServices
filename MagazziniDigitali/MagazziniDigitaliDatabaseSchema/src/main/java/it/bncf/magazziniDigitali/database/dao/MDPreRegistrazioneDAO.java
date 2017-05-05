@@ -3,12 +3,14 @@
  */
 package it.bncf.magazziniDigitali.database.dao;
 
+import java.sql.Timestamp;
+
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.criterion.Restrictions;
 
-import it.bncf.magazziniDigitali.database.entity.Regioni;
+import it.bncf.magazziniDigitali.database.entity.MDPreRegistrazione;
 import mx.randalf.hibernate.GenericHibernateDAO;
 import mx.randalf.hibernate.exception.HibernateUtilException;
 
@@ -16,27 +18,28 @@ import mx.randalf.hibernate.exception.HibernateUtilException;
  * @author massi
  *
  */
-public class RegioniDAO extends GenericHibernateDAO<Regioni, Integer> {
+public class MDPreRegistrazioneDAO extends GenericHibernateDAO<MDPreRegistrazione, String> {
 
-	private Logger log = Logger.getLogger(RegioniDAO.class);
+	private Logger log =Logger.getLogger(MDPreRegistrazioneDAO.class);
 
 	/**
-	 * 
-	 * @param hibernateTemplate
 	 */
-	public RegioniDAO() {
+	public MDPreRegistrazioneDAO() {
 		super();
 	}
 
-	public Regioni findByNomeRegione(String nomeRegione) throws HibernateException, HibernateUtilException {
-		Regioni result = null;
+	public MDPreRegistrazione findByProgressivo(Integer progressivo, Timestamp dataPreIscrizione) throws  HibernateException,
+			HibernateUtilException {
+		Criteria criteria = null;
+		MDPreRegistrazione result = null;
 
 		try {
 			beginTransaction();
-			Criteria crit = createCriteria();
-			crit.add(Restrictions.eq("nomeRegione", nomeRegione.toUpperCase()));
-			paging(crit);
-			result = (Regioni) crit.uniqueResult();
+			criteria = createCriteria();
+			criteria.add(Restrictions.eq("progressivo", progressivo));
+			criteria.add(Restrictions.eq("dataPreIscrizione", dataPreIscrizione));
+			paging(criteria);
+			result = (MDPreRegistrazione) criteria.uniqueResult();
 			commitTransaction();
 		} catch (HibernateException ex) {
 			rollbackTransaction();
@@ -52,6 +55,6 @@ public class RegioniDAO extends GenericHibernateDAO<Regioni, Integer> {
 			throw new HibernateException(ex.getMessage(), ex);
 		}
 		return result;
-
 	}
+
 }

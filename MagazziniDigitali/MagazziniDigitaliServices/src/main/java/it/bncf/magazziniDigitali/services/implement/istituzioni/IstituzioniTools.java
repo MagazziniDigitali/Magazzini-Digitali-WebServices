@@ -36,7 +36,7 @@ public class IstituzioniTools {
 				e.printStackTrace();
 			}
 		}
-		istituzione.setEmailBagit(mdIstituzione.getEmailBagit());
+//		istituzione.setEmailBagit(mdIstituzione.getEmailBagit());
 
 		return istituzione;
 	}

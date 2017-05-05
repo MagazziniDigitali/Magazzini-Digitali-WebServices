@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>it.bncf.magazziniDigitali</groupId>
 	<artifactId>MagazziniDigitali</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<packaging>pom</packaging>
 	<modules>
 		<module>MagazziniDigitaliBusinessLogic</module>
@@ -15,7 +15,22 @@
 		<module>MagazziniDigitaliSolr</module>
 		<module>MagazziniDigitaliUtils</module>
 		<module>MagazziniDigitaliExternalUser</module>
+		<module>MagazziniDigitaliBusinessLogicValidate</module>
+		<module>MagazziniDigitaliBusinessLogicDatabase</module>
+		<module>MagazziniDigitaliBusinessLogicSolr</module>
+		<module>MagazziniDigitaliBusinessLogicPublish</module>
+		<module>MagazziniDigitaliBusinessLogicTicket</module>
+		<module>MagazziniDigitaliBusinessLogicRegistroIngressi</module>
+		<module>MagazziniDigitaliBusinessLogicPackagesPremis</module>
+		<module>MagazziniDigitaliBusinessLogicCoda</module>
+		<module>MagazziniDigitaliBusinessLogicUtils</module>
+		<module>MagazziniDigitaliBusinessLogicGeoReplica</module>
 	</modules>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.7</maven.compiler.source>
+		<maven.compiler.target>1.7</maven.compiler.target>
+	</properties>
 	<repositories>
 		<repository>
 			<id>bncf</id>

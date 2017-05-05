@@ -78,4 +78,30 @@ public class MDIstituzioneDAO extends GenericHibernateDAO<MDIstituzione, String>
 		return result;
 	}
 
+	public MDIstituzione findByPIva(String pIva) throws HibernateException, HibernateUtilException {
+		MDIstituzione result = null;
+
+		try {
+			beginTransaction();
+			Criteria crit = createCriteria();
+			crit.add(Restrictions.eq("pIva", pIva.toUpperCase()));
+			paging(crit);
+			result = (MDIstituzione) crit.uniqueResult();
+			commitTransaction();
+		} catch (HibernateException ex) {
+			rollbackTransaction();
+			log.error(ex.getMessage(), ex);
+			throw ex;
+		} catch (HibernateUtilException e) {
+			rollbackTransaction();
+			log.error(e.getMessage(), e);
+			throw e;
+		} catch (Exception ex) {
+			rollbackTransaction();
+			log.error(ex.getMessage(), ex);
+			throw new HibernateException(ex.getMessage(), ex);
+		}
+		return result;
+	}
+
 }

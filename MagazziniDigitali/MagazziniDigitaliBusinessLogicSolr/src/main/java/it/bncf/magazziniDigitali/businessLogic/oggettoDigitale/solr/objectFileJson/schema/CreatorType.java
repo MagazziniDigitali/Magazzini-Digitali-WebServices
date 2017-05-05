@@ -9,7 +9,8 @@ package it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.solr.objectFileJ
  */
 public enum CreatorType {
 	author("author"),
-	translator("translator");
+	translator("translator"),
+	contributor("contributor");
 
 	private String type;
 

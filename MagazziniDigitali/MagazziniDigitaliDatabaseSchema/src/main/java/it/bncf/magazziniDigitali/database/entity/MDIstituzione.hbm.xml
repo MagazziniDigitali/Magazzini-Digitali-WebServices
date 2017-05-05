@@ -45,9 +45,6 @@
 		<property name="libreriaApiUtente" type="java.lang.String">
 			<column name="LIBRERIA_API_UTENTE" />
 		</property>
-		<property name="emailBagit" type="java.lang.String">
-			<column name="EMAIL_BAGIT" />
-		</property>
 		<property name="pathTmp" type="java.lang.String">
 			<column name="PATH_TMP" />
 		</property>
@@ -61,5 +58,14 @@
 			class="it.bncf.magazziniDigitali.database.entity.Regioni" fetch="join">
 			<column name="ID_REGIONE" />
 		</many-to-one>
+		<property name="pIva" type="java.lang.String">
+			<column name="PIVA" />
+		</property>
+		<property name="altaRisoluzione" type="java.lang.Integer">
+			<column name="ALTA_RISOLUZIONE" />
+		</property>
+		<property name="bagit" type="java.lang.Integer">
+			<column name="BAGIT" />
+		</property>
 	</class>
 </hibernate-mapping>

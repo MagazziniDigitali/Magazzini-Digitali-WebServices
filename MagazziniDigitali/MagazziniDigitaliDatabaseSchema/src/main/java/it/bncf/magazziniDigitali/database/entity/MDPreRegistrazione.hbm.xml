@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 22-ott-2014 15.34.38 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+	<class name="it.bncf.magazziniDigitali.database.entity.MDPreRegistrazione"
+		table="MDPreRegistrazione">
+		<id name="id" type="java.lang.String">
+			<column name="ID" />
+			<generator class="assigned" />
+		</id>
+		<property name="progressivo" type="java.lang.Integer">
+			<column name="PROGRESSIVO" />
+		</property>
+		<property name="dataPreIscrizione" type="java.sql.Timestamp">
+			<column name="DATA_PRESCRIZIONE" />
+		</property>
+		<property name="utenteEmail" type="java.lang.String">
+			<column name="UTENTE_EMAIL" />
+		</property>
+		<property name="utenteNome" type="java.lang.String">
+			<column name="UTENTE_NOME" />
+		</property>
+		<property name="utenteCognome" type="java.lang.String">
+			<column name="UTENTE_COGNOME" />
+		</property>
+		<property name="utenteCodiceFiscale" type="java.lang.String">
+			<column name="UTENTE_CODICEFISCALE" />
+		</property>
+		<property name="utenteNote" type="java.lang.String">
+			<column name="UTENTE_NOTE" />
+		</property>
+		<property name="istituzionePIva" type="java.lang.String">
+			<column name="ISTITUZIONE_PIVA" />
+		</property>
+		<property name="istituzioneNome" type="java.lang.String">
+			<column name="ISTITUZIONE_NOME" />
+		</property>
+		<property name="istituzioneIndirizzo" type="java.lang.String">
+			<column name="ISTITUZIONE_INDIRIZZO" />
+		</property>
+		<many-to-one name="idRegione"
+			class="it.bncf.magazziniDigitali.database.entity.Regioni" fetch="join">
+			<column name="ID_REGIONE" />
+		</many-to-one>
+		<property name="istituzioneUrl" type="java.lang.String">
+			<column name="ISTITUZIONE_URL" />
+		</property>
+		<property name="istituzioneTelefono" type="java.lang.String">
+			<column name="ISTITUZIONE_TELEFONO" />
+		</property>
+		<property name="istituzioneNomeContatto" type="java.lang.String">
+			<column name="ISTITUZIONE_NOME_CONTATTO" />
+		</property>
+		<property name="istituzioneNote" type="java.lang.String">
+			<column name="ISTITUZIONE_NOTE" />
+		</property>
+		<property name="altaRisoluzione" type="java.lang.Integer">
+			<column name="ALTA_RISOLUZIONE" />
+		</property>
+		<property name="tesiDottorato" type="java.lang.Integer">
+			<column name="TESI_DOTTORATO" />
+		</property>
+		<property name="rivisteAperte" type="java.lang.String">
+			<column name="RIVISTE_APERTE" />
+		</property>
+		<property name="rivisteRistrette" type="java.lang.String">
+			<column name="RIVISTE_RISTRETTE" />
+		</property>
+		<property name="ebookAperte" type="java.lang.String">
+			<column name="EBOOK_APERTE" />
+		</property>
+		<property name="ebookRistrette" type="java.lang.String">
+			<column name="EBOOK_RISTRETTE" />
+		</property>
+		<property name="altro" type="java.lang.String">
+			<column name="ALTRO" />
+		</property>
+		<property name="emailValidata" type="java.lang.Integer">
+			<column name="EMAIL_VALIDATA" />
+		</property>
+		<many-to-one name="idIstituzione"
+			class="it.bncf.magazziniDigitali.database.entity.MDIstituzione" fetch="join">
+			<column name="ID_ISTITUZIONE" />
+		</many-to-one>
+		<many-to-one name="idUtente"
+			class="it.bncf.magazziniDigitali.database.entity.MDUtenti" fetch="join">
+			<column name="ID_UTENTE" />
+		</many-to-one>
+	</class>
+</hibernate-mapping>

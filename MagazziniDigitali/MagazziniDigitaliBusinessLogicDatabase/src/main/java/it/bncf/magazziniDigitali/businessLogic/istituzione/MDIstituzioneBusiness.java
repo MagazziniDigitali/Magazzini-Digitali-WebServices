@@ -277,19 +277,19 @@ public class MDIstituzioneBusiness extends BusinessLogic<MDIstituzione, MDIstitu
 			} else {
 				table.setLibreriaApiUtente(null);
 			}
-
-			if (dati.get("emailBagit") != null && 
-					!((String)dati.get("emailBagit")).trim().equals("")){
-				table.setEmailBagit((String) dati.get("emailBagit"));
-			} else {
-				table.setEmailBagit(null);
-			}
+//
+//			if (dati.get("emailBagit") != null && 
+//					!((String)dati.get("emailBagit")).trim().equals("")){
+//				table.setEmailBagit((String) dati.get("emailBagit"));
+//			} else {
+//				table.setEmailBagit(null);
+//			}
 
 			if (dati.get("pathTmp") != null && 
 					!((String)dati.get("pathTmp")).trim().equals("")){
 				table.setPathTmp((String) dati.get("pathTmp"));
-			} else {
-				table.setPathTmp(null);
+//			} else {
+//				table.setPathTmp(null);
 			}
 
 			if (dati.get("note") != null && 
@@ -310,6 +310,27 @@ public class MDIstituzioneBusiness extends BusinessLogic<MDIstituzione, MDIstitu
 				table.setIdRegione((Regioni) dati.get("idRegione"));
 			} else {
 				table.setIdRegione(null);
+			}
+			
+			if (dati.get("pIva") != null && 
+					!((String)dati.get("pIva")).trim().equals("")){
+				table.setpIva((String) dati.get("pIva"));
+			} else {
+				table.setpIva(null);
+			}
+			
+			if (dati.get("altaRisoluzione") != null && 
+					!((String)dati.get("altaRisoluzione")).trim().equals("")){
+				table.setAltaRisoluzione(new Integer((String) dati.get("altaRisoluzione")));
+			} else {
+				table.setAltaRisoluzione(0);
+			}
+			
+			if (dati.get("bagit") != null && 
+					!((String)dati.get("bagit")).trim().equals("")){
+				table.setBagit(new Integer((String) dati.get("bagit")));
+			} else {
+				table.setBagit(0);
 			}
 		} catch (NoSuchAlgorithmException e) {
 			log.error(e.getMessage(),e);

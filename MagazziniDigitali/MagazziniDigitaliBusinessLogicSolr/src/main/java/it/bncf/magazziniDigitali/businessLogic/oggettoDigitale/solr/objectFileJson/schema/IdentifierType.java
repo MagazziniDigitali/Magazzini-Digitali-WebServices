@@ -10,7 +10,9 @@ package it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.solr.objectFileJ
 public enum IdentifierType {
 	ISBN("ISBN"),
 	ISSN("ISSN"),
-	DOI("DOI");
+	DOI("DOI"),
+	URL("URL"),
+	other("other");
 
 	private String type;
 

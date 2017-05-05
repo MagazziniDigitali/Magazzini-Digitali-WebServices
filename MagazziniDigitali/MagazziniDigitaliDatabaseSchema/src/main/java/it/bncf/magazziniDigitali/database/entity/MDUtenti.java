@@ -38,6 +38,10 @@ public class MDUtenti implements Serializable {
 	private String idIstituzioneID;
 
 	private String note;
+	
+	private String codiceFiscale;
+	
+	private String email;
 
 	public MDUtenti() {
 	}
@@ -176,5 +180,33 @@ public class MDUtenti implements Serializable {
 	 */
 	public void setNote(String note) {
 		this.note = note;
+	}
+
+	/**
+	 * @return the codiceFiscale
+	 */
+	public String getCodiceFiscale() {
+		return codiceFiscale;
+	}
+
+	/**
+	 * @param codiceFiscale the codiceFiscale to set
+	 */
+	public void setCodiceFiscale(String codiceFiscale) {
+		this.codiceFiscale = codiceFiscale;
+	}
+
+	/**
+	 * @return the email
+	 */
+	public String getEmail() {
+		return email;
+	}
+
+	/**
+	 * @param email the email to set
+	 */
+	public void setEmail(String email) {
+		this.email = email;
 	}
 }

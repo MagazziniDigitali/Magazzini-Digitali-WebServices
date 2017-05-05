@@ -35,8 +35,15 @@ public class MDUtentiDAO extends GenericHibernateDAO<MDUtenti, String> {
 		super();
 	}
 
+	public List<MDUtenti> find(String login, String nome, String cognome,
+			List<Order> orders) throws HibernateException,
+			HibernateUtilException {
+		return find(login, nome, cognome, null, orders);
+	}
+
 	@SuppressWarnings("unchecked")
 	public List<MDUtenti> find(String login, String nome, String cognome,
+			String email,
 			List<Order> orders) throws HibernateException,
 			HibernateUtilException {
 		Criteria criteria = null;
@@ -53,6 +60,9 @@ public class MDUtentiDAO extends GenericHibernateDAO<MDUtenti, String> {
 			}
 			if (cognome != null) {
 				criteria.add(Restrictions.ilike("cognome", "%"+cognome+"%"));
+			}
+			if (email != null) {
+				criteria.add(Restrictions.eq("email", email.toLowerCase()));
 			}
 			if (orders != null) {
 				for (Order order : orders) {
@@ -72,6 +82,32 @@ public class MDUtentiDAO extends GenericHibernateDAO<MDUtenti, String> {
 			log.error(e.getMessage(), e);
 			rollbackTransaction();
 			throw new HibernateUtilException(e.getMessage(), e);
+		}
+		return result;
+	}
+
+	public MDUtenti findByCodiceFiscale(String codiceFiscale) throws HibernateException, HibernateUtilException {
+		MDUtenti result = null;
+
+		try {
+			beginTransaction();
+			Criteria crit = createCriteria();
+			crit.add(Restrictions.eq("codiceFiscale", codiceFiscale.toUpperCase()));
+			paging(crit);
+			result = (MDUtenti) crit.uniqueResult();
+			commitTransaction();
+		} catch (HibernateException ex) {
+			rollbackTransaction();
+			log.error(ex.getMessage(), ex);
+			throw ex;
+		} catch (HibernateUtilException e) {
+			rollbackTransaction();
+			log.error(e.getMessage(), e);
+			throw e;
+		} catch (Exception ex) {
+			rollbackTransaction();
+			log.error(ex.getMessage(), ex);
+			throw new HibernateException(ex.getMessage(), ex);
 		}
 		return result;
 	}

@@ -145,7 +145,7 @@ public abstract class SolrObjectFileAnalyze<F, OICT, SPCT, OCCT, FCT, LRSICT, FR
 
 							fTtl = new File(pathTar.getAbsolutePath()+File.separator+filename+".json");
 							if (fTtl.exists()){
-								publicSolrJson(fTtl, admd);
+								publicSolrJson(fTtl, admd, configuration);
 							}
 						}
 					}

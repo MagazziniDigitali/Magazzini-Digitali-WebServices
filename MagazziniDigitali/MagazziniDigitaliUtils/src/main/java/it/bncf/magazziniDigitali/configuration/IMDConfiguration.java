@@ -3,12 +3,10 @@
  */
 package it.bncf.magazziniDigitali.configuration;
 
-import java.io.File;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 
 import it.bncf.magazziniDigitali.configuration.exception.MDConfigurationException;
@@ -18,26 +16,19 @@ import it.bncf.magazziniDigitali.database.entity.MDNodi;
 import it.bncf.magazziniDigitali.database.entity.MDRigths;
 import it.bncf.magazziniDigitali.database.entity.MDSoftware;
 import mx.randalf.configuration.Configuration;
-import mx.randalf.configuration.exception.ConfigurationException;
 import mx.randalf.hibernate.exception.HibernateUtilException;
 
 /**
  * @author massi
  *
  */
-public abstract class IMDConfiguration<S extends Serializable> {
-
-	private Logger log = Logger.getLogger(IMDConfiguration.class);
-
-	private String fileConfiguration = null;
+public abstract class IMDConfiguration<S extends Serializable> extends IConfiguration{
 
 	protected String nomeSW = null;
 
 	protected String ipClient = null;
 
 	protected String sysPassword = null;
-
-	protected String pathProperties = null;
 	
 	/**
 	 * Variabile utilizzata per la registrazione delle informazioni scaricate dal 
@@ -51,10 +42,11 @@ public abstract class IMDConfiguration<S extends Serializable> {
 	 */
 	public IMDConfiguration(String nomeSW, String fileConfiguration, String ipClient, String sysPassword) 
 			throws MDConfigurationException {
+		super(fileConfiguration);
 		this.nomeSW = nomeSW;
 		this.ipClient = ipClient;
 		this.sysPassword = sysPassword;
-		setFileConfiguration(fileConfiguration);
+		initConfig();
 	}
 
 	/**
@@ -63,8 +55,9 @@ public abstract class IMDConfiguration<S extends Serializable> {
 	 */
 	public IMDConfiguration(String nomeSW, String fileConfiguration) 
 			throws MDConfigurationException {
+		super(fileConfiguration);
 		this.nomeSW = nomeSW;
-		setFileConfiguration(fileConfiguration);
+		initConfig();
 	}
 
 	/**
@@ -73,9 +66,10 @@ public abstract class IMDConfiguration<S extends Serializable> {
 	 */
 	public IMDConfiguration(String nomeSW, String fileConfiguration, String sysPassword) 
 			throws MDConfigurationException {
+		super(fileConfiguration);
 		this.nomeSW = nomeSW;
 		this.sysPassword = sysPassword;
-		setFileConfiguration(fileConfiguration);
+		initConfig();
 	}
 
 	public String getFileConfiguration() {
@@ -84,56 +78,15 @@ public abstract class IMDConfiguration<S extends Serializable> {
 
 	public void init() throws MDConfigurationException{
 		setFileConfiguration(this.fileConfiguration);
+		initConfig();
 	}
 
-	public void setFileConfiguration(String fileConfiguration) 
-			throws MDConfigurationException {
-		String pathProperties = null;
-		String[] st = null;
-		File path = null;
-		try {
-			this.fileConfiguration = fileConfiguration;
-			
-			if (!Configuration.isInizialize()) {
-				st = fileConfiguration.split("\\|");
-				for (int x=0; x<st.length; x++){
-					fileConfiguration = st[x];
-
-					pathProperties = null;
-					if (fileConfiguration != null && fileConfiguration.startsWith("file://"))
-						pathProperties = fileConfiguration.replace("file:///", "");
-					else {
-						if (System.getProperty("catalina.base") != null){
-							pathProperties = System.getProperty("catalina.base")
-									+ File.separator;
-							if (fileConfiguration == null)
-								pathProperties += "conf/teca_digitale";
-							else
-								pathProperties += fileConfiguration;
-						}
-					}
-	
-					if (pathProperties != null){
-						path = new File(pathProperties);
-						if (path.exists()){
-							Configuration.init(path.getAbsolutePath());
-							this.pathProperties = path.getAbsolutePath();
-							break;
-						}
-					}
-				}
-			}
-			
-			if (Configuration.isInizialize() &&
-					!isSoftwareInizialize()){
-				readConfiguration(ipClient);
-			}
-		} catch (ConfigurationException e) {
-			log.error(e.getMessage(), e);
-			throw new MDConfigurationException(e.getMessage(), e);
-		} catch (MDConfigurationException e) {
-			throw e;
+	private void initConfig() throws MDConfigurationException{
+		if (Configuration.isInizialize() &&
+				!isSoftwareInizialize()){
+			readConfiguration(ipClient);
 		}
+
 	}
 
 	protected abstract boolean isSoftwareInizialize();

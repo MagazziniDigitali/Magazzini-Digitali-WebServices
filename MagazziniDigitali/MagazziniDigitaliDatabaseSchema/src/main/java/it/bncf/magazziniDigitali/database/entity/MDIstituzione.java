@@ -45,8 +45,6 @@ public class MDIstituzione implements Serializable {
 
 	private String libreriaApiUtente;
 
-	private String emailBagit;
-
 	private String pathTmp;
 
 	private String note;
@@ -56,6 +54,12 @@ public class MDIstituzione implements Serializable {
 	private Regioni idRegione;
 
 	private Integer idRegioneID;
+
+	private String pIva;
+
+	private Integer altaRisoluzione;
+
+	private Integer bagit;
 
 	public MDIstituzione() {
 	}
@@ -203,20 +207,6 @@ public class MDIstituzione implements Serializable {
 	}
 
 	/**
-	 * @return the emailBagit
-	 */
-	public String getEmailBagit() {
-		return emailBagit;
-	}
-
-	/**
-	 * @param emailBagit the emailBagit to set
-	 */
-	public void setEmailBagit(String emailBagit) {
-		this.emailBagit = emailBagit;
-	}
-
-	/**
 	 * @return the bibliotecaDepositaria
 	 */
 	public Integer getBibliotecaDepositaria() {
@@ -329,5 +319,47 @@ public class MDIstituzione implements Serializable {
 	 */
 	public void setIdRegioneID(Integer idRegioneID) {
 		this.idRegioneID = idRegioneID;
+	}
+
+	/**
+	 * @return the pIva
+	 */
+	public String getpIva() {
+		return pIva;
+	}
+
+	/**
+	 * @param pIva the pIva to set
+	 */
+	public void setpIva(String pIva) {
+		this.pIva = pIva;
+	}
+
+	/**
+	 * @return the altaRisoluzione
+	 */
+	public Integer getAltaRisoluzione() {
+		return altaRisoluzione;
+	}
+
+	/**
+	 * @param altaRisoluzione the altaRisoluzione to set
+	 */
+	public void setAltaRisoluzione(Integer altaRisoluzione) {
+		this.altaRisoluzione = altaRisoluzione;
+	}
+
+	/**
+	 * @return the bagit
+	 */
+	public Integer getBagit() {
+		return bagit;
+	}
+
+	/**
+	 * @param bagit the bagit to set
+	 */
+	public void setBagit(Integer bagit) {
+		this.bagit = bagit;
 	}
 }
