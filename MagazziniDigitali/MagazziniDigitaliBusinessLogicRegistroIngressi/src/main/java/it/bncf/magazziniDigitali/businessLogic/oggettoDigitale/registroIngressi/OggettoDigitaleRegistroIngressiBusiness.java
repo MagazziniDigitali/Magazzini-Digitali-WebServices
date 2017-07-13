@@ -119,6 +119,7 @@ public class OggettoDigitaleRegistroIngressiBusiness extends OggettoDigitaleBusi
 		File[] fl = null;
 		File fTgz = null;
 		Vector<String> listaCoda = new Vector<String>();
+		boolean catturato = false;
 		
 		try {
 			pDest = new File(configuration.getSoftwareConfigString("path.scambioTgz"));
@@ -148,6 +149,7 @@ public class OggettoDigitaleRegistroIngressiBusiness extends OggettoDigitaleBusi
 					if (genCheckSum(fl[x])){
 						if (genTarGz(fl[x])){
 							listaCoda.add(fl[x].getName());
+							catturato = true;
 						}
 					}
 				}
@@ -167,7 +169,9 @@ public class OggettoDigitaleRegistroIngressiBusiness extends OggettoDigitaleBusi
 		} catch (Exception e) {
 			throw e;
 		}  finally {
-			genCodaFile(configuration, listaCoda);
+			if (catturato){
+				genCodaFile(configuration, listaCoda);
+			}
 		}
 	}
 

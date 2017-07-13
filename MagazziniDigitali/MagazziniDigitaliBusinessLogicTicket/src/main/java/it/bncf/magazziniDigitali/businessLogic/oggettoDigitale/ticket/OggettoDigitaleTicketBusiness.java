@@ -116,6 +116,7 @@ public class OggettoDigitaleTicketBusiness extends OggettoDigitaleBusiness {
 		File[] fl = null;
 		File fTgz = null;
 		Vector<String> listaCoda = new Vector<String>();
+		boolean compattato = false;
 		
 		try {
 			pDest = new File(configuration.getSoftwareConfigString("path.scambioTgz"));
@@ -145,6 +146,7 @@ public class OggettoDigitaleTicketBusiness extends OggettoDigitaleBusiness {
 					if (genCheckSum(fl[x])){
 						if (genTarGz(fl[x])){
 							listaCoda.add(fl[x].getName());
+							compattato = true;
 						}
 					}
 				}
@@ -164,7 +166,9 @@ public class OggettoDigitaleTicketBusiness extends OggettoDigitaleBusiness {
 		} catch (Exception e) {
 			throw e;
 		}  finally {
-			genCodaFile(configuration, listaCoda);
+			if (compattato){
+				genCodaFile(configuration, listaCoda);
+			}
 		}
 	}
 

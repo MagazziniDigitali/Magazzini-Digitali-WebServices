@@ -56,6 +56,7 @@ public class AuthenticationUserLibraryFindObject extends AuthenticationUserLibra
 		String actualFileName = null;
 		String originalFileName = null;
 		String tipoOggetto = null;
+		String tipoContenitore = null;
 
 		try {
 			findDocumentMD = new FindDocumentMD(
@@ -133,8 +134,18 @@ public class AuthenticationUserLibraryFindObject extends AuthenticationUserLibra
 							output.getUserInput().setMimeType(
 									(String) solrFile.getFieldValues("mimeType_show").iterator().next());
 						} else {
-							throw new AuthenticationUserLibraryException(
+							tipoContenitore = null;
+							if (solrFile.getFieldValues("tipoContenitore_show") != null &&
+									!solrFile.getFieldValues("tipoContenitore_show").isEmpty()){
+								tipoContenitore = (String) solrFile.getFieldValues("tipoContenitore_show").iterator().next();
+							}
+							if (tipoContenitore != null && 
+									tipoContenitore.equals("warc")){
+								output.getUserInput().setMimeType("application/warc");
+							} else {
+								throw new AuthenticationUserLibraryException(
 									"Non risulta indicata il MimeType del documento");
+							}
 						}
 
 						output.getUserInput().setIdentifier((String) solrDocument.getFieldValue("id"));

@@ -209,8 +209,14 @@ public class ShowObject extends HttpServlet {
 		String fileName = null;
 
 		try {
-
 			fTar = GenFileDest.genFileDest(mdConfiguration.getSoftwareConfigMDNodi("validate.nodo"), actualFileName);
+			
+			if (!fTar.exists()){
+				fTar = GenFileDest.genFileDest(mdConfiguration.getSoftwareConfigMDNodi("validate.nodo"), mdTicket.getObjectIdentifier()+".warc");
+				if (fTar.exists()){
+					actualFileName = mdTicket.getObjectIdentifier()+".warc";
+				}
+			}
 
 			if (fTar.exists()) {
 
