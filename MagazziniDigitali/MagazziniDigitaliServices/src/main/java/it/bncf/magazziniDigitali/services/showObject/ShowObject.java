@@ -3,9 +3,11 @@
  */
 package it.bncf.magazziniDigitali.services.showObject;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.security.Principal;
 import java.util.Enumeration;
@@ -31,6 +33,9 @@ import org.apache.jasper.compiler.TldCache;
 import org.apache.log4j.Logger;
 import org.apache.tomcat.websocket.server.WsServerContainer;
 import org.hibernate.HibernateException;
+import org.jwat.warc.WarcReader;
+import org.jwat.warc.WarcReaderFactory;
+import org.jwat.warc.WarcRecord;
 
 import it.bncf.magazziniDigitali.businessLogic.ticket.MDTicketBusiness;
 import it.bncf.magazziniDigitali.configuration.exception.MDConfigurationException;
@@ -174,7 +179,8 @@ public class ShowObject extends HttpServlet {
 			} else if (mdTicket.getModalitaAccesso().equals("C")) {
 				if (mdTicket.getTipoOggetto().equals("contenitore")) {
 					result = mdTicket.getIpClient().trim().equals(remoteAddr);
-				} else if (mdTicket.getIdIstituzione().getId().trim().equals(mdConfiguration.getSoftwareConfigString("istituzioneMD.id"))){
+				} else if (mdTicket.getIdIstituzione().getId().trim()
+						.equals(mdConfiguration.getSoftwareConfigString("istituzioneMD.id"))) {
 					result = mdTicket.getIpClient().trim().equals(remoteAddr);
 				} else if (!AuthenticationUserLibrary.checkMimeTypeBib(mdTicket.getMimeType())) {
 					result = mdTicket.getIpClient().trim().equals(remoteAddr);
@@ -203,25 +209,24 @@ public class ShowObject extends HttpServlet {
 
 		File fTar = null;
 		FileInputStream fis = null;
-		TarArchiveInputStream tais = null;
-		TarArchiveEntry tae = null;
 		boolean trovato = false;
 		String fileName = null;
 
 		try {
 			fTar = GenFileDest.genFileDest(mdConfiguration.getSoftwareConfigMDNodi("validate.nodo"), actualFileName);
-			
-			if (!fTar.exists()){
-				fTar = GenFileDest.genFileDest(mdConfiguration.getSoftwareConfigMDNodi("validate.nodo"), mdTicket.getObjectIdentifier()+".warc");
-				if (fTar.exists()){
-					actualFileName = mdTicket.getObjectIdentifier()+".warc";
+
+			if (!fTar.exists()) {
+				fTar = GenFileDest.genFileDest(mdConfiguration.getSoftwareConfigMDNodi("validate.nodo"),
+						mdTicket.getObjectIdentifier() + ".warc");
+				if (fTar.exists()) {
+					actualFileName = mdTicket.getObjectIdentifier() + ".warc";
 				}
 			}
 
 			if (fTar.exists()) {
 
-				if (originalFileName.indexOf("/") > -1) {
-					fileName = originalFileName.substring(originalFileName.indexOf("/") + 1);
+				if (originalFileName.lastIndexOf("/") > -1) {
+					fileName = originalFileName.substring(originalFileName.lastIndexOf("/") + 1);
 				} else {
 					fileName = originalFileName;
 				}
@@ -236,35 +241,10 @@ public class ShowObject extends HttpServlet {
 					IOUtils.copy(fis, res.getOutputStream());
 
 					trovato = true;
+				} else if (fTar.getName().toLowerCase().endsWith(".warc")) {
+					trovato = readWarc(fis, originalFileName, fileName, mdConfiguration, mdTicket, res);
 				} else {
-					tais = (TarArchiveInputStream) new ArchiveStreamFactory().createArchiveInputStream("tar", fis);
-					while ((tae = (TarArchiveEntry) tais.getNextEntry()) != null) {
-						if (tae.getName().equals(originalFileName)) {
-							// System.out.println(tae.getName());
-							res.setHeader("Expires", "0");
-							res.setHeader("Cache-Control", "must-revalidate, post-check=0, pre-check=0");
-							res.setHeader("Pragma", "public");
-
-							res.setContentType(mdTicket.getMimeType());
-
-							if (mdTicket.getModalitaAccesso().equals("A") || mdTicket.getModalitaAccesso().equals("B")
-									|| (mdTicket.getModalitaAccesso().equals("C")
-											&& (mdTicket.getTipoOggetto().equals("contenitore")
-													|| mdTicket.getIdIstituzione().getId().trim()
-															.equals(mdConfiguration
-																	.getSoftwareConfigString("istituzioneMD.id"))
-													|| !AuthenticationUserLibrary
-															.checkMimeTypeBib(mdTicket.getMimeType())))) {
-								res.setHeader("Content-disposition", "attachment; filename=" + fileName);
-							}
-
-							IOUtils.copy(tais, res.getOutputStream());
-							// res.getOutputStream().close();
-							trovato = true;
-
-							break;
-						}
-					}
+					trovato = readTar(fis, originalFileName, fileName, mdConfiguration, mdTicket, res);
 				}
 				if (!trovato) {
 					showMsgError(res, "Non risulta l'oggetto cercato nel file archivio dello Storage");
@@ -276,13 +256,45 @@ public class ShowObject extends HttpServlet {
 			throw new ServletException(e.getMessage(), e);
 		} catch (IOException e) {
 			throw new ServletException(e.getMessage(), e);
-		} catch (ArchiveException e) {
-			throw new ServletException(e.getMessage(), e);
+		} catch (ServletException e) {
+			throw e;
 		} finally {
 			try {
 				if (fis != null) {
 					fis.close();
 				}
+			} catch (IOException e) {
+				throw new ServletException(e.getMessage(), e);
+			}
+		}
+	}
+
+	private boolean readTar(FileInputStream fis, String originalFileName, String fileName,
+			MDConfiguration mdConfiguration, MDTicket mdTicket, HttpServletResponse res) throws ServletException {
+		TarArchiveInputStream tais = null;
+		TarArchiveEntry tae = null;
+		boolean trovato = false;
+
+		try {
+			tais = (TarArchiveInputStream) new ArchiveStreamFactory().createArchiveInputStream("tar", fis);
+			while ((tae = (TarArchiveEntry) tais.getNextEntry()) != null) {
+				if (tae.getName().equals(originalFileName)) {
+					// System.out.println(tae.getName());
+					sendFile(tais, fileName, mdConfiguration, mdTicket, res);
+					// res.getOutputStream().close();
+					trovato = true;
+
+					break;
+				}
+			}
+		} catch (ArchiveException e) {
+			throw new ServletException(e.getMessage(), e);
+		} catch (IOException e) {
+			throw new ServletException(e.getMessage(), e);
+		} catch (ServletException e) {
+			throw e;
+		} finally {
+			try {
 				if (tais != null) {
 					tais.close();
 				}
@@ -290,6 +302,80 @@ public class ShowObject extends HttpServlet {
 				throw new ServletException(e.getMessage(), e);
 			}
 		}
+		return trovato;
+	}
+
+	private void sendFile(InputStream is, String fileName, MDConfiguration mdConfiguration, MDTicket mdTicket,
+			HttpServletResponse res) throws ServletException {
+
+		try {
+			res.setHeader("Expires", "0");
+			res.setHeader("Cache-Control", "must-revalidate, post-check=0, pre-check=0");
+			res.setHeader("Pragma", "public");
+
+			res.setContentType(mdTicket.getMimeType());
+
+			if (mdTicket
+					.getModalitaAccesso().equals(
+							"A")
+					|| mdTicket
+							.getModalitaAccesso().equals(
+									"B")
+					|| (mdTicket.getModalitaAccesso().equals("C") && (mdTicket.getTipoOggetto().equals("contenitore")
+							|| mdTicket.getIdIstituzione().getId().trim()
+									.equals(mdConfiguration.getSoftwareConfigString("istituzioneMD.id"))
+							|| !AuthenticationUserLibrary.checkMimeTypeBib(mdTicket.getMimeType())))) {
+				res.setHeader("Content-disposition", "attachment; filename=" + fileName);
+			}
+
+			IOUtils.copy(is, res.getOutputStream());
+			res.getOutputStream().flush();
+		} catch (MDConfigurationException e) {
+			throw new ServletException(e.getMessage(), e);
+		} catch (IOException e) {
+			throw new ServletException(e.getMessage(), e);
+		}
+	}
+
+	private boolean readWarc(FileInputStream fis, String originalFileName, String fileName,
+			MDConfiguration mdConfiguration, MDTicket mdTicket, HttpServletResponse res) throws ServletException {
+		WarcReader reader = null;
+		WarcRecord record = null;
+		boolean trovato = false;
+		InputStream is = null;
+
+		try {
+			reader = WarcReaderFactory.getReader(fis);
+			while ((record = reader.getNextRecord()) != null) {
+				if (record.header.contentLength > 0) {
+					if (record.header.warcFilename != null && record.header.warcFilename.equals(originalFileName)) {
+						sendFile(record.getPayloadContent(), fileName, mdConfiguration, mdTicket, res);
+						trovato = true;
+
+						break;
+					} else if (record.header.warcTargetUriStr != null
+							&& record.header.warcTargetUriStr.equals(originalFileName)) {
+						if (record.header.contentTypeStr.equals("application/http;msgtype=response")) {
+
+							is = record.getPayload().getInputStreamComplete();
+							sendFile(is, fileName, mdConfiguration, mdTicket, res);
+							trovato = true;
+							break;
+						}
+
+					}
+				}
+			}
+		} catch (IOException e) {
+			throw new ServletException(e.getMessage(), e);
+		} catch (ServletException e) {
+			throw e;
+		} finally {
+			if (reader != null) {
+				reader.close();
+			}
+		}
+		return trovato;
 	}
 
 	private void showMsgError(HttpServletResponse res, String msgError) throws IOException {
