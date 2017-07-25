@@ -10,6 +10,7 @@ import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.sql.JoinType;
 
 import it.bncf.magazziniDigitali.database.entity.MDIstituzione;
 import it.bncf.magazziniDigitali.database.entity.Regioni;
@@ -41,6 +42,7 @@ public class MDIstituzioneDAO extends GenericHibernateDAO<MDIstituzione, String>
 		try {
 			beginTransaction();
 			criteria = this.createCriteria();
+			initTableJoin(criteria);
 			if (nome != null) {
 				criteria.add(Restrictions.ilike("nome", "%"+nome+"%"));
 			}
@@ -84,6 +86,7 @@ public class MDIstituzioneDAO extends GenericHibernateDAO<MDIstituzione, String>
 		try {
 			beginTransaction();
 			Criteria crit = createCriteria();
+			initTableJoin(crit);
 			crit.add(Restrictions.eq("pIva", pIva.toUpperCase()));
 			paging(crit);
 			result = (MDIstituzione) crit.uniqueResult();
@@ -102,6 +105,15 @@ public class MDIstituzioneDAO extends GenericHibernateDAO<MDIstituzione, String>
 			throw new HibernateException(ex.getMessage(), ex);
 		}
 		return result;
+	}
+
+	/**
+	 * @see mx.randalf.hibernate.GenericHibernateDAO#initTableJoin(org.hibernate.Criteria)
+	 */
+	@Override
+	protected void initTableJoin(Criteria crit) {
+		crit.createAlias("idRegione", "idRegione", JoinType.LEFT_OUTER_JOIN);
+		super.initTableJoin(crit);
 	}
 
 }

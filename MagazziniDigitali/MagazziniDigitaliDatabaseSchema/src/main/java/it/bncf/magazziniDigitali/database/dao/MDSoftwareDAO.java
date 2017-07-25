@@ -10,6 +10,7 @@ import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.sql.JoinType;
 
 import it.bncf.magazziniDigitali.database.entity.MDSoftware;
 import mx.randalf.hibernate.GenericHibernateDAO;
@@ -39,6 +40,7 @@ public class MDSoftwareDAO extends GenericHibernateDAO<MDSoftware, String> {
 		try {
 			beginTransaction();
 			criteria = this.createCriteria();
+			initTableJoin(criteria);
 			if (nome != null) {
 				criteria.add(Restrictions.ilike("nome", "%"+nome+"%"));
 			}
@@ -65,5 +67,15 @@ public class MDSoftwareDAO extends GenericHibernateDAO<MDSoftware, String> {
 			throw new HibernateUtilException(e.getMessage(), e);
 		}
 		return result;
+	}
+
+	/**
+	 * @see mx.randalf.hibernate.GenericHibernateDAO#initTableJoin(org.hibernate.Criteria)
+	 */
+	@Override
+	protected void initTableJoin(Criteria crit) {
+		crit.createAlias("idIstituzione", "idIstituzione", JoinType.LEFT_OUTER_JOIN);
+		crit.createAlias("idRigths", "idRigths", JoinType.LEFT_OUTER_JOIN);
+		super.initTableJoin(crit);
 	}
 }

@@ -42,6 +42,7 @@ public class MDTicketDAO extends GenericHibernateDAO<MDTicket, String> {
 		try {
 			beginTransaction();
 			criteria = this.createCriteria();
+			initTableJoin(criteria);
 
 			criteria.add(Restrictions.isNull("dataExport"));
 			

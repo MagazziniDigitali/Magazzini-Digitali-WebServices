@@ -12,6 +12,7 @@ import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.sql.JoinType;
 
 import it.bncf.magazziniDigitali.database.entity.MDUtenti;
 import mx.randalf.hibernate.GenericHibernateDAO;
@@ -52,6 +53,7 @@ public class MDUtentiDAO extends GenericHibernateDAO<MDUtenti, String> {
 		try {
 			beginTransaction();
 			criteria = this.createCriteria();
+			initTableJoin(criteria);
 			if (login != null){
 				criteria.add(Restrictions.eq("login", login));
 			}
@@ -92,6 +94,7 @@ public class MDUtentiDAO extends GenericHibernateDAO<MDUtenti, String> {
 		try {
 			beginTransaction();
 			Criteria crit = createCriteria();
+			initTableJoin(crit);
 			crit.add(Restrictions.eq("codiceFiscale", codiceFiscale.toUpperCase()));
 			paging(crit);
 			result = (MDUtenti) crit.uniqueResult();
@@ -110,6 +113,15 @@ public class MDUtentiDAO extends GenericHibernateDAO<MDUtenti, String> {
 			throw new HibernateException(ex.getMessage(), ex);
 		}
 		return result;
+	}
+
+	/**
+	 * @see mx.randalf.hibernate.GenericHibernateDAO#initTableJoin(org.hibernate.Criteria)
+	 */
+	@Override
+	protected void initTableJoin(Criteria crit) {
+		crit.createAlias("idIstituzione", "idIstituzione", JoinType.LEFT_OUTER_JOIN);
+		super.initTableJoin(crit);
 	}
 
 }

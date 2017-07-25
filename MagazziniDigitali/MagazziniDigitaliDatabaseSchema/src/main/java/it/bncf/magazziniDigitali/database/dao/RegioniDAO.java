@@ -34,6 +34,7 @@ public class RegioniDAO extends GenericHibernateDAO<Regioni, Integer> {
 		try {
 			beginTransaction();
 			Criteria crit = createCriteria();
+			initTableJoin(crit);
 			crit.add(Restrictions.eq("nomeRegione", nomeRegione.toUpperCase()));
 			paging(crit);
 			result = (Regioni) crit.uniqueResult();

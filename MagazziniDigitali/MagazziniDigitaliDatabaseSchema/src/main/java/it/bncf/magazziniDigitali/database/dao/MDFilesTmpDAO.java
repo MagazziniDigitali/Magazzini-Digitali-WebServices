@@ -14,6 +14,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.sql.JoinType;
 
 import it.bncf.magazziniDigitali.database.entity.MDFilesTmp;
 import it.bncf.magazziniDigitali.database.entity.MDIstituzione;
@@ -47,6 +48,7 @@ public class MDFilesTmpDAO extends GenericHibernateDAO<MDFilesTmp, String> {
 		try {
 			beginTransaction();
 			criteria = this.createCriteria();
+			initTableJoin(criteria);
 			if (idIstituto != null) {
 				criteria.add(Restrictions.eq("idIstituto", idIstituto));
 			}
@@ -94,6 +96,7 @@ public class MDFilesTmpDAO extends GenericHibernateDAO<MDFilesTmp, String> {
 			ris = new Hashtable<String, Long>();
 			beginTransaction();
 			criteria = this.createCriteria();
+			initTableJoin(criteria);
 			
 			if (idIstituto != null){
 				criteria.add(Restrictions.eq("idIstituto", idIstituto));
@@ -141,6 +144,7 @@ public class MDFilesTmpDAO extends GenericHibernateDAO<MDFilesTmp, String> {
 		try {
 			beginTransaction();
 			criteria = this.createCriteria();
+			initTableJoin(criteria);
 			
 			criteria.add(Restrictions.like("premisFile", premisFile+".", MatchMode.START));
 			
@@ -160,5 +164,15 @@ public class MDFilesTmpDAO extends GenericHibernateDAO<MDFilesTmp, String> {
 			throw new HibernateUtilException(e.getMessage(), e);
 		}
 		return (ris==null?null:(MDFilesTmp)ris);
+	}
+
+	/**
+	 * @see mx.randalf.hibernate.GenericHibernateDAO#initTableJoin(org.hibernate.Criteria)
+	 */
+	@Override
+	protected void initTableJoin(Criteria crit) {
+		crit.createAlias("idIstituto", "idIstituto", JoinType.LEFT_OUTER_JOIN);
+		crit.createAlias("stato", "stato", JoinType.LEFT_OUTER_JOIN);
+		super.initTableJoin(crit);
 	}
 }

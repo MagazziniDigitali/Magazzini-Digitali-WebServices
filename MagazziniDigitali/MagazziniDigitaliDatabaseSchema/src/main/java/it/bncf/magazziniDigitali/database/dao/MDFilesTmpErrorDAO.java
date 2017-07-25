@@ -43,6 +43,7 @@ public class MDFilesTmpErrorDAO extends
 		try {
 			beginTransaction();
 			criteria = this.createCriteria();
+			initTableJoin(criteria);
 			if (idMdFilesTmp != null) {
 				criteria.add(Restrictions.eq("idMdFilesTmp", idMdFilesTmp));
 			}

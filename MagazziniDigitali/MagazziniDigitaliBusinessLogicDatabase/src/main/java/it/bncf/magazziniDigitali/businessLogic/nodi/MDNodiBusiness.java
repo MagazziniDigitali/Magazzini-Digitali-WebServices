@@ -95,14 +95,6 @@ public class MDNodiBusiness extends BusinessLogic<MDNodi, MDNodiDAO, String> {
 	}
 
 	/**
-	 * @see it.bncf.magazziniDigitali.businessLogic.BusinessLogic#setOrder()
-	 */
-	@Override
-	protected List<Order> setOrder() {
-		return null;
-	}
-
-	/**
 	 * @see it.bncf.magazziniDigitali.businessLogic.BusinessLogic#postSave(it.bncf.magazziniDigitali.businessLogic.HashTable,
 	 *      java.io.Serializable)
 	 */

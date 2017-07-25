@@ -263,9 +263,12 @@ public class MDFilesTmpBusiness extends
 	 */
 	@Override
 	protected List<Order> setOrder() {
-		Vector<Order> orders;
-		orders = new Vector<Order>();
-		orders.add(Order.asc("nomeFile"));
+		List<Order> orders;
+		orders = super.setOrder();
+		if (orders == null){
+			orders = new Vector<Order>();
+			orders.add(Order.asc("nomeFile"));
+		}
 		return orders;
 	}
 

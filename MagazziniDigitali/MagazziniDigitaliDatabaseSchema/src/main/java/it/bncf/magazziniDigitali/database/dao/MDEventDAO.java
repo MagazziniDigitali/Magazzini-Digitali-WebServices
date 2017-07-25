@@ -39,6 +39,7 @@ public class MDEventDAO extends GenericHibernateDAO<MDEvent, String> {
 		try {
 			beginTransaction();
 			criteria = this.createCriteria();
+			initTableJoin(criteria);
 			if (nome != null) {
 				criteria.add(Restrictions.ilike("nome", "%"+nome+"%"));
 			}

@@ -45,6 +45,7 @@ public class MDCompositionLevelDAO extends GenericHibernateDAO<MDCompositionLeve
 		try {
 			beginTransaction();
 			criteria = this.createCriteria();
+			initTableJoin(criteria);
 			if (key != null) {
 				criteria.add(Restrictions.ilike("key", "%"+key+"%"));
 			}

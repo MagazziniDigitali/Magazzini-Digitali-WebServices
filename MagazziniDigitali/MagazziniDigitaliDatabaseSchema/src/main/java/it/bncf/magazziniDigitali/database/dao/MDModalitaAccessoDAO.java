@@ -39,6 +39,7 @@ public class MDModalitaAccessoDAO extends GenericHibernateDAO<MDModalitaAccesso,
 		try {
 			beginTransaction();
 			criteria = this.createCriteria();
+			initTableJoin(criteria);
 			if (descrizione != null) {
 				criteria.add(Restrictions.ilike("descrizione", "%"+descrizione+"%"));
 			}

@@ -51,6 +51,7 @@ public class MDRegistroIngressoDAO extends GenericHibernateDAO<MDRegistroIngress
 	    try {
 			beginTransaction();
 			criteria = this.createCriteria();
+			initTableJoin(criteria);
 
 			criteria.addOrder(Order.desc("timestampIngest"));
 			paging(criteria);
@@ -84,6 +85,7 @@ public class MDRegistroIngressoDAO extends GenericHibernateDAO<MDRegistroIngress
 		try {
 			beginTransaction();
 			criteria = this.createCriteria();
+			initTableJoin(criteria);
 			if (stato != null) {
 				criteria.add(Restrictions.in("status", stato));
 			}
@@ -124,6 +126,7 @@ public class MDRegistroIngressoDAO extends GenericHibernateDAO<MDRegistroIngress
 		try {
 			beginTransaction();
 			criteria = this.createCriteria();
+			initTableJoin(criteria);
 
 			criteria.add(Restrictions.eq("status", 2));
 			criteria.add(Restrictions.isNull("timestampExport"));

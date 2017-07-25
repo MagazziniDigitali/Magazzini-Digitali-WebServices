@@ -36,6 +36,7 @@ public class MDPreRegistrazioneDAO extends GenericHibernateDAO<MDPreRegistrazion
 		try {
 			beginTransaction();
 			criteria = createCriteria();
+			initTableJoin(criteria);
 			criteria.add(Restrictions.eq("progressivo", progressivo));
 			criteria.add(Restrictions.eq("dataPreIscrizione", dataPreIscrizione));
 			paging(criteria);

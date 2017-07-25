@@ -37,6 +37,7 @@ public class MDNodiDAO extends GenericHibernateDAO<MDNodi, String> {
 		try {
 			beginTransaction();
 			criteria = this.createCriteria();
+			initTableJoin(criteria);
 			criteria.add(Restrictions.eq("active", 1));
 
 			paging(criteria);
@@ -67,6 +68,7 @@ public class MDNodiDAO extends GenericHibernateDAO<MDNodi, String> {
 		try {
 			beginTransaction();
 			criteria = this.createCriteria();
+			initTableJoin(criteria);
 			if (nome != null) {
 				criteria.add(Restrictions.ilike("nome", "%"+nome+"%"));
 			}

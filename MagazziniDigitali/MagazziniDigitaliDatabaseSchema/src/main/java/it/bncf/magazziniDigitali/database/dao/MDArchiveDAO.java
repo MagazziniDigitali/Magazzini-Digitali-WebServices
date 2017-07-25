@@ -38,6 +38,7 @@ public class MDArchiveDAO extends GenericHibernateDAO<MDArchive, String> {
 		try {
 			beginTransaction();
 			criteria = this.createCriteria();
+			initTableJoin(criteria);
 			if (mdFilesTmp != null) {
 				criteria.add(Restrictions.eq("idMdFilesTmp", mdFilesTmp));
 			}

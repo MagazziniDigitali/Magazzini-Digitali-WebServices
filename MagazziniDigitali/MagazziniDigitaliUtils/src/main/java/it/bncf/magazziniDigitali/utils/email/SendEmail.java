@@ -65,6 +65,14 @@ public class SendEmail {
 		}
 	}
 
+	public String corpoMsg(String msg){
+		return "<p align=\"right\">"
+				+ "<img src=\"http://www.depositolegale.it/wp-content/uploads/2010/10/logo.png\" height=\"30px\"/>"
+				+ "</p>"
+				+ "<br/>"+
+				msg+
+				"Lo staff di Magazzini Digitali<br/>";
+	}
 }
 
 class ElabGoogleAuthenticator extends Authenticator {
