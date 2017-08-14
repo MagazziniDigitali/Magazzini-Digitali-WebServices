@@ -169,6 +169,18 @@ public class MDPreRegistrazioneBusiness extends BusinessLogic<MDPreRegistrazione
 		if (dati.get("idUtente") != null) {
 			table.setIdUtente((MDUtenti) dati.get("idUtente"));
 		}
+
+		if (dati.get("dataEmailValidata1") != null) {
+			table.setDataEmailValidata1((Timestamp) dati.get("dataEmailValidata1"));
+		}
+
+		if (dati.get("checkIdFase") != null) {
+			table.setCheckIdFase((String) dati.get("checkIdFase"));
+		}
+
+		if (dati.get("dataEmailValidata2") != null) {
+			table.setDataEmailValidata2((Timestamp) dati.get("dataEmailValidata2"));
+		}
 	}
 
 	/**

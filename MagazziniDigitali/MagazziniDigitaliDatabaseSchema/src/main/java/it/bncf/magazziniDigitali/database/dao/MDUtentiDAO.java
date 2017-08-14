@@ -73,10 +73,10 @@ public class MDUtentiDAO extends GenericHibernateDAO<MDUtenti, String> {
 			if (email != null) {
 				criteria.add(Restrictions.eq("email", email.toLowerCase()));
 			}
-			if (email != null) {
+			if (idIstituzione != null) {
 				criteria.add(Restrictions.eq("idIstituzione", idIstituzione));
 			}
-			if (email != null) {
+			if (amministratore != null) {
 				criteria.add(Restrictions.eq("amministratore", amministratore));
 			}
 			if (orders != null) {
