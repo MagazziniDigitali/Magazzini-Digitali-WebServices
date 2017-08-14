@@ -14,6 +14,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
 
+import it.bncf.magazziniDigitali.database.entity.MDIstituzione;
 import it.bncf.magazziniDigitali.database.entity.MDUtenti;
 import mx.randalf.hibernate.GenericHibernateDAO;
 import mx.randalf.hibernate.exception.HibernateUtilException;
@@ -41,10 +42,16 @@ public class MDUtentiDAO extends GenericHibernateDAO<MDUtenti, String> {
 			HibernateUtilException {
 		return find(login, nome, cognome, null, orders);
 	}
+	public List<MDUtenti> find(String login, String nome, String cognome,
+			String email, 
+			List<Order> orders) throws HibernateException,
+			HibernateUtilException {
+		return find(login, nome, cognome, email, null, null, orders);
+	}
 
 	@SuppressWarnings("unchecked")
 	public List<MDUtenti> find(String login, String nome, String cognome,
-			String email,
+			String email, MDIstituzione idIstituzione, Integer amministratore,
 			List<Order> orders) throws HibernateException,
 			HibernateUtilException {
 		Criteria criteria = null;
@@ -65,6 +72,12 @@ public class MDUtentiDAO extends GenericHibernateDAO<MDUtenti, String> {
 			}
 			if (email != null) {
 				criteria.add(Restrictions.eq("email", email.toLowerCase()));
+			}
+			if (email != null) {
+				criteria.add(Restrictions.eq("idIstituzione", idIstituzione));
+			}
+			if (email != null) {
+				criteria.add(Restrictions.eq("amministratore", amministratore));
 			}
 			if (orders != null) {
 				for (Order order : orders) {

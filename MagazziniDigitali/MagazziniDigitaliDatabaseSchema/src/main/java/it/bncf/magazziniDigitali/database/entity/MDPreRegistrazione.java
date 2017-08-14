@@ -72,6 +72,12 @@ public class MDPreRegistrazione implements Serializable {
 
 	private MDUtenti idUtente;
 
+	private Timestamp dataEmailValidata1;
+
+	private String checkIdFase;
+
+	private Timestamp dataEmailValidata2;
+
 	public MDPreRegistrazione() {
 	}
 
@@ -438,6 +444,48 @@ public class MDPreRegistrazione implements Serializable {
 	 */
 	public void setUtenteEmail(String utenteEmail) {
 		this.utenteEmail = utenteEmail;
+	}
+
+	/**
+	 * @return the dataEmailValidata1
+	 */
+	public Timestamp getDataEmailValidata1() {
+		return dataEmailValidata1;
+	}
+
+	/**
+	 * @param dataEmailValidata1 the dataEmailValidata1 to set
+	 */
+	public void setDataEmailValidata1(Timestamp dataEmailValidata1) {
+		this.dataEmailValidata1 = dataEmailValidata1;
+	}
+
+	/**
+	 * @return the checkIdFase
+	 */
+	public String getCheckIdFase() {
+		return checkIdFase;
+	}
+
+	/**
+	 * @param checkIdFase the checkIdFase to set
+	 */
+	public void setCheckIdFase(String checkIdFase) {
+		this.checkIdFase = checkIdFase;
+	}
+
+	/**
+	 * @return the dataEmailValidata2
+	 */
+	public Timestamp getDataEmailValidata2() {
+		return dataEmailValidata2;
+	}
+
+	/**
+	 * @param dataEmailValidata2 the dataEmailValidata2 to set
+	 */
+	public void setDataEmailValidata2(Timestamp dataEmailValidata2) {
+		this.dataEmailValidata2 = dataEmailValidata2;
 	}
 
 }

@@ -80,12 +80,22 @@
 			<column name="EMAIL_VALIDATA" />
 		</property>
 		<many-to-one name="idIstituzione"
-			class="it.bncf.magazziniDigitali.database.entity.MDIstituzione" fetch="join">
+			class="it.bncf.magazziniDigitali.database.entity.MDIstituzione"
+			fetch="join">
 			<column name="ID_ISTITUZIONE" />
 		</many-to-one>
 		<many-to-one name="idUtente"
 			class="it.bncf.magazziniDigitali.database.entity.MDUtenti" fetch="join">
 			<column name="ID_UTENTE" />
 		</many-to-one>
+		<property name="dataEmailValidata1" type="java.sql.Timestamp">
+			<column name="DATA_EMAILVALIDATA1" />
+		</property>
+		<property name="checkIdFase" type="java.lang.String">
+			<column name="CHECKIDFASE" />
+		</property>
+		<property name="dataEmailValidata2" type="java.sql.Timestamp">
+			<column name="DATA_EMAILVALIDATA2" />
+		</property>
 	</class>
 </hibernate-mapping>
