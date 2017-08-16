@@ -7,7 +7,7 @@
   </parent>
   <groupId>it.bncf.magazziniDigitali.businessLogic.utils</groupId>
   <artifactId>MagazziniDigitaliBusinessLogicUtils</artifactId>
-  <version>2.0.18</version>
+  <version>2.0.19</version>
   <dependencies>
   	<dependency>
   		<groupId>
@@ -36,7 +36,7 @@
   			it.bncf.magazziniDigitali.demoni.clientServices
   		</groupId>
   		<artifactId>MagazziniDigitaliDemoniClientServices</artifactId>
-  		<version>1.0.1</version>
+  		<version>1.0.2</version>
   	</dependency>
   </dependencies>
 </project>

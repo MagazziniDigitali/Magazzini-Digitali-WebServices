@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.Vector;
 
+import org.apache.commons.httpclient.protocol.DefaultProtocolSocketFactory;
+import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 
@@ -801,10 +803,16 @@ public class OggettoDigitaleGeoReplica extends OggettoDigitale {
 	private Storage checkStorage(MDNodi mdNodi, Documenti documenti, String objectIdentifierPremis){
 		CheckStorageMDPortTypeProxy proxy = null;
 		Storage storage = null;
+		String wsdlCheckMD = null;
 		
 		try {
 
-			proxy = new CheckStorageMDPortTypeProxy(mdNodi.getUrlCheckStorage());
+			wsdlCheckMD = mdNodi.getUrlCheckStorage();
+			if (wsdlCheckMD.toLowerCase().trim().startsWith("https")){
+				Protocol.registerProtocol("https", 
+						new Protocol("https", new DefaultProtocolSocketFactory(), 443));
+			}
+			proxy = new CheckStorageMDPortTypeProxy(wsdlCheckMD);
 			storage = proxy.checkStorageMDOperation(documenti);
 		} catch (RemoteException e) {
 			log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(),e);
