@@ -12,6 +12,7 @@ import javax.naming.NamingException;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 
 import it.bncf.magazziniDigitali.businessLogic.BusinessLogic;
 import it.bncf.magazziniDigitali.businessLogic.HashTable;
@@ -191,7 +192,15 @@ public class MDPreRegistrazioneBusiness extends BusinessLogic<MDPreRegistrazione
 	@Override
 	protected List<MDPreRegistrazione> find(MDPreRegistrazioneDAO tableDao, HashTable<String, Object> dati,
 			List<Order> orders, int page, int pageSize) throws HibernateException, HibernateUtilException {
-		return null;
+		List<MDPreRegistrazione> tables;
+
+		tableDao.setPage(page);
+		tableDao.setPageSize(pageSize);
+		tables = tableDao.find((String)dati.get("utenteNome"),
+				(String)dati.get("utenteCognome"), 
+				(String)dati.get("emailValidata"),
+				orders);
+		return tables;
 	}
 
 	/**
@@ -200,7 +209,28 @@ public class MDPreRegistrazioneBusiness extends BusinessLogic<MDPreRegistrazione
 	 */
 	@Override
 	protected Criteria rowsCount(MDPreRegistrazioneDAO tableDao, HashTable<String, Object> dati) {
-		return null;
+		Criteria criteria = null;
+		String[] st = null;
+		Integer[] emailValid = null;
+		
+		criteria = tableDao.createCriteria();
+		if (dati != null){
+			if (dati.get("utenteNome") != null) {
+				criteria.add(Restrictions.ilike("utenteNome", "%"+dati.get("utenteNome")+"%"));
+			}
+			if (dati.get("utenteCognome") != null) {
+				criteria.add(Restrictions.ilike("utenteCognome", "%"+dati.get("utenteCognome")+"%"));
+			}
+			if (dati.get("emailValidata") != null) {
+				st = ((String)dati.get("emailValidata")).split(",");
+				emailValid = new Integer[st.length];
+				for(int x=0;x<st.length; x++){
+					emailValid[x] = new Integer(st[x]); 
+				}
+				criteria.add(Restrictions.in("emailValidata", emailValid));
+			}
+		}
+		return criteria;
 	}
 
 	/**

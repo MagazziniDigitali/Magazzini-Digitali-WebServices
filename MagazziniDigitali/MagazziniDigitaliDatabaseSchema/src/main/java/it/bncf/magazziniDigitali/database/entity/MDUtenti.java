@@ -43,6 +43,8 @@ public class MDUtenti implements Serializable {
 	
 	private String email;
 
+	private Integer superAdmin;
+	
 	public MDUtenti() {
 	}
 
@@ -208,5 +210,19 @@ public class MDUtenti implements Serializable {
 	 */
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	/**
+	 * @return the superAdmin
+	 */
+	public Integer getSuperAdmin() {
+		return superAdmin;
+	}
+
+	/**
+	 * @param superAdmin the superAdmin to set
+	 */
+	public void setSuperAdmin(Integer superAdmin) {
+		this.superAdmin = superAdmin;
 	}
 }

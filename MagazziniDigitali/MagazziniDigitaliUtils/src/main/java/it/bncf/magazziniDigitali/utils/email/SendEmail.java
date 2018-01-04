@@ -13,9 +13,9 @@ import javax.mail.internet.MimeMessage;
 
 public class SendEmail {
 
-	private ElabGoogleAuthenticator authenticator = null;
+	private  ElabGoogleAuthenticator authenticator = null;
 
-	private String from = null;
+	private  String from = null;
 
 	public SendEmail(String login, String password) {
 		this.from = login;
@@ -27,7 +27,8 @@ public class SendEmail {
 		Session session = null;
 		MimeMessage message = null;
 
-
+		System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2");
+		
 		// Get system properties
 		properties = System.getProperties();
 

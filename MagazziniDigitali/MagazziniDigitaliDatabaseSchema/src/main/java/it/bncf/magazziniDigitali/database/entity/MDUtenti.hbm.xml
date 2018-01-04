@@ -39,5 +39,8 @@
 		<property name="email" type="java.lang.String">
 			<column name="EMAIL" />
 		</property>
-					</class>
+		<property name="superAdmin" type="java.lang.Integer">
+			<column name="SUPERADMIN" />
+		</property>
+	</class>
 </hibernate-mapping>
