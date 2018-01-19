@@ -7,19 +7,19 @@
   </parent>
   <groupId>it.bncf.magazziniDigitali.businessLogic.utils</groupId>
   <artifactId>MagazziniDigitaliBusinessLogicUtils</artifactId>
-  <version>2.0.21</version>
+  <version>2.0.22</version>
   <dependencies>
   	<dependency>
   		<groupId>
   			it.bncf.magazziniDigitali.businessLogic.database
   		</groupId>
   		<artifactId>MagazziniDigitaliBusinessLogicDatabase</artifactId>
-  		<version>2.0.18</version>
+  		<version>2.0.19</version>
   	</dependency>
   	<dependency>
   		<groupId>it.bncf.magazziniDigitali.solr</groupId>
   		<artifactId>MagazziniDigitaliSolr</artifactId>
-  		<version>2.0.12</version>
+  		<version>2.0.13</version>
   	</dependency>
   	<dependency>
   		<groupId>it.bncf.magazziniDigitali.xsd</groupId>
