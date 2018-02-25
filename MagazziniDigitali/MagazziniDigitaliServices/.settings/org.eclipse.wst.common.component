@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
   <wb-module deploy-name="MagazziniDigitaliServices##2.0.19">
-        <dependent-module archiveName="MagazziniDigitaliExternalUser-2.0.5.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/MagazziniDigitaliExternalUser/MagazziniDigitaliExternalUser">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
         <dependent-module archiveName="Uol2010ValidazioneUtenti-1.0.4.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Uol2010ValidazioneUtenti/Uol2010ValidazioneUtenti">
             <dependency-type>uses</dependency-type>
         </dependent-module>
@@ -22,15 +19,6 @@
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="RandalfConverterXsl-1.0.2.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/RandalfConverterXsl/RandalfConverterXsl">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="MagazziniDigitaliBusinessLogicUtils-2.0.23.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/MagazziniDigitaliBusinessLogicUtils/MagazziniDigitaliBusinessLogicUtils">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="MagazziniDigitaliBusinessLogicDatabase-2.0.20.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/MagazziniDigitaliBusinessLogicDatabase/MagazziniDigitaliBusinessLogicDatabase">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="MagazziniDigitaliBusinessLogic-2.0.20.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/MagazziniDigitaliBusinessLogic/MagazziniDigitaliBusinessLogic">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="MagazziniDigitaliXsd-2.0.18.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/MagazziniDigitaliXsd/MagazziniDigitaliXsd">
@@ -69,16 +57,7 @@
         <dependent-module archiveName="RandalfDigest-1.0.4.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/RandalfDigest/RandalfDigest">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="MagazziniDigitaliNodi-1.0.1.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/MagazziniDigitaliNodi/MagazziniDigitaliNodi">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="MagazziniDigitaliDatabaseSchema-2.0.17.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/MagazziniDigitaliDatabaseSchema/MagazziniDigitaliDatabaseSchema">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
         <dependent-module archiveName="RandalfHibernate-1.0.14.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/RandalfHibernate/RandalfHibernate">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="MagazziniDigitaliDemoniClientServices-1.0.3.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/MagazziniDigitaliDemoniClientServices/MagazziniDigitaliDemoniClientServices">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="RandalfAmazonS3-1.0.1.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/RandalfAmazonS3/RandalfAmazonS3">
