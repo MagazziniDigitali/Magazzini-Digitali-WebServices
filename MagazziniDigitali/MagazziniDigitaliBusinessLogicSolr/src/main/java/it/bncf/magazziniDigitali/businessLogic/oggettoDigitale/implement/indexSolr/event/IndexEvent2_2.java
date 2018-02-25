@@ -30,10 +30,10 @@ public class IndexEvent2_2 extends IndexEvent<EventV2_2Xsd> {
 		try {
 			if (events != null) {
 				log.debug(
-						name + " [" + events.getEventIdentifier().getEventIdentifierValue() + "]" + " Eventi da preIndicizzare ");
+						"\n"+name + " [" + events.getEventIdentifier().getEventIdentifierValue() + "]" + " Eventi da preIndicizzare ");
 				se = new SolrEvent2_2();
 				se.publishSolr(events.getEvent(), admd);
-				log.debug(name + " [" + events.getEventIdentifier().getEventIdentifierValue() + "]" + " Fine preIndicizzare eventi");
+				log.debug("\n"+name + " [" + events.getEventIdentifier().getEventIdentifierValue() + "]" + " Fine preIndicizzare eventi");
 			}
 		} catch (SolrException e) {
 			throw e;

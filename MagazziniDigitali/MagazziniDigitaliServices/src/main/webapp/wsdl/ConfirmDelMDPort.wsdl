@@ -38,7 +38,7 @@
     
     <wsdl:service name="ConfirmDelMDService">
         <wsdl:port binding="ws:ConfirmDelMDBind" name="ConfirmDelMDPort">
-            <soap:address location="http://localhost:8080/MagazziniDigitaliServices/services/ConfirmDelMDPort"/>
+            <soap:address location="http://localhost:8080/MagazziniDigitaliServices%23%232.0.19/services/ConfirmDelMDPort"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

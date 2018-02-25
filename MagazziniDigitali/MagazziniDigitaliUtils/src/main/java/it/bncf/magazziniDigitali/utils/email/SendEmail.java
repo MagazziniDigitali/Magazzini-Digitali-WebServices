@@ -11,8 +11,11 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.apache.log4j.Logger;
+
 public class SendEmail {
 
+	private Logger log = Logger.getLogger(SendEmail.class);
 	private  ElabGoogleAuthenticator authenticator = null;
 
 	private  String from = null;
@@ -59,7 +62,7 @@ public class SendEmail {
 
 			// Send message
 			Transport.send(message);
-			System.out.println("Sent message successfully....");
+			log.debug("\n"+"Sent message successfully....");
 		} catch (MessagingException mex) {
 			mex.printStackTrace();
 			throw mex;

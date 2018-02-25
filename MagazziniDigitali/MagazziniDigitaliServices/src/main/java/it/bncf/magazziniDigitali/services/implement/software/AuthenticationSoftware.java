@@ -20,12 +20,16 @@ import it.bncf.magazziniDigitali.database.entity.MDRigths;
 import it.bncf.magazziniDigitali.database.entity.MDSoftware;
 import it.bncf.magazziniDigitali.database.entity.MDSoftwareConfig;
 import it.bncf.magazziniDigitali.services.implement.istituzioni.IstituzioniTools;
+import it.bncf.magazziniDigitali.services.implement.software.exception.AuthenticationSoftwareException;
 import it.bncf.magazziniDigitali.services.implement.tools.ToolsServices;
 import it.depositolegale.www.errorMsg.ErrorMsg;
 import it.depositolegale.www.errorMsg.ErrorType_type;
 import it.depositolegale.www.login.Authentication;
 import it.depositolegale.www.nodi.Nodo;
-import it.depositolegale.www.nodi.NodoRsync;
+import it.depositolegale.www.nodi.NodoStorage;
+import it.depositolegale.www.nodi.NodoStorageRsync;
+import it.depositolegale.www.nodi.NodoStorageS3;
+import it.depositolegale.www.nodi.NodoStorageTipo;
 import it.depositolegale.www.rigths.RightType_type;
 import it.depositolegale.www.rigths.Rigth;
 import it.depositolegale.www.software.Software;
@@ -87,12 +91,16 @@ public class AuthenticationSoftware {
 								software.setRigth(genRigth(mdSoftware.getIdRigths()));
 								software.setSoftwareConfig(genSoftwareConfigs(mdSoftware));
 							} else {
-								log.error("Al software ["+
+								log.error("\n"+"Al software ["+
 										authentication.getLogin()+
 										"] è stato negato l'accesso dall'IP ["+
 										ToolsServices.getRemoteIP()+
 										"]");
-								errorMsgs.add(new ErrorMsg(ErrorType_type.IPERROR, "IP Chiamante non Autorizzato"));
+								errorMsgs.add(new ErrorMsg(ErrorType_type.IPERROR, "Al software ["+
+										authentication.getLogin()+
+										"] è stato negato l'accesso dall'IP ["+
+										ToolsServices.getRemoteIP()+
+										"]"));
 							}
 						} else {
 							errorMsgs.add(new ErrorMsg(ErrorType_type.IPERROR, "Non risultano IP Autorizzati per questo Software"));
@@ -115,11 +123,13 @@ public class AuthenticationSoftware {
 			throw new RemoteException(e.getMessage(), e);
 		} catch (HibernateUtilException e) {
 			throw new RemoteException(e.getMessage(), e);
+		} catch (AuthenticationSoftwareException e) {
+			errorMsgs.add(new ErrorMsg(ErrorType_type.ERROR, e.getMessage()));
 		}
 		return software;
 	}
 
-	private static SoftwareConfig[] genSoftwareConfigs(MDSoftware mdSoftware) throws HibernateException, HibernateUtilException{
+	private static SoftwareConfig[] genSoftwareConfigs(MDSoftware mdSoftware) throws HibernateException, HibernateUtilException, AuthenticationSoftwareException{
 		Vector<SoftwareConfig> softwareConfigs = null;
 		MDSoftwareConfigBusiness mdSoftwareConfigBusiness = null;
 		HashTable<String , Object> dati = null;
@@ -153,28 +163,76 @@ public class AuthenticationSoftware {
 			throw e;
 		} catch (HibernateUtilException e) {
 			throw e;
+		} catch (AuthenticationSoftwareException e) {
+			throw e;
 		}
 		return (softwareConfigs!= null?softwareConfigs.toArray(new SoftwareConfig[softwareConfigs.size()]):null);
 	}
 
-	private static Nodo genNodo(MDNodi mdNodi){
+	private static Nodo genNodo(MDNodi mdNodi) throws AuthenticationSoftwareException{
 		Nodo nodo = null;
 		if (mdNodi != null){
 			nodo = new Nodo();
 			nodo.setId(mdNodi.getId());
 			nodo.setNome(mdNodi.getNome());
 			nodo.setDescrizioni(mdNodi.getDescrizione());
-			nodo.setRsync(new NodoRsync(mdNodi.getRsync(), mdNodi.getRsyncPassword()));
-			if (mdNodi.getUrlCheckStorage()!= null){
-				try {
-					nodo.setUrlCheckStorage(new URI(mdNodi.getUrlCheckStorage()));
-				} catch (MalformedURIException e) {
-					e.printStackTrace();
-				}
-			}
+			nodo.setStorage(genNodoStorage(mdNodi));
 		}
 		return nodo;
 	}
+
+	private static NodoStorage genNodoStorage(MDNodi mdNodi) throws AuthenticationSoftwareException {
+		NodoStorage nodoStorage = null;
+		nodoStorage = new NodoStorage();
+
+		switch (mdNodi.getTipo()) {
+			case "F":
+				nodoStorage.setFileSystem(mdNodi.getPathStorage());
+				break;
+
+			case "M":
+				nodoStorage.setRsync(genNodoStorageRsync(mdNodi));
+				break;
+
+			case "S":
+				nodoStorage.setS3(genNodoStorageS3(mdNodi));
+				break;
+	
+			default:
+				throw new AuthenticationSoftwareException("La tipologia di Nodo ["+
+							mdNodi.getTipo()+"] non risulta essere gestita");
+		}
+		nodoStorage.setTipo(NodoStorageTipo.fromValue(mdNodi.getTipo()));
+		return nodoStorage;
+	}
+
+	private static NodoStorageS3 genNodoStorageS3(MDNodi mdNodi) {
+		NodoStorageS3 nodoStorageS3 = null;
+		
+		nodoStorageS3 = new NodoStorageS3();
+		
+		nodoStorageS3.setUrlS3(mdNodi.getS3Url());
+		nodoStorageS3.setRegion(mdNodi.getS3Region());
+		nodoStorageS3.setAccessKey(mdNodi.getS3AccessKey());
+		nodoStorageS3.setSecretKey(mdNodi.getS3SecretKey());
+		nodoStorageS3.setBucketName(mdNodi.getS3BucketName());
+		return nodoStorageS3;
+	}
+
+	private static NodoStorageRsync genNodoStorageRsync(MDNodi mdNodi) throws AuthenticationSoftwareException {
+		NodoStorageRsync nodoStorageRsync = null;
+
+		try {
+			nodoStorageRsync = new NodoStorageRsync();
+			nodoStorageRsync.setUrlRsync(mdNodi.getRsync());
+			nodoStorageRsync.setPassword(mdNodi.getRsyncPassword());
+			nodoStorageRsync.setUrlCheckStorage(new URI(mdNodi.getUrlCheckStorage()));
+		} catch (MalformedURIException e) {
+			throw new AuthenticationSoftwareException(e.getMessage(),e);
+		}
+		return null;
+	}
+
 	private static Rigth genRigth(MDRigths mdRigths){
 		Rigth rigth = null;
 		

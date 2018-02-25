@@ -22,8 +22,9 @@ import it.bncf.magazziniDigitali.configuration.exception.MDConfigurationExceptio
 import it.bncf.magazziniDigitali.database.dao.MDFilesTmpDAO;
 import it.bncf.magazziniDigitali.database.dao.MDStatoDAO;
 import it.bncf.magazziniDigitali.database.entity.MDFilesTmp;
+import it.bncf.magazziniDigitali.nodi.ENodi;
+import it.bncf.magazziniDigitali.nodi.Nodi;
 import it.bncf.magazziniDigitali.solr.exception.SolrWarning;
-import it.bncf.magazziniDigitali.utils.GenFileDest;
 import it.magazziniDigitali.xsd.premis.PremisXsd;
 import it.magazziniDigitali.xsd.premis.exception.PremisXsdException;
 //import mx.randalf.configuration.Configuration;
@@ -59,7 +60,7 @@ public class OggettoDigitaleSolrIndex extends OggettoDigitale {
 		MDFilesTmpDAO mdFileTmpDao = null;
 		MDFilesTmp mdFilesTmp = null;
 
-		logSolr.info(name + " [" + objectIdentifierPremis + "] Inizio l'indicizzazione");
+		logSolr.info("\n"+name + " [" + objectIdentifierPremis + "] Inizio l'indicizzazione");
 
 		try {
 			mdFileTmpBusiness = new MDFilesTmpBusiness();
@@ -88,7 +89,7 @@ public class OggettoDigitaleSolrIndex extends OggettoDigitale {
 			log.error(name + " [" + objectIdentifierPremis + "] " + e.getMessage(), e);
 			esito = false;
 		} finally {
-			logSolr.info(name + " [" + objectIdentifierPremis + "] Fine dell'indicizzazione");
+			logSolr.info("\n"+name + " [" + objectIdentifierPremis + "] Fine dell'indicizzazione");
 		}
 		return esito;
 	}
@@ -130,6 +131,7 @@ public class OggettoDigitaleSolrIndex extends OggettoDigitale {
 		String pFile = null;
 		int pos = 0;
 		boolean esito = false;
+		Nodi nodoInput = null; 
 
 		try {
 			filePremis = new File(genFilePremis(configuration.getSoftwareConfigString("path.premis"), "SolrIndex",
@@ -140,16 +142,19 @@ public class OggettoDigitaleSolrIndex extends OggettoDigitale {
 			if (pos > -1) {
 				pFile = pFile.substring(pos + 1);
 			}
-			fInputPremis = GenFileDest.genFileDest(configuration.getSoftwareConfigMDNodi("nodo"), pFile);
+
+			nodoInput = new Nodi(configuration.getSoftwareConfigMDNodi("nodo"), pFile);
+			fInputPremis = nodoInput.getFile(ENodi.PREMIS);
+//			fInputPremis = GenFileDest.genFileDest(configuration.getSoftwareConfigMDNodi("nodo"), pFile);
 			premisInput = PremisXsd.open(fInputPremis);
 			fInput = new File(fInputPremis.getParentFile().getAbsolutePath() + File.separator
 					+ fInputPremis.getName().replace(".premis", ""));
 			if (mdFilesTmp.getStato().getId().equals(MDStatoDAO.FINEARCHIVE)) {
-				logSolr.info(name + " [" + objectIdentifierPremis + "]" + " Inizio l'indicizzazione del file ["
+				logSolr.info("\n"+name + " [" + objectIdentifierPremis + "]" + " Inizio l'indicizzazione del file ["
 						+ fInput.getAbsolutePath() + "]");
 				start = mdFileTmpBusiness.updateStartIndex(mdFilesTmp.getId());
 			} else {
-				logSolr.info(name + " [" + objectIdentifierPremis + "]" + " Continuo l'indicizzazione del file ["
+				logSolr.info("\n"+name + " [" + objectIdentifierPremis + "]" + " Continuo l'indicizzazione del file ["
 						+ fInput.getAbsolutePath() + "]");
 				start = new GregorianCalendar();
 				start.setTimeInMillis(mdFilesTmp.getIndexDataStart().getTime());
@@ -158,7 +163,7 @@ public class OggettoDigitaleSolrIndex extends OggettoDigitale {
 			premisElab.addObjectFileContainer(objectIdentifierPremis, null, null, new BigInteger("0"), null, null, null,
 					null, null, null, null);
 			logSolr.info(
-					name + " [" + objectIdentifierPremis + "]" + " Preparo l'indicizzazione del materiale in Solr");
+					"\n"+name + " [" + objectIdentifierPremis + "]" + " Preparo l'indicizzazione del materiale in Solr");
 			if (preIndexSolr(premisInput, fInput, logSolr, objectIdentifierPremis, configuration)) {
 				// stop = mdFileTmpBusiness.updateCheckIndex(
 				// mdFilesTmp.getId(),
@@ -168,11 +173,11 @@ public class OggettoDigitaleSolrIndex extends OggettoDigitale {
 						null,null);
 				premisElab.addEvent("index", start, stop, null, "OK", null, null, configuration.getMDSoftware(),
 						findObjectIdentifierContainer(premisInput));
-				logSolr.info(name + " [" + objectIdentifierPremis + "]" + " Materiale pubblicato");
+				logSolr.info("\n"+name + " [" + objectIdentifierPremis + "]" + " Materiale pubblicato");
 				esito = true;
 			} else {
 				logSolr.error(
-						name + " [" + objectIdentifierPremis + "]" + " Riscontrato un problema nella pubblicazione");
+						"\n"+name + " [" + objectIdentifierPremis + "]" + " Riscontrato un problema nella pubblicazione");
 				mdFileTmpBusiness.updateStopIndex(mdFilesTmp.getId(),
 						writeFilePremisDB(filePremis, configuration.getSoftwareConfigString("path.premis")), false,
 						null, new String[] { "Riscontrato un problema nella preIndicizazione" });

@@ -34,7 +34,32 @@ public class ItemObject extends Item {
 	/**
 	 * Campo relativo al documento dell'opera che verrà utilizzato per le ricerche
 	 */
+	public static String MD5="md5";
+
+	/**
+	 * Campo relativo al documento dell'opera che verrà utilizzato per le ricerche
+	public static String MD5_64BASE="md5_64base";
+	 */
+
+	/**
+	 * Campo relativo al documento dell'opera che verrà utilizzato per le ricerche
+	 */
 	public static String SHA1="sha1";
+
+	/**
+	 * Campo relativo al documento dell'opera che verrà utilizzato per le ricerche
+	public static String SHA1_64BASE="sha1_64base";
+	 */
+
+	/**
+	 * Campo relativo al documento dell'opera che verrà utilizzato per le ricerche
+	 */
+	public static String SHA256="sha256";
+
+	/**
+	 * Campo relativo al documento dell'opera che verrà utilizzato per le ricerche
+	public static String SHA256_64BASE="sha256_64base";
+	 */
 
 	/**
 	 * Campo relativo al documento dell'opera che verrà utilizzato per le ricerche
@@ -80,7 +105,12 @@ public class ItemObject extends Item {
 		addColumn(FILETYPE, false, true, true, true, true);
 		addColumn(ACTUALFILENAME, false, true, true, true, true);
 		addColumn(COMPOSITIONLEVEL, false, true, true, true, true);
+		addColumn(MD5, false, true, true, true, true);
+//		addColumn(MD5_64BASE, false, true, true, true, true);
 		addColumn(SHA1, false, true, true, true, true);
+//		addColumn(SHA1_64BASE, false, true, true, true, true);
+		addColumn(SHA256, false, true, true, true, true);
+//		addColumn(SHA256_64BASE, false, true, true, true, true);
 		addColumn(SIZE, false, true, true, true, true);
 		addColumn(MIMETYPE, true, true, true, true, true);
 		addColumn(PROMON, true, true, true, true, true);

@@ -38,6 +38,7 @@ import info.lc.xmlns.premis_v2.SignificantPropertiesComplexType;
 import info.lc.xmlns.premis_v2.StorageComplexType;
 import it.bncf.magazziniDigitali.database.entity.MDRigths;
 import it.bncf.magazziniDigitali.database.entity.MDSoftware;
+import it.magazziniDigitali.xsd.premis.PremisDigest;
 import it.magazziniDigitali.xsd.premis.PremisXsd;
 import it.magazziniDigitali.xsd.premis.v3_0.PremisNPM;
 import mx.randalf.xsd.exception.XsdException;
@@ -167,7 +168,7 @@ public class PremisV2_2Xsd extends PremisXsd<PremisComplexType, ObjectFactory,
 	@Override
 	public void addObjectFileContainer(String objectIdentifierValue,
 			String fType, String ext, BigInteger compositionLevel,
-			String digest, Long size, String formatDesignationValue,
+			List<PremisDigest> digests, Long size, String formatDesignationValue,
 			String originalName, MDRigths right, String formatVersion, String puid) {
 		File file = null;
 		SignificantPropertiesComplexType fileType = null;
@@ -203,7 +204,7 @@ public class PremisV2_2Xsd extends PremisXsd<PremisComplexType, ObjectFactory,
 		}
 
 		file.getObjectCharacteristics().add(
-				addObjectCharacteristics(compositionLevel, digest, size,
+				addObjectCharacteristics(compositionLevel, digests, size,
 						formatDesignationValue, formatVersion, puid));
 
 		if (originalName != null){
@@ -244,7 +245,7 @@ public class PremisV2_2Xsd extends PremisXsd<PremisComplexType, ObjectFactory,
 	 */
 	@Override
 	public void addObjectFile(String objectIdentifierValue,
-			BigInteger compositionLevel, String digest, Long size,
+			BigInteger compositionLevel, List<PremisDigest> digests, Long size,
 			String formatDesignationValue, String originalName,
 			String contentLocationValue, String formatVersion, String puid,
 			String relationshipSubType, String objectIdentifierMaster
@@ -259,7 +260,7 @@ public class PremisV2_2Xsd extends PremisXsd<PremisComplexType, ObjectFactory,
 				addObjectIdentifier(objectIdentifierValue));
 
 		file.getObjectCharacteristics().add(
-				addObjectCharacteristics(compositionLevel, digest, size,
+				addObjectCharacteristics(compositionLevel, digests, size,
 						formatDesignationValue, formatVersion, puid));
 
 		file.setOriginalName(addOriginalName(originalName));
@@ -315,7 +316,7 @@ public class PremisV2_2Xsd extends PremisXsd<PremisComplexType, ObjectFactory,
 
 	@Override
 	protected ObjectCharacteristicsComplexType addObjectCharacteristics(
-			BigInteger compositionLevel, String digest, Long size,
+			BigInteger compositionLevel, List<PremisDigest> digests, Long size,
 			String formatDesignationValue, String formatVersion, String puid) {
 		ObjectCharacteristicsComplexType objectCharacterstics = null;
 		FixityComplexType fixity = null;
@@ -327,11 +328,14 @@ public class PremisV2_2Xsd extends PremisXsd<PremisComplexType, ObjectFactory,
 		objectCharacterstics = new ObjectCharacteristicsComplexType();
 		objectCharacterstics.setCompositionLevel(compositionLevel);
 
-		if (digest != null){
-			fixity = new FixityComplexType();
-			fixity.setMessageDigestAlgorithm("SHA-1");
-			fixity.setMessageDigest(digest);
-			objectCharacterstics.getFixity().add(fixity);
+		if (digests != null){
+			for (PremisDigest digest : digests) {
+				fixity = new FixityComplexType();
+	//			fixity.setMessageDigestAlgorithm("SHA-1");
+				fixity.setMessageDigestAlgorithm(digest.getAlgorithm().value());
+				fixity.setMessageDigest(digest.getValue());
+				objectCharacterstics.getFixity().add(fixity);
+			}
 		}
 
 		objectCharacterstics.setSize(size);

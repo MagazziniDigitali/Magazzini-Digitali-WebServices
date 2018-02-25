@@ -10,15 +10,15 @@
     xmlns="http://xml.apache.org/axis/wsdd/"
     xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
 
-  <!-- Services from AuthenticationUserLibraryService WSDL service -->
+  <!-- Services from AuthenticationUtentiService WSDL service -->
 
-  <service name="AuthenticationUserLibraryPort" provider="java:RPC" style="document" use="literal">
+  <service name="AuthenticationUtentiPort" provider="java:RPC" style="document" use="literal">
       <parameter name="wsdlTargetNamespace" value="http://www.depositolegale.it/webservice.authenticationUtenti"/>
-      <parameter name="wsdlServiceElement" value="AuthenticationUserLibraryService"/>
-      <parameter name="schemaQualified" value="http://www.depositolegale.it/rigths,http://www.depositolegale.it/nodi,http://www.depositolegale.it/errorMsg,http://www.depositolegale.it/authenticationUserOutput,http://www.depositolegale.it/istituzione,http://www.depositolegale.it/login,http://www.depositolegale.it/authenticationUserInput,http://www.depositolegale.it/software,http://www.loc.gov/premis/v3,http://www.depositolegale.it/loginUtenti"/>
-      <parameter name="wsdlServicePort" value="AuthenticationUserLibraryPort"/>
-      <parameter name="className" value="it.depositolegale.www.webservice_authenticationUtenti.AuthenticationUserLibraryBindSkeleton"/>
-      <parameter name="wsdlPortType" value="AuthenticationUserLibraryPortType"/>
+      <parameter name="wsdlServiceElement" value="AuthenticationUtentiService"/>
+      <parameter name="schemaQualified" value="http://www.depositolegale.it/rigths,http://www.depositolegale.it/nodi,http://www.depositolegale.it/errorMsg,http://www.depositolegale.it/istituzione,http://www.depositolegale.it/login,http://www.depositolegale.it/utenti,http://www.depositolegale.it/software,http://www.depositolegale.it/loginUtenti"/>
+      <parameter name="wsdlServicePort" value="AuthenticationUtentiPort"/>
+      <parameter name="className" value="it.depositolegale.www.webservice_authenticationUtenti.AuthenticationUtentiBindSkeleton"/>
+      <parameter name="wsdlPortType" value="AuthenticationUtentiPortType"/>
       <parameter name="typeMappingVersion" value="1.2"/>
       <parameter name="allowedMethods" value="*"/>
 
@@ -31,17 +31,17 @@
         encodingStyle=""
       />
       <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:linkingEventIdentifierComplexType"
-        type="java:gov.loc.www.premis.v3.LinkingEventIdentifierComplexType"
+        xmlns:ns="http://www.depositolegale.it/utenti"
+        qname="ns:>datiUtente"
+        type="java:it.depositolegale.www.utenti.DatiUtente"
         serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
         deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
         encodingStyle=""
       />
       <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:statuteDocumentationIdentifierComplexType"
-        type="java:gov.loc.www.premis.v3.StatuteDocumentationIdentifierComplexType"
+        xmlns:ns="http://www.depositolegale.it/software"
+        qname="ns:>softwareConfig"
+        type="java:it.depositolegale.www.software.SoftwareConfig"
         serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
         deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
         encodingStyle=""
@@ -55,129 +55,33 @@
         encodingStyle=""
       />
       <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:rightsStatementIdentifierComplexType"
-        type="java:gov.loc.www.premis.v3.RightsStatementIdentifierComplexType"
+        xmlns:ns="http://www.depositolegale.it/nodi"
+        qname="ns:>>>nodo>storage>s3"
+        type="java:it.depositolegale.www.nodi.NodoStorageS3"
         serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
         deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
         encodingStyle=""
       />
       <typeMapping
-        xmlns:ns="http://www.depositolegale.it/authenticationUserInput"
-        qname="ns:>authenticationUserInput"
-        type="java:it.depositolegale.www.authenticationUserInput.AuthenticationUserInput"
+        xmlns:ns="http://www.depositolegale.it/loginUtenti"
+        qname="ns:>authenticationUtenti"
+        type="java:it.depositolegale.www.loginUtenti.AuthenticationUtenti"
         serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
         deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
         encodingStyle=""
       />
       <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:contentLocationComplexType"
-        type="java:gov.loc.www.premis.v3.ContentLocationComplexType"
+        xmlns:ns="http://www.depositolegale.it/errorMsg"
+        qname="ns:>errorMsg"
+        type="java:it.depositolegale.www.errorMsg.ErrorMsg"
         serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
         deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
         encodingStyle=""
       />
       <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:eventComplexType"
-        type="java:gov.loc.www.premis.v3.EventComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:agentIdentifierComplexType"
-        type="java:gov.loc.www.premis.v3.AgentIdentifierComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:extensionComplexType"
-        type="java:gov.loc.www.premis.v3.ExtensionComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:linkingEnvironmentIdentifierComplexType"
-        type="java:gov.loc.www.premis.v3.LinkingEnvironmentIdentifierComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:objectCharacteristicsComplexType"
-        type="java:gov.loc.www.premis.v3.ObjectCharacteristicsComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:formatRegistryComplexType"
-        type="java:gov.loc.www.premis.v3.FormatRegistryComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:>compositionLevelComplexType>unknown"
-        type="java:gov.loc.www.premis.v3.CompositionLevelComplexTypeUnknown"
-        serializer="org.apache.axis.encoding.ser.EnumSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.EnumDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:fixityComplexType"
-        type="java:gov.loc.www.premis.v3.FixityComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:rightsComplexType"
-        type="java:gov.loc.www.premis.v3.RightsComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:objectIdentifierComplexType"
-        type="java:gov.loc.www.premis.v3.ObjectIdentifierComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:licenseInformationComplexType"
-        type="java:gov.loc.www.premis.v3.LicenseInformationComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:rightsGrantedComplexType"
-        type="java:gov.loc.www.premis.v3.RightsGrantedComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:inhibitorsComplexType"
-        type="java:gov.loc.www.premis.v3.InhibitorsComplexType"
+        xmlns:ns="http://www.depositolegale.it/nodi"
+        qname="ns:>>>nodo>storage>rsync"
+        type="java:it.depositolegale.www.nodi.NodoStorageRsync"
         serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
         deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
         encodingStyle=""
@@ -199,195 +103,11 @@
         encodingStyle=""
       />
       <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:intellectualEntity"
-        type="java:gov.loc.www.premis.v3.IntellectualEntity"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:statuteInformationComplexType"
-        type="java:gov.loc.www.premis.v3.StatuteInformationComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:copyrightInformationComplexType"
-        type="java:gov.loc.www.premis.v3.CopyrightInformationComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:licenseDocumentationIdentifierComplexType"
-        type="java:gov.loc.www.premis.v3.LicenseDocumentationIdentifierComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:agentComplexType"
-        type="java:gov.loc.www.premis.v3.AgentComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:formatDesignationComplexType"
-        type="java:gov.loc.www.premis.v3.FormatDesignationComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:significantPropertiesComplexType"
-        type="java:gov.loc.www.premis.v3.SignificantPropertiesComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
         xmlns:ns="http://www.depositolegale.it/nodi"
-        qname="ns:>>nodo>rsync"
-        type="java:it.depositolegale.www.nodi.NodoRsync"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:otherRightsDocumentationIdentifierComplexType"
-        type="java:gov.loc.www.premis.v3.OtherRightsDocumentationIdentifierComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:eventOutcomeDetailComplexType"
-        type="java:gov.loc.www.premis.v3.EventOutcomeDetailComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:linkingAgentIdentifierComplexType"
-        type="java:gov.loc.www.premis.v3.LinkingAgentIdentifierComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.depositolegale.it/authenticationUserInput"
-        qname="ns:userInput"
-        type="java:it.depositolegale.www.authenticationUserInput.UserInput"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:representation"
-        type="java:gov.loc.www.premis.v3.Representation"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:linkingObjectIdentifierComplexType"
-        type="java:gov.loc.www.premis.v3.LinkingObjectIdentifierComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.depositolegale.it/software"
-        qname="ns:>softwareConfig"
-        type="java:it.depositolegale.www.software.SoftwareConfig"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:startAndEndDateComplexType"
-        type="java:gov.loc.www.premis.v3.StartAndEndDateComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.depositolegale.it/errorMsg"
-        qname="ns:>errorMsg"
-        type="java:it.depositolegale.www.errorMsg.ErrorMsg"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:copyrightDocumentationIdentifierComplexType"
-        type="java:gov.loc.www.premis.v3.CopyrightDocumentationIdentifierComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:environmentDesignationComplexType"
-        type="java:gov.loc.www.premis.v3.EnvironmentDesignationComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:compositionLevelComplexType"
-        type="java:gov.loc.www.premis.v3.CompositionLevelComplexType"
-        serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:creatingApplicationComplexType"
-        type="java:gov.loc.www.premis.v3.CreatingApplicationComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:formatComplexType"
-        type="java:gov.loc.www.premis.v3.FormatComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:signatureInformationComplexType"
-        type="java:gov.loc.www.premis.v3.SignatureInformationComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:environmentRegistryComplexType"
-        type="java:gov.loc.www.premis.v3.EnvironmentRegistryComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        qname="ns:>>>nodo>storage>tipo"
+        type="java:it.depositolegale.www.nodi.NodoStorageTipo"
+        serializer="org.apache.axis.encoding.ser.EnumSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.EnumDeserializerFactory"
         encodingStyle=""
       />
       <typeMapping
@@ -396,30 +116,6 @@
         type="java:it.depositolegale.www.istituzione.IstituzioneApiUtente"
         serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
         deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:environmentFunctionComplexType"
-        type="java:gov.loc.www.premis.v3.EnvironmentFunctionComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:stringPlusAuthority"
-        type="java:gov.loc.www.premis.v3.StringPlusAuthority"
-        serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:countryCode"
-        type="java:gov.loc.www.premis.v3.CountryCode"
-        serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
         encodingStyle=""
       />
       <typeMapping
@@ -439,19 +135,11 @@
         encodingStyle=""
       />
       <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:linkingRightsStatementIdentifierComplexType"
-        type="java:gov.loc.www.premis.v3.LinkingRightsStatementIdentifierComplexType"
+        xmlns:ns="http://www.depositolegale.it/utenti"
+        qname="ns:>utenti"
+        type="java:it.depositolegale.www.utenti.Utenti"
         serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
         deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:originalNameComplexType"
-        type="java:gov.loc.www.premis.v3.OriginalNameComplexType"
-        serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
         encodingStyle=""
       />
       <typeMapping
@@ -463,161 +151,9 @@
         encodingStyle=""
       />
       <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:file"
-        type="java:gov.loc.www.premis.v3.File"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:relatedObjectIdentifierComplexType"
-        type="java:gov.loc.www.premis.v3.RelatedObjectIdentifierComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:objectComplexType"
-        type="java:gov.loc.www.premis.v3.ObjectComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:signatureComplexType"
-        type="java:gov.loc.www.premis.v3.SignatureComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:storageComplexType"
-        type="java:gov.loc.www.premis.v3.StorageComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.depositolegale.it/loginUtenti"
-        qname="ns:>authenticationUtenti"
-        type="java:it.depositolegale.www.loginUtenti.AuthenticationUtenti"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:eventOutcomeInformationComplexType"
-        type="java:gov.loc.www.premis.v3.EventOutcomeInformationComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:rightsStatementComplexType"
-        type="java:gov.loc.www.premis.v3.RightsStatementComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:eventIdentifierComplexType"
-        type="java:gov.loc.www.premis.v3.EventIdentifierComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:eventDetailInformationComplexType"
-        type="java:gov.loc.www.premis.v3.EventDetailInformationComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:bitstream"
-        type="java:gov.loc.www.premis.v3.Bitstream"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:relationshipComplexType"
-        type="java:gov.loc.www.premis.v3.RelationshipComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:otherRightsInformationComplexType"
-        type="java:gov.loc.www.premis.v3.OtherRightsInformationComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:edtfSimpleType"
-        type="java:java.lang.String"
-        serializer="org.apache.axis.encoding.ser.SimpleSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.SimpleDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.depositolegale.it/authenticationUserOutput"
-        qname="ns:>authenticationUserOutput"
-        type="java:it.depositolegale.www.authenticationUserOutput.AuthenticationUserOutput"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:version3"
-        type="java:gov.loc.www.premis.v3.Version3"
-        serializer="org.apache.axis.encoding.ser.EnumSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.EnumDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:relatedEventIdentifierComplexType"
-        type="java:gov.loc.www.premis.v3.RelatedEventIdentifierComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.depositolegale.it/istituzione"
-        qname="ns:>mdIstituzione"
-        type="java:it.depositolegale.www.istituzione.MdIstituzione"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:premisComplexType"
-        type="java:gov.loc.www.premis.v3.PremisComplexType"
-        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
-        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
-        encodingStyle=""
-      />
-      <typeMapping
-        xmlns:ns="http://www.loc.gov/premis/v3"
-        qname="ns:preservationLevelComplexType"
-        type="java:gov.loc.www.premis.v3.PreservationLevelComplexType"
+        xmlns:ns="http://www.depositolegale.it/nodi"
+        qname="ns:>>nodo>storage"
+        type="java:it.depositolegale.www.nodi.NodoStorage"
         serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
         deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
         encodingStyle=""

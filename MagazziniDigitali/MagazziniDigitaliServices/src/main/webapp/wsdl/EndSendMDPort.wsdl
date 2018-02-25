@@ -38,7 +38,7 @@
     
     <wsdl:service name="EndSendMDService">
         <wsdl:port binding="ws:EndSendMDBind" name="EndSendMDPort">
-            <soap:address location="http://localhost:8080/MagazziniDigitaliServices/services/EndSendMDPort"/>
+            <soap:address location="http://localhost:8080/MagazziniDigitaliServices%23%232.0.19/services/EndSendMDPort"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

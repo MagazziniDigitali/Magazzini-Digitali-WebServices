@@ -67,7 +67,7 @@ public class AuthenticationIstituzione {
 									errorMsgs.add(new ErrorMsg(ErrorType_type.SOFTWARE_ERROR, "Le credenziali del Software non sono valide"));
 								}
 							} else {
-								log.error("Al software ["+
+								log.error("\n"+"Al software ["+
 										authenticationUtenti.getAuthentication().getLogin()+
 										"] è stato negato l'accesso dall'IP ["+
 										ToolsServices.getRemoteIP()+

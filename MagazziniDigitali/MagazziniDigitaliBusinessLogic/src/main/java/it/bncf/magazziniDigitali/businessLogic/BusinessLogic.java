@@ -360,8 +360,8 @@ public abstract class BusinessLogic<T extends Serializable, D extends GenericHib
 						try{
 							value = m[i].invoke(table);
 						} catch (Exception e){
-							System.out.println(table.getClass().getName()+" - "+m[i]);
-							e.printStackTrace();
+							log.error("\n"+table.getClass().getName()+" - "+m[i]);
+							log.error(e.getMessage(), e);
 						}
 						if (value != null) {
 

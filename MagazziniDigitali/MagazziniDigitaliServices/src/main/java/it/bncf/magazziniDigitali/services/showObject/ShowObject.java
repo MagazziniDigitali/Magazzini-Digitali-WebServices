@@ -40,9 +40,10 @@ import org.jwat.warc.WarcRecord;
 import it.bncf.magazziniDigitali.businessLogic.ticket.MDTicketBusiness;
 import it.bncf.magazziniDigitali.configuration.exception.MDConfigurationException;
 import it.bncf.magazziniDigitali.database.entity.MDTicket;
+import it.bncf.magazziniDigitali.nodi.Nodi;
+import it.bncf.magazziniDigitali.nodi.exception.NodiException;
 import it.bncf.magazziniDigitali.services.axis.MDConfiguration;
 import it.bncf.magazziniDigitali.services.implement.userLibrary.AuthenticationUserLibrary;
-import it.bncf.magazziniDigitali.utils.GenFileDest;
 import mx.randalf.hibernate.exception.HibernateUtilException;
 
 /**
@@ -211,13 +212,17 @@ public class ShowObject extends HttpServlet {
 		FileInputStream fis = null;
 		boolean trovato = false;
 		String fileName = null;
+		Nodi nodiInput = null;
 
 		try {
-			fTar = GenFileDest.genFileDest(mdConfiguration.getSoftwareConfigMDNodi("validate.nodo"), actualFileName);
+			nodiInput = new Nodi(mdConfiguration.getSoftwareConfigMDNodi("validate.nodo"));
+			fTar = new File(nodiInput.genFileDest(actualFileName));
+//			fTar = GenFileDest.genFileDest(mdConfiguration.getSoftwareConfigMDNodi("validate.nodo"), actualFileName);
 
 			if (!fTar.exists()) {
-				fTar = GenFileDest.genFileDest(mdConfiguration.getSoftwareConfigMDNodi("validate.nodo"),
-						mdTicket.getObjectIdentifier() + ".warc");
+				fTar = new File(nodiInput.genFileDest(mdTicket.getObjectIdentifier() + ".warc"));
+//				fTar = GenFileDest.genFileDest(mdConfiguration.getSoftwareConfigMDNodi("validate.nodo"),
+//						mdTicket.getObjectIdentifier() + ".warc");
 				if (fTar.exists()) {
 					actualFileName = mdTicket.getObjectIdentifier() + ".warc";
 				}
@@ -258,6 +263,8 @@ public class ShowObject extends HttpServlet {
 			throw new ServletException(e.getMessage(), e);
 		} catch (ServletException e) {
 			throw e;
+		} catch (NodiException e) {
+			throw new ServletException(e.getMessage(), e);
 		} finally {
 			try {
 				if (fis != null) {
@@ -279,9 +286,7 @@ public class ShowObject extends HttpServlet {
 			tais = (TarArchiveInputStream) new ArchiveStreamFactory().createArchiveInputStream("tar", fis);
 			while ((tae = (TarArchiveEntry) tais.getNextEntry()) != null) {
 				if (tae.getName().equals(originalFileName)) {
-					// System.out.println(tae.getName());
 					sendFile(tais, fileName, mdConfiguration, mdTicket, res);
-					// res.getOutputStream().close();
 					trovato = true;
 
 					break;

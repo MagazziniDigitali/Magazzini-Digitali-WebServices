@@ -25,6 +25,7 @@
 		<module>MagazziniDigitaliBusinessLogicCoda</module>
 		<module>MagazziniDigitaliBusinessLogicUtils</module>
 		<module>MagazziniDigitaliBusinessLogicGeoReplica</module>
+		<module>MagazziniDigitaliNodi</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

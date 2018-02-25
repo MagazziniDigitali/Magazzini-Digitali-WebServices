@@ -8,7 +8,7 @@
 	</parent>
 	<groupId>it.bncf.magazziniDigitali.businessLogic.solr</groupId>
 	<artifactId>MagazziniDigitaliBusinessLogicSolr</artifactId>
-	<version>2.0.16</version>
+	<version>2.0.17</version>
 	<dependencies>
 		<dependency>
 			<groupId>
@@ -17,17 +17,27 @@
 			<artifactId>
 				MagazziniDigitaliBusinessLogicValidate
 			</artifactId>
-			<version>2.0.16</version>
+			<version>2.0.17</version>
 		</dependency>
 		<dependency>
 			<groupId>mx.randalf.converter.xsl</groupId>
 			<artifactId>RandalfConverterXsl</artifactId>
-			<version>1.0.1</version>
+			<version>1.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 			<version>2.8.0</version>
+		</dependency>
+		<dependency>
+			<groupId>it.bncf.magazziniDigitali.nodi</groupId>
+			<artifactId>MagazziniDigitaliNodi</artifactId>
+			<version>1.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>it.bncf.magazziniDigitali.solr</groupId>
+			<artifactId>MagazziniDigitaliSolr</artifactId>
+			<version>2.0.14</version>
 		</dependency>
 	</dependencies>
 </project>

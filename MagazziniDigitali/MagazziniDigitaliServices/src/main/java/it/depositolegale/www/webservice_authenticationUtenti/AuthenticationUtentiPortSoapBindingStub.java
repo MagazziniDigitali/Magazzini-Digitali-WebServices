@@ -135,13 +135,6 @@ public class AuthenticationUtentiPortSoapBindingStub extends org.apache.axis.cli
             cachedSerFactories.add(enumsf);
             cachedDeserFactories.add(enumdf);
 
-            qName = new javax.xml.namespace.QName("http://www.depositolegale.it/software", ">>softwareConfig>nodo>rsync");
-            cachedSerQNames.add(qName);
-            cls = it.depositolegale.www.software.SoftwareConfigNodoRsync.class;
-            cachedSerClasses.add(cls);
-            cachedSerFactories.add(beansf);
-            cachedDeserFactories.add(beandf);
-
             qName = new javax.xml.namespace.QName("http://www.depositolegale.it/software", ">softwareConfig>nodo");
             cachedSerQNames.add(qName);
             cls = it.depositolegale.www.software.SoftwareConfigNodo.class;

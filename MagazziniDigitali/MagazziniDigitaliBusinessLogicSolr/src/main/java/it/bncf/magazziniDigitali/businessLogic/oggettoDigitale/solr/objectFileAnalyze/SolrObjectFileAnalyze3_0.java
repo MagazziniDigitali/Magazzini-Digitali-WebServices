@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 
 import gov.loc.premis.v3.ContentLocationComplexType;
 import gov.loc.premis.v3.File;
+import gov.loc.premis.v3.FixityComplexType;
 import gov.loc.premis.v3.FormatComplexType;
 import gov.loc.premis.v3.FormatDesignationComplexType;
 import gov.loc.premis.v3.FormatRegistryComplexType;
@@ -17,6 +18,7 @@ import gov.loc.premis.v3.RelationshipComplexType;
 import gov.loc.premis.v3.SignificantPropertiesComplexType;
 import gov.loc.premis.v3.StorageComplexType;
 import gov.loc.premis.v3.StringPlusAuthority;
+import info.lc.xmlns.premis_v2.CHECKSUMTYPEDefinition;
 import it.bncf.magazziniDigitali.configuration.IMDConfiguration;
 import it.bncf.magazziniDigitali.solr.AddDocumentMD;
 import it.bncf.magazziniDigitali.solr.ItemMD;
@@ -188,8 +190,14 @@ public class SolrObjectFileAnalyze3_0 extends SolrObjectFileAnalyze<File, Object
 			if (object.getFixity()!= null &&
 					object.getFixity().size()>0){
 				isValid = true;
-				if (object.getFixity().get(0).getMessageDigestAlgorithm().getValue().equals("SHA-1")){
-					params.add(ItemMD.SHA1, object.getFixity().get(0).getMessageDigest());
+				for (FixityComplexType fixity: object.getFixity()) {
+					if (fixity.getMessageDigestAlgorithm().getValue().equals(CHECKSUMTYPEDefinition.SHA_1.value())) {
+						params.add(ItemMD.SHA1, fixity.getMessageDigest());
+					} else if (fixity.getMessageDigestAlgorithm().getValue().equals(CHECKSUMTYPEDefinition.SHA_256.value())) {
+						params.add(ItemMD.SHA256, fixity.getMessageDigest());
+					} else if (fixity.getMessageDigestAlgorithm().getValue().equals(CHECKSUMTYPEDefinition.MD_5.value())) {
+						params.add(ItemMD.MD5, fixity.getMessageDigest());
+					}
 				}
 			}
 			if (object.getSize()!= null){

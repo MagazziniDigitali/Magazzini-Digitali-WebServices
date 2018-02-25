@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.apache.log4j.Logger;
 import org.everit.json.schema.Schema;
 import org.everit.json.schema.ValidationException;
 import org.everit.json.schema.loader.SchemaLoader;
@@ -22,6 +23,8 @@ import org.json.JSONTokener;
  */
 public class JsonValidator {
 
+	private Logger log = Logger.getLogger(JsonValidator.class);
+
 	/**
 	 * 
 	 */
@@ -33,11 +36,11 @@ public class JsonValidator {
 		Schema schema = null;
 
 		try {
-			System.out.println("File Schema: "+fSchema);
+			log.debug("\n"+"File Schema: "+fSchema);
 			schema = SchemaLoader.load(readJson(fSchema));
-			System.out.println("File Json:   "+fJson);
+			log.debug("\n"+"File Json:   "+fJson);
 			schema.validate(readJson(fJson));
-			System.out.println("File Validato: ");
+			log.debug("\n"+"File Validato: ");
 		} catch (FileNotFoundException e) {
 			throw e;
 		} catch (JSONException e) {
@@ -45,10 +48,9 @@ public class JsonValidator {
 		} catch (IOException e) {
 			throw e;
 		} catch (ValidationException e) {
-			e.printStackTrace();
-			System.err.println("SSSSSS");
+			log.error(e.getMessage(), e);
 			for(ValidationException ve :e.getCausingExceptions()){
-				ve.printStackTrace();
+				log.error(ve.getMessage(), ve);
 			}
 			throw e;
 		}

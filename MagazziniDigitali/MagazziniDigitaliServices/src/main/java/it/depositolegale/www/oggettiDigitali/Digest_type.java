@@ -17,12 +17,18 @@ public class Digest_type implements java.io.Serializable {
         _table_.put(_value_,this);
     }
 
-    public static final java.lang.String _SHA256 = "SHA256";
-    public static final java.lang.String _SHA1 = "SHA1";
-    public static final java.lang.String _MD5 = "MD5";
-    public static final Digest_type SHA256 = new Digest_type(_SHA256);
-    public static final Digest_type SHA1 = new Digest_type(_SHA1);
-    public static final Digest_type MD5 = new Digest_type(_MD5);
+    public static final java.lang.String _value1 = "SHA256";
+    public static final java.lang.String _value2 = "SHA1";
+    public static final java.lang.String _value3 = "MD5";
+    public static final java.lang.String _value4 = "MD5-64Base";
+    public static final java.lang.String _value5 = "SHA1-64Base";
+    public static final java.lang.String _value6 = "SHA256-64Base";
+    public static final Digest_type value1 = new Digest_type(_value1);
+    public static final Digest_type value2 = new Digest_type(_value2);
+    public static final Digest_type value3 = new Digest_type(_value3);
+    public static final Digest_type value4 = new Digest_type(_value4);
+    public static final Digest_type value5 = new Digest_type(_value5);
+    public static final Digest_type value6 = new Digest_type(_value6);
     public java.lang.String getValue() { return _value_;}
     public static Digest_type fromValue(java.lang.String value)
           throws java.lang.IllegalArgumentException {

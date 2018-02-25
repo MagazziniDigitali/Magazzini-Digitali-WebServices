@@ -21,8 +21,23 @@
 		<property name="nomeFile" type="java.lang.String">
 			<column name="NOMEFILE" />
 		</property>
+		<property name="md5" type="java.lang.String">
+			<column name="MD5" />
+		</property>
+		<property name="md564base" type="java.lang.String">
+			<column name="MD5_64BASE" />
+		</property>
 		<property name="sha1" type="java.lang.String">
 			<column name="SHA1" />
+		</property>
+		<property name="sha164base" type="java.lang.String">
+			<column name="SHA1_64BASE" />
+		</property>
+		<property name="sha256" type="java.lang.String">
+			<column name="SHA256" />
+		</property>
+		<property name="sha25664base" type="java.lang.String">
+			<column name="SHA256_64BASE" />
 		</property>
 		<property name="nomeFileMod" type="java.util.Date">
 			<column name="NOMEFILE_MOD" />

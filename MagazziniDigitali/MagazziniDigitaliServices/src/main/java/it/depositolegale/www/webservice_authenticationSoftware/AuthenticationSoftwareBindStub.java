@@ -79,7 +79,7 @@ public class AuthenticationSoftwareBindStub extends org.apache.axis.client.Stub 
             cachedSerFactories.add(enumsf);
             cachedDeserFactories.add(enumdf);
 
-            qName = new javax.xml.namespace.QName("http://www.depositolegale.it/istituzione", ">>istituzione>ApiUtente");
+            qName = new javax.xml.namespace.QName("http://www.depositolegale.it/istituzione", ">>istituzione>apiUtente");
             cachedSerQNames.add(qName);
             cls = it.depositolegale.www.istituzione.IstituzioneApiUtente.class;
             cachedSerClasses.add(cls);
@@ -100,9 +100,30 @@ public class AuthenticationSoftwareBindStub extends org.apache.axis.client.Stub 
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
-            qName = new javax.xml.namespace.QName("http://www.depositolegale.it/nodi", ">>nodo>rsync");
+            qName = new javax.xml.namespace.QName("http://www.depositolegale.it/nodi", ">>>nodo>storage>rsync");
             cachedSerQNames.add(qName);
-            cls = it.depositolegale.www.nodi.NodoRsync.class;
+            cls = it.depositolegale.www.nodi.NodoStorageRsync.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://www.depositolegale.it/nodi", ">>>nodo>storage>s3");
+            cachedSerQNames.add(qName);
+            cls = it.depositolegale.www.nodi.NodoStorageS3.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://www.depositolegale.it/nodi", ">>>nodo>storage>tipo");
+            cachedSerQNames.add(qName);
+            cls = it.depositolegale.www.nodi.NodoStorageTipo.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(enumsf);
+            cachedDeserFactories.add(enumdf);
+
+            qName = new javax.xml.namespace.QName("http://www.depositolegale.it/nodi", ">>nodo>storage");
+            cachedSerQNames.add(qName);
+            cls = it.depositolegale.www.nodi.NodoStorage.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);

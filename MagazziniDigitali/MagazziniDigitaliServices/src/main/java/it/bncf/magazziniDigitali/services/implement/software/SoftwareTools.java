@@ -35,7 +35,7 @@ public class SoftwareTools {
 				for (int x=0; x<software.getErrorMsg().length; x++){
 					msgErr+=software.getErrorMsg()[x]+"\n";
 				}
-				log.error(msgErr);
+				log.error("\n"+msgErr);
 			} else {
 				mdSoftwareBusiness  = new MDSoftwareBusiness();
 				mdSoftware = mdSoftwareBusiness .findById(software.getId());
@@ -57,7 +57,7 @@ public class SoftwareTools {
 										"] la password Software ["+
 										software.getAuthentication().getPassword()+
 										"] non è valida";
-								log.error(msgErr);
+								log.error("\n"+msgErr);
 							}
 						} else {
 							msgErr = "Richiesta da authenticazione Utente dall'IP ["+
@@ -70,7 +70,7 @@ public class SoftwareTools {
 									"] l'identificativo Software ["+
 									software.getAuthentication().getLogin()+
 									"] non è valido";
-							log.error(msgErr);
+							log.error("\n"+msgErr);
 						}
 					} else {
 						msgErr = "Richiesta da authenticazione Utente dall'IP ["+
@@ -81,7 +81,7 @@ public class SoftwareTools {
 								"Il Software ["+
 								software.getId()+
 								"] non può essere utilizzato dalla stazione chiamante";
-						log.error(msgErr);
+						log.error("\n"+msgErr);
 					}
 				} else {
 					msgErr = "Richiesta da authenticazione Utente dall'IP ["+
@@ -92,7 +92,7 @@ public class SoftwareTools {
 							"Il Software ["+
 							software.getId()+
 							"] non risulta registrato in base dati";
-					log.error(msgErr);
+					log.error("\n"+msgErr);
 				}
 			}
 		} catch (HibernateException e) {

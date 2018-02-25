@@ -39,12 +39,12 @@ public class IndexPremis2_2 extends IndexPremis<PremisV2_2Xsd, ObjectComplexType
 		try {
 			if (objects != null && objects.size() > 0) {
 				logPublish.info(
-						name + " [" + objectIdentifierPremis + "]" + " Oggetto da preIndicizzare " + objects.size());
+						"\n"+name + " [" + objectIdentifierPremis + "]" + " Oggetto da preIndicizzare " + objects.size());
 				sof = new SolrObjectFileAnalyze2_2();
 				for (int x = 0; x < objects.size(); x++) {
 					if ((x % 100) == 0) {
 						logPublish.info(
-								name + " [" + objectIdentifierPremis + "]" + " Oggetto " + x + "/" + objects.size());
+								"\n"+name + " [" + objectIdentifierPremis + "]" + " Oggetto " + x + "/" + objects.size());
 						System.gc();
 					}
 					object = objects.get(x);
@@ -52,7 +52,7 @@ public class IndexPremis2_2 extends IndexPremis<PremisV2_2Xsd, ObjectComplexType
 						sof.publishSolr((info.lc.xmlns.premis_v2.File) object, admd, pathTar, configuration, elabTarPremis,  name,  logPublish,  objectIdentifierPremis);
 					}
 				}
-				logPublish.info(name + " [" + objectIdentifierPremis + "]" + " Fine preIndicizzare oggetti");
+				logPublish.info("\n"+name + " [" + objectIdentifierPremis + "]" + " Fine preIndicizzare oggetti");
 			}
 			System.gc();
 		} catch (SolrException e) {
@@ -69,18 +69,18 @@ public class IndexPremis2_2 extends IndexPremis<PremisV2_2Xsd, ObjectComplexType
 		try {
 			if (events != null && events.size() > 0) {
 				logPublish.debug(
-						name + " [" + objectIdentifierPremis + "]" + " Eventi da preIndicizzare " + events.size());
+						"\n"+name + " [" + objectIdentifierPremis + "]" + " Eventi da preIndicizzare " + events.size());
 				se = new SolrEvent2_2();
 				for (int x = 0; x < events.size(); x++) {
 					if ((x % 100) == 0) {
 						logPublish.debug(
-								name + " [" + objectIdentifierPremis + "]" + " Eventi " + x + "/" + events.size());
+								"\n"+name + " [" + objectIdentifierPremis + "]" + " Eventi " + x + "/" + events.size());
 						System.gc();
 					}
 					event = events.get(x);
 					se.publishSolr(event, admd);
 				}
-				logPublish.debug(name + " [" + objectIdentifierPremis + "]" + " Fine preIndicizzare eventi");
+				logPublish.debug("\n"+name + " [" + objectIdentifierPremis + "]" + " Fine preIndicizzare eventi");
 			}
 		} catch (SolrException e) {
 			throw e;

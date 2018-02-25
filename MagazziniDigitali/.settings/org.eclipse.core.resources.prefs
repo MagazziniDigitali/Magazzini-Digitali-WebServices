@@ -28,7 +28,6 @@ encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/loginUte
 encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/loginUtenti/AuthenticationUtentiSoftwareIstituzioneApiUtente.java=UTF-8
 encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/loginUtenti/AuthenticationUtentiSoftwareRigth.java=UTF-8
 encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/nodi/Nodo.java=UTF-8
-encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/nodi/NodoRsync.java=UTF-8
 encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/numberView/NumberView.java=UTF-8
 encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/oggettiDigitali/Digest.java=UTF-8
 encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/oggettiDigitali/Digest_type.java=UTF-8
@@ -43,8 +42,6 @@ encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/rigths/R
 encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/rigths/Rigth.java=UTF-8
 encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/software/Software.java=UTF-8
 encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/software/SoftwareConfig.java=UTF-8
-encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/software/SoftwareConfigNodo.java=UTF-8
-encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/software/SoftwareConfigNodoRsync.java=UTF-8
 encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/storage/Documenti.java=UTF-8
 encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/storage/DocumentiDocumento.java=UTF-8
 encoding//MagazziniDigitaliServices/src/main/java/it/depositolegale/www/storage/DocumentiDocumentoEsito.java=UTF-8

@@ -48,7 +48,7 @@
     
     <wsdl:service name="CheckMDService">
         <wsdl:port binding="ws:CheckMDBind" name="CheckMDPort">
-            <soap:address location="http://localhost:8080/MagazziniDigitaliServices/services/CheckMDPort"/>
+            <soap:address location="http://localhost:8080/MagazziniDigitaliServices%23%232.0.19/services/CheckMDPort"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

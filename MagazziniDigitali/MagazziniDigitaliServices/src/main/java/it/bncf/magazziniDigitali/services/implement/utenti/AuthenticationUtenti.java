@@ -71,7 +71,11 @@ public class AuthenticationUtenti {
 									errorMsgs.add(new ErrorMsg(ErrorType_type.SOFTWARE_ERROR, "Le credenziali del Software non sono valide"));
 								}
 							} else {
-								errorMsgs.add(new ErrorMsg(ErrorType_type.IPERROR, "IP Chiamante non Autorizzato"));
+								errorMsgs.add(new ErrorMsg(ErrorType_type.IPERROR, "L'utente ["+
+										mdUtenti.getLogin()+
+										"] è stato negato l'accesso dall'IP ["+
+										ToolsServices.getRemoteIP()+
+										"]"));
 							}
 						} else {
 							errorMsgs.add(new ErrorMsg(ErrorType_type.IPERROR, "Non risultano IP Autorizzati per questo Software"));

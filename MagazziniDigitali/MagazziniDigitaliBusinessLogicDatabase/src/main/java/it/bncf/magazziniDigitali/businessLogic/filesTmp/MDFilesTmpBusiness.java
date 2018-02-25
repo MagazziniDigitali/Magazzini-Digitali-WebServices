@@ -75,10 +75,10 @@ public class MDFilesTmpBusiness extends
 			}
 			this.records.add(setRecord(dati));
 		} catch (HibernateException e) {
-			log.error(e);
+			log.error(e.getMessage(),e);
 			throw e;
 		} catch (HibernateUtilException e) {
-			log.error(e);
+			log.error(e.getMessage(), e);
 			throw e;
 		}
 	}
@@ -96,7 +96,12 @@ public class MDFilesTmpBusiness extends
 			FactoryDAO.initialize(dati.getIdIstituto());
 			record.set("istituto", MDIstituzioneBusiness.setRecord(dati.getIdIstituto()));
 			record.set("nomeFile", dati.getNomeFile());
+			record.set("md5", dati.getMd5());
+			record.set("md564base", dati.getMd564base());
 			record.set("sha1", dati.getSha1());
+			record.set("sha164Base", dati.getSha164base());
+			record.set("sha256", dati.getSha256());
+			record.set("sha25664Base", dati.getSha25664base());
 			record.set("nomeFileMod", DateBusiness.convert(dati.getNomeFileMod()));
 			FactoryDAO.initialize(dati.getStato());
 			record.set("stato", MDStatoBusiness.setRecord(dati.getStato()));
@@ -241,7 +246,8 @@ public class MDFilesTmpBusiness extends
 		tableDao.setPage(page);
 		tableDao.setPageSize(pageSize);
 		tables = tableDao.find((MDIstituzione)dati.get("idIstituto"),
-				(String)dati.get("nomeFile"), (MDStato[])dati.get("stato"), (String)dati.get("sha1"), 
+				(String)dati.get("nomeFile"), (MDStato[])dati.get("stato"), (String)dati.get("md5"), (String)dati.get("md564base"), 
+				(String)dati.get("sha1"), (String)dati.get("sha164base"), (String)dati.get("sha256"), (String)dati.get("sha25664base"), 
 				orders);
 		return tables;
 	}
@@ -484,8 +490,23 @@ public class MDFilesTmpBusiness extends
 		if (dati.containsKey("nomeFile")) {
 			table.setNomeFile((String) dati.get("nomeFile"));
 		}
+		if (dati.containsKey("md5")) {
+			table.setMd5((String) dati.get("md5"));
+		}
+		if (dati.containsKey("md564base")) {
+			table.setMd564base((String) dati.get("md564base"));
+		}
 		if (dati.containsKey("sha1")) {
 			table.setSha1((String) dati.get("sha1"));
+		}
+		if (dati.containsKey("sha164base")) {
+			table.setSha164base((String) dati.get("sha164base"));
+		}
+		if (dati.containsKey("sha256")) {
+			table.setSha256((String) dati.get("sha256"));
+		}
+		if (dati.containsKey("sha25664base")) {
+			table.setSha25664base((String) dati.get("sha25664base"));
 		}
 		if (dati.containsKey("nomeFileMod")) {
 			table.setNomeFileMod((Timestamp) dati.get("nomeFileMod"));
@@ -635,7 +656,8 @@ public class MDFilesTmpBusiness extends
 	 * @throws HibernateUtilException
 	 */
 	public List<MDFilesTmp> find(String idMDFilesTmp, MDIstituzione idIstituto,
-			String nomeFile, MDStato[] stato, String sha1, int page, int pageSize) 
+			String nomeFile, MDStato[] stato, String md5, String md564base, String sha1, String sha164base, 
+			String sha256, String sha25664base, int page, int pageSize) 
 					throws HibernateException, HibernateUtilException{
 		HashTable<String, Object> dati = null;
 		
@@ -657,15 +679,36 @@ public class MDFilesTmpBusiness extends
 			dati.put("stato", stato);
 		}
 		
+		if (md5 != null){
+			dati.put("md5", md5);
+		}
+		
+		if (md564base != null){
+			dati.put("md564base", md564base);
+		}
+		
 		if (sha1 != null){
 			dati.put("sha1", sha1);
+		}
+		
+		if (sha164base != null){
+			dati.put("sha164base", sha164base);
+		}
+		
+		if (sha256 != null){
+			dati.put("sha256", sha256);
+		}
+		
+		if (sha25664base != null){
+			dati.put("sha25664base", sha25664base);
 		}
 		
 		return find(dati, page, pageSize);
 	}
 
 	public Vector<Record> findToRecord(String idMDFilesTmp, MDIstituzione idIstituto,
-			String nomeFile, MDStato[] stato, String sha1, int page, int pageSize) 
+			String nomeFile, MDStato[] stato, String md5, String md564base, String sha1, String sha164base, 
+			String sha256, String sha25664base, int page, int pageSize) 
 					throws HibernateException, HibernateUtilException{
 		HashTable<String, Object> dati = null;
 		
@@ -687,8 +730,28 @@ public class MDFilesTmpBusiness extends
 			dati.put("stato", stato);
 		}
 		
+		if (md5 != null){
+			dati.put("md5", md5);
+		}
+		
+		if (md564base != null){
+			dati.put("md564base", md564base);
+		}
+		
 		if (sha1 != null){
 			dati.put("sha1", sha1);
+		}
+		
+		if (sha164base != null){
+			dati.put("sha164base", sha164base);
+		}
+		
+		if (sha256 != null){
+			dati.put("sha256", sha256);
+		}
+		
+		if (sha25664base != null){
+			dati.put("sha25664base", sha25664base);
 		}
 		
 		return new Vector<Record>(findToRecord(dati, page, pageSize));
@@ -704,8 +767,8 @@ public class MDFilesTmpBusiness extends
 		
 	}
 	
-	public String insertNewRec(MDSoftware idSoftware, String nomeFile, String sha1, 
-			Calendar nomeFileMod, MDNodi idNodo) throws SQLException 
+	public String insertNewRec(MDSoftware idSoftware, String nomeFile, String md5, String md564base, String sha1, String sha164base, 
+			String sha256, String sha25664base, Calendar nomeFileMod, MDNodi idNodo) throws SQLException 
 					{
 		String ris = null;
 		HashTable<String, Object> dati=null;
@@ -716,7 +779,28 @@ public class MDFilesTmpBusiness extends
 			dati.put("idIstituto", idSoftware.getIdIstituzione());
 			dati.put("idSoftware", idSoftware);
 			dati.put("nomeFile", nomeFile);
+			
+			if (md5 != null){
+				dati.put("md5", md5);
+			}
+			
+			if (md564base != null){
+				dati.put("md564base", md564base);
+			}
+			
 			dati.put("sha1", sha1);
+			
+			if (sha164base != null){
+				dati.put("sha164base", sha164base);
+			}
+			
+			if (sha256 != null){
+				dati.put("sha256", sha256);
+			}
+			
+			if (sha25664base != null){
+				dati.put("sha25664base", sha25664base);
+			}
 			dati.put("nomeFileMod", new Timestamp(nomeFileMod.getTimeInMillis()));
 			dati.put("stato", mdStattoDAO.INITTRASF());
 			dati.put("trasfDataStart", new Timestamp(new GregorianCalendar().getTimeInMillis()));

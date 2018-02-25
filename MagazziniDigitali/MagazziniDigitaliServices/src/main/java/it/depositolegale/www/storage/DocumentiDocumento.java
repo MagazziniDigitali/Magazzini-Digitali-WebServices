@@ -11,8 +11,8 @@ public class DocumentiDocumento  implements java.io.Serializable {
     /* Percorso assoluto relativa allo storage del matriale da verificare */
     private java.lang.String nomeFile;
 
-    /* Chiame SHA1 relativa al File */
-    private java.lang.String digest;
+    /* Lista delle chiavi calcolate per il file selszionato */
+    private it.depositolegale.www.storage.DocumentiDocumentoDigests[] digests;
 
     /* Esito della verifica sullo Storage */
     private java.lang.String esito;
@@ -24,11 +24,11 @@ public class DocumentiDocumento  implements java.io.Serializable {
 
     public DocumentiDocumento(
            java.lang.String nomeFile,
-           java.lang.String digest,
+           it.depositolegale.www.storage.DocumentiDocumentoDigests[] digests,
            java.lang.String esito,
            java.util.Calendar dataMod) {
            this.nomeFile = nomeFile;
-           this.digest = digest;
+           this.digests = digests;
            this.esito = esito;
            this.dataMod = dataMod;
     }
@@ -55,22 +55,30 @@ public class DocumentiDocumento  implements java.io.Serializable {
 
 
     /**
-     * Gets the digest value for this DocumentiDocumento.
+     * Gets the digests value for this DocumentiDocumento.
      * 
-     * @return digest   * Chiame SHA1 relativa al File
+     * @return digests   * Lista delle chiavi calcolate per il file selszionato
      */
-    public java.lang.String getDigest() {
-        return digest;
+    public it.depositolegale.www.storage.DocumentiDocumentoDigests[] getDigests() {
+        return digests;
     }
 
 
     /**
-     * Sets the digest value for this DocumentiDocumento.
+     * Sets the digests value for this DocumentiDocumento.
      * 
-     * @param digest   * Chiame SHA1 relativa al File
+     * @param digests   * Lista delle chiavi calcolate per il file selszionato
      */
-    public void setDigest(java.lang.String digest) {
-        this.digest = digest;
+    public void setDigests(it.depositolegale.www.storage.DocumentiDocumentoDigests[] digests) {
+        this.digests = digests;
+    }
+
+    public it.depositolegale.www.storage.DocumentiDocumentoDigests getDigests(int i) {
+        return this.digests[i];
+    }
+
+    public void setDigests(int i, it.depositolegale.www.storage.DocumentiDocumentoDigests _value) {
+        this.digests[i] = _value;
     }
 
 
@@ -128,9 +136,9 @@ public class DocumentiDocumento  implements java.io.Serializable {
             ((this.nomeFile==null && other.getNomeFile()==null) || 
              (this.nomeFile!=null &&
               this.nomeFile.equals(other.getNomeFile()))) &&
-            ((this.digest==null && other.getDigest()==null) || 
-             (this.digest!=null &&
-              this.digest.equals(other.getDigest()))) &&
+            ((this.digests==null && other.getDigests()==null) || 
+             (this.digests!=null &&
+              java.util.Arrays.equals(this.digests, other.getDigests()))) &&
             ((this.esito==null && other.getEsito()==null) || 
              (this.esito!=null &&
               this.esito.equals(other.getEsito()))) &&
@@ -151,8 +159,16 @@ public class DocumentiDocumento  implements java.io.Serializable {
         if (getNomeFile() != null) {
             _hashCode += getNomeFile().hashCode();
         }
-        if (getDigest() != null) {
-            _hashCode += getDigest().hashCode();
+        if (getDigests() != null) {
+            for (int i=0;
+                 i<java.lang.reflect.Array.getLength(getDigests());
+                 i++) {
+                java.lang.Object obj = java.lang.reflect.Array.get(getDigests(), i);
+                if (obj != null &&
+                    !obj.getClass().isArray()) {
+                    _hashCode += obj.hashCode();
+                }
+            }
         }
         if (getEsito() != null) {
             _hashCode += getEsito().hashCode();
@@ -182,10 +198,11 @@ public class DocumentiDocumento  implements java.io.Serializable {
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("digest");
-        elemField.setXmlName(new javax.xml.namespace.QName("http://www.depositolegale.it/storage", "digest"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+        elemField.setFieldName("digests");
+        elemField.setXmlName(new javax.xml.namespace.QName("http://www.depositolegale.it/storage", "digests"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.depositolegale.it/storage", ">>>documenti>documento>digests"));
         elemField.setNillable(false);
+        elemField.setMaxOccursUnbounded(true);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("esito");

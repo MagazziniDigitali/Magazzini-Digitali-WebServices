@@ -58,7 +58,7 @@ public abstract class IndexEvent<PX extends EventXsd<?, ?, ?, ?, ?>> {
 					configuration.getSoftwareConfigInteger("solr.clientTimeOut"));
 
 			checkEvent((PX) eventInput, admd);
-			log.info(name + " Inizio pubblicazione in Solr");
+			log.info("\n"+name + " Inizio pubblicazione in Solr");
 			admd.commit();
 			ris = true;
 		} catch (NumberFormatException e) {

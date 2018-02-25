@@ -48,73 +48,73 @@ public class OggettoDigitaleCodaBusiness extends OggettoDigitaleBusiness{
 		MDRegistroIngressoBusiness mdRegistroIngresso = null;
 		List<MDRegistroIngresso> rs = null;
 		String data = "";
-		boolean elabora = false;
-		GregorianCalendar gc = null;
+//		boolean elabora = false;
+//		GregorianCalendar gc = null;
 		try {
-			gc = new GregorianCalendar();
-
-			if (context.getJobDetail().getJobDataMap().containsKey("addGG")){
-				if (context.getJobDetail().getJobDataMap().getInt("addGG")!=0){
-					gc.add(Calendar.DAY_OF_MONTH, context.getJobDetail().getJobDataMap().getInt("addGG"));
-				}
-			} else {
-				gc.add(Calendar.DAY_OF_MONTH, -1);
-			}
-
-			if (context.getJobDetail().getJobDataMap().containsKey("setHour")){
-				if (context.getJobDetail().getJobDataMap().getInt("setHour")!=0){
-					gc.set(Calendar.HOUR_OF_DAY, context.getJobDetail().getJobDataMap().getInt("setHour"));
-				}
-			} else {
-				gc.set(Calendar.HOUR_OF_DAY, 23);
-			}
-
-			if (context.getJobDetail().getJobDataMap().containsKey("setMinute")){
-				if (context.getJobDetail().getJobDataMap().getInt("setMinute")!=0){
-					gc.set(Calendar.MINUTE, context.getJobDetail().getJobDataMap().getInt("setMinute"));
-				}
-			} else {
-				gc.set(Calendar.MINUTE, 59);
-			}
-
-			if (context.getJobDetail().getJobDataMap().containsKey("setSecond")){
-				if (context.getJobDetail().getJobDataMap().getInt("setSecond")!=0){
-					gc.set(Calendar.SECOND, context.getJobDetail().getJobDataMap().getInt("setSecond"));
-				}
-			} else {
-				gc.set(Calendar.SECOND, 59);
-			}
-
-			if (context.getJobDetail().getJobDataMap().containsKey("setMillisecond")){
-				if (context.getJobDetail().getJobDataMap().getInt("setMillisecond")!=0){
-					gc.set(Calendar.MILLISECOND, context.getJobDetail().getJobDataMap().getInt("setMillisecond"));
-				}
-			} else {
-				gc.set(Calendar.MILLISECOND, 999);
-			}
-			logCoda.debug("Ricerco oggetti da mettere in coda");
+//			gc = new GregorianCalendar();
+//
+//			if (context.getJobDetail().getJobDataMap().containsKey("addGG")){
+//				if (context.getJobDetail().getJobDataMap().getInt("addGG")!=0){
+//					gc.add(Calendar.DAY_OF_MONTH, context.getJobDetail().getJobDataMap().getInt("addGG"));
+//				}
+//			} else {
+//				gc.add(Calendar.DAY_OF_MONTH, -1);
+//			}
+//
+//			if (context.getJobDetail().getJobDataMap().containsKey("setHour")){
+//				if (context.getJobDetail().getJobDataMap().getInt("setHour")!=0){
+//					gc.set(Calendar.HOUR_OF_DAY, context.getJobDetail().getJobDataMap().getInt("setHour"));
+//				}
+//			} else {
+//				gc.set(Calendar.HOUR_OF_DAY, 23);
+//			}
+//
+//			if (context.getJobDetail().getJobDataMap().containsKey("setMinute")){
+//				if (context.getJobDetail().getJobDataMap().getInt("setMinute")!=0){
+//					gc.set(Calendar.MINUTE, context.getJobDetail().getJobDataMap().getInt("setMinute"));
+//				}
+//			} else {
+//				gc.set(Calendar.MINUTE, 59);
+//			}
+//
+//			if (context.getJobDetail().getJobDataMap().containsKey("setSecond")){
+//				if (context.getJobDetail().getJobDataMap().getInt("setSecond")!=0){
+//					gc.set(Calendar.SECOND, context.getJobDetail().getJobDataMap().getInt("setSecond"));
+//				}
+//			} else {
+//				gc.set(Calendar.SECOND, 59);
+//			}
+//
+//			if (context.getJobDetail().getJobDataMap().containsKey("setMillisecond")){
+//				if (context.getJobDetail().getJobDataMap().getInt("setMillisecond")!=0){
+//					gc.set(Calendar.MILLISECOND, context.getJobDetail().getJobDataMap().getInt("setMillisecond"));
+//				}
+//			} else {
+//				gc.set(Calendar.MILLISECOND, 999);
+//			}
+			logCoda.debug("\n"+"Ricerco oggetti da mettere in coda");
 			mdRegistroIngresso = new MDRegistroIngressoBusiness();
 			
 			rs = mdRegistroIngresso.findCoda();
 			if (rs != null && 
 					rs.size()>0){
 				for (int x=0; x<rs.size(); x++){
-					elabora = false;
+//					elabora = false;
 					if (rs.get(x).getTimestampPub()!= null){
-						if (rs.get(x).getTimestampPub().getTime()<=gc.getTimeInMillis()){
+//						if (rs.get(x).getTimestampPub().getTime()<=gc.getTimeInMillis()){
 							data = componiData(rs.get(x).getTimestampPub());
-							elabora = true;
-						}
+//							elabora = true;
+//						}
 					} else {
-						if (rs.get(x).getTimestampElab().getTime()<=gc.getTimeInMillis()){
+//						if (rs.get(x).getTimestampElab().getTime()<=gc.getTimeInMillis()){
 							data = componiData(rs.get(x).getTimestampElab());
-							elabora = true;
-						}
+//							elabora = true;
+//						}
 					}
-					if (elabora){
-						writeFileCoda(data, rs.get(x).getContainerName(), configuration);
+//					if (elabora){
+						writeFileCoda(data, rs.get(x).getId(), rs.get(x).getContainerName(), configuration);
 						mdRegistroIngresso.coda(rs.get(x).getId());
-					}
+//					}
 				}
 			}
 		} catch (HibernateException e) {
@@ -141,7 +141,7 @@ public class OggettoDigitaleCodaBusiness extends OggettoDigitaleBusiness{
 	/**
 	 * Metodo utilizzato per scrivere il file Coda
 	 */
-	private void writeFileCoda(String data, String containerName, IMDConfiguration<?> configuration) 
+	private void writeFileCoda(String data, String id, String containerName, IMDConfiguration<?> configuration) 
 			throws FileNotFoundException, MDConfigurationException,
 			IOException{
 		File coda = null;
@@ -153,7 +153,7 @@ public class OggettoDigitaleCodaBusiness extends OggettoDigitaleBusiness{
 		boolean trovato = false;
 		
 		try {
-			coda = genFileCoda(data, configuration, 0);
+			coda = genFileCoda(data, id, configuration, 0);
 			
 			if (coda.exists()){
 				try {
@@ -217,18 +217,21 @@ public class OggettoDigitaleCodaBusiness extends OggettoDigitaleBusiness{
 		}
 	}
 
-	private File genFileCoda(String data, IMDConfiguration<?> configuration, int conta) throws MDConfigurationException {
+	private File genFileCoda(String data, String id, IMDConfiguration<?> configuration, int conta) throws MDConfigurationException {
 		File coda = null;
 		File codaElab = null;
 		DecimalFormat df4 = new DecimalFormat("0000");
 		
 		try {
-			coda = new File(configuration.getSoftwareConfigString("coda.path")+
-					File.separator+data+(conta>0?"_"+df4.format(conta):"")+".coda");
+			coda = new File(configuration.getSoftwareConfigString("coda.path")+File.separator+
+					data.substring(0, 4)+File.separator+
+					data.substring(4, 6)+File.separator+
+					data.substring(6, 8)+File.separator+
+					File.separator+id+(conta>0?"_"+df4.format(conta):"")+".coda");
 			if (coda.exists()){
 				codaElab = new File(coda.getAbsolutePath()+".elab");
 				if (codaElab.exists()){
-					coda = genFileCoda(data, configuration, conta+1);
+					coda = genFileCoda(data, id, configuration, conta+1);
 				}
 			}
 		} catch (MDConfigurationException e) {
@@ -247,6 +250,7 @@ public class OggettoDigitaleCodaBusiness extends OggettoDigitaleBusiness{
 		GregorianCalendar gc = null;
 		String result = "";
 		DecimalFormat df4 = new DecimalFormat("0000");
+//		DecimalFormat df3 = new DecimalFormat("000");
 		DecimalFormat df2 = new DecimalFormat("00");
 		
 		gc = new GregorianCalendar();
@@ -254,6 +258,10 @@ public class OggettoDigitaleCodaBusiness extends OggettoDigitaleBusiness{
 		result = df4.format(gc.get(Calendar.YEAR));
 		result += df2.format(gc.get(Calendar.MONTH)+1);
 		result += df2.format(gc.get(Calendar.DAY_OF_MONTH));
+//		result += df2.format(gc.get(Calendar.HOUR_OF_DAY));
+//		result += df2.format(gc.get(Calendar.MINUTE));
+//		result += df2.format(gc.get(Calendar.SECOND));
+//		result += df3.format(gc.get(Calendar.MILLISECOND));
 		return result;
 	}
 }

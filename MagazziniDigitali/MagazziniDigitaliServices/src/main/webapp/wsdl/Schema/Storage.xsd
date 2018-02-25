@@ -24,10 +24,28 @@
                                     <xs:documentation xml:lang="it">Percorso assoluto relativa allo storage del matriale da verificare</xs:documentation>
                                 </xs:annotation>
                             </xs:element>
-                            <xs:element name="digest" type="xs:string">
+                            <xs:element maxOccurs="unbounded" name="digests">
                                 <xs:annotation>
-                                    <xs:documentation xml:lang="it">Chiame SHA1 relativa al File</xs:documentation>
+                                    <xs:documentation xml:lang="it">Lista delle chiavi calcolate per il file selszionato</xs:documentation>
                                 </xs:annotation>
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="instance">
+                                            <xs:simpleType>
+                                                <xs:restriction base="xs:string">
+                                                  <xs:enumeration value="SHA1">
+                                                  <xs:annotation>
+                                                  <xs:documentation xml:lang="it">Chiave SHA-1</xs:documentation>
+                                                  </xs:annotation>
+                                                  </xs:enumeration>
+                                                  <xs:enumeration value="SHA256"/>
+                                                  <xs:enumeration value="MD5"/>
+                                                </xs:restriction>
+                                            </xs:simpleType>
+                                        </xs:element>
+                                        <xs:element name="value" type="xs:string"/>
+                                    </xs:sequence>
+                                </xs:complexType>
                             </xs:element>
                             <xs:element name="esito" type="xs:string">
                                 <xs:annotation>

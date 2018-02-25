@@ -48,7 +48,7 @@
     
     <wsdl:service name="CheckTicketService">
         <wsdl:port binding="ws:CheckTicketBind" name="CheckTicketPort">
-            <soap:address location="http://localhost:8080/MagazziniDigitaliServices/services/CheckTicketPort"/>
+            <soap:address location="http://localhost:8080/MagazziniDigitaliServices%23%232.0.19/services/CheckTicketPort"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
 import org.everit.json.schema.ValidationException;
 import org.json.JSONException;
 
@@ -35,6 +36,8 @@ import mx.randalf.xsd.exception.XsdException;
  */
 public class TarMD extends Tar {
 
+	private Logger log = Logger.getLogger(TarMD.class);
+
 	/**
 	 * 
 	 */
@@ -51,10 +54,9 @@ public class TarMD extends Tar {
 			throws FileNotFoundException, IOException, XsdException {
 		try {
 			if (fTmp.getName().toLowerCase().endsWith(".xml") || fTmp.getName().toLowerCase().endsWith(".premis")) {
-				// System.out.print("File: "+fTmp.getName());
+				log.debug("\nFile: "+fTmp.getName());
 				tarIndexer.setXmlType(checkXml(fTmp));
-				// System.out.println(" XmlType:
-				// "+tarIndexer.getXmlType());
+				log.debug("\nXmlType: "+tarIndexer.getXmlType());
 			}
 			if (fTmp.getName().toLowerCase().endsWith(".json") && 
 					! fTmp.getName().toLowerCase().endsWith(".siegfried.json")) {

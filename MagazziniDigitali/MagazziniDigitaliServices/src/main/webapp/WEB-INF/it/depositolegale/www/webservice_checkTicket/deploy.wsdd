@@ -55,9 +55,25 @@
         encodingStyle=""
       />
       <typeMapping
+        xmlns:ns="http://www.depositolegale.it/nodi"
+        qname="ns:>>>nodo>storage>s3"
+        type="java:it.depositolegale.www.nodi.NodoStorageS3"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
         xmlns:ns="http://www.depositolegale.it/errorMsg"
         qname="ns:>errorMsg"
         type="java:it.depositolegale.www.errorMsg.ErrorMsg"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.depositolegale.it/nodi"
+        qname="ns:>>>nodo>storage>rsync"
+        type="java:it.depositolegale.www.nodi.NodoStorageRsync"
         serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
         deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
         encodingStyle=""
@@ -95,6 +111,14 @@
         encodingStyle=""
       />
       <typeMapping
+        xmlns:ns="http://www.depositolegale.it/nodi"
+        qname="ns:>>>nodo>storage>tipo"
+        type="java:it.depositolegale.www.nodi.NodoStorageTipo"
+        serializer="org.apache.axis.encoding.ser.EnumSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.EnumDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
         xmlns:ns="http://www.depositolegale.it/istituzione"
         qname="ns:>>istituzione>apiUtente"
         type="java:it.depositolegale.www.istituzione.IstituzioneApiUtente"
@@ -119,17 +143,17 @@
         encodingStyle=""
       />
       <typeMapping
-        xmlns:ns="http://www.depositolegale.it/nodi"
-        qname="ns:>>nodo>rsync"
-        type="java:it.depositolegale.www.nodi.NodoRsync"
+        xmlns:ns="http://www.depositolegale.it/software"
+        qname="ns:>software"
+        type="java:it.depositolegale.www.software.Software"
         serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
         deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
         encodingStyle=""
       />
       <typeMapping
-        xmlns:ns="http://www.depositolegale.it/software"
-        qname="ns:>software"
-        type="java:it.depositolegale.www.software.Software"
+        xmlns:ns="http://www.depositolegale.it/nodi"
+        qname="ns:>>nodo>storage"
+        type="java:it.depositolegale.www.nodi.NodoStorage"
         serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
         deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
         encodingStyle=""

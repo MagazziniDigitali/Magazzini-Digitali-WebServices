@@ -50,10 +50,10 @@ public class MDNodiBusiness extends BusinessLogic<MDNodi, MDNodiDAO, String> {
 			}
 			this.records.add(setRecord(dati));
 		} catch (HibernateException e) {
-			log.error(e);
+			log.error(e.getMessage(),e);
 			throw e;
 		} catch (HibernateUtilException e) {
-			log.error(e);
+			log.error(e.getMessage(), e);
 			throw e;
 		}
 	}
@@ -142,6 +142,16 @@ public class MDNodiBusiness extends BusinessLogic<MDNodi, MDNodiDAO, String> {
 			table.setRsync(null);
 		}
 
+		if (dati.get("tipo") != null) {
+			table.setTipo((String) dati.get("tipo"));
+		}
+
+		if (dati.get("pathStorage") != null) {
+			table.setPathStorage((String) dati.get("pathStorage"));
+		} else {
+			table.setPathStorage(null);
+		}
+
 		if (dati.get("rsyncPassword") != null) {
 			table.setRsyncPassword((String) dati.get("rsyncPassword"));
 		} else {
@@ -154,10 +164,34 @@ public class MDNodiBusiness extends BusinessLogic<MDNodi, MDNodiDAO, String> {
 			table.setUrlCheckStorage(null);
 		}
 
-		if (dati.get("pathStorage") != null) {
-			table.setPathStorage((String) dati.get("pathStorage"));
+		if (dati.get("s3Url") != null) {
+			table.setS3Url((String) dati.get("s3Url"));
 		} else {
-			table.setPathStorage(null);
+			table.setS3Url(null);
+		}
+
+		if (dati.get("s3Region") != null) {
+			table.setS3Region((String) dati.get("s3Region"));
+		} else {
+			table.setS3Region(null);
+		}
+
+		if (dati.get("s3AccessKey") != null) {
+			table.setS3AccessKey((String) dati.get("s3AccessKey"));
+		} else {
+			table.setS3AccessKey(null);
+		}
+
+		if (dati.get("s3SecretKey") != null) {
+			table.setS3SecretKey((String) dati.get("s3SecretKey"));
+		} else {
+			table.setS3SecretKey(null);
+		}
+
+		if (dati.get("s3BucketName") != null) {
+			table.setS3BucketName((String) dati.get("s3BucketName"));
+		} else {
+			table.setS3BucketName(null);
 		}
 
 		if (dati.get("active") != null) {

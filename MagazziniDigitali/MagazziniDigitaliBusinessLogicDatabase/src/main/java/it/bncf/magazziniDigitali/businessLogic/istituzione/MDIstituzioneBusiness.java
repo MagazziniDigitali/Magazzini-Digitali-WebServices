@@ -93,10 +93,10 @@ public class MDIstituzioneBusiness extends BusinessLogic<MDIstituzione, MDIstitu
 			}
 			this.records.add(setRecord(dati));
 		} catch (HibernateException e) {
-			log.error(e);
+			log.error(e.getMessage(),e);
 			throw e;
 		} catch (HibernateUtilException e) {
-			log.error(e);
+			log.error(e.getMessage(),e);
 			throw e;
 		}
 	}

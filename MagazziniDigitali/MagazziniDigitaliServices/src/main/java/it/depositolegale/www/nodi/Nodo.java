@@ -17,11 +17,7 @@ public class Nodo  implements java.io.Serializable {
     /* Descrizione del Nodo */
     private java.lang.String descrizioni;
 
-    /* Informazioni per il collegamento Rsync */
-    private it.depositolegale.www.nodi.NodoRsync rsync;
-
-    /* Url per eseguire il Check dei dati sullo Storage */
-    private org.apache.axis.types.URI urlCheckStorage;
+    private it.depositolegale.www.nodi.NodoStorage storage;
 
     public Nodo() {
     }
@@ -30,13 +26,11 @@ public class Nodo  implements java.io.Serializable {
            java.lang.String id,
            java.lang.String nome,
            java.lang.String descrizioni,
-           it.depositolegale.www.nodi.NodoRsync rsync,
-           org.apache.axis.types.URI urlCheckStorage) {
+           it.depositolegale.www.nodi.NodoStorage storage) {
            this.id = id;
            this.nome = nome;
            this.descrizioni = descrizioni;
-           this.rsync = rsync;
-           this.urlCheckStorage = urlCheckStorage;
+           this.storage = storage;
     }
 
 
@@ -101,42 +95,22 @@ public class Nodo  implements java.io.Serializable {
 
 
     /**
-     * Gets the rsync value for this Nodo.
+     * Gets the storage value for this Nodo.
      * 
-     * @return rsync   * Informazioni per il collegamento Rsync
+     * @return storage
      */
-    public it.depositolegale.www.nodi.NodoRsync getRsync() {
-        return rsync;
+    public it.depositolegale.www.nodi.NodoStorage getStorage() {
+        return storage;
     }
 
 
     /**
-     * Sets the rsync value for this Nodo.
+     * Sets the storage value for this Nodo.
      * 
-     * @param rsync   * Informazioni per il collegamento Rsync
+     * @param storage
      */
-    public void setRsync(it.depositolegale.www.nodi.NodoRsync rsync) {
-        this.rsync = rsync;
-    }
-
-
-    /**
-     * Gets the urlCheckStorage value for this Nodo.
-     * 
-     * @return urlCheckStorage   * Url per eseguire il Check dei dati sullo Storage
-     */
-    public org.apache.axis.types.URI getUrlCheckStorage() {
-        return urlCheckStorage;
-    }
-
-
-    /**
-     * Sets the urlCheckStorage value for this Nodo.
-     * 
-     * @param urlCheckStorage   * Url per eseguire il Check dei dati sullo Storage
-     */
-    public void setUrlCheckStorage(org.apache.axis.types.URI urlCheckStorage) {
-        this.urlCheckStorage = urlCheckStorage;
+    public void setStorage(it.depositolegale.www.nodi.NodoStorage storage) {
+        this.storage = storage;
     }
 
     private java.lang.Object __equalsCalc = null;
@@ -160,12 +134,9 @@ public class Nodo  implements java.io.Serializable {
             ((this.descrizioni==null && other.getDescrizioni()==null) || 
              (this.descrizioni!=null &&
               this.descrizioni.equals(other.getDescrizioni()))) &&
-            ((this.rsync==null && other.getRsync()==null) || 
-             (this.rsync!=null &&
-              this.rsync.equals(other.getRsync()))) &&
-            ((this.urlCheckStorage==null && other.getUrlCheckStorage()==null) || 
-             (this.urlCheckStorage!=null &&
-              this.urlCheckStorage.equals(other.getUrlCheckStorage())));
+            ((this.storage==null && other.getStorage()==null) || 
+             (this.storage!=null &&
+              this.storage.equals(other.getStorage())));
         __equalsCalc = null;
         return _equals;
     }
@@ -186,11 +157,8 @@ public class Nodo  implements java.io.Serializable {
         if (getDescrizioni() != null) {
             _hashCode += getDescrizioni().hashCode();
         }
-        if (getRsync() != null) {
-            _hashCode += getRsync().hashCode();
-        }
-        if (getUrlCheckStorage() != null) {
-            _hashCode += getUrlCheckStorage().hashCode();
+        if (getStorage() != null) {
+            _hashCode += getStorage().hashCode();
         }
         __hashCodeCalc = false;
         return _hashCode;
@@ -221,16 +189,9 @@ public class Nodo  implements java.io.Serializable {
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("rsync");
-        elemField.setXmlName(new javax.xml.namespace.QName("http://www.depositolegale.it/nodi", "rsync"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.depositolegale.it/nodi", ">>nodo>rsync"));
-        elemField.setNillable(false);
-        typeDesc.addFieldDesc(elemField);
-        elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("urlCheckStorage");
-        elemField.setXmlName(new javax.xml.namespace.QName("http://www.depositolegale.it/nodi", "urlCheckStorage"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "anyURI"));
-        elemField.setMinOccurs(0);
+        elemField.setFieldName("storage");
+        elemField.setXmlName(new javax.xml.namespace.QName("http://www.depositolegale.it/nodi", "storage"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.depositolegale.it/nodi", ">>nodo>storage"));
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
     }

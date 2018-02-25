@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import info.lc.xmlns.premis_v2.CHECKSUMTYPEDefinition;
 import info.lc.xmlns.premis_v2.ContentLocationComplexType;
 import info.lc.xmlns.premis_v2.File;
+import info.lc.xmlns.premis_v2.FixityComplexType;
 import info.lc.xmlns.premis_v2.FormatComplexType;
 import info.lc.xmlns.premis_v2.FormatDesignationComplexType;
 import info.lc.xmlns.premis_v2.FormatRegistryComplexType;
@@ -187,8 +189,14 @@ public class SolrObjectFileAnalyze2_2 extends
 			}
 			if (object.getFixity() != null && object.getFixity().size() > 0) {
 				isValid = true;
-				if (object.getFixity().get(0).getMessageDigestAlgorithm().equals("SHA-1")) {
-					params.add(ItemMD.SHA1, object.getFixity().get(0).getMessageDigest());
+				for (FixityComplexType fixity: object.getFixity()) {
+					if (fixity.getMessageDigestAlgorithm().equals(CHECKSUMTYPEDefinition.SHA_1.value())) {
+						params.add(ItemMD.SHA1, fixity.getMessageDigest());
+					} else if (fixity.getMessageDigestAlgorithm().equals(CHECKSUMTYPEDefinition.SHA_256.value())) {
+						params.add(ItemMD.SHA256, fixity.getMessageDigest());
+					} else if (fixity.getMessageDigestAlgorithm().equals(CHECKSUMTYPEDefinition.MD_5.value())) {
+						params.add(ItemMD.MD5, fixity.getMessageDigest());
+					}
 				}
 			}
 			if (object.getSize() != null) {

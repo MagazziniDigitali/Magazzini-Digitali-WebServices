@@ -40,6 +40,22 @@
       />
       <typeMapping
         xmlns:ns="http://www.depositolegale.it/storage"
+        qname="ns:>>>>documenti>documento>digests>instance"
+        type="java:it.depositolegale.www.storage.DocumentiDocumentoDigestsInstance"
+        serializer="org.apache.axis.encoding.ser.EnumSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.EnumDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.depositolegale.it/storage"
+        qname="ns:>>>documenti>documento>digests"
+        type="java:it.depositolegale.www.storage.DocumentiDocumentoDigests"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://www.depositolegale.it/storage"
         qname="ns:>>documenti>documento"
         type="java:it.depositolegale.www.storage.DocumentiDocumento"
         serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"

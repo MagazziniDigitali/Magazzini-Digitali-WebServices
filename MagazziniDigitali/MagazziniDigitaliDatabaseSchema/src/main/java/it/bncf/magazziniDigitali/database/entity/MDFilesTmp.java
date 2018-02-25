@@ -32,7 +32,17 @@ public class MDFilesTmp implements Serializable {
 
 	private String nomeFile;
 
+	private String md5;
+
+	private String md564base;
+
 	private String sha1;
+
+	private String sha164base;
+
+	private String sha256;
+
+	private String sha25664base;
 
 	private Date nomeFileMod;
 
@@ -517,6 +527,76 @@ public class MDFilesTmp implements Serializable {
 	 */
 	public void setGeoReplicaPremis(String geoReplicaPremis) {
 		this.geoReplicaPremis = geoReplicaPremis;
+	}
+
+	/**
+	 * @return the md5
+	 */
+	public String getMd5() {
+		return md5;
+	}
+
+	/**
+	 * @param md5 the md5 to set
+	 */
+	public void setMd5(String md5) {
+		this.md5 = md5;
+	}
+
+	/**
+	 * @return the md564base
+	 */
+	public String getMd564base() {
+		return md564base;
+	}
+
+	/**
+	 * @param md564base the md564base to set
+	 */
+	public void setMd564base(String md564base) {
+		this.md564base = md564base;
+	}
+
+	/**
+	 * @return the sha164base
+	 */
+	public String getSha164base() {
+		return sha164base;
+	}
+
+	/**
+	 * @param sha164base the sha164base to set
+	 */
+	public void setSha164base(String sha164base) {
+		this.sha164base = sha164base;
+	}
+
+	/**
+	 * @return the sha256
+	 */
+	public String getSha256() {
+		return sha256;
+	}
+
+	/**
+	 * @param sha256 the sha256 to set
+	 */
+	public void setSha256(String sha256) {
+		this.sha256 = sha256;
+	}
+
+	/**
+	 * @return the sha25664base
+	 */
+	public String getSha25664base() {
+		return sha25664base;
+	}
+
+	/**
+	 * @param sha25664base the sha25664base to set
+	 */
+	public void setSha25664base(String sha25664base) {
+		this.sha25664base = sha25664base;
 	}
 
 }

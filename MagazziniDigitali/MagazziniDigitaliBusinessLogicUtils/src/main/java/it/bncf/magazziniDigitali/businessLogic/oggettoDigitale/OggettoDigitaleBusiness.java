@@ -6,28 +6,24 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.Vector;
 import java.util.concurrent.Future;
 
 import org.apache.log4j.Logger;
-import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.response.QueryResponse;
+//import org.apache.solr.client.solrj.SolrServerException;
+//import org.apache.solr.client.solrj.response.QueryResponse;
 import org.hibernate.HibernateException;
 
 import it.bncf.magazziniDigitali.businessLogic.filesTmp.MDFilesTmpBusiness;
-import it.bncf.magazziniDigitali.configuration.IMDConfiguration;
-import it.bncf.magazziniDigitali.configuration.exception.MDConfigurationException;
-import it.bncf.magazziniDigitali.database.dao.MDStatoDAO;
 import it.bncf.magazziniDigitali.database.entity.MDFilesTmp;
 import it.bncf.magazziniDigitali.database.entity.MDIstituzione;
 import it.bncf.magazziniDigitali.database.entity.MDStato;
-import it.bncf.magazziniDigitali.solr.AddDocumentMD;
+//import it.bncf.magazziniDigitali.solr.AddDocumentMD;
 import it.bncf.magazziniDigitali.utils.Record;
 import mx.randalf.hibernate.exception.HibernateUtilException;
-import mx.randalf.solr.exception.SolrException;
+//import mx.randalf.solr.exception.SolrException;
 
 public class OggettoDigitaleBusiness {
 
@@ -45,7 +41,7 @@ public class OggettoDigitaleBusiness {
 
 		try {
 			mdFileTmp = new MDFilesTmpBusiness();
-			rs = mdFileTmp.find(idMDFilesTmp, null, null, status, null,1,numRec);
+			rs = mdFileTmp.find(idMDFilesTmp, null, null, status, null, null, null, null, null, null,1,numRec);
 			if (rs!=null && rs.size()>0){
 				if (result== null){
 					result = new Vector<MDFilesTmp>();
@@ -98,93 +94,12 @@ public class OggettoDigitaleBusiness {
 
 		try {
 			mdFileTmp = new MDFilesTmpBusiness();
-			records = mdFileTmp.findToRecord(null, idIstituto, nomeFile, null, null, 1, 1000);
-//			if (records!= null){
-//				for (MDFilesTmp ai : records) {
-//					addRecord(ai);
-//				}
-//			}
+			records = mdFileTmp.findToRecord(null, idIstituto, nomeFile, null, null, null, null, null, null, null, 1, 1000);
 		} catch (HibernateException | HibernateUtilException e) {
 			log.error(e.getMessage(), e);
 			throw new SQLException(e.getMessage(), e);
 		}
 		return records;
-	}
-
-	/**
-	 * Metodo utilizzato per verificare lo stato dell'OggettoDigitale
-	 * 
-	 * @param sha1
-	 * @return
-	 * @throws FileNotFoundException
-	 * @throws ClassNotFoundException
-	 * @throws SQLException
-	 * @throws SolrException
-	 * @throws SolrServerException
-	 * @throws MDConfigurationException 
-	 */
-	public Hashtable<String, String> checkStatus(String sha1, IMDConfiguration<?> configuration)
-			throws SolrException, SolrServerException, HibernateException, HibernateUtilException, MDConfigurationException {
-		MDFilesTmpBusiness mdFileTmp = null;
-		List<MDFilesTmp> records = null;
-		Hashtable<String, String> result = null;
-		AddDocumentMD admd = null;
-		QueryResponse qr = null;
-
-		try {
-			mdFileTmp = new MDFilesTmpBusiness();
-			records = mdFileTmp.find(null, null, null, null, sha1, 0, 0);
-
-			if (records != null) {
-				for (int x = 0; x < records.size(); x++) {
-					if (records.get(x).getStato() != null) {
-						if (result == null) {
-							result = new Hashtable<String, String>();
-						}
-						result.put("id", records.get(x).getId());
-						result.put("stato", records.get(x).getStato().getId());
-
-						break;
-					}
-				}
-			} else {
-				admd = new AddDocumentMD(configuration.getSoftwareConfigString("solr.URL"),
-//						Configuration.getValue("demoni.Publish.solr.URL"),
-						configuration.getSoftwareConfigBoolean("solr.Cloud"),
-//						Boolean.parseBoolean(Configuration
-//								.getValue("demoni.Publish.solr.Cloud")),
-						configuration.getSoftwareConfigString("solr.collection"),
-//						Configuration
-//								.getValue("demoni.Publish.solr.collection"),
-						configuration.getSoftwareConfigInteger("solr.connectionTimeOut"),
-//						Integer.parseInt(Configuration
-//								.getValue("demoni.Publish.solr.connectionTimeOut")),
-						configuration.getSoftwareConfigInteger("solr.clientTimeOut"));
-//						Integer.parseInt(Configuration
-//								.getValue("demoni.Publish.solr.clientTimeOut")));
-				qr = admd.find("sha1:" + sha1);
-				if (qr != null && qr.getResults() != null
-						&& qr.getResults().getNumFound() > 0) {
-					if (result == null) {
-						result = new Hashtable<String, String>();
-					}
-					result.put("id", ((String) qr.getResults().get(0)
-							.getFieldValue("id")).substring(0, 36));
-					result.put("stato", MDStatoDAO.FINEPUBLISH);
-				}
-			}
-		} catch (SolrException e) {
-			throw e;
-		} catch (SolrServerException e) {
-			throw e;
-		} catch (HibernateException e) {
-			throw e;
-		} catch (HibernateUtilException e) {
-			throw e;
-		} catch (MDConfigurationException e) {
-			throw e;
-		}
-		return result;
 	}
 
 	public static Date convertDate(String date){
@@ -255,7 +170,7 @@ public class OggettoDigitaleBusiness {
 					if (future.isDone()) {
 						future.get();
 						if (!futuresList.remove(future)) {
-							log.error("Riscontrato nella eliminazione di un Thread dalla Lista");
+							log.error("\n"+"Riscontrato nella eliminazione di un Thread dalla Lista");
 						}
 						future = null;
 						break;

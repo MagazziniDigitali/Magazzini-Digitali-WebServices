@@ -13,6 +13,8 @@ import it.bncf.magazziniDigitali.database.entity.MDNodi;
 import it.bncf.magazziniDigitali.database.entity.MDSoftware;
 import it.bncf.magazziniDigitali.services.axis.DepositoLegaleAxisServlet;
 import it.bncf.magazziniDigitali.services.implement.software.SoftwareTools;
+import it.depositolegale.www.oggettiDigitali.Digest;
+import it.depositolegale.www.oggettiDigitali.Digest_type;
 import it.depositolegale.www.oggettiDigitali.StatoOggettoDigitale_type;
 import it.depositolegale.www.readInfoInput.ReadInfoInput;
 import it.depositolegale.www.readInfoOutput.Errori;
@@ -26,17 +28,20 @@ public class InitSendMDImpl {
 	public InitSendMDImpl() {
 	}
 
-    public static ReadInfoOutput initSendMDOperation(ReadInfoInput input) throws java.rmi.RemoteException {
-    	ReadInfoOutput output = null;
-    	MDFilesTmpBusiness oggettoDigitaleBusiness = null;
-    	String id = null;
-    	Errori[] errori = null;
-//    	MDIstituzioneDAO mdIstituzioneDAO = null;
-//    	MDIstituzione mdIstituzione = null;
-//    	MDNodiDAO mdNodiDAO = null;
-    	MDSoftwareDAO mdSoftwareDAO = null;
-    	MDSoftware mdSoftware = null;
-    	MDNodi mdNodi = null;
+	public static ReadInfoOutput initSendMDOperation(ReadInfoInput input) throws java.rmi.RemoteException {
+		ReadInfoOutput output = null;
+	    	MDFilesTmpBusiness oggettoDigitaleBusiness = null;
+	    	String id = null;
+	    	Errori[] errori = null;
+	    	MDSoftwareDAO mdSoftwareDAO = null;
+	    	MDSoftware mdSoftware = null;
+	    	MDNodi mdNodi = null;
+	    	String md5 = null;
+	    	String md564base = null;
+	    	String sha1 = null;
+	    	String sha164base = null; 
+		String sha256 = null;
+		String sha25664base = null;
 
 		output = new ReadInfoOutput();
 
@@ -46,25 +51,55 @@ public class InitSendMDImpl {
 			oggettoDigitaleBusiness = new MDFilesTmpBusiness();
 
 			if (SoftwareTools.checkSoftware(input.getSoftware(), input.getSoftware().getNome())){
-//			mdIstituzioneDAO = new MDIstituzioneDAO();
-//
-//			mdIstituzione = mdIstituzioneDAO.findById(input.getIstituto().getId());
-//			if (mdIstituzione != null && mdIstituzione.getId().equals(input.getIstituto().getId())){
-//				mdNodiDAO = new MDNodiDAO();
 				mdNodi = DepositoLegaleAxisServlet.mdConfiguration.getSoftwareConfigMDNodi("nodo");
-//				mdNodi = mdNodiDAO.findById(
-//						Configuration.getValue("nodo")
-//						);
 				if (mdNodi != null){
 					mdSoftwareDAO = new MDSoftwareDAO();
 					mdSoftware = mdSoftwareDAO.findById(input.getSoftware().getId());
-					id = oggettoDigitaleBusiness.insertNewRec(mdSoftware, 
-							input.getOggettoDigitale().getNomeFile(), 
-							input.getOggettoDigitale().getDigest()[0].getDigestValue(), 
-							input.getOggettoDigitale().getUltimaModifica(),
-							mdNodi);
-					output.getOggettoDigitale().setStatoOggettoDigitale(StatoOggettoDigitale_type.INITTRASF);
-					output.getOggettoDigitale().setId(id);
+					for (Digest digest:input.getOggettoDigitale().getDigest()) {
+						switch(digest.getDigestType().getValue()) {
+							case Digest_type._value1:  // SHA256
+								sha256 = digest.getDigestValue();
+								break;
+							case Digest_type._value2:  // SHA1
+								sha1 = digest.getDigestValue();
+								break;
+							case Digest_type._value3:  // MD5
+								md5 = digest.getDigestValue();
+								break;
+							case Digest_type._value4:  // MD5-64Base
+								md564base = digest.getDigestValue();
+								break;
+							case Digest_type._value5:  // SHA1-64Base
+								sha164base = digest.getDigestValue();
+								break;
+							case Digest_type._value6:  // SHA256-64Base
+								sha25664base = digest.getDigestValue();
+								break;
+							default:
+								output.getOggettoDigitale().setStatoOggettoDigitale(StatoOggettoDigitale_type.ERROR);
+								errori = new Errori[1];
+								errori[0] = new Errori("-4","Digest del file usato non gestito");
+								output.setErrori(errori);
+								throw new RemoteException("Digest del file usato non gestito");
+						}
+					}
+					if (sha256 != null ||sha1 != null || md5 != null ||
+							md564base != null || sha164base !=null || sha25664base != null) {
+						id = oggettoDigitaleBusiness.insertNewRec(mdSoftware, 
+								input.getOggettoDigitale().getNomeFile(), 
+								md5, md564base, sha1, sha164base, 
+								sha256, sha25664base, 
+								input.getOggettoDigitale().getUltimaModifica(),
+								mdNodi);
+						output.getOggettoDigitale().setStatoOggettoDigitale(StatoOggettoDigitale_type.INITTRASF);
+						output.getOggettoDigitale().setId(id);
+					} else {
+						output.getOggettoDigitale().setStatoOggettoDigitale(StatoOggettoDigitale_type.ERROR);
+						errori = new Errori[1];
+						errori[0] = new Errori("-5","Indicare almeno in Digest valido");
+						output.setErrori(errori);
+						throw new RemoteException("Indicare almeno in Digest valido");
+					}
 				} else {
 					output.getOggettoDigitale().setStatoOggettoDigitale(StatoOggettoDigitale_type.ERROR);
 					errori = new Errori[1];

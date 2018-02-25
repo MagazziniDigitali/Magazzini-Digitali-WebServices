@@ -143,7 +143,7 @@ public abstract class PremisXsd<C, O, OCT, ECT, ACT, RCT, ReCT, SCT, OICT, OCCT,
 	 */
 	public abstract void addObjectFileContainer(String objectIdentifierValue,
 			String fType, String ext, BigInteger compositionLevel,
-			String digest, Long size, String formatDesignationValue,
+			List<PremisDigest> digests, Long size, String formatDesignationValue,
 			String originalName, MDRigths right, String formatVersion, String puid);
 
 	/**
@@ -167,7 +167,7 @@ public abstract class PremisXsd<C, O, OCT, ECT, ACT, RCT, ReCT, SCT, OICT, OCCT,
 	 *            Posizione dell'oggetto digitale all'interno del file Tar
 	 */
 	public abstract void addObjectFile(String objectIdentifierValue,
-			BigInteger compositionLevel, String digest, Long size,
+			BigInteger compositionLevel, List<PremisDigest> digests, Long size,
 			String formatDesignationValue, String originalName,
 			String contentLocationValue, String formatVersion, String puid,
 			String relationshipSubType, String objectIdentifierMaster
@@ -180,7 +180,7 @@ public abstract class PremisXsd<C, O, OCT, ECT, ACT, RCT, ReCT, SCT, OICT, OCCT,
 	protected abstract OICT addObjectIdentifier(String objectIdentifierValue);
 
 	protected abstract OCCT addObjectCharacteristics(
-			BigInteger compositionLevel, String digest, Long size,
+			BigInteger compositionLevel, List<PremisDigest> digests, Long size,
 			String formatDesignationValue, String formatVersion, String puid);
 
 	protected abstract ONCT addOriginalName(String originalName);

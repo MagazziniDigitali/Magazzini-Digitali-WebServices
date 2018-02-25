@@ -10,10 +10,13 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 
+import info.lc.xmlns.premis_v2.CHECKSUMTYPEDefinition;
 import it.bncf.magazziniDigitali.businessLogic.filesTmp.MDFilesTmpBusiness;
 import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.implement.exception.ClientMDException;
 import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.validate.ValidateFile;
@@ -24,6 +27,7 @@ import it.bncf.magazziniDigitali.database.dao.MDFilesTmpDAO;
 import it.bncf.magazziniDigitali.database.dao.MDStatoDAO;
 import it.bncf.magazziniDigitali.database.entity.MDFilesTmp;
 import it.bncf.magazziniDigitali.database.entity.MDIstituzione;
+import it.magazziniDigitali.xsd.premis.PremisDigest;
 import it.magazziniDigitali.xsd.premis.PremisXsd;
 import it.magazziniDigitali.xsd.premis.exception.PremisXsdException;
 import mx.randalf.archive.info.DigestType;
@@ -69,7 +73,7 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 		MDFilesTmp mdFilesTmp = null;
 		Boolean ris = false;
 
-		logValidate.info(name + " [" + objectIdentifierPremis + "]" + " Inizio la validazione");
+		logValidate.info("\n"+name + " [" + objectIdentifierPremis + "]" + " Inizio la validazione");
 		try {
 			mdFileTmpBusiness = new MDFilesTmpBusiness();
 			mdFileTmpDao = new MDFilesTmpDAO();
@@ -119,7 +123,7 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 					null, writeFilePremisDB(filePremis, configuration.getSoftwareConfigString("path.premis")));
 			log.error(name + " [" + objectIdentifierPremis + "] " + e.getMessage(), e);
 		} finally {
-			logValidate.info(name + " [" + objectIdentifierPremis + "]" + " Fine della validazione");
+			logValidate.info("\n"+name + " [" + objectIdentifierPremis + "]" + " Fine della validazione");
 		}
 		return ris;
 	}
@@ -183,7 +187,7 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 				fTar = new File(fileTar);
 
 				logValidate.info(
-						name + " [" + objectIdentifierPremis + "]" + " File da validare: " + fObj.getAbsolutePath());
+						"\n"+name + " [" + objectIdentifierPremis + "]" + " File da validare: " + fObj.getAbsolutePath());
 				eventDetailDecomp = fObj.getName() + " => " + fileTar;
 				if (!fObj.exists()) {
 					removeOrigin=false;
@@ -193,7 +197,7 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 					ris = validate(mdFileTmpBusiness, mdFilesTmp, objectIdentifierPremis, fObj, fTar, configuration,
 							validate, eventDetailDecomp, removeOrigin);
 				} else {
-					logValidate.info(name + " [" + objectIdentifierPremis + "]" + " Il file [" + fObj.getAbsolutePath()
+					logValidate.info("\n"+name + " [" + objectIdentifierPremis + "]" + " Il file [" + fObj.getAbsolutePath()
 							+ "] non è presente sul Server");
 					mdFileTmpBusiness.updateStopValidate(mdFilesTmp.getId(), null, false, null, 
 							new String[] { "Il file [" + fObj.getAbsolutePath() + "] non è presente sul Server" },
@@ -201,7 +205,7 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 									configuration.getSoftwareConfigString("path.premis")));
 				}
 			} else {
-				logValidate.error(name + " [" + objectIdentifierPremis + "]" + " L'identiifcativo ["
+				logValidate.error("\n"+name + " [" + objectIdentifierPremis + "]" + " L'identiifcativo ["
 						+ objectIdentifierPremis + "] non è presente in archivio");
 				ris = false;
 			}
@@ -237,11 +241,11 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 			// il file Esiste
 			FactoryDAO.initialize(mdFilesTmp.getStato());
 			if (mdFilesTmp.getStato().getId().equals(MDStatoDAO.FINETRASF) || mdFilesTmp.getValidDataStart()==null) {
-				logValidate.info(name + " [" + objectIdentifierPremis + "]" + " Inizio la validazione del file ["
+				logValidate.info("\n"+name + " [" + objectIdentifierPremis + "]" + " Inizio la validazione del file ["
 						+ fObj.getAbsolutePath() + "]");
 				start = mdFileTmpBusiness.updateStartValidate(mdFilesTmp.getId(), fTar);
 			} else {
-				logValidate.info(name + " [" + objectIdentifierPremis + "]" + " Continuo la validazione del file ["
+				logValidate.info("\n"+name + " [" + objectIdentifierPremis + "]" + " Continuo la validazione del file ["
 						+ fObj.getAbsolutePath() + "]");
 				start = new GregorianCalendar();
 				start.setTimeInMillis(mdFilesTmp.getValidDataStart().getTime());
@@ -346,12 +350,12 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 				}
 			}
 			if (startDecomp != null || stopDecomp != null) {
-				logValidate.info(name + " [" + objectIdentifierPremis + "]" + " Tempo per Unzip del file da "
+				logValidate.info("\n"+name + " [" + objectIdentifierPremis + "]" + " Tempo per Unzip del file da "
 						+ (startDecomp == null ? "none" : df.format(startDecomp.getTime())) + " a "
 						+ (stopDecomp == null ? "none" : df.format(stopDecomp.getTime())));
 			}
 			if (validate.getUnzipError() != null) {
-				logValidate.error(name + " [" + objectIdentifierPremis + "]"
+				logValidate.error("\n"+name + " [" + objectIdentifierPremis + "]"
 						+ " Riscontrato un problema nella procedura di Unzip");
 				premis.addEvent("decompress", startDecomp, stopDecomp, eventDetailDecomp, "KO",
 						validate.getUnzipError(), null, configuration.getMDSoftware(),
@@ -361,7 +365,7 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 				premis.write(filePremis, false);
 			} else {
 				if (startDecomp != null || stopDecomp != null) {
-					logValidate.info(name + " [" + objectIdentifierPremis + "]" + " Tempo di decompressione da "
+					logValidate.info("\n"+name + " [" + objectIdentifierPremis + "]" + " Tempo di decompressione da "
 							+ (startDecomp == null ? "none" : df.format(startDecomp.getTime())) + " a "
 							+ (stopDecomp == null ? "none" : df.format(stopDecomp.getTime())));
 					premis.addEvent("decompress", startDecomp, stopDecomp, eventDetailDecomp, "OK", null, null,
@@ -380,7 +384,7 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 						stopDecomp.setTimeInMillis(mdFilesTmp.getDecompDataEnd().getTime());
 					}
 					if (mdFilesTmp.getDecompEsito()){
-						logValidate.info(name + " [" + objectIdentifierPremis + "]" + " Tempo di decompressione da "
+						logValidate.info("\n"+name + " [" + objectIdentifierPremis + "]" + " Tempo di decompressione da "
 								+ (startDecomp == null ? "none" : df.format(startDecomp.getTime())) + " a "
 								+ (stopDecomp == null ? "none" : df.format(stopDecomp.getTime())));
 						premis.addEvent("decompress", startDecomp, stopDecomp, eventDetailDecomp, "OK", null, null,
@@ -390,7 +394,7 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 								objectIdentifierMaster);
 						result = true;
 					} else {
-						logValidate.error(name + " [" + objectIdentifierPremis + "]"
+						logValidate.error("\n"+name + " [" + objectIdentifierPremis + "]"
 								+ " Riscontrato un problema nella procedura di Unzip");
 						premis.addEvent("decompress", startDecomp, stopDecomp, eventDetailDecomp, "KO",
 								validate.getUnzipError(), null, configuration.getMDSoftware(),
@@ -422,10 +426,12 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 		String objectIdentifierMaster = null;
 		int pos = 0;
 		boolean isWarc = false;
+		List<PremisDigest> digests = null;
+		String digest = null;
 
 		try {
 			if (validate.getArchive() != null) {
-				logValidate.info(name + " [" + objectIdentifierPremis + "]" + " Analizzo gli archivi");
+				logValidate.info("\n"+name + " [" + objectIdentifierPremis + "]" + " Analizzo gli archivi");
 				if (validate.getArchive().getType() != null &&
 						validate.getArchive().getType().getExt() != null &&
 						validate.getArchive().getType().getExt().equalsIgnoreCase("warc")){
@@ -436,6 +442,29 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 				} else {
 					archive = (ArchiveMD) validate.getArchive().getArchive().get(0);
 				}
+				
+				digest = archive.getDigest(DigestType.SHA_1);
+				if (digest != null && !digest.trim().equals("")) {
+					digests = new Vector<PremisDigest>();
+					digests.add(new PremisDigest(CHECKSUMTYPEDefinition.SHA_1, digest));
+				}
+				
+				digest = archive.getDigest(DigestType.MD_5);
+				if (digest != null && !digest.trim().equals("")) {
+					if (digests==null) {
+						digests = new Vector<PremisDigest>();
+					}
+					digests.add(new PremisDigest(CHECKSUMTYPEDefinition.MD_5, digest));
+				}
+				
+				digest = archive.getDigest(DigestType.SHA_256);
+				if (digest != null && !digest.trim().equals("")) {
+					if (digests==null) {
+						digests = new Vector<PremisDigest>();
+					}
+					digests.add(new PremisDigest(CHECKSUMTYPEDefinition.SHA_256, digest));
+				}
+
 				if (mdFilesTmp.getPremisFile() == null || mdFilesTmp.getPremisFile().trim().equals("")) {
 					objectIdentifierMaster = archive.getID();
 				} else {
@@ -446,23 +475,23 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 					objectIdentifierMaster = objectIdentifierMaster.substring(0,pos).replace(".", "");
 				}
 				premis.addObjectFileContainer(objectIdentifierMaster, archive.getXmltype().value(),
-						archive.getType().getExt(), new BigInteger("0"), archive.getDigest(DigestType.SHA_1),
+						archive.getType().getExt(), new BigInteger("0"), digests,
 						archive.getType().getSize(), archive.getMimetype(), archive.getNome(),
 						mdFilesTmp.getIdSoftware().getIdRigths() 
 						, archive.getType().getFormat().getVersion(), archive.getType().getPUID());
 
 				if (archive.getArchive() != null && archive.getArchive().size() > 0) {
-					logValidate.info(name + " [" + objectIdentifierPremis + "]" + " Inizio analisi degli Archivi "
+					logValidate.info("\n"+name + " [" + objectIdentifierPremis + "]" + " Inizio analisi degli Archivi "
 							+ archive.getArchive().size());
 					for (int y = 0; y < archive.getArchive().size(); y++) {
 						if ((y % 100) == 0) {
-							logValidate.info(name + " [" + objectIdentifierPremis + "]" + " " + y
+							logValidate.info("\n"+name + " [" + objectIdentifierPremis + "]" + " " + y
 									+ " Archivi analizzati su " + archive.getArchive().size());
 						}
 						addArchive(premis, (ArchiveMD) archive.getArchive().get(y), objectIdentifierMaster,
 								configuration, validate, "", isWarc);
 					}
-					logValidate.info(name + " [" + objectIdentifierPremis + "]" + " Fine analisi degli Archivi "
+					logValidate.info("\n"+name + " [" + objectIdentifierPremis + "]" + " Fine analisi degli Archivi "
 							+ archive.getArchive().size());
 				}
 			}
@@ -511,7 +540,7 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 				premis.write(filePremis, false);
 			} else {
 				if (validate.getXmlType() == null) {
-					logValidate.error(name + " [" + objectIdentifierPremis + "]"
+					logValidate.error("\n"+name + " [" + objectIdentifierPremis + "]"
 							+ " Impossibile individuare il formato del tracciato XML presente nel file");
 					stop = mdFileTmpBusiness.updateStopValidate(mdFilesTmp.getId(), null, false, null, 
 							new String[] { "Impossibile individuare il formato del tracciato XML presente nel file" },
@@ -536,7 +565,7 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 							// + ".UUID"),
 							objectIdentifierMaster);
 					premis.write(filePremis, false);
-					logValidate.info(name + " [" + objectIdentifierPremis + "]" + " Tempo di validazione da "
+					logValidate.info("\n"+name + " [" + objectIdentifierPremis + "]" + " Tempo di validazione da "
 							+ (start == null ? "none" : df.format(start.getTime())) + " a "
 							+ (stop == null ? "none" : df.format(stop.getTime())));
 					result = true;
@@ -560,6 +589,7 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 			IMDConfiguration<?> configuration, ValidateFile validate, String folder, boolean isWarc) throws MDConfigurationException {
 		String objectIdentifierValue = null;
 		BigInteger compositionLevel = null;
+		List<PremisDigest> digests = null;
 		String digest = null;
 		Long size = null;
 		String formatDesignationValue = null;
@@ -585,6 +615,26 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 				}
 	
 				digest = archive.getDigest(DigestType.SHA_1);
+				if (digest != null && !digest.trim().equals("")) {
+					digests = new Vector<PremisDigest>();
+					digests.add(new PremisDigest(CHECKSUMTYPEDefinition.SHA_1, digest));
+				}
+				
+				digest = archive.getDigest(DigestType.MD_5);
+				if (digest != null && !digest.trim().equals("")) {
+					if (digests==null) {
+						digests = new Vector<PremisDigest>();
+					}
+					digests.add(new PremisDigest(CHECKSUMTYPEDefinition.MD_5, digest));
+				}
+				
+				digest = archive.getDigest(DigestType.SHA_256);
+				if (digest != null && !digest.trim().equals("")) {
+					if (digests==null) {
+						digests = new Vector<PremisDigest>();
+					}
+					digests.add(new PremisDigest(CHECKSUMTYPEDefinition.SHA_256, digest));
+				}
 				size = archive.getType().getSize();
 				formatDesignationValue = archive.getMimetype();
 				originalName = (archive.getProtocol() != null?archive.getProtocol():"")+
@@ -613,7 +663,7 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 				} else {
 					relationshipSubType = "1";
 				}
-				premis.addObjectFile(objectIdentifierValue, compositionLevel, digest, size, formatDesignationValue,
+				premis.addObjectFile(objectIdentifierValue, compositionLevel, digests, size, formatDesignationValue,
 						originalName, contentLocationValue, formatVersion, puid, relationshipSubType,
 						objectIdentifierMaster);
 			}

@@ -50,7 +50,7 @@ public class OggettoDigitalePackagesPremisBusiness extends OggettoDigitaleBusine
 		gc.set(Calendar.MINUTE, 59);
 		gc.set(Calendar.SECOND, 59);
 		gc.set(Calendar.MILLISECOND, 999);
-		logCoda.debug("Ricerca Oggetti Premis da elaborare");
+		logCoda.debug("\n"+"Ricerca Oggetti Premis da elaborare");
 		fPremis = new File(configuration.getSoftwareConfigString("path.premis"));
 		fAnni = fPremis.listFiles(new CheckFolder());
 
@@ -58,7 +58,7 @@ public class OggettoDigitalePackagesPremisBusiness extends OggettoDigitaleBusine
 			checkFolder(logCoda, configuration, fAnno, gc);
 			if (fAnno.list().length==0){
 				if (!fAnno.delete()){
-					log.error("Riscontrato un problema nella cancellazione della cartella ["+fAnno.getAbsolutePath()+"]");
+					log.error("\n"+"Riscontrato un problema nella cancellazione della cartella ["+fAnno.getAbsolutePath()+"]");
 				}
 			}
 		}
@@ -73,7 +73,7 @@ public class OggettoDigitalePackagesPremisBusiness extends OggettoDigitaleBusine
 			checkFolder(logCoda, configuration, fAnno, fMese, gcMax);
 			if (fMese.list().length==0){
 				if (!fMese.delete()){
-					log.error("Riscontrato un problema nella cancellazione della cartella ["+fMese.getAbsolutePath()+"]");
+					log.error("\n"+"Riscontrato un problema nella cancellazione della cartella ["+fMese.getAbsolutePath()+"]");
 				}
 			}
 		}
@@ -93,7 +93,7 @@ public class OggettoDigitalePackagesPremisBusiness extends OggettoDigitaleBusine
 				checkFolder(logCoda, configuration, fAnno, fMese, fGiorno);
 				if (fGiorno.list().length==0){
 					if (!fGiorno.delete()){
-						log.error("Riscontrato un problema nella cancellazione della cartella ["+fGiorno.getAbsolutePath()+"]");
+						log.error("\n"+"Riscontrato un problema nella cancellazione della cartella ["+fGiorno.getAbsolutePath()+"]");
 					}
 				}
 			}
@@ -110,7 +110,7 @@ public class OggettoDigitalePackagesPremisBusiness extends OggettoDigitaleBusine
 				checkFolder(logCoda, configuration, fAnno, fMese, fGiorno, fTipo);
 				if (fTipo.list().length==0){
 					if (!fTipo.delete()){
-						log.error("Riscontrato un problema nella cancellazione della cartella ["+fTipo.getAbsolutePath()+"]");
+						log.error("\n"+"Riscontrato un problema nella cancellazione della cartella ["+fTipo.getAbsolutePath()+"]");
 					}
 				}
 			}

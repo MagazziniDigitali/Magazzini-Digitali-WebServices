@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.depositolegale.it/oggettiDigitali" elementFormDefault="qualified" targetNamespace="http://www.depositolegale.it/oggettiDigitali"> 
+<?xml version="1.0" encoding="UTF-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.depositolegale.it/oggettiDigitali" elementFormDefault="qualified" targetNamespace="http://www.depositolegale.it/oggettiDigitali">
     <xs:element name="oggettoDigitale">
         <xs:annotation>
             <xs:documentation xml:lang="it">Informazioni relative all'oggetto Digitale</xs:documentation>
@@ -41,6 +41,9 @@
             <xs:enumeration value="SHA256"/>
             <xs:enumeration value="SHA1"/>
             <xs:enumeration value="MD5"/>
+            <xs:enumeration value="MD5-64Base"/>
+            <xs:enumeration value="SHA1-64Base"/>
+            <xs:enumeration value="SHA256-64Base"/>
         </xs:restriction>
     </xs:simpleType>
     <xs:element name="statoOggettoDigitale" type="statoOggettoDigitale_type">

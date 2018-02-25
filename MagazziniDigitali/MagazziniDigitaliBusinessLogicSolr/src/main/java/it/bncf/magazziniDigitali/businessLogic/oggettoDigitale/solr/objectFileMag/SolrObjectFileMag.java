@@ -55,7 +55,7 @@ public class SolrObjectFileMag extends SolrObjectFile {
 				if (metadigit.getBib() != null){
 					if (metadigit.getBib().getLevel() != null){
 						params.add(ItemMD.TIPODOCUMENTO, 
-								(metadigit.getBib().getLevel().equals(BibliographicLevel.M)
+								(metadigit.getBib().getLevel().value().equals(BibliographicLevel.M.value())
 										?ItemMD.TIPODOCUMENTO_LIBRODIGITALIZZATO:
 											ItemMD.TIPODOCUMENTO_PERIODICODIGITALIZZATO));
 					}

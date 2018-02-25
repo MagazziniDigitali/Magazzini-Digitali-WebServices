@@ -53,7 +53,7 @@ public class ReaderTtlTest {
 		try {
 			readerTtl = new ReaderTtl(fTtl);
 			
-			System.out.println("Scheda Articolo\n");
+			System.out.println("\nScheda Articolo\n");
 			print(readerTtl.getArticle(), readerTtl.getArticle());
 			System.out.println("\nScheda Padre\n");
 			print(readerTtl.getArticle(), readerTtl.getArticle().getJournal());

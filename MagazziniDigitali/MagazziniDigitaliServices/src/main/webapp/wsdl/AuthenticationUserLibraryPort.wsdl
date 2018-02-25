@@ -48,7 +48,7 @@
     
     <wsdl:service name="AuthenticationUserLibraryService">
         <wsdl:port binding="ws:AuthenticationUserLibraryBind" name="AuthenticationUserLibraryPort">
-            <soap:address location="http://localhost:8080/MagazziniDigitaliServices/services/AuthenticationUserLibraryPort"/>
+            <soap:address location="http://localhost:8080/MagazziniDigitaliServices%23%232.0.19/services/AuthenticationUserLibraryPort"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

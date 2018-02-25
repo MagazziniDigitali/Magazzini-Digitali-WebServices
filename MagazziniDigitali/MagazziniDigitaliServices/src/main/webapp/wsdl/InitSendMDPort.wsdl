@@ -48,7 +48,7 @@
     
     <wsdl:service name="InitSendMDService">
         <wsdl:port binding="ws:InitSendMDBind" name="InitSendMDPort">
-            <soap:address location="http://localhost:8080/MagazziniDigitaliServices/services/InitSendMDPort"/>
+            <soap:address location="http://localhost:8080/MagazziniDigitaliServices%23%232.0.19/services/InitSendMDPort"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

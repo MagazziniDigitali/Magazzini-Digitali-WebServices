@@ -25,6 +25,8 @@ public class MDNodi implements Serializable {
 
 	private String descrizione;
 
+	private String tipo;
+
 	private String rsync;
 
 	private String rsyncPassword;
@@ -33,6 +35,16 @@ public class MDNodi implements Serializable {
 
 	private String pathStorage;
 
+	private String s3Url;
+
+	private String s3Region;
+
+	private String s3AccessKey;
+
+	private String s3SecretKey;
+
+	private String s3BucketName;
+	
 	private Integer active;
 
 	private String code;
@@ -164,6 +176,90 @@ public class MDNodi implements Serializable {
 	 */
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+	/**
+	 * @return the tipo
+	 */
+	public String getTipo() {
+		return tipo;
+	}
+
+	/**
+	 * @param tipo the tipo to set
+	 */
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
+	}
+
+	/**
+	 * @return the s3Url
+	 */
+	public String getS3Url() {
+		return s3Url;
+	}
+
+	/**
+	 * @param s3Url the s3Url to set
+	 */
+	public void setS3Url(String s3Url) {
+		this.s3Url = s3Url;
+	}
+
+	/**
+	 * @return the s3Region
+	 */
+	public String getS3Region() {
+		return s3Region;
+	}
+
+	/**
+	 * @param s3Region the s3Region to set
+	 */
+	public void setS3Region(String s3Region) {
+		this.s3Region = s3Region;
+	}
+
+	/**
+	 * @return the s3AccessKey
+	 */
+	public String getS3AccessKey() {
+		return s3AccessKey;
+	}
+
+	/**
+	 * @param s3AccessKey the s3AccessKey to set
+	 */
+	public void setS3AccessKey(String s3AccessKey) {
+		this.s3AccessKey = s3AccessKey;
+	}
+
+	/**
+	 * @return the s3SecretKey
+	 */
+	public String getS3SecretKey() {
+		return s3SecretKey;
+	}
+
+	/**
+	 * @param s3SecretKey the s3SecretKey to set
+	 */
+	public void setS3SecretKey(String s3SecretKey) {
+		this.s3SecretKey = s3SecretKey;
+	}
+
+	/**
+	 * @return the s3BucketName
+	 */
+	public String getS3BucketName() {
+		return s3BucketName;
+	}
+
+	/**
+	 * @param s3BucketName the s3BucketName to set
+	 */
+	public void setS3BucketName(String s3BucketName) {
+		this.s3BucketName = s3BucketName;
 	}
 
 }

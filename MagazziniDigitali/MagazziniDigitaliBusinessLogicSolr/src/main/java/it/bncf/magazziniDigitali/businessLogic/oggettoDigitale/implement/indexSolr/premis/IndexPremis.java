@@ -64,7 +64,7 @@ public abstract class IndexPremis<PX extends PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?
 			// admd = new IndexDocumentMD(fObj.getName());
 			checkObject((List<OCT>) premisInput.getObject(), logPublish, objectIdentifierPremis,admd, pathTar, configuration, false);
 			checkEvent((List<ECT>) premisInput.getEvent(), logPublish, objectIdentifierPremis, admd);
-			logPublish.info(name + " [" + objectIdentifierPremis + "]" + " Inizio pubblicazione in Solr");
+			logPublish.info("\n"+name + " [" + objectIdentifierPremis + "]" + " Inizio pubblicazione in Solr");
 			admd.commit();
 			// admd.send(configuration);
 			ris = true;
@@ -133,13 +133,13 @@ public abstract class IndexPremis<PX extends PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?
 		for (int x = 0; x < fl.length; x++) {
 			if (fl[x].isDirectory()) {
 				if (!deleteFolder(fl[x])) {
-					System.out.println("Problemi nella cancellazione della cartella ["+fl[x].getAbsolutePath()+"]");
+					log.error("\nProblemi nella cancellazione della cartella ["+fl[x].getAbsolutePath()+"]");
 					ris = false;
 				}
 			} else {
 				if (!fl[x].delete()) {
 					if (fl[x].exists()){
-						System.out.println("Problemi nella cancellazione del file ["+fl[x].getAbsolutePath()+"]");
+						log.error("\nProblemi nella cancellazione del file ["+fl[x].getAbsolutePath()+"]");
 						ris = false;
 					}
 				}

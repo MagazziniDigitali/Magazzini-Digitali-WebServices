@@ -110,6 +110,7 @@ public class ValidateFile {
 						+ file.getAbsolutePath() + "]");
 			}
 		} catch (CheckArchiveException e) {
+			e.printStackTrace();
 			log.error(e.getMessage(), e);
 			addError(e);
 		} catch (MDConfigurationException e) {

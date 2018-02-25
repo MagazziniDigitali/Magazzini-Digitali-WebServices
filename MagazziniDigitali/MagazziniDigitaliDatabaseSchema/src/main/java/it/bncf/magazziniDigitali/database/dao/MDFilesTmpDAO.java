@@ -9,11 +9,13 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.criterion.LogicalExpression;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
 import org.hibernate.sql.JoinType;
 
 import it.bncf.magazziniDigitali.database.entity.MDFilesTmp;
@@ -39,11 +41,14 @@ public class MDFilesTmpDAO extends GenericHibernateDAO<MDFilesTmp, String> {
 
 	@SuppressWarnings("unchecked")
 	public List<MDFilesTmp> find(MDIstituzione idIstituto,
-			String nomeFile, MDStato[] stato, String sha1,
+			String nomeFile, MDStato[] stato, String md5, String md564base, 
+			String sha1, String sha164base, String sha256, String sha25664base,
 			List<Order> orders) throws HibernateException,
 			HibernateUtilException {
 		Criteria criteria = null;
 		List<MDFilesTmp> result = null;
+		SimpleExpression val1 = null;
+		LogicalExpression log1 = null;
 
 		try {
 			beginTransaction();
@@ -52,8 +57,64 @@ public class MDFilesTmpDAO extends GenericHibernateDAO<MDFilesTmp, String> {
 			if (idIstituto != null) {
 				criteria.add(Restrictions.eq("idIstituto", idIstituto));
 			}
-			if (sha1 != null) {
-				criteria.add(Restrictions.eq("sha1", sha1));
+
+			if (md5 != null || md564base != null ||
+					sha1 != null || sha164base != null ||
+					sha256 != null || sha25664base != null) {
+
+			
+				if (md5 != null) {
+					val1 = Restrictions.eq("md5", md5);
+				}
+				if (md564base != null) {
+					if (val1 == null) {
+						val1 = Restrictions.eq("md564base", md564base);
+					} else {
+						log1 = Restrictions.or(val1, Restrictions.eq("md564base", md564base));
+					}
+				}
+				if (sha1 != null) {
+					if (val1 == null) {
+						val1 = Restrictions.eq("sha1", sha1);
+					} else if (log1 ==null) {
+						log1 = Restrictions.or(val1, Restrictions.eq("sha1", sha1));
+					} else {
+						log1 = Restrictions.or(log1, Restrictions.eq("sha1", sha1));
+					}
+				}
+				if (sha164base != null) {
+					if (val1 == null) {
+						val1 = Restrictions.eq("sha164base", sha164base);
+					} else if (log1 ==null) {
+						log1 = Restrictions.or(val1, Restrictions.eq("sha164base", sha164base));
+					} else {
+						log1 = Restrictions.or(log1, Restrictions.eq("sha164base", sha164base));
+					}
+				}
+				if (sha256 != null) {
+					if (val1 == null) {
+						val1 = Restrictions.eq("sha256", sha256);
+					} else if (log1 ==null) {
+						log1 = Restrictions.or(val1, Restrictions.eq("sha256", sha256));
+					} else {
+						log1 = Restrictions.or(log1, Restrictions.eq("sha256", sha256));
+					}
+				}
+				if (sha25664base != null) {
+					if (val1 == null) {
+						val1 = Restrictions.eq("sha25664base", sha25664base);
+					} else if (log1 ==null) {
+						log1 = Restrictions.or(val1, Restrictions.eq("sha25664base", sha25664base));
+					} else {
+						log1 = Restrictions.or(log1, Restrictions.eq("sha25664base", sha25664base));
+					}
+				}
+				
+				if (log1 != null) {
+					criteria.add(log1);
+				} else if (val1 != null) {
+					criteria.add(val1);
+				}
 			}
 			if (nomeFile != null) {
 				criteria.add(Restrictions.ilike("nomeFile", "%"+nomeFile+"%"));
