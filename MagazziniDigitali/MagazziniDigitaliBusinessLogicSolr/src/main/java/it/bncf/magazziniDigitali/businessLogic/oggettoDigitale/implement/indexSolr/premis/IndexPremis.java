@@ -56,7 +56,7 @@ public abstract class IndexPremis<PX extends PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?
 				tar = new TarMD();
 				tar.decompress(fObj, pathTar);
 			}
-			admd = new AddDocumentMD(configuration.getSoftwareConfigString("solr.URL"),
+ 			admd = new AddDocumentMD(configuration.getSoftwareConfigString("solr.URL"),
 					configuration.getSoftwareConfigBoolean("solr.Cloud"),
 					configuration.getSoftwareConfigString("solr.collection"),
 					configuration.getSoftwareConfigInteger("solr.connectionTimeOut"),

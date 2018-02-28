@@ -119,9 +119,9 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 					null, writeFilePremisDB(filePremis, configuration.getSoftwareConfigString("path.premis")));
 			log.error(name + " [" + objectIdentifierPremis + "] " + e.getMessage(), e);
 		} catch (Exception e) {
+			log.error(name + " [" + objectIdentifierPremis + "] " + e.getMessage(), e);
 			mdFileTmpBusiness.updateStopValidate(mdFilesTmp.getId(), null, false, new Exception[] { e },
 					null, writeFilePremisDB(filePremis, configuration.getSoftwareConfigString("path.premis")));
-			log.error(name + " [" + objectIdentifierPremis + "] " + e.getMessage(), e);
 		} finally {
 			logValidate.info("\n"+name + " [" + objectIdentifierPremis + "]" + " Fine della validazione");
 		}
@@ -383,19 +383,30 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 						stopDecomp = new GregorianCalendar();
 						stopDecomp.setTimeInMillis(mdFilesTmp.getDecompDataEnd().getTime());
 					}
-					if (mdFilesTmp.getDecompEsito()){
-						logValidate.info("\n"+name + " [" + objectIdentifierPremis + "]" + " Tempo di decompressione da "
-								+ (startDecomp == null ? "none" : df.format(startDecomp.getTime())) + " a "
-								+ (stopDecomp == null ? "none" : df.format(stopDecomp.getTime())));
-						premis.addEvent("decompress", startDecomp, stopDecomp, eventDetailDecomp, "OK", null, null,
-								configuration.getMDSoftware(),
-								// Configuration.getValue("demoni."
-								// + application + ".UUID"),
-								objectIdentifierMaster);
-						result = true;
+					if (mdFilesTmp.getDecompEsito()!= null) {
+						if (mdFilesTmp.getDecompEsito()){
+							logValidate.info("\n"+name + " [" + objectIdentifierPremis + "]" + " Tempo di decompressione da "
+									+ (startDecomp == null ? "none" : df.format(startDecomp.getTime())) + " a "
+									+ (stopDecomp == null ? "none" : df.format(stopDecomp.getTime())));
+							premis.addEvent("decompress", startDecomp, stopDecomp, eventDetailDecomp, "OK", null, null,
+									configuration.getMDSoftware(),
+									// Configuration.getValue("demoni."
+									// + application + ".UUID"),
+									objectIdentifierMaster);
+							result = true;
+						} else {
+							logValidate.error("\n"+name + " [" + objectIdentifierPremis + "]"
+									+ " Riscontrato un problema nella procedura di Unzip");
+							premis.addEvent("decompress", startDecomp, stopDecomp, eventDetailDecomp, "KO",
+									validate.getUnzipError(), null, configuration.getMDSoftware(),
+									// Configuration.getValue("demoni."
+									// + application + ".UUID"),
+									objectIdentifierMaster);
+							premis.write(filePremis, false);
+						}
 					} else {
 						logValidate.error("\n"+name + " [" + objectIdentifierPremis + "]"
-								+ " Riscontrato un problema nella procedura di Unzip");
+								+ " Riscontrato un problema nella definizione dello stato di decompressione");
 						premis.addEvent("decompress", startDecomp, stopDecomp, eventDetailDecomp, "KO",
 								validate.getUnzipError(), null, configuration.getMDSoftware(),
 								// Configuration.getValue("demoni."

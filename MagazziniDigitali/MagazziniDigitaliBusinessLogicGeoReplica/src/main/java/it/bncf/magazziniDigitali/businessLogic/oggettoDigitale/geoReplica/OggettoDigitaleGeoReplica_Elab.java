@@ -276,8 +276,29 @@ class OggettoDigitaleGeoReplica_Elab extends OggettoDigitaleGeoReplica_Verify {
 					null,
 					writeFilePremisDB(filePremis, configuration.getSoftwareConfigString("path.premis")));
 			log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
+		} catch (Exception e) {
+			esito = false;
+			if (premisElab != null) {
+				premisElab.addEvent(
+						"Error",
+						null,
+						null,
+						null,
+						"KO",
+						new String[] { e.getMessage() },
+						null,
+						configuration.getMDSoftware()
+//						Configuration.getValue("demoni."
+//								+ application + ".UUID")
+						, null);
+			}
+			mdFileTmpBusiness.updateStopArchive(mdFilesTmp.getId(), false,
+					new Exception[] { e },
+					null,
+					writeFilePremisDB(filePremis, configuration.getSoftwareConfigString("path.premis")));
+			log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
 		}finally{
-			logPublish.info("\n"+name+" Fine l'elaborazione del file ["+objectIdentifierPremis+"]");
+			log.info("\n"+name+" Fine l'elaborazione del file ["+objectIdentifierPremis+"]");
 			try {
 				if (premisElab != null){
 					premisElab.write(filePremis, false);
