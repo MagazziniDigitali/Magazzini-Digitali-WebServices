@@ -102,7 +102,8 @@ public class ValidateFile {
 			checkArchive.setUnZip(true);
 			checkArchive.setRemoveOrgin(removeOrigin);
 
-			archive = checkArchive.check(file, fileTar, deCompEsito, decompressRequired);
+			archive = checkArchive.check(file, fileTar, deCompEsito, decompressRequired,
+					new File(configuration.getSoftwareConfigString("path.droid.tmp")));
 			if (archive != null) {
 				check((ArchiveMD)archive);
 			} else {
