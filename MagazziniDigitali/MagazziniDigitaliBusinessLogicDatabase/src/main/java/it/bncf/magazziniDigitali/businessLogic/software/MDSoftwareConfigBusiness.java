@@ -21,6 +21,7 @@ import it.bncf.magazziniDigitali.database.dao.MDSoftwareConfigDAO;
 import it.bncf.magazziniDigitali.database.entity.MDNodi;
 import it.bncf.magazziniDigitali.database.entity.MDSoftware;
 import it.bncf.magazziniDigitali.database.entity.MDSoftwareConfig;
+import mx.randalf.hibernate.FactoryDAO;
 import mx.randalf.hibernate.exception.HibernateUtilException;
 
 /**
@@ -163,5 +164,35 @@ public class MDSoftwareConfigBusiness extends BusinessLogic<MDSoftwareConfig, MD
 			throw e;
 		}
 		return jsonArray;
+	}
+
+	/* (non-Javadoc)
+	 * @see it.bncf.magazziniDigitali.businessLogic.BusinessLogic#findById(java.lang.String)
+	 */
+	@Override
+	public MDSoftwareConfig findById(String id) throws HibernateException, HibernateUtilException {
+		MDSoftwareConfig mdSoftwareConfig = null;
+		
+		mdSoftwareConfig = super.findById(id);
+		if (mdSoftwareConfig.getIdNodo() != null) {
+			FactoryDAO.initialize(mdSoftwareConfig.getIdNodo());
+		}
+		if (mdSoftwareConfig.getIdSoftware() != null) {
+			FactoryDAO.initialize(mdSoftwareConfig.getIdSoftware());
+			if (mdSoftwareConfig.getIdSoftware().getIdIstituzione() != null) {
+				FactoryDAO.initialize(mdSoftwareConfig.getIdSoftware().getIdIstituzione());
+				if (mdSoftwareConfig.getIdSoftware().getIdIstituzione().getIdRegione() != null) {
+					FactoryDAO.initialize(mdSoftwareConfig.getIdSoftware().getIdIstituzione().getIdRegione());
+				}
+			}
+			if (mdSoftwareConfig.getIdSoftware().getIdRigths() != null) {
+				FactoryDAO.initialize(mdSoftwareConfig.getIdSoftware().getIdRigths());
+				if (mdSoftwareConfig.getIdSoftware().getIdRigths().getIdModalitaAccesso() != null) {
+					FactoryDAO.initialize(mdSoftwareConfig.getIdSoftware().getIdRigths().getIdModalitaAccesso());
+				}
+			}
+		}
+		// TODO Auto-generated method stub
+		return mdSoftwareConfig;
 	}
 }

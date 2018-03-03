@@ -20,6 +20,7 @@ import it.bncf.magazziniDigitali.businessLogic.modalitaAccesso.MDModalitaAccesso
 import it.bncf.magazziniDigitali.database.dao.MDRigthsDAO;
 import it.bncf.magazziniDigitali.database.entity.MDModalitaAccesso;
 import it.bncf.magazziniDigitali.database.entity.MDRigths;
+import mx.randalf.hibernate.FactoryDAO;
 import mx.randalf.hibernate.exception.HibernateUtilException;
 
 /**
@@ -205,5 +206,17 @@ public class MDRigthsBusiness extends BusinessLogic<MDRigths, MDRigthsDAO, Strin
 			throw e;
 		}
 		return jsonArray;
+	}
+
+	/* (non-Javadoc)
+	 * @see it.bncf.magazziniDigitali.businessLogic.BusinessLogic#findById(java.lang.String)
+	 */
+	@Override
+	public MDRigths findById(String id) throws HibernateException, HibernateUtilException {
+		MDRigths mdRigths = null;
+		
+		mdRigths = super.findById(id);
+		FactoryDAO.initialize(mdRigths.getIdModalitaAccesso());
+		return mdRigths;
 	}
 }
