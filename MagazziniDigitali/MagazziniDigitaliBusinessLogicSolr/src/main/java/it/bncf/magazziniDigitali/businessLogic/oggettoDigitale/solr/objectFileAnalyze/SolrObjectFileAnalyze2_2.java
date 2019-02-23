@@ -318,8 +318,10 @@ public class SolrObjectFileAnalyze2_2 extends
 		for (int x = 0; x < objects.size(); x++) {
 			object = objects.get(x);
 			if (object.getRelatedObjectIdentifierType().equals(PremisXsd.UUID_MD)) {
-				params.add(ItemMD._ROOT_, object.getRelatedObjectIdentifierValue());
-				isValid = true;
+				if (object.getRelatedObjectIdentifierValue() !=null) {
+					params.add(ItemMD._ROOT_, object.getRelatedObjectIdentifierValue());
+					isValid = true;
+				}
 			}
 		}
 		return isValid;

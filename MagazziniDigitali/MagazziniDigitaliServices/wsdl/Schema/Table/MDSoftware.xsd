@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://www.depositolegale.it/software"
+    xmlns="http://www.depositolegale.it/software" xmlns:login="http://www.depositolegale.it/login"
+    xmlns:istituzione="http://www.depositolegale.it/istituzione"
+    xmlns:errorMsg="http://www.depositolegale.it/errorMsg"
+    xmlns:nodi="http://www.depositolegale.it/nodi"
+    xmlns:rigths="http://www.depositolegale.it/rigths">
+    <xs:import namespace="http://www.depositolegale.it/login" schemaLocation="../Tools/Login.xsd"/>
+    <xs:import namespace="http://www.depositolegale.it/errorMsg"
+        schemaLocation="../Tools/ErrorMsg.xsd"/>
+    <xs:import namespace="http://www.depositolegale.it/istituzione"
+        schemaLocation="MDIstituzione.xsd"/>
+    <xs:import namespace="http://www.depositolegale.it/rigths" schemaLocation="MDRigths.xsd"/>
+    <xs:import namespace="http://www.depositolegale.it/nodi" schemaLocation="MDNodi.xsd"/>
+    <xs:element name="software">
+        <xs:annotation>
+            <xs:documentation xml:lang="it">Informazioni relative all'istituto</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="login:authentication"/>
+                <xs:choice>
+                    <xs:element maxOccurs="unbounded" ref="errorMsg:errorMsg"/>
+                    <xs:sequence>
+                        <xs:element name="id" type="xs:string">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="it">Identificativo del software
+</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="nome" type="xs:string">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="it">Nome del software</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element ref="istituzione:istituzione"/>
+                        <xs:element minOccurs="0" ref="rigths:rigth"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" ref="softwareConfig"/>
+                    </xs:sequence>
+                </xs:choice>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="softwareConfig">
+        <xs:annotation>
+            <xs:documentation xml:lang="it">Lista dei parametri associati al Software</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="it">Identificativo</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="nome" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="id">Nome della chiave del Parametro</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element minOccurs="0" name="descrizione" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="it">Eventuale Descrizione</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:choice>
+                    <xs:element name="value" type="xs:string">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="it">Valore assegnato al Parametro</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element ref="nodi:nodo"/>
+                </xs:choice>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

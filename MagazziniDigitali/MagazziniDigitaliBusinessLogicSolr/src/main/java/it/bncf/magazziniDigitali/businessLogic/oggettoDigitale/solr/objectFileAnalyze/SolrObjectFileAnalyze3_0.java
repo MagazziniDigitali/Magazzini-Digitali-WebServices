@@ -316,8 +316,10 @@ public class SolrObjectFileAnalyze3_0 extends SolrObjectFileAnalyze<File, Object
 		for (int x=0;x<objects.size(); x++){
 			object = objects.get(x);
 			if (object.getRelatedObjectIdentifierType().getValue().equals(PremisXsd.UUID_MD)){
-				params.add(ItemMD._ROOT_, object.getRelatedObjectIdentifierValue());
-				isValid = true;
+				if (object.getRelatedObjectIdentifierValue() != null) {
+					params.add(ItemMD._ROOT_, object.getRelatedObjectIdentifierValue());
+					isValid = true;
+				}
 			}
 		}
 		return isValid;

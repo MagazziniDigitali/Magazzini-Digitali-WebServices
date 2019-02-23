@@ -42,38 +42,38 @@ public class MDRegistroIngressoDAO extends GenericHibernateDAO<MDRegistroIngress
 	 * @return
 	 * @throws SQLException
 	 */
-	@SuppressWarnings("unchecked")
-	public String findLastKey() throws HibernateException, HibernateUtilException{
-		List<MDRegistroIngresso> result = null;
-		Criteria criteria = null;
-		String res = null;
-		
-	    try {
-			beginTransaction();
-			criteria = this.createCriteria();
-			initTableJoin(criteria);
-
-			criteria.addOrder(Order.desc("timestampIngest"));
-			paging(criteria);
-			result = criteria.list();
-			if (result != null &&
-					result.size()>0){
-				res = result.get(0).getContainerFingerPrint();
-			}
-			commitTransaction();
-		} catch (HibernateException e) {
-			rollbackTransaction();
-			throw e;
-		} catch (HibernateUtilException e) {
-			rollbackTransaction();
-			throw e;
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-			rollbackTransaction();
-			throw new HibernateUtilException(e.getMessage(), e);
-		}
-	    return res;
-	}
+//	@SuppressWarnings("unchecked")
+//	public String findLastKey() throws HibernateException, HibernateUtilException{
+//		List<MDRegistroIngresso> result = null;
+//		Criteria criteria = null;
+//		String res = null;
+//		
+//	    try {
+//			beginTransaction();
+//			criteria = this.createCriteria();
+//			initTableJoin(criteria);
+//
+//			criteria.addOrder(Order.desc("timestampIngest"));
+//			paging(criteria);
+//			result = criteria.list();
+//			if (result != null &&
+//					result.size()>0){
+//				res = result.get(0).getContainerFingerPrint();
+//			}
+//			commitTransaction();
+//		} catch (HibernateException e) {
+//			rollbackTransaction();
+//			throw e;
+//		} catch (HibernateUtilException e) {
+//			rollbackTransaction();
+//			throw e;
+//		} catch (Exception e) {
+//			log.error(e.getMessage(), e);
+//			rollbackTransaction();
+//			throw new HibernateUtilException(e.getMessage(), e);
+//		}
+//	    return res;
+//	}
 
 	@SuppressWarnings("unchecked")
 	public List<MDRegistroIngresso> findCoda(Integer[] stato, boolean timeStamCodaNull,

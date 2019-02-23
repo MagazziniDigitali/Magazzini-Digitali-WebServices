@@ -23,6 +23,7 @@ import org.hibernate.criterion.Order;
 import it.bncf.magazziniDigitali.businessLogic.BusinessLogic;
 import it.bncf.magazziniDigitali.businessLogic.HashTable;
 import it.bncf.magazziniDigitali.businessLogic.exception.BusinessLogicException;
+import it.bncf.magazziniDigitali.database.dao.MDContatoriDAO;
 import it.bncf.magazziniDigitali.database.dao.MDRegistroIngressoDAO;
 import it.bncf.magazziniDigitali.database.entity.MDRegistroIngresso;
 import it.bncf.magazziniDigitali.database.entity.MDStato;
@@ -84,6 +85,7 @@ public class MDRegistroIngressoBusiness extends BusinessLogic<MDRegistroIngresso
 			record.set("containerFingerPrintChain", dati.getContainerFingerPrintChain());
 		}
 
+		record.set("containerFingerChain", dati.getContainerFingerChain());
 		record.set("containerType", dati.getContainerType());
 		record.set("agentMachineIngest", dati.getAgentMachineIngest());
 		record.set("agentSoftwareIngest", dati.getAgentSoftwareIngest());
@@ -419,6 +421,10 @@ public class MDRegistroIngressoBusiness extends BusinessLogic<MDRegistroIngresso
 			table.setContainerFingerPrintChain((String) dati.get("containerFingerPrintChain"));
 		}
 
+		if (dati.containsKey("containerFingerChain")) {
+			table.setContainerFingerChain((String) dati.get("containerFingerChain"));
+		}
+
 		if (dati.containsKey("containerType")) {
 			table.setContainerType((Integer) dati.get("containerType"));
 		}
@@ -614,16 +620,20 @@ public class MDRegistroIngressoBusiness extends BusinessLogic<MDRegistroIngresso
 			throws IllegalAccessException, InvocationTargetException, NoSuchMethodException, NamingException,
 			HibernateException, HibernateUtilException {
 
-		MDRegistroIngressoDAO registroDAO = null;
+//		MDRegistroIngressoDAO registroDAO = null;
+		MDContatoriDAO mdContatoriDAO = null;
 		HashTable<String, Object> dati = null;
 		String containerFingerPrintChain = null;
+		String containerFingerChain = null;
 
 		try {
-			registroDAO = new MDRegistroIngressoDAO();
-			containerFingerPrintChain = registroDAO.findLastKey();
-			if (containerFingerPrintChain != null) {
-				containerFingerPrintChain = containerFingerPrint + containerFingerPrintChain;
+			mdContatoriDAO = new MDContatoriDAO();
+			containerFingerChain = mdContatoriDAO.readKey("RegistroIngresso");
+			if (containerFingerChain != null) {
+				containerFingerPrintChain = containerFingerPrint + containerFingerChain;
 			}
+//			registroDAO = new MDRegistroIngressoDAO();
+//			containerFingerChain = registroDAO.findLastKey();
 
 			dati = new HashTable<String, Object>();
 			dati.put("id", id);
@@ -635,6 +645,9 @@ public class MDRegistroIngressoBusiness extends BusinessLogic<MDRegistroIngresso
 			dati.put("containerFingerPrint", containerFingerPrint);
 			if (containerFingerPrintChain != null) {
 				dati.put("containerFingerPrintChain", containerFingerPrintChain);
+				dati.put("containerFingerChain", containerFingerChain);
+			} else {
+				dati.put("containerFingerChain", "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 			}
 			dati.put("containerType", containerType);
 			dati.put("agentMachineIngest", agentMachineIngest);
@@ -642,6 +655,8 @@ public class MDRegistroIngressoBusiness extends BusinessLogic<MDRegistroIngresso
 			dati.put("status", 0);
 			dati.put("timestampInit", timeStampInit);
 			save(dati, true);
+			mdContatoriDAO.writeKey("RegistroIngresso", containerFingerPrint);
+
 		} catch (IllegalAccessException e) {
 			throw e;
 		} catch (InvocationTargetException e) {

@@ -28,6 +28,9 @@
         <property name="containerFingerPrintChain" type="java.lang.String">
             <column name="CONTAINERFINGERPRINTCHAIN" />
         </property>
+        <property name="containerFingerChain" type="java.lang.String">
+            <column name="CONTAINERFINGERCHAIN" />
+        </property>
         <property name="containerType" type="java.lang.Integer">
             <column name="CONTAINERTYPE" />
         </property>

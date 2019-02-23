@@ -33,6 +33,8 @@ public class MDRegistroIngresso implements Serializable {
 	private String containerFingerPrint;
 
 	private String containerFingerPrintChain;
+	
+	private String containerFingerChain;
 
 	private Integer containerType;
 
@@ -206,5 +208,19 @@ public class MDRegistroIngresso implements Serializable {
 	 */
 	public void setTimestampExport(Date timestampExport) {
 		this.timestampExport = timestampExport;
+	}
+
+	/**
+	 * @return the containerFingerChain
+	 */
+	public String getContainerFingerChain() {
+		return containerFingerChain;
+	}
+
+	/**
+	 * @param containerFingerChain the containerFingerChain to set
+	 */
+	public void setContainerFingerChain(String containerFingerChain) {
+		this.containerFingerChain = containerFingerChain;
 	}
 }

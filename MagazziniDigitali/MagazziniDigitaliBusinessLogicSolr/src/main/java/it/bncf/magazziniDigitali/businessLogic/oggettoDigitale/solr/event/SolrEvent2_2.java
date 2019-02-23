@@ -87,12 +87,14 @@ public class SolrEvent2_2 extends SolrEvent<EventComplexType, LinkingObjectIdent
 		LinkingObjectIdentifierComplexType value;
 		for (int x=0; x<values.size(); x++){
 			value =values.get(x);
-			if (value.getLinkingObjectIdentifierType().equals("codiceNBN")){
-				params.add(ItemMD.NBN, value.getLinkingObjectIdentifierValue());
-			} else if (value.getLinkingObjectIdentifierType().equals("urlOriginal")){
-				params.add(ItemMD.URL, value.getLinkingObjectIdentifierValue());
-			} else {
-				params.add(ItemMD._ROOT_, value.getLinkingObjectIdentifierValue());
+			if (value != null) {
+				if (value.getLinkingObjectIdentifierType().equals("codiceNBN")){
+					params.add(ItemMD.NBN, value.getLinkingObjectIdentifierValue());
+				} else if (value.getLinkingObjectIdentifierType().equals("urlOriginal")){
+					params.add(ItemMD.URL, value.getLinkingObjectIdentifierValue());
+				} else {
+					params.add(ItemMD._ROOT_, value.getLinkingObjectIdentifierValue());
+				}
 			}
 		}
 	}
