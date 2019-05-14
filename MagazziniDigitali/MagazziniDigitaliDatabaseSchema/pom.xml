@@ -74,4 +74,9 @@
 			<version>1.0.14</version>
 		</dependency>
 	</dependencies>
+	<parent>
+		<groupId>it.bncf.magazziniDigitali</groupId>
+		<artifactId>MagazziniDigitali</artifactId>
+		<version>1.0.1</version>
+	</parent>
 </project>

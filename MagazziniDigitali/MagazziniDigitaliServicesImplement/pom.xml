@@ -3,11 +3,10 @@
   <parent>
     <groupId>it.bncf.magazziniDigitali</groupId>
     <artifactId>MagazziniDigitali</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
   </parent>
   <groupId>it.bncf.magazziniDigitali.services.implement</groupId>
   <artifactId>MagazziniDigitaliServicesImplement</artifactId>
-  <version>1.0.1</version>
   <properties>
     <maven.compiler.source>1.6</maven.compiler.source>
     <maven.compiler.target>1.6</maven.compiler.target>
