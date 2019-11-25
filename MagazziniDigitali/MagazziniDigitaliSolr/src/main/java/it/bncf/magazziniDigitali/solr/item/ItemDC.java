@@ -154,6 +154,11 @@ public class ItemDC extends ItemEvent{
 	public static String KEYWORDSDOC="keywordsDoc";
 
 	/**
+	 * Campo utilizzato per la ricerca per parola su tutti i campi
+	 */
+	public static String OCR="ocr";
+
+	/**
 	 * 
 	 */
 	public ItemDC() {
@@ -186,6 +191,7 @@ public class ItemDC extends ItemEvent{
 		addColumn(PIECEGIORNO, true, true, true, true, true);
 		addColumn(PIECEANNATA, true, true, true, true, true);
 		addColumn(KEYWORDSDOC, true, false, false, false, false);
+		addColumn(OCR, true, false, false, true, false);
 	}
 
 }
