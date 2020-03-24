@@ -144,6 +144,21 @@ public class ItemDC extends ItemEvent{
 	public static String PIECEANNATA="pieceannata";
 
 	/**
+	 * Campo relativo alla pieceIn dell'opera che verrà utilizzato per le ricerche
+	 */
+	public static String PIECEFASCICOLO="piecefascicolo";
+
+	/**
+	 * Campo relativo alla pieceIn dell'opera che verrà utilizzato per le ricerche
+	 */
+	public static String PIECESUPPLEMENTO="piecesupplemento";
+
+	/**
+	 * Campo relativo alla pieceIn dell'opera che verrà utilizzato per le ricerche
+	 */
+	public static String PIECESTRAORDINARIA="piecestraordinaria";
+
+	/**
 	 * Campo utilizzato per la ricerca per parola su tutti i campi
 	 */
 	public static String KEYWORDS="keywords";
@@ -190,6 +205,9 @@ public class ItemDC extends ItemEvent{
 		addColumn(PIECEMESEDESCR, true, true, true, true, true);
 		addColumn(PIECEGIORNO, true, true, true, true, true);
 		addColumn(PIECEANNATA, true, true, true, true, true);
+		addColumn(PIECEFASCICOLO, true, true, true, true, true);
+		addColumn(PIECESUPPLEMENTO, true, true, true, true, true);
+		addColumn(PIECESTRAORDINARIA, true, true, true, true, true);
 		addColumn(KEYWORDSDOC, true, false, false, false, false);
 		addColumn(OCR, true, false, false, true, false);
 	}

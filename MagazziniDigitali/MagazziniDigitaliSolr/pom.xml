@@ -6,7 +6,7 @@
     <version>1.0.1</version>
   </parent>
   <artifactId>MagazziniDigitaliSolr</artifactId>
-  <version>2.0.19</version>
+  <version>2.0.20</version>
   <description>Librerie per l'interfaccia verso il database Solr</description>
   <groupId>it.bncf.magazziniDigitali.solr</groupId>
   <properties>
