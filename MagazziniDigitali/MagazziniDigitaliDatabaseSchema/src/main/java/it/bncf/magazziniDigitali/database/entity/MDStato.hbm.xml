@@ -3,19 +3,30 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 22-ott-2014 15.40.53 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="it.bncf.magazziniDigitali.database.entity.MDStato" table="MDStato">
-        <id name="id" type="java.lang.String">
-            <column name="ID" />
-            <generator class="assigned" />
-        </id>
-        <property name="descrizione" type="java.lang.String">
-            <column name="DESCRIZIONE" />
-        </property>
-        <property name="sequenza" type="java.lang.Integer">
-            <column name="SEQUENZA" />
-        </property>
-        <property name="optGroup" type="java.lang.String">
-            <column name="OPTGROUP" />
-        </property>
-        </class>
+	<class name="it.bncf.magazziniDigitali.database.entity.MDStato"
+		table="MDStato">
+		<comment>Questa tabella viene utilizzata per indicare la lista degli
+			stati gestini nel programma</comment>
+		<id name="id" type="java.lang.String">
+			<column name="ID" length="20">
+				<comment>Identificativo</comment>
+			</column>
+			<generator class="assigned" />
+		</id>
+		<property name="descrizione" type="java.lang.String">
+			<column name="DESCRIZIONE" length="255" not-null="true">
+				<comment>Descrizione dello Stato</comment>
+			</column>
+		</property>
+		<property name="sequenza" type="java.lang.Integer">
+			<column name="SEQUENZA" not-null="true">
+				<comment>Indica l\'ordine nella visualizzazione nelle liste</comment>
+			</column>
+		</property>
+		<property name="optGroup" type="java.lang.String">
+			<column name="OPTGROUP" length="255" not-null="true">
+				<comment>Indica il raggruppamento della tipologia di stato</comment>
+			</column>
+		</property>
+	</class>
 </hibernate-mapping>

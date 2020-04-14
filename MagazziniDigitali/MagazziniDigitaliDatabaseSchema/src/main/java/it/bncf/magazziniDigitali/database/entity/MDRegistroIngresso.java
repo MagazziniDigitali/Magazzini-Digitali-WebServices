@@ -4,7 +4,7 @@
 package it.bncf.magazziniDigitali.database.entity;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Timestamp;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -22,7 +22,7 @@ public class MDRegistroIngresso implements Serializable {
 	@Id
 	private String id;
 
-	private Date timestampIngest;
+	private Timestamp timestampIngest;
 
 	private String agentDepositor;
 
@@ -44,17 +44,17 @@ public class MDRegistroIngresso implements Serializable {
 
 	private Integer status;
 
-	private Date timestampInit;
+	private Timestamp timestampInit;
 
-	private Date timestampElab;
+	private Timestamp timestampElab;
 
-	private Date timestampPub;
+	private Timestamp timestampPub;
 
-	private Date timestampErr;
+	private Timestamp timestampErr;
 
-	private Date timestampCoda;
+	private Timestamp timestampCoda;
 
-	private Date timestampExport;
+	private Timestamp timestampExport;
 	
 	/**
 	 * 
@@ -70,11 +70,11 @@ public class MDRegistroIngresso implements Serializable {
 		this.id = id;
 	}
 
-	public Date getTimestampIngest() {
+	public Timestamp getTimestampIngest() {
 		return timestampIngest;
 	}
 
-	public void setTimestampIngest(Date timestampIngest) {
+	public void setTimestampIngest(Timestamp timestampIngest) {
 		this.timestampIngest = timestampIngest;
 	}
 
@@ -150,63 +150,63 @@ public class MDRegistroIngresso implements Serializable {
 		this.status = status;
 	}
 
-	public Date getTimestampInit() {
+	public Timestamp getTimestampInit() {
 		return timestampInit;
 	}
 
-	public void setTimestampInit(Date timestampInit) {
+	public void setTimestampInit(Timestamp timestampInit) {
 		this.timestampInit = timestampInit;
 	}
 
-	public Date getTimestampElab() {
+	public Timestamp getTimestampElab() {
 		return timestampElab;
 	}
 
-	public void setTimestampElab(Date timestampElab) {
+	public void setTimestampElab(Timestamp timestampElab) {
 		this.timestampElab = timestampElab;
 	}
 
-	public Date getTimestampPub() {
+	public Timestamp getTimestampPub() {
 		return timestampPub;
 	}
 
-	public void setTimestampPub(Date timestampPub) {
+	public void setTimestampPub(Timestamp timestampPub) {
 		this.timestampPub = timestampPub;
 	}
 
-	public Date getTimestampErr() {
+	public Timestamp getTimestampErr() {
 		return timestampErr;
 	}
 
-	public void setTimestampErr(Date timestampErr) {
+	public void setTimestampErr(Timestamp timestampErr) {
 		this.timestampErr = timestampErr;
 	}
 
 	/**
 	 * @return the timestampCoda
 	 */
-	public Date getTimestampCoda() {
+	public Timestamp getTimestampCoda() {
 		return timestampCoda;
 	}
 
 	/**
 	 * @param timestampCoda the timestampCoda to set
 	 */
-	public void setTimestampCoda(Date timestampCoda) {
+	public void setTimestampCoda(Timestamp timestampCoda) {
 		this.timestampCoda = timestampCoda;
 	}
 
 	/**
 	 * @return the timestampExport
 	 */
-	public Date getTimestampExport() {
+	public Timestamp getTimestampExport() {
 		return timestampExport;
 	}
 
 	/**
 	 * @param timestampExport the timestampExport to set
 	 */
-	public void setTimestampExport(Date timestampExport) {
+	public void setTimestampExport(Timestamp timestampExport) {
 		this.timestampExport = timestampExport;
 	}
 

@@ -5,25 +5,46 @@
 
 <!-- Generated 16-lug-2014 20.54.46 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="it.bncf.magazziniDigitali.database.entity.MDRegistroIngressoError" table="MDRegistroIngressoError">
-        <id name="id" type="java.lang.String">
-            <column name="ID" />
-            <generator class="assigned" />
-        </id>
-        <many-to-one name="idMDRegistroIngresso" class="it.bncf.magazziniDigitali.database.entity.MDRegistroIngresso" fetch="join">
-            <column name="ID_MDREGISTROINGRESSO" />
-        </many-to-one>
-        <property name="dataIns" type="java.util.Date">
-            <column name="DATA_INS" />
-        </property>
-        <many-to-one name="type" class="it.bncf.magazziniDigitali.database.entity.MDStato" fetch="join">
-            <column name="TYPE" />
-        </many-to-one>
-        <property name="msgError" type="java.lang.String">
-            <column name="MSGERROR" />
-        </property>
-        <property name="traceError" type="java.lang.String">
-            <column name="TRACEERROR" />
-        </property>
+	<class
+		name="it.bncf.magazziniDigitali.database.entity.MDRegistroIngressoError"
+		table="MDRegistroIngressoError">
+		<comment>Lista degli errori relativi al RegistroIngresso</comment>
+		<id name="id" type="java.lang.String">
+			<column name="ID" length="36">
+				<comment>Identificativo relativo alla registrazione degli errori nel
+					registro di ingresso</comment>
+			</column>
+			<generator class="uuid.hex" />
+		</id>
+		<many-to-one name="idMDRegistroIngresso"
+			class="it.bncf.magazziniDigitali.database.entity.MDRegistroIngresso"
+			fetch="join">
+			<column name="ID_MDREGISTROINGRESSO" not-null="true">
+				<comment>Identificativo del contenitore di riferimento</comment>
+			</column>
+		</many-to-one>
+		<property name="dataIns" type="java.sql.Timestamp">
+			<column name="DATA_INS" not-null="true">
+				<comment>Data e ora di inserimento</comment>
+			</column>
+		</property>
+		<many-to-one name="type"
+			class="it.bncf.magazziniDigitali.database.entity.MDStato"
+			fetch="join">
+			<column name="TYPE" not-null="true">
+				<comment>Tipo messaggio di errore</comment>
+			</column>
+		</many-to-one>
+		<property name="msgError" type="java.lang.String">
+			<column name="MSGERROR" length="500" not-null="true">
+				<comment>Messaggio di errore</comment>
+			</column>
+		</property>
+		<property name="traceError" type="java.lang.String">
+			<column name="TRACEERROR" length="10000" not-null="false">
+				<comment>Ricostruzione della traccia che ha portato all\'errore
+					nell\'applicazione</comment>
+			</column>
+		</property>
 	</class>
 </hibernate-mapping>

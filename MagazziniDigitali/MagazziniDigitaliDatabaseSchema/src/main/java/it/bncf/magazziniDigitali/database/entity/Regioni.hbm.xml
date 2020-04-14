@@ -5,15 +5,24 @@
 <hibernate-mapping>
 	<class name="it.bncf.magazziniDigitali.database.entity.Regioni"
 		table="regioni">
+		<comment>Lista delle regioni Italiane</comment>
 		<id name="id" type="java.lang.Integer">
-			<column name="ID" />
+			<column name="ID">
+				<comment>Identificativo</comment>
+			</column>
 			<generator class="assigned" />
 		</id>
 		<property name="abb" type="java.lang.String">
-			<column name="ABB" />
+			<column name="ABB" length="4" not-null="true"
+				unique-key="U_Regioni_01">
+				<comment>Sigla della Regione</comment>
+			</column>
 		</property>
 		<property name="nomeRegione" type="java.lang.String">
-			<column name="NOMEREGIONE" />
+			<column name="NOMEREGIONE" length="200" not-null="true"
+				unique-key="U_Regioni_02">
+				<comment>Nome della Regione</comment>
+			</column>
 		</property>
 	</class>
 </hibernate-mapping>

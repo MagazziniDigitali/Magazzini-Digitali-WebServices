@@ -3,49 +3,86 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 22-ott-2014 15.34.38 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="it.bncf.magazziniDigitali.database.entity.MDTicket" table="MDTicket">
-        <id name="id" type="java.lang.String">
-            <column name="ID" />
-            <generator class="assigned" />
-        </id>
-        <property name="objectIdentifier" type="java.lang.String">
-            <column name="OBJECTIDENTIFIER" />
-        </property>
-        <property name="dataStart" type="java.sql.Timestamp">
-            <column name="DATA_START" />
-        </property>
-        <property name="dataEnd" type="java.sql.Timestamp">
-            <column name="DATA_END" />
-        </property>
-        <property name="modalitaAccesso" type="java.lang.String">
-            <column name="MODALITA_ACCESSO" />
-        </property>
-		<property name="idRights" type="java.lang.String">
-			<column name="ID_RIGHTS" />
+	<class name="it.bncf.magazziniDigitali.database.entity.MDTicket"
+		table="MDTicket">
+		<comment>Tabella utilizzata per la gestione dei Ticket delle richieste
+			di Visualizzazione/Scarico materiale in Backgroup nella interfaccia
+			Web</comment>
+		<id name="id" type="java.lang.String">
+			<column name="ID" length="36">
+				<comment>Identificativo</comment>
+			</column>
+			<generator class="assigned" />
+		</id>
+		<property name="objectIdentifier" type="java.lang.String">
+			<column name="OBJECTIDENTIFIER" length="48" not-null="true"
+				index="D_MDTicket_01">
+				<comment>Identificativo dell\'aggetto da enaborare</comment>
+			</column>
 		</property>
-        <many-to-one name="idIstituzione" class="it.bncf.magazziniDigitali.database.entity.MDIstituzione" fetch="join">
-            <column name="ID_ISTITUZIONE" />
-        </many-to-one>
-        <property name="loginUtente" type="java.lang.String">
-            <column name="LOGIN_UTENTE" />
-        </property>
-        <property name="ipClient" type="java.lang.String">
-            <column name="IPCLIENT" />
-        </property>
-        <property name="actualFileName" type="java.lang.String">
-            <column name="ACTUALFILENAME" />
-        </property>
-        <property name="originalFileName" type="java.lang.String">
-            <column name="ORIGINALFILENAME" />
-        </property>
-        <property name="dataExport" type="java.sql.Timestamp">
-            <column name="DATA_EXPORT" />
-        </property>
-        <property name="mimeType" type="java.lang.String">
-            <column name="MIMETYPE" />
-        </property>
-        <property name="tipoOggetto" type="java.lang.String">
-            <column name="TIPOOGGETTO" />
-        </property>
-    </class>
+		<property name="dataStart" type="java.sql.Timestamp">
+			<column name="DATA_START" not-null="true">
+				<comment>Data e ora di inizio della richiesta</comment>
+			</column>
+		</property>
+		<property name="dataEnd" type="java.sql.Timestamp">
+			<column name="DATA_END" not-null="false">
+				<comment>Data e ora di fine della richiesta</comment>
+			</column>
+		</property>
+		<property name="modalitaAccesso" type="java.lang.String">
+			<column name="MODALITA_ACCESSO" length="2" not-null="false">
+				<comment>Modalità di accesso al materiale</comment>
+			</column>
+		</property>
+		<many-to-one name="idRigths"
+			class="it.bncf.magazziniDigitali.database.entity.MDRigths"
+			fetch="join">
+			<column name="ID_RIGTHS" not-null="false">
+				<comment>Identificativo del Rigth</comment>
+			</column>
+		</many-to-one>
+		<many-to-one name="idIstituzione"
+			class="it.bncf.magazziniDigitali.database.entity.MDIstituzione"
+			fetch="join">
+			<column name="ID_ISTITUZIONE" not-null="false">
+				<comment>Identificativo della Istituzione</comment>
+			</column>
+		</many-to-one>
+		<property name="loginUtente" type="java.lang.String">
+			<column name="LOGIN_UTENTE" length="100" not-null="false">
+				<comment>Identificativo dell\'utente remoto che ha fatto la richiesta</comment>
+			</column>
+		</property>
+		<property name="ipClient" type="java.lang.String">
+			<column name="IPCLIENT" length="50" not-null="false">
+				<comment>Indirizzo IP da cui l\'utente ha fatto la richiesta</comment>
+			</column>
+		</property>
+		<property name="actualFileName" type="java.lang.String">
+			<column name="ACTUALFILENAME" length="100" not-null="false">
+				<comment>Nome attuale del nome del file assegnato</comment>
+			</column>
+		</property>
+		<property name="originalFileName" type="java.lang.String">
+			<column name="ORIGINALFILENAME" length="255" not-null="false">
+				<comment>Nome originale del File presente in archivio</comment>
+			</column>
+		</property>
+		<property name="dataExport" type="java.sql.Timestamp">
+			<column name="DATA_EXPORT" not-null="false">
+				<comment>Data e ora di scadenza del ticket</comment>
+			</column>
+		</property>
+		<property name="mimeType" type="java.lang.String">
+			<column name="MIMETYPE" length="100" not-null="false">
+				<comment>MimeType relativo all\'oggetto</comment>
+			</column>
+		</property>
+		<property name="tipoOggetto" type="java.lang.String">
+			<column name="TIPOOGGETTO" length="100" not-null="false">
+				<comment>Tipologia di oggetto</comment>
+			</column>
+		</property>
+	</class>
 </hibernate-mapping>

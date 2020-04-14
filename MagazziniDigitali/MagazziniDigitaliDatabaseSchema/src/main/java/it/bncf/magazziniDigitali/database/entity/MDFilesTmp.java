@@ -4,7 +4,7 @@
 package it.bncf.magazziniDigitali.database.entity;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Timestamp;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -44,65 +44,65 @@ public class MDFilesTmp implements Serializable {
 
 	private String sha25664base;
 
-	private Date nomeFileMod;
+	private Timestamp nomeFileMod;
 
 	private MDStato stato;
 
-	private Date trasfDataStart;
+	private Timestamp trasfDataStart;
 
-	private Date trasfDataEnd;
+	private Timestamp trasfDataEnd;
 
 	private Boolean trasfEsito;
 	
-	private Date validDataStart;
+	private Timestamp validDataStart;
 
-	private Date validDataEnd;
+	private Timestamp validDataEnd;
 
 	private Boolean validEsito;
 	
 	private String xmlMimeType;
 	
-	private Date decompDataStart;
+	private Timestamp decompDataStart;
 
-	private Date decompDataEnd;
+	private Timestamp decompDataEnd;
 
 	private Boolean decompEsito;
 	
-	private Date publishDataStart;
+	private Timestamp publishDataStart;
 
-	private Date publishDataEnd;
+	private Timestamp publishDataEnd;
 
 	private Boolean publishEsito;
 	
-	private Date copyPremisDataStart;
+	private Timestamp copyPremisDataStart;
 
-	private Date copyPremisDataEnd;
+	private Timestamp copyPremisDataEnd;
 
 	private Boolean copyPremisEsito;
 	
-	private Date moveFileDataStart;
+	private Timestamp moveFileDataStart;
 
-	private Date moveFileDataEnd;
+	private Timestamp moveFileDataEnd;
 
 	private Boolean moveFileEsito;
 
-	private Date deleteLocalData;
+	private Timestamp deleteLocalData;
 
 	private Boolean deleteLocalEsito;
 
 	private String premisFile;
 	
-	private Date archiveDataStart;
+	private Timestamp archiveDataStart;
 
-	private Date archiveDataEnd;
+	private Timestamp archiveDataEnd;
 
 	private Boolean archiveEsito;
 
 	private MDNodi idNodo;
 	
-	private Date indexDataStart;
+	private Timestamp indexDataStart;
 
-	private Date indexDataEnd;
+	private Timestamp indexDataEnd;
 
 	private Boolean indexEsito;
 
@@ -152,11 +152,11 @@ public class MDFilesTmp implements Serializable {
 		this.sha1 = sha1;
 	}
 
-	public Date getNomeFileMod() {
+	public Timestamp getNomeFileMod() {
 		return nomeFileMod;
 	}
 
-	public void setNomeFileMod(Date nomeFileMod) {
+	public void setNomeFileMod(Timestamp nomeFileMod) {
 		this.nomeFileMod = nomeFileMod;
 	}
 
@@ -168,19 +168,19 @@ public class MDFilesTmp implements Serializable {
 		this.stato = stato;
 	}
 
-	public Date getTrasfDataStart() {
+	public Timestamp getTrasfDataStart() {
 		return trasfDataStart;
 	}
 
-	public void setTrasfDataStart(Date trasfDataStart) {
+	public void setTrasfDataStart(Timestamp trasfDataStart) {
 		this.trasfDataStart = trasfDataStart;
 	}
 
-	public Date getTrasfDataEnd() {
+	public Timestamp getTrasfDataEnd() {
 		return trasfDataEnd;
 	}
 
-	public void setTrasfDataEnd(Date trasfDataEnd) {
+	public void setTrasfDataEnd(Timestamp trasfDataEnd) {
 		this.trasfDataEnd = trasfDataEnd;
 	}
 
@@ -192,19 +192,19 @@ public class MDFilesTmp implements Serializable {
 		this.trasfEsito = trasfEsito;
 	}
 
-	public Date getValidDataStart() {
+	public Timestamp getValidDataStart() {
 		return validDataStart;
 	}
 
-	public void setValidDataStart(Date validDataStart) {
+	public void setValidDataStart(Timestamp validDataStart) {
 		this.validDataStart = validDataStart;
 	}
 
-	public Date getValidDataEnd() {
+	public Timestamp getValidDataEnd() {
 		return validDataEnd;
 	}
 
-	public void setValidDataEnd(Date validDataEnd) {
+	public void setValidDataEnd(Timestamp validDataEnd) {
 		this.validDataEnd = validDataEnd;
 	}
 
@@ -224,19 +224,19 @@ public class MDFilesTmp implements Serializable {
 		this.xmlMimeType = xmlMimeType;
 	}
 
-	public Date getDecompDataStart() {
+	public Timestamp getDecompDataStart() {
 		return decompDataStart;
 	}
 
-	public void setDecompDataStart(Date decompDataStart) {
+	public void setDecompDataStart(Timestamp decompDataStart) {
 		this.decompDataStart = decompDataStart;
 	}
 
-	public Date getDecompDataEnd() {
+	public Timestamp getDecompDataEnd() {
 		return decompDataEnd;
 	}
 
-	public void setDecompDataEnd(Date decompDataEnd) {
+	public void setDecompDataEnd(Timestamp decompDataEnd) {
 		this.decompDataEnd = decompDataEnd;
 	}
 
@@ -248,19 +248,19 @@ public class MDFilesTmp implements Serializable {
 		this.decompEsito = decompEsito;
 	}
 
-	public Date getPublishDataStart() {
+	public Timestamp getPublishDataStart() {
 		return publishDataStart;
 	}
 
-	public void setPublishDataStart(Date publishDataStart) {
+	public void setPublishDataStart(Timestamp publishDataStart) {
 		this.publishDataStart = publishDataStart;
 	}
 
-	public Date getPublishDataEnd() {
+	public Timestamp getPublishDataEnd() {
 		return publishDataEnd;
 	}
 
-	public void setPublishDataEnd(Date publishDataEnd) {
+	public void setPublishDataEnd(Timestamp publishDataEnd) {
 		this.publishDataEnd = publishDataEnd;
 	}
 
@@ -272,19 +272,19 @@ public class MDFilesTmp implements Serializable {
 		this.publishEsito = publishEsito;
 	}
 
-	public Date getCopyPremisDataStart() {
+	public Timestamp getCopyPremisDataStart() {
 		return copyPremisDataStart;
 	}
 
-	public void setCopyPremisDataStart(Date copyPremisDataStart) {
+	public void setCopyPremisDataStart(Timestamp copyPremisDataStart) {
 		this.copyPremisDataStart = copyPremisDataStart;
 	}
 
-	public Date getCopyPremisDataEnd() {
+	public Timestamp getCopyPremisDataEnd() {
 		return copyPremisDataEnd;
 	}
 
-	public void setCopyPremisDataEnd(Date copyPremisDataEnd) {
+	public void setCopyPremisDataEnd(Timestamp copyPremisDataEnd) {
 		this.copyPremisDataEnd = copyPremisDataEnd;
 	}
 
@@ -296,19 +296,19 @@ public class MDFilesTmp implements Serializable {
 		this.copyPremisEsito = copyPremisEsito;
 	}
 
-	public Date getMoveFileDataStart() {
+	public Timestamp getMoveFileDataStart() {
 		return moveFileDataStart;
 	}
 
-	public void setMoveFileDataStart(Date moveFileDataStart) {
+	public void setMoveFileDataStart(Timestamp moveFileDataStart) {
 		this.moveFileDataStart = moveFileDataStart;
 	}
 
-	public Date getMoveFileDataEnd() {
+	public Timestamp getMoveFileDataEnd() {
 		return moveFileDataEnd;
 	}
 
-	public void setMoveFileDataEnd(Date moveFileDataEnd) {
+	public void setMoveFileDataEnd(Timestamp moveFileDataEnd) {
 		this.moveFileDataEnd = moveFileDataEnd;
 	}
 
@@ -320,11 +320,11 @@ public class MDFilesTmp implements Serializable {
 		this.moveFileEsito = moveFileEsito;
 	}
 
-	public Date getDeleteLocalData() {
+	public Timestamp getDeleteLocalData() {
 		return deleteLocalData;
 	}
 
-	public void setDeleteLocalData(Date deleteLocalData) {
+	public void setDeleteLocalData(Timestamp deleteLocalData) {
 		this.deleteLocalData = deleteLocalData;
 	}
 
@@ -347,28 +347,28 @@ public class MDFilesTmp implements Serializable {
 	/**
 	 * @return the archiveDataStart
 	 */
-	public Date getArchiveDataStart() {
+	public Timestamp getArchiveDataStart() {
 		return archiveDataStart;
 	}
 
 	/**
 	 * @param archiveDataStart the archiveDataStart to set
 	 */
-	public void setArchiveDataStart(Date archiveDataStart) {
+	public void setArchiveDataStart(Timestamp archiveDataStart) {
 		this.archiveDataStart = archiveDataStart;
 	}
 
 	/**
 	 * @return the archiveDataEnd
 	 */
-	public Date getArchiveDataEnd() {
+	public Timestamp getArchiveDataEnd() {
 		return archiveDataEnd;
 	}
 
 	/**
 	 * @param archiveDataEnd the archiveDataEnd to set
 	 */
-	public void setArchiveDataEnd(Date archiveDataEnd) {
+	public void setArchiveDataEnd(Timestamp archiveDataEnd) {
 		this.archiveDataEnd = archiveDataEnd;
 	}
 
@@ -403,28 +403,28 @@ public class MDFilesTmp implements Serializable {
 	/**
 	 * @return the indexDataStart
 	 */
-	public Date getIndexDataStart() {
+	public Timestamp getIndexDataStart() {
 		return indexDataStart;
 	}
 
 	/**
 	 * @param indexDataStart the indexDataStart to set
 	 */
-	public void setIndexDataStart(Date indexDataStart) {
+	public void setIndexDataStart(Timestamp indexDataStart) {
 		this.indexDataStart = indexDataStart;
 	}
 
 	/**
 	 * @return the indexDataEnd
 	 */
-	public Date getIndexDataEnd() {
+	public Timestamp getIndexDataEnd() {
 		return indexDataEnd;
 	}
 
 	/**
 	 * @param indexDataEnd the indexDataEnd to set
 	 */
-	public void setIndexDataEnd(Date indexDataEnd) {
+	public void setIndexDataEnd(Timestamp indexDataEnd) {
 		this.indexDataEnd = indexDataEnd;
 	}
 

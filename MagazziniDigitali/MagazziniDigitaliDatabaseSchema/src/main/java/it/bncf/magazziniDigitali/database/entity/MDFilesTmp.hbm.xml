@@ -3,148 +3,273 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 22-ott-2014 16.00.31 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-	<class name="it.bncf.magazziniDigitali.database.entity.MDFilesTmp"
+	<class
+		name="it.bncf.magazziniDigitali.database.entity.MDFilesTmp"
 		table="MDFilesTmp">
+		<comment>Lista completa dei files caricati nelle aree Temporanee di MD</comment>
 		<id name="id" type="java.lang.String">
-			<column name="ID" />
-			<generator class="assigned" />
+			<column name="ID" length="36">
+				<comment>Identificativo</comment>
+			</column>
+			<generator class="uuid.hex" />
 		</id>
 		<many-to-one name="idIstituto"
 			class="it.bncf.magazziniDigitali.database.entity.MDIstituzione"
 			fetch="join">
-			<column name="ID_ISTITUTO" />
+			<column name="ID_ISTITUTO" not-null="true">
+				<comment>Identificatico dell\'Istituto che ha fatto il trasferimento
+					del materiale</comment>
+			</column>
 		</many-to-one>
 		<many-to-one name="idSoftware"
-			class="it.bncf.magazziniDigitali.database.entity.MDSoftware" fetch="join">
-			<column name="ID_SOFTWARE" />
+			class="it.bncf.magazziniDigitali.database.entity.MDSoftware"
+			fetch="join">
+			<column name="ID_SOFTWARE" not-null="true">
+				<comment>Idenditicativo del Software con cui l\'istituto a eseguirto
+					il trasferimento del materiale</comment>
+			</column>
 		</many-to-one>
 		<property name="nomeFile" type="java.lang.String">
-			<column name="NOMEFILE" />
+			<column name="NOMEFILE" not-null="true" length="255">
+				<comment>Nome del file originale trasferito dall\'istituto</comment>
+			</column>
 		</property>
 		<property name="md5" type="java.lang.String">
-			<column name="MD5" />
+			<column name="MD5" not-null="false" length="32"
+				unique-key="U_MDFilesTmp_03">
+				<comment>Valore MD5 calcolato sul file originale</comment>
+			</column>
 		</property>
 		<property name="md564base" type="java.lang.String">
-			<column name="MD5_64BASE" />
+			<column name="MD5_64BASE" length="44" not-null="false"
+				unique-key="U_MDFilesTmp_04">
+				<comment>Valore MD5 in Base 64 calcolato sul file originale</comment>
+			</column>
 		</property>
 		<property name="sha1" type="java.lang.String">
-			<column name="SHA1" />
+			<column name="SHA1" not-null="true" length="40"
+				unique-key="U_MDFilesTmp_02">
+				<comment>Valore SHA1 calcolato sul file originale</comment>
+			</column>
 		</property>
 		<property name="sha164base" type="java.lang.String">
-			<column name="SHA1_64BASE" />
+			<column name="SHA1_64BASE" not-null="false" length="56"
+				unique-key="U_MDFilesTmp_05">
+				<comment>Valore SHA1 in Base 64 calcolato sul file originale</comment>
+			</column>
 		</property>
 		<property name="sha256" type="java.lang.String">
-			<column name="SHA256" />
+			<column name="SHA256" length="64" not-null="false"
+				unique-key="U_MDFilesTmp_06">
+				<comment>Valore SHA256 calcolato sul file originale</comment>
+			</column>
 		</property>
 		<property name="sha25664base" type="java.lang.String">
-			<column name="SHA256_64BASE" />
+			<column name="SHA256_64BASE" length="88" not-null="false"
+				unique-key="U_MDFilesTmp_07">
+				<comment>Valore SHA256 in Base 64 calcolato sul file originale</comment>
+			</column>
 		</property>
-		<property name="nomeFileMod" type="java.util.Date">
-			<column name="NOMEFILE_MOD" />
+		<property name="nomeFileMod" type="java.sql.Timestamp">
+			<column name="NOMEFILE_MOD" not-null="true">
+				<comment>Data ultima modifica del file originale</comment>
+			</column>
 		</property>
 		<many-to-one name="stato"
-			class="it.bncf.magazziniDigitali.database.entity.MDStato" fetch="join">
-			<column name="STATO" />
+			class="it.bncf.magazziniDigitali.database.entity.MDStato"
+			fetch="join">
+			<column name="STATO" not-null="true">
+				<comment>Stato avanzamento lavori del file originale</comment>
+			</column>
 		</many-to-one>
-		<property name="trasfDataStart" type="java.util.Date">
-			<column name="TRASF_DATASTART" />
+		<property name="trasfDataStart" type="java.sql.Timestamp">
+			<column name="TRASF_DATASTART" not-null="true">
+				<comment>Data e ora di inizio trasferimento del file Originale
+					dall\'istituto verso l\'area temporanea di MD</comment>
+			</column>
 		</property>
-		<property name="trasfDataEnd" type="java.util.Date">
-			<column name="TRASF_DATAEND" />
+		<property name="trasfDataEnd" type="java.sql.Timestamp">
+			<column name="TRASF_DATAEND" not-null="false">
+				<comment>Data e ora di fine trasferimento del file Originale
+					dall\'istituto verso l\'area temporanea di MD</comment>
+			</column>
 		</property>
 		<property name="trasfEsito" type="java.lang.Boolean">
-			<column name="TRASF_ESITO" />
+			<column name="TRASF_ESITO" not-null="false">
+				<comment>Esito del trasferimento del file Originale dall\'istituto
+					verso l\'area temporanea di MD</comment>
+			</column>
 		</property>
-		<property name="validDataStart" type="java.util.Date">
-			<column name="VALID_DATASTART" />
+		<property name="validDataStart" type="java.sql.Timestamp">
+			<column name="VALID_DATASTART" not-null="false">
+				<comment>Data e ora di inizio validazione del file Originale</comment>
+			</column>
 		</property>
-		<property name="validDataEnd" type="java.util.Date">
-			<column name="VALID_DATAEND" />
+		<property name="validDataEnd" type="java.sql.Timestamp">
+			<column name="VALID_DATAEND" not-null="false">
+				<comment>Data e ora di fine validazione del file Originale</comment>
+			</column>
 		</property>
 		<property name="validEsito" type="java.lang.Boolean">
-			<column name="VALID_ESITO" />
+			<column name="VALID_ESITO" not-null="false">
+				<comment>Esito della validazione del file Originale</comment>
+			</column>
 		</property>
 		<property name="xmlMimeType" type="java.lang.String">
-			<column name="XMLMIMETYPE" />
+			<column name="XMLMIMETYPE" length="10" not-null="false">
+				<comment>Tipologia di tracciato XML</comment>
+			</column>
 		</property>
-		<property name="decompDataStart" type="java.util.Date">
-			<column name="DECOMP_DATASTART" />
+		<property name="decompDataStart" type="java.sql.Timestamp">
+			<column name="DECOMP_DATASTART" not-null="false">
+				<comment>Data e ora di inizio decompressione del file Originale</comment>
+			</column>
 		</property>
-		<property name="decompDataEnd" type="java.util.Date">
-			<column name="DECOMP_DATAEND" />
+		<property name="decompDataEnd" type="java.sql.Timestamp">
+			<column name="DECOMP_DATAEND" not-null="false">
+				<comment>Data e ora di fine decompressione del file Originale</comment>
+			</column>
 		</property>
 		<property name="decompEsito" type="java.lang.Boolean">
-			<column name="DECOMP_ESITO" />
+			<column name="DECOMP_ESITO" not-null="false">
+				<comment>Esito della decompressione del file Originale</comment>
+			</column>
 		</property>
-		<property name="publishDataStart" type="java.util.Date">
-			<column name="PUBLISH_DATASTART" />
+		<property name="publishDataStart" type="java.sql.Timestamp">
+			<column name="PUBLISH_DATASTART" not-null="false">
+				<comment>Data e Ora di inizio della pubblicazione del materiale
+					sullo storage principale</comment>
+			</column>
 		</property>
-		<property name="publishDataEnd" type="java.util.Date">
-			<column name="PUBLISH_DATAEND" />
+		<property name="publishDataEnd" type="java.sql.Timestamp">
+			<column name="PUBLISH_DATAEND" not-null="false">
+				<comment>Data e Ora di fine della pubblicazione del materiale sullo
+					storage principale</comment>
+			</column>
 		</property>
 		<property name="publishEsito" type="java.lang.Boolean">
-			<column name="PUBLISH_ESITO" />
+			<column name="PUBLISH_ESITO" not-null="false">
+				<comment>Esito della pubblicazione del materiale sullo storage
+					principale</comment>
+			</column>
 		</property>
-		<property name="copyPremisDataStart" type="java.util.Date">
-			<column name="COPYPREMIS_DATASTART" />
+		<property name="copyPremisDataStart"
+			type="java.sql.Timestamp">
+			<column name="COPYPREMIS_DATASTART" not-null="false">
+				<comment>Data e Ora di inizio della copia del FilePremis sugli
+					storage (Nodi)</comment>
+			</column>
 		</property>
-		<property name="copyPremisDataEnd" type="java.util.Date">
-			<column name="COPYPREMIS_DATAEND" />
+		<property name="copyPremisDataEnd" type="java.sql.Timestamp">
+			<column name="COPYPREMIS_DATAEND" not-null="false">
+				<comment>Data e Ora di fine della copia del FilePremis sugli storage
+					(Nodi)</comment>
+			</column>
 		</property>
 		<property name="copyPremisEsito" type="java.lang.Boolean">
-			<column name="COPYPREMIS_ESITO" />
+			<column name="COPYPREMIS_ESITO" not-null="false">
+				<comment>Esito della copia del FilePremis sugli storage (Nodi)</comment>
+			</column>
 		</property>
-		<property name="moveFileDataStart" type="java.util.Date">
-			<column name="MOVEFILE_DATASTART" />
+		<property name="moveFileDataStart" type="java.sql.Timestamp">
+			<column name="MOVEFILE_DATASTART" not-null="false">
+				<comment>Data e Ora di inizio dello spostamento del File da
+					Archiviare sugli storage (Nodi)</comment>
+			</column>
 		</property>
-		<property name="moveFileDataEnd" type="java.util.Date">
-			<column name="MOVEFILE_DATAEND" />
+		<property name="moveFileDataEnd" type="java.sql.Timestamp">
+			<column name="MOVEFILE_DATAEND" not-null="false">
+				<comment>Data e Ora di fine dello spostamento del File da Archiviare
+					sugli storage (Nodi)</comment>
+			</column>
 		</property>
 		<property name="moveFileEsito" type="java.lang.Boolean">
-			<column name="MOVEFILE_ESITO" />
+			<column name="MOVEFILE_ESITO" not-null="false">
+				<comment>Esito dello spostamento del File da Archiviare sugli
+					storage (Nodi)</comment>
+			</column>
 		</property>
-		<property name="deleteLocalData" type="java.util.Date">
-			<column name="DELETELOCAL_DATA" />
+		<property name="deleteLocalData" type="java.sql.Timestamp">
+			<column name="DELETELOCAL_DATA" not-null="false">
+				<comment>Data e Ora della cancellazione del file sul fileSystem
+					Locale dell\'istituto</comment>
+			</column>
 		</property>
 		<property name="deleteLocalEsito" type="java.lang.Boolean">
-			<column name="DELETELOCAL_ESITO" />
+			<column name="DELETELOCAL_ESITO" not-null="false">
+				<comment>Esito della cancellazione del file sul fileSystem Locale
+					dell\'istituto</comment>
+			</column>
 		</property>
 		<property name="premisFile" type="java.lang.String">
-			<column name="PREMIS_FILE" />
+			<column name="PREMIS_FILE" length="100" not-null="false"
+				unique-key="U_MDFilesTmp_01">
+				<comment>Nome del file premis associato al file da Archiviare in cui
+					viene riportato tutte le informazioni relative alle operazioni
+					eseguite sul file</comment>
+			</column>
 		</property>
-		<property name="archiveDataStart" type="java.util.Date">
-			<column name="ARCHIVE_DATASTART" />
+		<property name="archiveDataStart" type="java.sql.Timestamp">
+			<column name="ARCHIVE_DATASTART" not-null="false">
+				<comment>Data e Ora di inizio dell\'archiviazione del materiale su
+					tutti gli storage in GeoReplica</comment>
+			</column>
 		</property>
-		<property name="archiveDataEnd" type="java.util.Date">
-			<column name="ARCHIVE_DATAEND" />
+		<property name="archiveDataEnd" type="java.sql.Timestamp">
+			<column name="ARCHIVE_DATAEND" not-null="false">
+				<comment>Data e Ora di fine dell\'archiviazione del materiale su
+					tutti gli storage in GeoReplica</comment>
+			</column>
 		</property>
 		<property name="archiveEsito" type="java.lang.Boolean">
-			<column name="ARCHIVE_ESITO" />
+			<column name="ARCHIVE_ESITO" not-null="false">
+				<comment>Esito dell\'archiviazione del materiale su tutti gli
+					storage in GeoReplica</comment>
+			</column>
 		</property>
 		<many-to-one name="idNodo"
 			class="it.bncf.magazziniDigitali.database.entity.MDNodi" fetch="join">
-			<column name="ID_NODO" />
+			<column name="ID_NODO" not-null="false">
+				<comment>Identificativo del Nodo (Storage) Principale</comment>
+			</column>
 		</many-to-one>
-		<property name="indexDataStart" type="java.util.Date">
-			<column name="INDEX_DATASTART" />
+		<property name="indexDataStart" type="java.sql.Timestamp">
+			<column name="INDEX_DATASTART" not-null="false">
+				<comment>Data e ora di inizio dell\'indicizzazione del materiale</comment>
+			</column>
 		</property>
-		<property name="indexDataEnd" type="java.util.Date">
-			<column name="INDEX_DATAEND" />
+		<property name="indexDataEnd" type="java.sql.Timestamp">
+			<column name="INDEX_DATAEND" not-null="false">
+				<comment>Data e ora di fine dell\'indicizzazione del materiale</comment>
+			</column>
 		</property>
 		<property name="indexEsito" type="java.lang.Boolean">
-			<column name="INDEX_ESITO" />
+			<column name="INDEX_ESITO" not-null="false">
+				<comment>Esito dell\'indicizzazione del materiale</comment>
+			</column>
 		</property>
 		<property name="indexPremis" type="java.lang.String">
-			<column name="INDEX_PREMIS" />
+			<column name="INDEX_PREMIS" length="100" not-null="false">
+				<comment>Nome del file Premis in cui viene registrata l\'attività di
+					Indirrizzazione</comment>
+			</column>
 		</property>
 		<property name="tarTmpFile" type="java.lang.String">
-			<column name="TARTMP_FILE" />
+			<column name="TARTMP_FILE" length="255" not-null="false">
+				<comment>Percorso completo del file decompresso</comment>
+			</column>
 		</property>
 		<property name="publishPremis" type="java.lang.String">
-			<column name="PUBLISH_PREMIS" />
+			<column name="PUBLISH_PREMIS" length="100" not-null="false">
+				<comment>Nome del file Premis in cui viene registrata l\'attività di
+					Pubblicazione del materiale</comment>
+			</column>
 		</property>
 		<property name="geoReplicaPremis" type="java.lang.String">
-			<column name="GEOREPLICA_PREMIS" />
+			<column name="GEOREPLICA_PREMIS" length="100" not-null="false">
+				<comment>Nome del file Premis in cui viene registrata l\'attività di
+					Archiviazione del materiale</comment>
+			</column>
 		</property>
 
 	</class>

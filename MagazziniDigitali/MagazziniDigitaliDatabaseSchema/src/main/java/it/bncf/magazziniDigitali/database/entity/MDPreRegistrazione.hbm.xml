@@ -3,99 +3,167 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 22-ott-2014 15.34.38 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-	<class name="it.bncf.magazziniDigitali.database.entity.MDPreRegistrazione"
+	<class
+		name="it.bncf.magazziniDigitali.database.entity.MDPreRegistrazione"
 		table="MDPreRegistrazione">
+		<comment>Questa tabella viene utilizzata per registrare gli utenti in
+			fase di Autoregistrazione</comment>
 		<id name="id" type="java.lang.String">
-			<column name="ID" />
-			<generator class="assigned" />
+			<column name="ID" length="36">
+				<comment>Identificativo</comment>
+			</column>
+			<generator class="uuid.hex" />
 		</id>
 		<property name="progressivo" type="java.lang.Integer">
-			<column name="PROGRESSIVO" />
+			<column name="PROGRESSIVO" not-null="true">
+				<comment>Progressivo della richiesta</comment>
+			</column>
 		</property>
 		<property name="dataPreIscrizione" type="java.sql.Timestamp">
-			<column name="DATA_PRESCRIZIONE" />
+			<column name="DATA_PREISCRIZIONE" not-null="true">
+				<comment>Data e ora di inizio della pre Iscrizione</comment>
+			</column>
 		</property>
 		<property name="utenteEmail" type="java.lang.String">
-			<column name="UTENTE_EMAIL" />
+			<column name="UTENTE_EMAIL" length="255" not-null="true">
+				<comment>Indirizzo Email dell\'utente che ha richiesto la
+					registrazione</comment>
+			</column>
 		</property>
 		<property name="utenteNome" type="java.lang.String">
-			<column name="UTENTE_NOME" />
+			<column name="UTENTE_NOME" length="255" not-null="true">
+				<comment>Nome dell\'utente che ha richiesto la registrazione</comment>
+			</column>
 		</property>
 		<property name="utenteCognome" type="java.lang.String">
-			<column name="UTENTE_COGNOME" />
+			<column name="UTENTE_COGNOME" length="255" not-null="true">
+				<comment>Cognome dell\'utente che ha richiesto la registrazione</comment>
+			</column>
 		</property>
 		<property name="utenteCodiceFiscale" type="java.lang.String">
-			<column name="UTENTE_CODICEFISCALE" />
+			<column name="UTENTE_CODICEFISCALE" length="19"
+				not-null="true" index="D_MDPreRegistrazione_02">
+				<comment>Codice Fiscale dell\'utente</comment>
+			</column>
 		</property>
 		<property name="utenteNote" type="java.lang.String">
-			<column name="UTENTE_NOTE" />
+			<column name="UTENTE_NOTE" length="5000" not-null="false" >
+				<comment>Note relative all\'utente</comment>
+			</column>
 		</property>
 		<property name="istituzionePIva" type="java.lang.String">
-			<column name="ISTITUZIONE_PIVA" />
+			<column name="ISTITUZIONE_PIVA" length="50" not-null="true"
+				index="D_MDPreRegistrazione_01">
+				<comment>Partita IVA dell\'Istituto di cui l\'utente fa riferimento</comment>
+			</column>
 		</property>
 		<property name="istituzioneNome" type="java.lang.String">
-			<column name="ISTITUZIONE_NOME" />
+			<column name="ISTITUZIONE_NOME" length="255" not-null="true">
+				<comment>Nome dell\'Istituto di riferimento</comment>
+			</column>
 		</property>
 		<property name="istituzioneIndirizzo" type="java.lang.String">
-			<column name="ISTITUZIONE_INDIRIZZO" />
+			<column name="ISTITUZIONE_INDIRIZZO" length="255"
+				not-null="true">
+				<comment>Indirizzo dell\'istituto</comment>
+			</column>
 		</property>
 		<many-to-one name="idRegione"
-			class="it.bncf.magazziniDigitali.database.entity.Regioni" fetch="join">
-			<column name="ID_REGIONE" />
+			class="it.bncf.magazziniDigitali.database.entity.Regioni"
+			fetch="join">
+			<column name="ID_REGIONE" not-null="true">
+				<comment>Identificativo della Regione relativa l\'istituto</comment>
+			</column>
 		</many-to-one>
 		<property name="istituzioneUrl" type="java.lang.String">
-			<column name="ISTITUZIONE_URL" />
+			<column name="ISTITUZIONE_URL" length="255" not-null="true">
+				<comment>Indirizzo Web dell\'istituto</comment>
+			</column>
 		</property>
 		<property name="istituzioneTelefono" type="java.lang.String">
-			<column name="ISTITUZIONE_TELEFONO" />
+			<column name="ISTITUZIONE_TELEFONO" length="50"
+				not-null="false">
+				<comment>Numero Telefonico dell\'istituto</comment>
+			</column>
 		</property>
-		<property name="istituzioneNomeContatto" type="java.lang.String">
-			<column name="ISTITUZIONE_NOME_CONTATTO" />
+		<property name="istituzioneNomeContatto"
+			type="java.lang.String">
+			<column name="ISTITUZIONE_NOME_CONTATTO" length="50"
+				not-null="false">
+				<comment>Nome del Contatto relativo all\'istituto</comment>
+			</column>
 		</property>
 		<property name="istituzioneNote" type="java.lang.String">
-			<column name="ISTITUZIONE_NOTE" />
+			<column name="ISTITUZIONE_NOTE" length="5000" not-null="false">
+				<comment>Campo note per l\'istituto</comment>
+			</column>
 		</property>
 		<property name="altaRisoluzione" type="java.lang.Integer">
-			<column name="ALTA_RISOLUZIONE" />
+			<column name="ALTA_RISOLUZIONE" not-null="true">
+				<comment>Abilita il trasferimento delle imagini Alta Risoluzione</comment>
+			</column>
 		</property>
 		<property name="tesiDottorato" type="java.lang.Integer">
-			<column name="TESI_DOTTORATO" />
+			<column name="TESI_DOTTORATO" not-null="true">
+				<comment>Abilita il trasferimento delle Tesi Dotorrato</comment>
+			</column>
 		</property>
 		<property name="rivisteAperte" type="java.lang.String">
-			<column name="RIVISTE_APERTE" />
+			<column name="RIVISTE_APERTE" length="255" not-null="false">
+				<comment>Lista delle riviste ad accesso libero</comment>
+			</column>
 		</property>
 		<property name="rivisteRistrette" type="java.lang.String">
-			<column name="RIVISTE_RISTRETTE" />
+			<column name="RIVISTE_RISTRETTE" length="255" not-null="false">
+				<comment>Lista delle riviste ad accesso riservato</comment>
+			</column>
 		</property>
 		<property name="ebookAperte" type="java.lang.String">
-			<column name="EBOOK_APERTE" />
+			<column name="EBOOK_APERTE" length="255" not-null="false">
+				<comment>Lista degli ebook ad accesso libero</comment>
+			</column>
 		</property>
 		<property name="ebookRistrette" type="java.lang.String">
-			<column name="EBOOK_RISTRETTE" />
+			<column name="EBOOK_RISTRETTE" length="255" not-null="false">
+				<comment>Lista degli ebook ad accesso riservato</comment>
+			</column>
 		</property>
 		<property name="altro" type="java.lang.String">
-			<column name="ALTRO" />
+			<column name="ALTRO" length="5000" not-null="false" />
 		</property>
 		<property name="emailValidata" type="java.lang.Integer">
-			<column name="EMAIL_VALIDATA" />
+			<column name="EMAIL_VALIDATA" default="0" not-null="true">
+				<comment>Indica se l\'email inviato risulta essere validata</comment>
+			</column>
 		</property>
 		<many-to-one name="idIstituzione"
 			class="it.bncf.magazziniDigitali.database.entity.MDIstituzione"
 			fetch="join">
-			<column name="ID_ISTITUZIONE" />
+			<column name="ID_ISTITUZIONE" not-null="false">
+				<comment>Identificativo dell\'Istituto</comment>
+			</column>
 		</many-to-one>
 		<many-to-one name="idUtente"
-			class="it.bncf.magazziniDigitali.database.entity.MDUtenti" fetch="join">
-			<column name="ID_UTENTE" />
+			class="it.bncf.magazziniDigitali.database.entity.MDUtenti"
+			fetch="join">
+			<column name="ID_UTENTE" not-null="false">
+				<comment>Identificativo dell\'utente registrato</comment>
+			</column>
 		</many-to-one>
 		<property name="dataEmailValidata1" type="java.sql.Timestamp">
-			<column name="DATA_EMAILVALIDATA1" />
+			<column name="DATA_EMAILVALIDATA1" not-null="false">
+				<comment>Data e ora della validazione della prima email</comment>
+			</column>
 		</property>
 		<property name="checkIdFase" type="java.lang.String">
-			<column name="CHECKIDFASE" />
+			<column name="CHECKIDFASE" length="39" not-null="false">
+				<comment>Identifica lo stato della elaborazione</comment>
+			</column>
 		</property>
 		<property name="dataEmailValidata2" type="java.sql.Timestamp">
-			<column name="DATA_EMAILVALIDATA2" />
+			<column name="DATA_EMAILVALIDATA2" not-null="false">
+				<comment>Data e ora della validazione della seconda email</comment>
+			</column>
 		</property>
 	</class>
 </hibernate-mapping>

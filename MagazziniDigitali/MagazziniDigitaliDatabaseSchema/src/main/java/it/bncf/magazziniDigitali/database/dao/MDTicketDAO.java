@@ -8,7 +8,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.criterion.Order;
@@ -24,7 +25,7 @@ import mx.randalf.hibernate.exception.HibernateUtilException;
  */
 public class MDTicketDAO extends GenericHibernateDAO<MDTicket, String> {
 
-	private Logger log = Logger.getLogger(MDTicketDAO.class);
+	private Logger log = LogManager.getLogger(MDTicketDAO.class);
 			
 	/**
 	 */

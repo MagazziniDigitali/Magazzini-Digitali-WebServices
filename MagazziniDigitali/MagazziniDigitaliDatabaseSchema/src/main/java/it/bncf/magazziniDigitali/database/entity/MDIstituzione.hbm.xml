@@ -1,71 +1,137 @@
 <?xml version="1.0"?>
-<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
 <!-- Generated 22-ott-2014 15.34.38 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-	<class name="it.bncf.magazziniDigitali.database.entity.MDIstituzione"
+	<class
+		name="it.bncf.magazziniDigitali.database.entity.MDIstituzione"
 		table="MDIstituzione">
+		<comment>Lista degli Istituti registrati</comment>
 		<id name="id" type="java.lang.String">
-			<column name="ID" />
-			<generator class="assigned" />
+			<column name="ID" length="39">
+				<comment>Identificativo dell\'Istituzione (calcolata usando un
+					generatore di chiavi UUID)</comment>
+			</column>
+			<generator class="uuid.hex" />
 		</id>
 		<property name="login" type="java.lang.String">
-			<column name="LOGIN" />
+			<column name="LOGIN" length="255" not-null="true"
+				unique-key="U_MDIstituzione_01">
+				<comment>Login dell\'istituto</comment>
+			</column>
 		</property>
 		<property name="password" type="java.lang.String">
-			<column name="PASSWORD" />
+			<column name="PASSWORD" length="64" not-null="true">
+				<comment>Password dell\'istituzione (codificata utilizzando
+					l\'algoritmo SHA256)</comment>
+			</column>
 		</property>
 		<property name="ipAutorizzati" type="java.lang.String">
-			<column name="IP_AUTORIZZATI" />
+			<column name="IP_AUTORIZZATI" length="200" not-null="false">
+				<comment>Lista degli indirizzi IP da cui l\'istituzione è autorizzata
+					ad accedere al gestionale</comment>
+			</column>
 		</property>
 		<property name="nome" type="java.lang.String">
-			<column name="NOME" />
+			<column name="NOME" length="255" not-null="true"
+				index="D_MDIstituzione_01">
+				<comment>Nome dell\'Istituzione</comment>
+			</column>
 		</property>
 		<property name="indirizzo" type="java.lang.String">
-			<column name="INDIRIZZO" />
+			<column name="INDIRIZZO" length="255" not-null="false">
+				<comment>Indirizzo completo dell\'istituto</comment>
+			</column>
 		</property>
 		<property name="telefono" type="java.lang.String">
-			<column name="TELEFONO" />
+			<column name="TELEFONO" length="50" not-null="false">
+				<comment>Numero di Telefono dell\'istituto</comment>
+			</column>
 		</property>
 		<property name="nomeContatto" type="java.lang.String">
-			<column name="NOME_CONTATTO" />
+			<column name="NOME_CONTATTO" length="50" not-null="false">
+				<comment>Nome del contatto dell\'istituto</comment>
+			</column>
 		</property>
-		<property name="bibliotecaDepositaria" type="java.lang.Integer">
-			<column name="BIBLIOTECA_DEPOSITARIA" />
+		<property name="bibliotecaDepositaria"
+			type="java.lang.Integer">
+			<column name="BIBLIOTECA_DEPOSITARIA" not-null="true"
+				default="0">
+				<comment>Indica se l\'istituzione viene riconosciuta come Biblioteca
+					Depositaria dell\'oggetto</comment>
+			</column>
 		</property>
 		<property name="istitutoCentrale" type="java.lang.Integer">
-			<column name="ISTITUTO_CENTRALE" />
+			<column name="ISTITUTO_CENTRALE" not-null="true" default="0">
+				<comment>Identifica Istituzione come Istituto Centrale</comment>
+			</column>
 		</property>
 		<property name="ipAccreditati" type="java.lang.String">
-			<column name="IP_ACCREDITATI" />
+			<column name="IP_ACCREDITATI" length="255" not-null="false">
+				<comment>Indica la lista degli IP con cui l\'istituzione si presenta
+					per l\'interfaccia API Utente</comment>
+			</column>
 		</property>
 		<property name="interfacciaApiUtente" type="java.lang.String">
-			<column name="INTERFACCIA_API_UTENTE" />
+			<column name="INTERFACCIA_API_UTENTE" length="255"
+				not-null="false">
+				<comment>URL dell\'interfaccia API fornita dall\'istituto per la
+					validazione dell\'utente</comment>
+			</column>
 		</property>
 		<property name="libreriaApiUtente" type="java.lang.String">
-			<column name="LIBRERIA_API_UTENTE" />
+			<column name="LIBRERIA_API_UTENTE" length="255"
+				not-null="false">
+				<comment>Libreria Java da utilizzare per la validazione dell\'utente
+					nell\'anagrafica Utente dell\'istituto</comment>
+			</column>
+		</property>
+		<property name="emailBagit" type="java.lang.String">
+			<column name="EMAIL_BAGIT" length="50" not-null="false">
+				<comment>Casella Email Accreditata per l\'invio di materiale Bagit</comment>
+			</column>
 		</property>
 		<property name="pathTmp" type="java.lang.String">
-			<column name="PATH_TMP" />
+			<column name="PATH_TMP" length="255" not-null="false">
+				<comment>Path sul filesystem relativa all\'area Temporanea assegnata
+					all\'istituzione</comment>
+			</column>
 		</property>
 		<property name="note" type="java.lang.String">
-			<column name="NOTE" />
+			<column name="NOTE" length="5000" not-null="false" />
 		</property>
 		<property name="url" type="java.lang.String">
-			<column name="URL" />
+			<column name="URL" length="255" not-null="false">
+				<comment>URL relative al sito istituzione dell\'Istituzione</comment>
+			</column>
 		</property>
 		<many-to-one name="idRegione"
-			class="it.bncf.magazziniDigitali.database.entity.Regioni" fetch="join">
-			<column name="ID_REGIONE" />
+			class="it.bncf.magazziniDigitali.database.entity.Regioni"
+			fetch="join">
+			<column name="ID_REGIONE" not-null="false">
+				<comment>Identificativo relative alla regione di appartenenza
+					dell\'Istituzione</comment>
+			</column>
 		</many-to-one>
 		<property name="pIva" type="java.lang.String">
-			<column name="PIVA" />
+			<column name="PIVA" length="50" not-null="false"
+				unique-key="U_MDIstituzione_02">
+				<comment>Partita Iva dell\'istituzione</comment>
+			</column>
 		</property>
 		<property name="altaRisoluzione" type="java.lang.Integer">
-			<column name="ALTA_RISOLUZIONE" />
+			<column name="ALTA_RISOLUZIONE" not-null="false">
+				<comment>Indica se l\'istituzione è abilitata all\'invio delle TIFF ad
+					alta Risoluzione</comment>
+			</column>
 		</property>
 		<property name="bagit" type="java.lang.Integer">
-			<column name="BAGIT" />
+			<column name="BAGIT" not-null="false">
+				<comment>Indica se l\istituzione è abilitata all\'invio del materiale
+					formato Bagit</comment>
+			</column>
 		</property>
 	</class>
 </hibernate-mapping>

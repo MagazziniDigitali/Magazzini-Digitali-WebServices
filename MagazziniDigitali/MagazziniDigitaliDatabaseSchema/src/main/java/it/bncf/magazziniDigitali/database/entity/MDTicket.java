@@ -30,7 +30,7 @@ public class MDTicket implements Serializable {
 
 	private String modalitaAccesso;
 
-	private String  idRights;
+	private MDRigths  idRigths;
 
 	private MDIstituzione idIstituzione;
 
@@ -124,15 +124,15 @@ public class MDTicket implements Serializable {
 	/**
 	 * @return the idRights
 	 */
-	public String getIdRights() {
-		return idRights;
+	public MDRigths getIdRigths() {
+		return idRigths;
 	}
 
 	/**
 	 * @param idRights the idRights to set
 	 */
-	public void setIdRights(String idRights) {
-		this.idRights = idRights;
+	public void setIdRigths(MDRigths idRigths) {
+		this.idRigths = idRigths;
 	}
 
 	/**

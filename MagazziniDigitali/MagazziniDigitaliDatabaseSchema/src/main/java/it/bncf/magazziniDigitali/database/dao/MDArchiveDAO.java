@@ -3,7 +3,8 @@
  */
 package it.bncf.magazziniDigitali.database.dao;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.criterion.Restrictions;
@@ -20,7 +21,7 @@ import mx.randalf.hibernate.exception.HibernateUtilException;
  */
 public class MDArchiveDAO extends GenericHibernateDAO<MDArchive, String> {
 
-	private Logger log = Logger.getLogger(MDArchiveDAO.class);
+	private Logger log = LogManager.getLogger(MDArchiveDAO.class);
 
 	/**
 	 * @param fileDb

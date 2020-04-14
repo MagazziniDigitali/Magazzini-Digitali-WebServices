@@ -5,31 +5,49 @@
 <hibernate-mapping>
 	<class name="it.bncf.magazziniDigitali.database.entity.Comuni"
 		table="comuni">
-		<id name="id" type="java.lang.Integer">
-			<column name="ID" />
+		<comment>Lista dei comuni italiani</comment>
+		<id name="id" type="java.lang.Integer" access="field">
+			<column name="ID">
+				<comment>Identificativo Comuni</comment>
+			</column>
 			<generator class="assigned" />
 		</id>
 		<property name="comune" type="java.lang.String">
-			<column name="COMUNE" />
+			<column name="COMUNE" length="35">
+				<comment>Nome del Comune</comment>
+			</column>
 		</property>
 		<many-to-one name="idProvinca"
-			class="it.bncf.magazziniDigitali.database.entity.Province" fetch="join">
-			<column name="ID_PROVINCIA" />
+			class="it.bncf.magazziniDigitali.database.entity.Province"
+			fetch="join">
+			<column name="ID_PROVINCIA" not-null="true">
+				<comment>Identificativo della Provincia</comment>
+			</column>
 		</many-to-one>
 		<property name="prefisso" type="java.lang.Integer">
-			<column name="PREFISSO" />
+			<column name="PREFISSO" length="6" not-null="true">
+				<comment>Prefisso del Comune</comment>
+			</column>
 		</property>
 		<property name="cap" type="java.lang.String">
-			<column name="CAP" />
+			<column name="CAP" length="5" not-null="true">
+				<comment>CAP del Comune</comment>
+			</column>
 		</property>
 		<property name="codFisco" type="java.lang.String">
-			<column name="CODFISCO" />
+			<column name="CODFISCO" length="4" not-null="true">
+				<comment>Codice Catastale</comment>
+			</column>
 		</property>
 		<property name="abitanti" type="java.lang.Integer">
-			<column name="ABITANTI" />
+			<column name="ABITANTI" length="7" not-null="true">
+				<comment>Popolazione Residente</comment>
+			</column>
 		</property>
 		<property name="link" type="java.lang.String">
-			<column name="LINK" />
+			<column name="LINK" length="38" not-null="true">
+				<comment>Link relativo al sito Comuni Italiani</comment>
+			</column>
 		</property>
 	</class>
 </hibernate-mapping>

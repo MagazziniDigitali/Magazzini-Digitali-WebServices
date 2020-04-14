@@ -21,7 +21,7 @@ public class MDContatori implements Serializable {
 	@Id
 	private String id;
 
-	private String key;
+	private String value;
 
 	public MDContatori() {
 	}
@@ -35,17 +35,17 @@ public class MDContatori implements Serializable {
 	}
 
 	/**
-	 * @return the key
+	 * @return the value
 	 */
-	public String getKey() {
-		return key;
+	public String getValue() {
+		return value;
 	}
 
 	/**
-	 * @param key the key to set
+	 * @param key the value to set
 	 */
-	public void setKey(String key) {
-		this.key = key;
+	public void setValue(String value) {
+		this.value = value;
 	}
 
 }

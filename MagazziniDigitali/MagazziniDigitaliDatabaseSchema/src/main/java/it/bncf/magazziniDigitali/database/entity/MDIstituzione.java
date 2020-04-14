@@ -45,6 +45,8 @@ public class MDIstituzione implements Serializable {
 
 	private String libreriaApiUtente;
 
+	private String emailBagit;
+	
 	private String pathTmp;
 
 	private String note;
@@ -361,5 +363,13 @@ public class MDIstituzione implements Serializable {
 	 */
 	public void setBagit(Integer bagit) {
 		this.bagit = bagit;
+	}
+
+	public String getEmailBagit() {
+		return emailBagit;
+	}
+
+	public void setEmailBagit(String emailBagit) {
+		this.emailBagit = emailBagit;
 	}
 }

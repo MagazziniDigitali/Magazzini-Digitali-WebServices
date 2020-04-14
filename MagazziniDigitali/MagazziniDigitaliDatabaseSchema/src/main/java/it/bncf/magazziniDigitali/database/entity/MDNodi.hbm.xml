@@ -3,52 +3,93 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 22-ott-2014 15.19.32 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="it.bncf.magazziniDigitali.database.entity.MDNodi" table="MDNodi">
-        <id name="id" type="java.lang.String">
-            <column name="ID" />
-            <generator class="assigned" />
-        </id>
-        <property name="nome" type="java.lang.String">
-            <column name="NOME" />
-        </property>
-        <property name="descrizione" type="java.lang.String">
-            <column name="DESCRIZIONE" />
-        </property>
-        <property name="tipo" type="java.lang.String">
-            <column name="TIPO" />
-        </property>
-        <property name="rsync" type="java.lang.String">
-            <column name="RSYNC" />
-        </property>
-        <property name="rsyncPassword" type="java.lang.String">
-            <column name="RSYNCPASSWORD" />
-        </property>
-        <property name="urlCheckStorage" type="java.lang.String">
-            <column name="URLCHECKSTORAGE" />
-        </property>
-        <property name="pathStorage" type="java.lang.String">
-            <column name="PATH_STORAGE" />
-        </property>
-        <property name="s3Url" type="java.lang.String">
-            <column name="S3_URL" />
-        </property>
-        <property name="s3Region" type="java.lang.String">
-            <column name="S3_REGION" />
-        </property>
-        <property name="s3AccessKey" type="java.lang.String">
-            <column name="S3_ACCESSKEY" />
-        </property>
-        <property name="s3SecretKey" type="java.lang.String">
-            <column name="S3_SECRETKEY" />
-        </property>
-        <property name="s3BucketName" type="java.lang.String">
-            <column name="S3_BUCKETNAME" />
-        </property>
+	<class name="it.bncf.magazziniDigitali.database.entity.MDNodi"
+		table="MDNodi">
+		<comment>Lista dei Nodi (Storage) configurati nel sistema MD con
+			relative informazioni per il collegamento con gli stessi</comment>
+		<id name="id" type="java.lang.String">
+			<column name="ID" length="36">
+				<comment>Identificativo</comment>
+			</column>
+			<generator class="uuid.hex" />
+		</id>
+		<property name="nome" type="java.lang.String">
+			<column name="NOME" length="50" not-null="true"
+				unique-key="U_MDNodi_01">
+				<comment>Nome del Nodo</comment>
+			</column>
+		</property>
+		<property name="descrizione" type="java.lang.String">
+			<column name="DESCRIZIONE" length="255" not-null="false">
+				<comment>Descrizione del Nodo</comment>
+			</column>
+		</property>
+		<property name="tipo" type="java.lang.String">
+			<column name="TIPO" length="1" not-null="false"
+				index="D_MDNodi_01">
+				<comment>Indica il Tipo di Storage (F=FileSystem Locale, S=Storage
+					AmazonS3, M=Storage Remoto con Rsync)</comment>
+			</column>
+		</property>
+		<property name="rsync" type="java.lang.String">
+			<column name="RSYNC" length="500" not-null="false">
+				<comment>Indirizzo Server Rsync</comment>
+			</column>
+		</property>
+		<property name="rsyncPassword" type="java.lang.String">
+			<column name="RSYNCPASSWORD" length="50">
+				<comment>Password per il Server Rsync</comment>
+			</column>
+		</property>
+		<property name="urlCheckStorage" type="java.lang.String">
+			<column name="URLCHECKSTORAGE" length="255" not-null="false">
+				<comment>Indirizzo URL usato con il protocollo Rsync per ricavare la
+					chiave MD5,SHA1 eSHA256 del file trasferito</comment>
+			</column>
+		</property>
+		<property name="pathStorage" type="java.lang.String">
+			<column name="PATH_STORAGE" length="255" not-null="true">
+				<comment>Path dello storage Remoto relativo alla sua Home</comment>
+			</column>
+		</property>
+		<property name="s3Url" type="java.lang.String">
+			<column name="S3_URL" length="256" not-null="false">
+				<comment>URL del servizio S3</comment>
+			</column>
+		</property>
+		<property name="s3Region" type="java.lang.String">
+			<column name="S3_REGION" length="50" not-null="false">
+				<comment>Codice Region per il servizio S3</comment>
+			</column>
+		</property>
+		<property name="s3AccessKey" type="java.lang.String">
+			<column name="S3_ACCESSKEY" length="50" not-null="false">
+				<comment>AccessKey per il servizio S3</comment>
+			</column>
+		</property>
+		<property name="s3SecretKey" type="java.lang.String">
+			<column name="S3_SECRETKEY" length="50" not-null="false">
+				<comment>SecretKey per il servizio S3</comment>
+			</column>
+		</property>
+		<property name="s3BucketName" type="java.lang.String">
+			<column name="S3_BUCKETNAME" length="50" not-null="false">
+				<comment>BucketName per il servizio S3</comment>
+			</column>
+		</property>
 		<property name="active" type="java.lang.Integer">
-			<column name="ACTIVE" />
+			<column name="ACTIVE" default="0" not-null="true"
+				index="D_MDNodi_02">
+				<comment>Indica se il Nod (Storage) risulta attivo per
+					l\'archivizione</comment>
+			</column>
 		</property>
 		<property name="code" type="java.lang.String">
-			<column name="CODE" />
+			<column name="CODE" length="2" not-null="true"
+				index="D_MDNodi_03">
+				<comment>Codice di riferimento usato per il coolegamento con la
+					Versione 1.0 di MD</comment>
+			</column>
 		</property>
-    </class>
+	</class>
 </hibernate-mapping>

@@ -29,12 +29,8 @@ public class MDContatoriDAO extends GenericHibernateDAO<MDContatori, String> {
 			mdContatori = this.findById(id);
 			if (mdContatori != null) {
 				if (mdContatori.getId().equals(id)) {
-					key = mdContatori.getKey();
-				} else {
-					throw new HibernateUtilException("La chiave della talebba contatore ["+mdContatori.getId()+"] non corrisponde a  ["+id+"]");
+					key = mdContatori.getValue();
 				}
-			} else {
-				throw new HibernateUtilException("Non risulta presente i contatore ["+id+"]");
 			}
 		} catch (HibernateException e) {
 			throw e;
@@ -44,20 +40,24 @@ public class MDContatoriDAO extends GenericHibernateDAO<MDContatori, String> {
 		return key;
 	}
 
-	public void writeKey(String id, String key) throws HibernateException, HibernateUtilException {
+	public void writeKey(String id, String value) throws HibernateException, HibernateUtilException {
 		MDContatori mdContatori = null;
 
 		try {
 			mdContatori = this.findById(id);
 			if (mdContatori != null) {
 				if (mdContatori.getId().equals(id)) {
-					mdContatori.setKey(key);
+					mdContatori.setValue(value);
 					this.update(mdContatori);
 				} else {
 					throw new HibernateUtilException("La chiave della talebba contatore ["+mdContatori.getId()+"] non corrisponde a  ["+id+"]");
 				}
 			} else {
-				throw new HibernateUtilException("Non risulta presente i contatore ["+id+"]");
+				// La Chiave non è presente ne registro una nuova
+				mdContatori = new MDContatori();
+				mdContatori.setId(id);
+				mdContatori.setValue(value);
+				this.save(mdContatori);
 			}
 		} catch (HibernateException e) {
 			throw e;

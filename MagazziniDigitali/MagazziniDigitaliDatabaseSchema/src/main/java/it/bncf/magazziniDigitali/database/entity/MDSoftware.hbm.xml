@@ -3,34 +3,62 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 22-ott-2014 15.34.38 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="it.bncf.magazziniDigitali.database.entity.MDSoftware" table="MDSoftware">
-        <id name="id" type="java.lang.String">
-            <column name="ID" />
-            <generator class="assigned" />
-        </id>
-        <property name="nome" type="java.lang.String">
-            <column name="NOME" />
-        </property>
-        <property name="login" type="java.lang.String">
-            <column name="LOGIN" />
-        </property>
-        <property name="password" type="java.lang.String">
-            <column name="PASSWORD" />
-        </property>
-        <property name="ipAutorizzati" type="java.lang.String">
-            <column name="IP_AUTORIZZATI" />
-        </property>
-		<property name="bibliotecaDepositaria" type="java.lang.Integer">
-			<column name="BIBLIOTECA_DEPOSITARIA" />
+	<class
+		name="it.bncf.magazziniDigitali.database.entity.MDSoftware"
+		table="MDSoftware">
+		<id name="id" type="java.lang.String">
+			<column name="ID" length="39">
+				<comment>Identificativo del Software</comment>
+			</column>
+			<generator class="assigned" />
+		</id>
+		<property name="nome" type="java.lang.String">
+			<column name="NOME" length="255" not-null="true"
+				unique-key="U_MDSoftware_01">
+				<comment>Nome del Software</comment>
+			</column>
 		</property>
-        <many-to-one name="idIstituzione" class="it.bncf.magazziniDigitali.database.entity.MDIstituzione" fetch="join">
-            <column name="ID_ISTITUZIONE" />
-        </many-to-one>
-        <many-to-one name="idRigths" class="it.bncf.magazziniDigitali.database.entity.MDRigths" fetch="join">
-            <column name="ID_RIGTHS" />
-        </many-to-one>
-        <property name="note" type="java.lang.String">
-            <column name="NOTE" />
-        </property>
-        </class>
+		<property name="login" type="java.lang.String">
+			<column name="LOGIN" length="255" not-null="true">
+				<comment>Login di identificazione</comment>
+			</column>
+		</property>
+		<property name="password" type="java.lang.String">
+			<column name="PASSWORD" length="64" not-null="true">
+				<comment>Password del software</comment>
+			</column>
+		</property>
+		<property name="ipAutorizzati" type="java.lang.String">
+			<column name="IP_AUTORIZZATI" length="200" not-null="true">
+				<comment>Lista degli ip da cui l\'applicazione è autorizzata a
+					contattare</comment>
+			</column>
+		</property>
+		<property name="bibliotecaDepositaria"
+			type="java.lang.Integer">
+			<column name="BIBLIOTECA_DEPOSITARIA" default="0"
+				not-null="true">
+				<comment>Indica se l\'istituto è un depositaria</comment>
+			</column>
+		</property>
+		<many-to-one name="idIstituzione"
+			class="it.bncf.magazziniDigitali.database.entity.MDIstituzione"
+			fetch="join">
+			<column name="ID_ISTITUZIONE" not-null="true">
+				<comment>Identificativo dell\'Istituzione</comment>
+			</column>
+		</many-to-one>
+		<many-to-one name="idRigths"
+			class="it.bncf.magazziniDigitali.database.entity.MDRigths"
+			fetch="join">
+			<column name="ID_RIGTHS" not-null="false">
+				<comment>Identificativo del Rigth</comment>
+			</column>
+		</many-to-one>
+		<property name="note" type="java.lang.String">
+			<column name="NOTE" length="5000" not-null="false">
+				<comment>Campo note descrittivo del Rigth</comment>
+			</column>
+		</property>
+	</class>
 </hibernate-mapping>

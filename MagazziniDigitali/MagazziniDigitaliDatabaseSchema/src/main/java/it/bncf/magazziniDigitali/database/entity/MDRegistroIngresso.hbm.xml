@@ -5,61 +5,120 @@
 
 <!-- Generated 16-lug-2014 20.48.28 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="it.bncf.magazziniDigitali.database.entity.MDRegistroIngresso" table="MDRegistroIngresso">
-        <id name="id" type="java.lang.String">
-            <column name="ID" />
-            <generator class="assigned" />
-        </id>
-        <property name="timestampIngest" type="java.util.Date">
-            <column name="TIMESTAMPINGEST" />
-        </property>
-        <property name="agentDepositor" type="java.lang.String">
-            <column name="AGENTDEPOSITOR" />
-        </property>
-        <property name="originalContainerName" type="java.lang.String">
-            <column name="ORIGINALCONTAINERNAME" />
-        </property>
-        <property name="containerName" type="java.lang.String">
-            <column name="CONTAINERNAME" />
-        </property>
-        <property name="containerFingerPrint" type="java.lang.String">
-            <column name="CONTAINERFINGERPRINT" />
-        </property>
-        <property name="containerFingerPrintChain" type="java.lang.String">
-            <column name="CONTAINERFINGERPRINTCHAIN" />
-        </property>
-        <property name="containerFingerChain" type="java.lang.String">
-            <column name="CONTAINERFINGERCHAIN" />
-        </property>
-        <property name="containerType" type="java.lang.Integer">
-            <column name="CONTAINERTYPE" />
-        </property>
-        <property name="agentMachineIngest" type="java.lang.String">
-            <column name="AGENTMACHINEINGEST" />
-        </property>
-        <property name="agentSoftwareIngest" type="java.lang.String">
-            <column name="AGENTSOFTWAREINGEST" />
-        </property>
-        <property name="status" type="java.lang.Integer">
-            <column name="STATUS" />
-        </property>
-        <property name="timestampInit" type="java.util.Date">
-            <column name="TIMESTAMPINIT" />
-        </property>
-        <property name="timestampElab" type="java.util.Date">
-            <column name="TIMESTAMPELAB" />
-        </property>
-        <property name="timestampPub" type="java.util.Date">
-            <column name="TIMESTAMPPUB" />
-        </property>
-        <property name="timestampErr" type="java.util.Date">
-            <column name="TIMESTAMPERR" />
-        </property>
-        <property name="timestampCoda" type="java.util.Date">
-            <column name="TIMESTAMPCODA" />
-        </property>
-        <property name="timestampExport" type="java.util.Date">
-            <column name="TIMESTAMPEXPORT" />
-        </property>
-        </class>
+	<class
+		name="it.bncf.magazziniDigitali.database.entity.MDRegistroIngresso"
+		table="MDRegistroIngresso">
+		<comment>Tabella utilizzata per archiviare le informazioni relative al
+			Registro di ingresso che viene generato al momento dell\'archiviazione
+			del contenitore negli Storage</comment>
+		<id name="id" type="java.lang.String">
+			<column name="ID" length="36">
+				<comment>Identificativo</comment>
+			</column>
+			<generator class="assigned" />
+		</id>
+		<property name="timestampIngest" type="java.sql.Timestamp">
+			<column name="TIMESTAMPINGEST" not-null="true"
+				index="D_MDRegistroIngresso_01">
+				<comment>Data e ora di inserimento</comment>
+			</column>
+		</property>
+		<property name="agentDepositor" type="java.lang.String">
+			<column name="AGENTDEPOSITOR" length="255" not-null="false">
+				<comment>Identificativo del Software che ha creato il record</comment>
+			</column>
+		</property>
+		<property name="originalContainerName"
+			type="java.lang.String">
+			<column name="ORIGINALCONTAINERNAME" length="255"
+				not-null="false">
+				<comment>Nome del file contenitore originale</comment>
+			</column>
+		</property>
+		<property name="containerName" type="java.lang.String">
+			<column name="CONTAINERNAME" length="100" not-null="false">
+				<comment>Nome del file registrato nello storage</comment>
+			</column>
+		</property>
+		<property name="containerFingerChain" type="java.lang.String">
+			<column name="CONTAINERFINGERCHAIN" length="40"
+				not-null="false"
+				unique-key="U_MDRegistroIngresso_01,U_MDRegistroIngresso_04">
+				<comment>Chiave di registro calcolata sull\'oggetto precedente</comment>
+			</column>
+		</property>
+		<property name="containerFingerPrint" type="java.lang.String">
+			<column name="CONTAINERFINGERPRINT" length="40"
+				not-null="false"
+				unique-key="U_MDRegistroIngresso_03,U_MDRegistroIngresso_04">
+				<comment>Chiave di registro calcolata sull\'oggetto attuale</comment>
+			</column>
+		</property>
+		<property name="containerFingerPrintChain"
+			type="java.lang.String">
+			<column name="CONTAINERFINGERPRINTCHAIN" length="80"
+				not-null="false" unique-key="U_MDRegistroIngresso_02">
+				<comment>Chiave di verifica del registro calcolata concatenando il
+					valore del campo \"CONTAINERFINGERPRINT\" dell\'ultimo record
+					registrato con il valore del campo \"CONTAINERFINGERPRINT\" del
+					record attuale</comment>
+			</column>
+		</property>
+		<property name="containerType" type="java.lang.Integer">
+			<column name="CONTAINERTYPE" not-null="false">
+				<comment>Tipo di contenitore</comment>
+			</column>
+		</property>
+		<property name="agentMachineIngest" type="java.lang.String">
+			<column name="AGENTMACHINEINGEST" length="100"
+				not-null="false">
+				<comment>Agent della Macchina</comment>
+			</column>
+		</property>
+		<property name="agentSoftwareIngest" type="java.lang.String">
+			<column name="AGENTSOFTWAREINGEST" length="100"
+				not-null="false">
+				<comment>Agent del Software</comment>
+			</column>
+		</property>
+		<property name="status" type="java.lang.Integer">
+			<column name="STATUS" not-null="false"
+				index="D_MDRegistroIngresso_03">
+				<comment>Esito della attività</comment>
+			</column>
+		</property>
+		<property name="timestampInit" type="java.sql.Timestamp">
+			<column name="TIMESTAMPINIT" not-null="false">
+				<comment>Data e ora di inizio lavori</comment>
+			</column>
+		</property>
+		<property name="timestampElab" type="java.sql.Timestamp">
+			<column name="TIMESTAMPELAB" not-null="false"
+				index="D_MDRegistroIngresso_02">
+				<comment>Data e ora di inizio Elaborazione</comment>
+			</column>
+		</property>
+		<property name="timestampPub" type="java.sql.Timestamp">
+			<column name="TIMESTAMPPUB" not-null="false"
+				index="D_MDRegistroIngresso_02">
+				<comment>Data e ora di Pubblicazione</comment>
+			</column>
+		</property>
+		<property name="timestampErr" type="java.sql.Timestamp">
+			<column name="TIMESTAMPERR" not-null="false">
+				<comment>Data e ora di registrazione Errori</comment>
+			</column>
+		</property>
+		<property name="timestampCoda" type="java.sql.Timestamp">
+			<column name="TIMESTAMPCODA" not-null="false"
+				index="D_MDRegistroIngresso_03">
+				<comment>Data e ora di Georeplica</comment>
+			</column>
+		</property>
+		<property name="timestampExport" type="java.sql.Timestamp">
+			<column name="TIMESTAMPEXPORT" not-null="false">
+				<comment>Data e ora di esportazione</comment>
+			</column>
+		</property>
+	</class>
 </hibernate-mapping>

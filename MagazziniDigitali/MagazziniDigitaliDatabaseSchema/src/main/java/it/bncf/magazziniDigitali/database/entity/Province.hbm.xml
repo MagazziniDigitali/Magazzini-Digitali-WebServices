@@ -5,19 +5,31 @@
 <hibernate-mapping>
 	<class name="it.bncf.magazziniDigitali.database.entity.Province"
 		table="province">
+		<comment>Lista delle province italiane</comment>
 		<id name="id" type="java.lang.Integer">
-			<column name="ID" />
+			<column name="ID">
+				<comment>Identificativo della provincia</comment>
+			</column>
 			<generator class="assigned" />
 		</id>
 		<many-to-one name="idRegione"
-			class="it.bncf.magazziniDigitali.database.entity.Regioni" fetch="join">
-			<column name="ID_REGIONE" />
+			class="it.bncf.magazziniDigitali.database.entity.Regioni"
+			fetch="join">
+			<column name="ID_REGIONE" not-null="true">
+				<comment>Identificativo della Regione</comment>
+			</column>
 		</many-to-one>
 		<property name="nomeProvincia" type="java.lang.String">
-			<column name="NOMEPROVINCIA" />
+			<column name="NOMEPROVINCIA" length="200" not-null="true"
+				unique-key="U_Province_01">
+				<comment>Nome della provincia</comment>
+			</column>
 		</property>
-		<property name="siglaProvincia" type="java.lang.String">
-			<column name="SIGLAPROVINCIA" />
+		<property name="siglaProvincia" type="java.lang.String"
+			unique-key="U_Province_02">
+			<column name="SIGLAPROVINCIA" length="4" not-null="true">
+				<comment>Sigla della provincia</comment>
+			</column>
 		</property>
 	</class>
 </hibernate-mapping>

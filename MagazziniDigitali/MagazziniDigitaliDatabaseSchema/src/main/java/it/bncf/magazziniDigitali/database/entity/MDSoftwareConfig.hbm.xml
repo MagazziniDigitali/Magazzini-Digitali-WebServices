@@ -3,26 +3,47 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 22-ott-2014 15.40.53 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-	<class name="it.bncf.magazziniDigitali.database.entity.MDSoftwareConfig"
+	<class
+		name="it.bncf.magazziniDigitali.database.entity.MDSoftwareConfig"
 		table="MDSoftwareConfig">
+		<comment>In questa tabella vengono riportate tutte le configurazioni
+			che invieremo al Software al momento in cui viene fatta
+			l\'autenticazione in modo da centralizzare tale funzione</comment>
 		<id name="id" type="java.lang.String">
-			<column name="ID" />
+			<column name="ID" length="36">
+				<comment>Identificativo della configurazione del Software</comment>
+			</column>
 			<generator class="assigned" />
 		</id>
-        <many-to-one name="idSoftware" class="it.bncf.magazziniDigitali.database.entity.MDSoftware" fetch="join">
-            <column name="ID_SOFTWARE" />
-        </many-to-one>
+		<many-to-one name="idSoftware"
+			class="it.bncf.magazziniDigitali.database.entity.MDSoftware"
+			fetch="join">
+			<column name="ID_SOFTWARE" not-null="true"
+				unique-key="U_MDSoftwareConfig_01">
+				<comment>Identificativo del Software</comment>
+			</column>
+		</many-to-one>
 		<property name="nome" type="java.lang.String">
-			<column name="NOME" />
+			<column name="NOME" length="255" not-null="true"
+				unique-key="U_MDSoftwareConfig_01">
+				<comment>Nome della variabile di configurazione</comment>
+			</column>
 		</property>
 		<property name="descrizione" type="java.lang.String">
-			<column name="DESCRIZIONE" />
+			<column name="DESCRIZIONE" length="255" not-null="true">
+				<comment>Descrizione della variabile</comment>
+			</column>
 		</property>
 		<property name="value" type="java.lang.String">
-			<column name="VALUE" />
+			<column name="VALUE" length="255" not-null="false">
+				<comment>Valore testuale della configurazione</comment>
+			</column>
 		</property>
-        <many-to-one name="idNodo" class="it.bncf.magazziniDigitali.database.entity.MDNodi" fetch="join">
-            <column name="ID_NODO" />
-        </many-to-one>
+		<many-to-one name="idNodo"
+			class="it.bncf.magazziniDigitali.database.entity.MDNodi" fetch="join">
+			<column name="ID_NODO" not-null="false">
+				<comment>Identificativo del nodo</comment>
+			</column>
+		</many-to-one>
 	</class>
 </hibernate-mapping>

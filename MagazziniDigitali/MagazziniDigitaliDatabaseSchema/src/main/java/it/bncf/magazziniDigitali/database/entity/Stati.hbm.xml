@@ -5,21 +5,38 @@
 <hibernate-mapping>
 	<class name="it.bncf.magazziniDigitali.database.entity.Stati"
 		table="stati">
+		<comment>Lista delle Nazioni</comment>
 		<id name="id" type="java.lang.Integer">
-			<column name="ID" />
+			<column name="ID">
+				<comment>Identificativo</comment>
+			</column>
 			<generator class="assigned" />
 		</id>
 		<property name="nomeStati" type="java.lang.String">
-			<column name="NOME_STATI" />
+			<column name="NOME_STATI" length="128" not-null="true"
+				unique-key="U_Stati_01">
+				<comment>Nome dello Stato/Nazione</comment>
+			</column>
 		</property>
 		<property name="siglaNumericaStati" type="java.lang.String">
-			<column name="SIGLA_NUMERICA_STATI" />
+			<column name="SIGLA_NUMERICA_STATI" length="4"
+				not-null="false" unique-key="U_Stati_02">
+				<comment>Sigla numerica dello stato</comment>
+			</column>
 		</property>
-		<property name="siglaIso31661Alpha3Stati" type="java.lang.String">
-			<column name="SIGLA_ISO_3166_1_ALPHA_3_STATI" />
+		<property name="siglaIso31661Alpha3Stati"
+			type="java.lang.String">
+			<column name="SIGLA_ISO_3166_1_ALPHA_3_STATI" length="3"
+				not-null="false" unique-key="U_Stati_03">
+				<comment>Sigla di 3 cifre ricavato dalla tabella ISO 3166-1</comment>
+			</column>
 		</property>
-		<property name="siglaIso31661Alpha2Stati" type="java.lang.String">
-			<column name="SIGLA_ISO_3166_1_ALPHA_2_STATI" />
+		<property name="siglaIso31661Alpha2Stati"
+			type="java.lang.String">
+			<column name="SIGLA_ISO_3166_1_ALPHA_2_STATI" length="2"
+				not-null="false" unique-key="U_Stati_04">
+				<comment>Sigla di 2 cifre ricavato dalla tabella ISO 3166-1</comment>
+			</column>
 		</property>
 	</class>
 </hibernate-mapping>

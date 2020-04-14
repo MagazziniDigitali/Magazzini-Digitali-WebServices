@@ -3,25 +3,47 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 22-ott-2014 15.27.15 by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="it.bncf.magazziniDigitali.database.entity.MDArchive" table="MDArchive">
-        <id name="id" type="java.lang.String">
-            <column name="ID" />
-            <generator class="assigned" />
-        </id>
-        <many-to-one name="idMdFilesTmp" class="it.bncf.magazziniDigitali.database.entity.MDFilesTmp" fetch="join">
-            <column name="ID_MDFILESTMP" />
-        </many-to-one>
-        <many-to-one name="idNodo" class="it.bncf.magazziniDigitali.database.entity.MDNodi" fetch="join">
-            <column name="ID_NODO" />
-        </many-to-one>
-        <property name="dataStart" type="java.util.Date">
-            <column name="DATASTART" />
-        </property>
-        <property name="dataEnd" type="java.util.Date">
-            <column name="DATAEND" />
-        </property>
-        <property name="esito" type="java.lang.Boolean">
-            <column name="ESITO" />
-        </property>
-    </class>
+	<class name="it.bncf.magazziniDigitali.database.entity.MDArchive"
+		table="MDArchive">
+		<comment>Registro degli oggetti Archiviati sui diversi Storage</comment>
+		<id name="id" type="java.lang.String">
+			<column name="ID" length="36">
+				<comment>Identificativo</comment>
+			</column>
+			<generator class="uuid.hex" />
+		</id>
+		<many-to-one name="idMdFilesTmp"
+			class="it.bncf.magazziniDigitali.database.entity.MDFilesTmp"
+			fetch="join">
+			<column name="ID_MDFILESTMP" not-null="true"
+				unique-key="U_MDArchive_01">
+				<comment>Identificativo relativo al file presente nell\'area
+					Temporanea di MD</comment>
+			</column>
+		</many-to-one>
+		<many-to-one name="idNodo"
+			class="it.bncf.magazziniDigitali.database.entity.MDNodi" fetch="join">
+			<column name="ID_NODO" length="36" not-null="true"
+				unique-key="U_MDArchive_01">
+				<comment>Idenfiticativo del Nodo</comment>
+			</column>
+		</many-to-one>
+		<property name="dataStart" type="java.sql.Timestamp">
+			<column name="DATASTART" not-null="false">
+				<comment>Data e Ora di inizio del trasferimento del materiale sullo
+					Storage</comment>
+			</column>
+		</property>
+		<property name="dataEnd" type="java.sql.Timestamp">
+			<column name="DATAEND" not-null="false">
+				<comment>Data e Ora di fine del trasferimento del materiale sullo
+					Storage</comment>
+			</column>
+		</property>
+		<property name="esito" type="java.lang.Boolean">
+			<column name="ESITO" not-null="false">
+				<comment>Esito del trasferimento (Positivo o Negativo)</comment>
+			</column>
+		</property>
+	</class>
 </hibernate-mapping>

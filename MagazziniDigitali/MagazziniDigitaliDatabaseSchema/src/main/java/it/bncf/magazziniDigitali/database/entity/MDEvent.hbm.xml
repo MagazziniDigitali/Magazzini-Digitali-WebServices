@@ -5,12 +5,18 @@
 <hibernate-mapping>
 	<class name="it.bncf.magazziniDigitali.database.entity.MDEvent"
 		table="MDEvent">
+		<comment>Lista degli eventi</comment>
 		<id name="id" type="java.lang.String">
-			<column name="ID" />
+			<column name="ID" length="40">
+				<comment>Identificativo dell\'evento</comment>
+			</column>
 			<generator class="assigned" />
 		</id>
 		<property name="nome" type="java.lang.String">
-			<column name="NOME" />
+			<column name="NOME" length="255" not-null="true"
+				unique-key="U_MDEvent_01">
+				<comment>Nome dell\'evento</comment>
+			</column>
 		</property>
 	</class>
 </hibernate-mapping>
