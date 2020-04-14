@@ -10,7 +10,9 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 /**
  * @author massi
@@ -18,7 +20,7 @@ import org.apache.log4j.Logger;
  */
 public class FolderSyncElab {
 
-	private Logger log = Logger.getLogger(FolderSyncElab.class);
+	private Logger log = LogManager.getLogger(FolderSyncElab.class);
 
 	private File pathElab = null;
 

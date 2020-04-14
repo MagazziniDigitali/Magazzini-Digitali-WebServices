@@ -5,7 +5,8 @@ package it.bncf.magazziniDigitali.configuration;
 
 import java.io.File;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import it.bncf.magazziniDigitali.configuration.exception.MDConfigurationException;
 import mx.randalf.configuration.Configuration;
@@ -17,7 +18,7 @@ import mx.randalf.configuration.exception.ConfigurationException;
  */
 public class IConfiguration {
 
-	private Logger log = Logger.getLogger(IConfiguration.class);
+	private Logger log = LogManager.getLogger(IConfiguration.class);
 
 	protected String fileConfiguration = null;
 

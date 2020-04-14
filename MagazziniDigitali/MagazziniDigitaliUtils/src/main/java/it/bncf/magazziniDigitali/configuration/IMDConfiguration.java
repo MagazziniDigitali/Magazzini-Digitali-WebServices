@@ -57,7 +57,7 @@ public abstract class IMDConfiguration<S extends Serializable> extends IConfigur
 			throws MDConfigurationException {
 		super(fileConfiguration);
 		this.nomeSW = nomeSW;
-		initConfig();
+		init();
 	}
 
 	/**
@@ -69,7 +69,7 @@ public abstract class IMDConfiguration<S extends Serializable> extends IConfigur
 		super(fileConfiguration);
 		this.nomeSW = nomeSW;
 		this.sysPassword = sysPassword;
-		initConfig();
+		init();
 	}
 
 	public String getFileConfiguration() {
