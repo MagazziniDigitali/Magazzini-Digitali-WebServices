@@ -17,8 +17,8 @@ public class AddDocumentMD extends AddDocument {
 	 * @param cloud
 	 * @throws SolrException
 	 */
-	public AddDocumentMD(String url, boolean cloud, String collection) throws SolrException {
-		super(url, cloud, collection);
+	public AddDocumentMD(String url, boolean cloud, String collection, String optional) throws SolrException {
+		super(url, cloud, collection, optional);
 	}
 
 	/**
@@ -29,8 +29,8 @@ public class AddDocumentMD extends AddDocument {
 	 * @throws SolrException
 	 */
 	public AddDocumentMD(String url, boolean cloud, String collection, int connectionTimeout,
-			int clientTimeout) throws SolrException {
-		super(url, cloud, collection, connectionTimeout, clientTimeout);
+			int clientTimeout, String optional) throws SolrException {
+		super(url, cloud, collection, connectionTimeout, clientTimeout, optional);
 	}
 
 //	/**

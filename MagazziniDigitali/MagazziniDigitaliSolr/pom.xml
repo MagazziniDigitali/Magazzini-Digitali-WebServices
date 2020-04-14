@@ -6,19 +6,19 @@
     <version>1.0.1</version>
   </parent>
   <artifactId>MagazziniDigitaliSolr</artifactId>
-  <version>2.0.20</version>
+  <version>3.0.0</version>
   <description>Librerie per l'interfaccia verso il database Solr</description>
   <groupId>it.bncf.magazziniDigitali.solr</groupId>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.6</maven.compiler.source>
-    <maven.compiler.target>1.6</maven.compiler.target>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
   <dependencies>
   	<dependency>
   		<groupId>mx.randalf.solr</groupId>
   		<artifactId>RandalfSolrCore</artifactId>
-  		<version>1.0.22</version>
+  		<version>2.0.0</version>
   	</dependency>
   	<dependency>
   		<groupId>commons-logging</groupId>
@@ -28,12 +28,12 @@
   	<dependency>
   		<groupId>mx.randalf.tools</groupId>
   		<artifactId>RandalfTools</artifactId>
-  		<version>1.0.9</version>
+  		<version>2.0.0</version>
   	</dependency>
   	<dependency>
   		<groupId>it.bncf.magazziniDigitali.utils</groupId>
   		<artifactId>MagazziniDigitaliUtils</artifactId>
-  		<version>2.0.15</version>
+  		<version>3.0.0</version>
   	</dependency>
   </dependencies>
   <repositories>

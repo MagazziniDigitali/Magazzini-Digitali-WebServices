@@ -56,7 +56,7 @@ public class ModificaSolr {
 		Params params = null;
 
 		try {
-			addDocumentMD = new AddDocumentMD(url, cloud, collection, connectionTimeout, clientTimeout);
+			addDocumentMD = new AddDocumentMD(url, cloud, collection, connectionTimeout, clientTimeout, null);
 			
 			queryResponse = addDocumentMD.find("id:\""+id+"\"");
 	

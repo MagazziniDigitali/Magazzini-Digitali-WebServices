@@ -34,7 +34,7 @@ public class AddDocumentMDTest {
 				System.out.println("connectionTimeout: "+connectionTimeout);
 				System.out.println("clientTimeout: "+clientTimeout);
 				System.out.println("Apro la connessione con Solr");
-				admd = new AddDocumentMD(url, cloud, collection, connectionTimeout, clientTimeout);
+				admd = new AddDocumentMD(url, cloud, collection, connectionTimeout, clientTimeout,null);
 				
 				if (admd != null){
 					System.out.println("Eseguo la ricerca nel database");

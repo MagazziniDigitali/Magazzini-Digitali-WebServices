@@ -22,8 +22,8 @@ public class FindDocumentMD extends FindDocument {
 	 * @param collection
 	 * @throws SolrException
 	 */
-	public FindDocumentMD(String url, boolean cloud, String collection) throws SolrException {
-		super(url, cloud, collection);
+	public FindDocumentMD(String url, boolean cloud, String collection, String optional) throws SolrException {
+		super(url, cloud, collection, optional);
 	}
 
 	/**
@@ -34,9 +34,9 @@ public class FindDocumentMD extends FindDocument {
 	 * @param clientTimeout
 	 * @throws SolrException
 	 */
-	public FindDocumentMD(String url, boolean cloud, String collection, int connectionTimeout, int clientTimeout)
+	public FindDocumentMD(String url, boolean cloud, String collection, int connectionTimeout, int clientTimeout, String optional)
 			throws SolrException {
-		super(url, cloud, collection, connectionTimeout, clientTimeout);
+		super(url, cloud, collection, connectionTimeout, clientTimeout, optional);
 	}
 
 	public SolrDocumentList find(String key, String value) throws SolrServerException{
