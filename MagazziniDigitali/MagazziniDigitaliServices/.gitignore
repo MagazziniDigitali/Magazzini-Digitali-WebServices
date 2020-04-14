@@ -4,3 +4,7 @@ premis
 premisGeoReplica
 /.apt_generated_tests/
 Materiale_V2
+hibernate.cfg.xml
+log4j2.xml
+context.xml
+web.xml
