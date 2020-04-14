@@ -11,9 +11,8 @@ import java.util.TreeMap;
 import java.util.Vector;
 import java.util.concurrent.Future;
 
-import org.apache.log4j.Logger;
-//import org.apache.solr.client.solrj.SolrServerException;
-//import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 
 import it.bncf.magazziniDigitali.businessLogic.filesTmp.MDFilesTmpBusiness;
@@ -28,7 +27,7 @@ import mx.randalf.hibernate.exception.HibernateUtilException;
 public class OggettoDigitaleBusiness {
 
 	
-	public Logger log = Logger.getLogger(OggettoDigitaleBusiness.class);
+	public Logger log = LogManager.getLogger(OggettoDigitaleBusiness.class);
 
 	public OggettoDigitaleBusiness() {
 	}
