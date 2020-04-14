@@ -3,7 +3,8 @@ package it.bncf.magazziniDigitali.services.implement;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 
 import it.bncf.magazziniDigitali.businessLogic.filesTmp.MDFilesTmpBusiness;
@@ -23,7 +24,7 @@ import mx.randalf.hibernate.exception.HibernateUtilException;
 
 public class InitSendMDImpl {
 
-	private static Logger log = Logger.getLogger(InitSendMDImpl.class);
+	private static Logger log = LogManager.getLogger(InitSendMDImpl.class);
 
 	public InitSendMDImpl() {
 	}

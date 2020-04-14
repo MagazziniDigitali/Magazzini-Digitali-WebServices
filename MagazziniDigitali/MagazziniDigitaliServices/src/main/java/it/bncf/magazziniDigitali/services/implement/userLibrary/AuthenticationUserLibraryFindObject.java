@@ -67,7 +67,9 @@ public class AuthenticationUserLibraryFindObject extends AuthenticationUserLibra
 					Integer.parseInt(DepositoLegaleAxisServlet.mdConfiguration
 							.getSoftwareConfigString("solr.connectionTimeOut")),
 					Integer.parseInt(
-							DepositoLegaleAxisServlet.mdConfiguration.getSoftwareConfigString("solr.clientTimeOut")));
+							DepositoLegaleAxisServlet.mdConfiguration.getSoftwareConfigString("solr.clientTimeOut"))
+					, DepositoLegaleAxisServlet.mdConfiguration
+					.getSoftwareConfigString("solr.optional"));
 
 			if (input.getUserInput().getObjectIdentifier().getObjectIdentifierType().equals("id")) {
 				key = "id";

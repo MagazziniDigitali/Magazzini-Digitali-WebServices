@@ -5,7 +5,8 @@ package it.bncf.magazziniDigitali.services.implement.numberView;
 
 import java.math.BigInteger;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 
 import it.bncf.magazziniDigitali.businessLogic.HashTable;
@@ -19,7 +20,7 @@ import mx.randalf.hibernate.exception.HibernateUtilException;
  */
 public class NumberViewImpl {
 
-	private static Logger log = Logger.getLogger(NumberViewImpl.class);
+	private static Logger log = LogManager.getLogger(NumberViewImpl.class);
 
 	/**
 	 * 

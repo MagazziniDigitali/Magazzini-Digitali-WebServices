@@ -3,11 +3,11 @@ package it.bncf.magazziniDigitali.services.implement;
 import java.rmi.RemoteException;
 import java.util.Hashtable;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.hibernate.HibernateException;
 
-import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.OggettoDigitaleBusiness;
 import it.bncf.magazziniDigitali.configuration.exception.MDConfigurationException;
 import it.bncf.magazziniDigitali.database.dao.MDStatoDAO;
 import it.bncf.magazziniDigitali.services.axis.DepositoLegaleAxisServlet;
@@ -24,7 +24,7 @@ import mx.randalf.solr.exception.SolrException;
 
 public class CheckMDImpl {
 
-	private static Logger log = Logger.getLogger(CheckMDImpl.class);
+	private static Logger log = LogManager.getLogger(CheckMDImpl.class);
 
 	public CheckMDImpl() {
 	}

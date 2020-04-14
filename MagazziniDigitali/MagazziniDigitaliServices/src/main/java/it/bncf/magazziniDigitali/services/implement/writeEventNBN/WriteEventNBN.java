@@ -10,7 +10,8 @@ import java.util.GregorianCalendar;
 import java.util.UUID;
 import java.util.Vector;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 
 import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.implement.OggettoDigitale;
@@ -30,7 +31,7 @@ import mx.randalf.hibernate.exception.HibernateUtilException;
  */
 public class WriteEventNBN {
 
-	private static Logger log = Logger.getLogger(WriteEventNBN.class);
+	private static Logger log = LogManager.getLogger(WriteEventNBN.class);
 
 	/**
 	 * 

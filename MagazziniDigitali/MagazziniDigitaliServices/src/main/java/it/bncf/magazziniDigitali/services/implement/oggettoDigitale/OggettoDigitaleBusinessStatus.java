@@ -83,7 +83,8 @@ public class OggettoDigitaleBusinessStatus extends OggettoDigitaleBusiness {
 						configuration.getSoftwareConfigInteger("solr.connectionTimeOut"),
 //						Integer.parseInt(Configuration
 //								.getValue("demoni.Publish.solr.connectionTimeOut")),
-						configuration.getSoftwareConfigInteger("solr.clientTimeOut"));
+						configuration.getSoftwareConfigInteger("solr.clientTimeOut")
+						, configuration.getSoftwareConfigString("solr.optional"));
 //						Integer.parseInt(Configuration
 //								.getValue("demoni.Publish.solr.clientTimeOut")));
 				qr = admd.find("sha1:" + sha1);

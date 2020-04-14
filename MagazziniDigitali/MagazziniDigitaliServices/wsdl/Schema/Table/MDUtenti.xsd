@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.depositolegale.it/utenti" xmlns:errorMsg="http://www.depositolegale.it/errorMsg" xmlns:istituzione="http://www.depositolegale.it/istituzione" xmlns:loginUtenti="http://www.depositolegale.it/loginUtenti" elementFormDefault="qualified" targetNamespace="http://www.depositolegale.it/utenti">
+    <xs:import namespace="http://www.depositolegale.it/loginUtenti" schemaLocation="../Tools/LoginUtenti.xsd"/>
+    <xs:import namespace="http://www.depositolegale.it/errorMsg" schemaLocation="../Tools/ErrorMsg.xsd"/>
+    <xs:import namespace="http://www.depositolegale.it/istituzione" schemaLocation="MDIstituzione.xsd"/>
+    <xs:element name="utenti">
+        <xs:annotation>
+            <xs:documentation xml:lang="it">Informazioni relative all'istituto</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="loginUtenti:authenticationUtenti"/>
+                <xs:choice>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" ref="errorMsg:errorMsg"/>
+                    <xs:element minOccurs="0" ref="datiUtente"/>
+                </xs:choice>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="datiUtente">
+        <xs:complexType>
+            <xs:sequence minOccurs="0">
+                <xs:element name="id" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="it">Identificativo dell'utente
+</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="cognome" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="it">Cognome dell'utente</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="nome" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="it">Nome dell'utente
+</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="amministratore" type="xs:int">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="it">Indica se l'utente è un amministartore </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element maxOccurs="unbounded" minOccurs="0" name="IpAccreditati" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="it">Indica la lista degli IP Accreditati</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element minOccurs="0" ref="istituzione:istituzione"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

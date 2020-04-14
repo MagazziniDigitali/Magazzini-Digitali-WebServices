@@ -9,7 +9,7 @@
                         version="3.0">
 	-->
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
-  <display-name>Magazzini Digitali 2 - Services</display-name>
+  <display-name>Magazzini Digitali 3 - Services</display-name>
   <distributable/>
   <context-param>
     <param-name>version</param-name>
@@ -32,7 +32,7 @@
     <servlet-class>it.bncf.magazziniDigitali.services.showObject.ShowObject</servlet-class>
     <init-param>
       <param-name>nomeCatalogo</param-name>
-      <param-value>MDConfig|file:////Users/massi/Desktop/Lavoro/Sorgenti/Bncf/MagazziniDigitali/MagazziniDigitali/MagazziniDigitaliServices/configurazione</param-value>
+      <param-value>MD3Config</param-value>
     </init-param>
   </servlet>
   <servlet-mapping>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.depositolegale.it/loginUtenti" xmlns:login="http://www.depositolegale.it/login" xmlns:software="http://www.depositolegale.it/software" elementFormDefault="qualified" targetNamespace="http://www.depositolegale.it/loginUtenti">
+    <xs:import namespace="http://www.depositolegale.it/login" schemaLocation="Login.xsd"/>
+    <xs:import namespace="http://www.depositolegale.it/software" schemaLocation="../Table/MDSoftware.xsd"/>
+    <xs:element name="authenticationUtenti">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="login:authentication"/>
+                <xs:element minOccurs="0" name="ipClient" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="it">Indica l'indirizzo IP del client che ha fatto la richiesta di autenticazione</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element ref="software:software"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

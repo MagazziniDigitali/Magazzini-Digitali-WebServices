@@ -31,6 +31,8 @@ public class DepositoLegaleAxisServlet extends AxisServlet {
 					new MDConfiguration("IA",this.getServletContext().getInitParameter("nomeCatalogo"));
 		} catch (MDConfigurationException e) {
 			throw new ServletException(e.getMessage(), e);
+		} catch (Exception e) {
+			throw new ServletException(e.getMessage(), e);
 		}
 	}
 }

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.depositolegale.it/readInfoOutput" xmlns:oggettiDigitali="http://www.depositolegale.it/oggettiDigitali" xmlns:software="http://www.depositolegale.it/software" elementFormDefault="qualified" targetNamespace="http://www.depositolegale.it/readInfoOutput">
+    <xs:import namespace="http://www.depositolegale.it/oggettiDigitali" schemaLocation="OggettiDigitali.xsd"/>
+    <xs:import namespace="http://www.depositolegale.it/software" schemaLocation="Table/MDSoftware.xsd"/>
+    <xs:element name="readInfoOutput">
+        <xs:annotation>
+            <xs:documentation xml:lang="it">Tracciato dato relativo alla risposta del ReadInfo</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="software:software"/>
+                <xs:element ref="oggettiDigitali:oggettoDigitale"/>
+                <xs:element maxOccurs="unbounded" minOccurs="0" ref="errori"/>
+                <xs:element maxOccurs="unbounded" minOccurs="0" ref="warning"/>
+                <xs:element maxOccurs="unbounded" minOccurs="0" ref="info"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="errori">
+        <xs:annotation>
+            <xs:documentation xml:lang="it">Lista degli errori trovati dall'applicativo</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" name="id" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="it">Identificativo relativo al codice di Errore</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="messaggio" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation>Messaggio di errore</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="warning">
+        <xs:annotation>
+            <xs:documentation xml:lang="it">Lista degli avvisi trovati dall'applicativo</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" name="id" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="it">Identificativo relativo al codice di Warning</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="messaggio" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation>Messaggio di errore</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="info">
+        <xs:annotation>
+            <xs:documentation xml:lang="it">Lista dei messaggi trovati dall'applicativo</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" name="id" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="it">Identificativo relativo al codice di Info</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="messaggio" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation>Messaggio di errore</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://www.depositolegale.it/webservice.checkTicket"
+    xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+    xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:wsoap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+    xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:checkTicketType="http://www.depositolegale.it/checkTicket"
+    xmlns:checkTicketOutputType="http://www.depositolegale.it/checkTicketOutput"
+    xmlns:ws="http://www.depositolegale.it/webservice.checkTicket">
+
+    <!-- definizione dei tipi di dato utilizzati... questo dovrebbe ricordarvi qualcosa ;) -->
+    <wsdl:types>
+        <xs:schema xmlns:checkTicketType="http://www.depositolegale.it/checkTicket">
+            <xs:import namespace="http://www.depositolegale.it/checkTicket" schemaLocation="./Schema/Tools/CheckTicket.xsd"/>
+        </xs:schema>
+        <xs:schema xmlns:checkTicketOutputType="http://www.depositolegale.it/checkTicket">
+            <xs:import namespace="http://www.depositolegale.it/checkTicketOutput" schemaLocation="./Schema/Tools/CheckTicketOutput.xsd"/>
+        </xs:schema>
+    </wsdl:types>
+    
+    <!-- definizione di uno dei messaggi impiegati dal web service per comunicare con l'applicazione client -->
+    <wsdl:message name="CheckTicketInput">
+        <wsdl:part name="CheckTicketInput" element="checkTicketType:checkTicket"/>
+    </wsdl:message>
+    <wsdl:message name="CheckTicketOutput">
+        <wsdl:part name="CheckTicketOutput" element="checkTicketOutputType:checkTicketOutput"/>
+    </wsdl:message>
+    <!-- naturalmente può esistere più di un elemento message 
+     all'interno del documento -->
+
+    <wsdl:portType name="CheckTicketPortType"> 
+        <!-- definisce una "porta" e le operazioni che possono essere eseguite dal web service. 
+            Definisce inoltre i messaggi coinvolti nelle operazioni elencate -->
+        <wsdl:operation name="CheckTicketOperation">
+            <wsdl:input message="ws:CheckTicketInput" name="CheckTicketInput"/>
+            <wsdl:output message="ws:CheckTicketOutput" name="CheckTicketOutput"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    
+    <wsdl:binding name="CheckTicketBind" type="ws:CheckTicketPortType"> 
+        <!-- definisce il formato del messaggio ed i 
+       dettagli di protocollo per ogni porta -->
+
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="CheckTicketOperation">
+            <soap:operation soapAction=""/>
+            <wsdl:input name="CheckTicketInput">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="CheckTicketOutput">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    
+    <wsdl:service name="CheckTicketService">
+        <wsdl:port binding="ws:CheckTicketBind" name="CheckTicketPort">
+            <soap:address location="http://localhost:8080/MagazziniDigitaliServices/services/CheckTicketPort"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

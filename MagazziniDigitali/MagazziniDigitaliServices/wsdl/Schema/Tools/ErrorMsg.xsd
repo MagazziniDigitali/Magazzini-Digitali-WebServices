@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.depositolegale.it/errorMsg" elementFormDefault="qualified" targetNamespace="http://www.depositolegale.it/errorMsg">
+    <xs:element name="errorMsg">
+        <xs:annotation>
+            <xs:documentation xml:lang="it">Informazioni relative al singolo Errore
+</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="errorType">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="it">Indica il Tipo di Errore</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element minOccurs="0" name="msgError" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="it">Messaggio di Errore
+</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="errorType" type="errorType_type">
+        <xs:annotation>
+            <xs:documentation xml:lang="it">Viene utilizzato per indicare lo stato di verifica dell'istituto</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:simpleType name="errorType_type">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="LOGINERROR">
+                <xs:annotation>
+                    <xs:documentation xml:lang="it">Identificativo Login non Valido</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="PASSWORDERROR">
+                <xs:annotation>
+                    <xs:documentation xml:lang="it">Password Errata</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="IPERROR">
+                <xs:annotation>
+                    <xs:documentation xml:lang="it">Indirizzi IP non Validi</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ERROR">
+                <xs:annotation>
+                    <xs:documentation xml:lang="it">Errore Generico</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="SOFTWARE_ERROR">
+                <xs:annotation>
+                    <xs:documentation xml:lang="it">Tipologia di Errore legato alla Verifica dei Software</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="WARNING"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

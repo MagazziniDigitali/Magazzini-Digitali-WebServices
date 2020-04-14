@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.depositolegale.it/authenticationUserOutput" xmlns:authenticationUserInput="http://www.depositolegale.it/authenticationUserInput" xmlns:errorMsg="http://www.depositolegale.it/errorMsg" xmlns:login="http://www.depositolegale.it/login" xmlns:premis="http://www.loc.gov/premis/v3" xmlns:software="http://www.depositolegale.it/software" elementFormDefault="qualified" targetNamespace="http://www.depositolegale.it/authenticationUserOutput">
+    <xs:import namespace="http://www.depositolegale.it/authenticationUserInput" schemaLocation="UserLibraryInput.xsd"/>
+    <xs:import namespace="http://www.depositolegale.it/errorMsg" schemaLocation="ErrorMsg.xsd"/>
+    <xs:element name="authenticationUserOutput">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="userInput" type="authenticationUserInput:userInput"/>
+                <xs:group minOccurs="0" ref="gAgentRights"/>
+                <xs:element maxOccurs="unbounded" minOccurs="0" ref="errorMsg:errorMsg"/>
+                <xs:element minOccurs="0" ref="url"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:group name="gAgentRights">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="authenticationUserInput:agent"/>
+            <xs:element minOccurs="0" ref="authenticationUserInput:rights"/>
+        </xs:sequence>
+    </xs:group>
+    <xs:element name="url" type="xs:string"/>
+</xs:schema>

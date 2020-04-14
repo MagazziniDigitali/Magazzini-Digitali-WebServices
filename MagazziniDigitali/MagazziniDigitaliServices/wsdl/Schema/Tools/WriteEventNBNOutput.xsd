@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.depositolegale.it/writeEventNBNOutput" xmlns:error="http://www.depositolegale.it/errorMsg" xmlns:login="http://www.depositolegale.it/login" xmlns:software="http://www.depositolegale.it/software" xmlns:writeEventNBN="http://www.depositolegale.it/writeEventNBN" elementFormDefault="qualified" targetNamespace="http://www.depositolegale.it/writeEventNBNOutput">
+    <xs:import namespace="http://www.depositolegale.it/software" schemaLocation="../Table/MDSoftware.xsd"/>
+    <xs:import namespace="http://www.depositolegale.it/errorMsg" schemaLocation="ErrorMsg.xsd"/>
+    <xs:import namespace="http://www.depositolegale.it/writeEventNBN" schemaLocation="WriteEventNBN.xsd"/>
+    <xs:element name="writeEventNBNOutput">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="writeEventNBN:writeEventNBN"/>
+                <xs:element minOccurs="0" name="esito">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:enumeration value="OK"/>
+                            <xs:enumeration value="KO"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element maxOccurs="unbounded" minOccurs="0" ref="error:errorMsg"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

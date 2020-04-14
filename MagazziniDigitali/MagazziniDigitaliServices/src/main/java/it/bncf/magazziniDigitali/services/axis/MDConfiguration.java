@@ -6,7 +6,8 @@ package it.bncf.magazziniDigitali.services.axis;
 import java.rmi.RemoteException;
 import java.security.NoSuchAlgorithmException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 
 import it.bncf.magazziniDigitali.businessLogic.nodi.MDNodiBusiness;
@@ -32,7 +33,7 @@ import mx.randalf.tools.SHA256Tools;
  */
 public class MDConfiguration extends IMDConfiguration<Software> {
 
-	private static Logger log = Logger.getLogger(MDConfiguration.class);
+	private static Logger log = LogManager.getLogger(MDConfiguration.class);
 	
 	/**
 	 * @throws MDConfigurationException 

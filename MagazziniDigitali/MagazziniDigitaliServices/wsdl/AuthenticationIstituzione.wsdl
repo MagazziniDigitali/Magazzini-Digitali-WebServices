@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://www.depositolegale.it/webservice.authenticationIstituzione"
+    xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+    xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:wsoap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+    xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:loginInputType="http://www.depositolegale.it/loginUtenti"
+    xmlns:istituzioneOutputType="http://www.depositolegale.it/istituzione"
+    xmlns:ws="http://www.depositolegale.it/webservice.authenticationIstituzione">
+
+    <!-- definizione dei tipi di dato utilizzati... questo dovrebbe ricordarvi qualcosa ;) -->
+    <wsdl:types>
+        <xs:schema xmlns:loginInputType="http://www.depositolegale.it/loginUtenti">
+            <xs:import namespace="http://www.depositolegale.it/loginUtenti" schemaLocation="./Schema/Tools/LoginUtenti.xsd"/>
+        </xs:schema>
+        <xs:schema xmlns:istituzioneOutputType="http://www.depositolegale.it/istituzione">
+            <xs:import namespace="http://www.depositolegale.it/istituzione" schemaLocation="./Schema/Table/MDIstituzione.xsd"/>
+        </xs:schema>
+    </wsdl:types>
+    
+    <!-- definizione di uno dei messaggi impiegati dal web service per comunicare con l'applicazione client -->
+    <wsdl:message name="AuthenticationIstituzioneInput">
+        <wsdl:part name="AuthenticationIstituzioneInput" element="loginInputType:authenticationUtenti"/>
+    </wsdl:message>
+    <wsdl:message name="AuthenticationIstituzioneOutput">
+        <wsdl:part name="AuthenticationIstituzioneOutput" element="istituzioneOutputType:mdIstituzione"/>
+    </wsdl:message>
+    <!-- naturalmente può esistere più di un elemento message 
+     all'interno del documento -->
+
+    <wsdl:portType name="AuthenticationIstituzionePortType"> 
+        <!-- definisce una "porta" e le operazioni che possono essere eseguite dal web service. 
+            Definisce inoltre i messaggi coinvolti nelle operazioni elencate -->
+        <wsdl:operation name="AuthenticationIstituzioneOperation">
+            <wsdl:input message="ws:AuthenticationIstituzioneInput" name="AuthenticationIstituzioneInput"/>
+            <wsdl:output message="ws:AuthenticationIstituzioneOutput" name="AuthenticationIstituzioneOutput"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    
+    <wsdl:binding name="AuthenticationIstituzioneBind" type="ws:AuthenticationIstituzionePortType"> 
+        <!-- definisce il formato del messaggio ed i 
+       dettagli di protocollo per ogni porta -->
+
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="AuthenticationIstituzioneOperation">
+            <soap:operation soapAction=""/>
+            <wsdl:input name="AuthenticationIstituzioneInput">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="AuthenticationIstituzioneOutput">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    
+    <wsdl:service name="AuthenticationIstituzioneService">
+        <wsdl:port binding="ws:AuthenticationIstituzioneBind" name="AuthenticationIstituzionePort">
+            <soap:address location="http://localhost:8080/MagazziniDigitaliServices/services/AuthenticationIstituzionePort"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

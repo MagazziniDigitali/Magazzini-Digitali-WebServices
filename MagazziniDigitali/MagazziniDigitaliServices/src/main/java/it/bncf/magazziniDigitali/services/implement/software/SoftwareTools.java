@@ -1,6 +1,7 @@
 package it.bncf.magazziniDigitali.services.implement.software;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 
 import it.bncf.magazziniDigitali.businessLogic.software.MDSoftwareBusiness;
@@ -11,7 +12,7 @@ import mx.randalf.hibernate.exception.HibernateUtilException;
 
 public class SoftwareTools {
 
-	private static Logger log = Logger.getLogger(SoftwareTools.class);
+	private static Logger log = LogManager.getLogger(SoftwareTools.class);
 
 	public SoftwareTools() {
 	}

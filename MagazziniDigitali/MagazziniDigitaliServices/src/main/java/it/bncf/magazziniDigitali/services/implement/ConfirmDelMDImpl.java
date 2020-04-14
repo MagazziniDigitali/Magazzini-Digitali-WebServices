@@ -6,11 +6,12 @@ import it.depositolegale.www.readInfoInput.ReadInfoInput;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ConfirmDelMDImpl {
 
-	private static Logger log = Logger.getLogger(ConfirmDelMDImpl.class);
+	private static Logger log = LogManager.getLogger(ConfirmDelMDImpl.class);
 
 	public ConfirmDelMDImpl() {
 	}

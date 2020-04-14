@@ -7,7 +7,8 @@ import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Vector;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 
 import it.bncf.magazziniDigitali.businessLogic.HashTable;
@@ -27,7 +28,7 @@ import mx.randalf.hibernate.exception.HibernateUtilException;
  */
 public class AuthenticationIstituzione {
 	
-	private static Logger log = Logger.getLogger(AuthenticationIstituzione.class);
+	private static Logger log = LogManager.getLogger(AuthenticationIstituzione.class);
 
 	/**
 	 * 

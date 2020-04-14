@@ -5,7 +5,8 @@ package it.bncf.magazziniDigitali.services.implement.userLibrary;
 
 import java.util.Vector;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 
 import it.bncf.magazziniDigitali.services.implement.software.SoftwareTools;
@@ -21,7 +22,7 @@ import mx.randalf.hibernate.exception.HibernateUtilException;
  */
 public class AuthenticationUserLibrary extends AuthenticationUserLibraryFindObject {
 
-	private static Logger log = Logger.getLogger(AuthenticationUserLibrary.class);
+	private static Logger log = LogManager.getLogger(AuthenticationUserLibrary.class);
 
 	/**
 	 * 

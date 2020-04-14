@@ -6,11 +6,12 @@ import it.depositolegale.www.endSend.EndSend;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class EndSendMDImpl {
 
-	private static Logger log = Logger.getLogger(EndSendMDImpl.class);
+	private static Logger log = LogManager.getLogger(EndSendMDImpl.class);
 
 	public EndSendMDImpl() {
 	}

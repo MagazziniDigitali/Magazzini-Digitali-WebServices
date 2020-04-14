@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/MagazziniDigitaliServices" crossContext="true" debug="0" reloadable="true">
+    <Parameter name="nomeCatalogo" value="MD3Config"/>
+</Context>

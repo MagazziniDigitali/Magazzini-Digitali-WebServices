@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.depositolegale.it/nodi" elementFormDefault="qualified" targetNamespace="http://www.depositolegale.it/nodi">
+    <xs:element name="nodo">
+        <xs:annotation>
+            <xs:documentation xml:lang="it">Informazioni relative al nodo
+</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="it">Identificativo
+
+</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="nome" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="it">Nome</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="descrizioni" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="it">Descrizione del Nodo
+
+</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="storage">
+                    <xs:complexType>
+                        <xs:choice>
+                            <xs:element minOccurs="0" name="fileSystem" type="xs:string">
+                                <xs:annotation>
+                                    <xs:documentation xml:lang="it">Informazioni relativi agli storage di tipo FileSystem
+</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element minOccurs="0" name="rsync">
+                                <xs:annotation>
+                                    <xs:documentation xml:lang="it">Informazioni per il collegamento Rsync</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="urlRsync" type="xs:string">
+                                            <xs:annotation>
+                                                <xs:documentation xml:lang="it">Url per il collegamento Rsync</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:element>
+                                        <xs:element name="password" type="xs:string">
+                                            <xs:annotation>
+                                                <xs:documentation xml:lang="it">PAssword per il collegamento Rsync</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:element>
+                                        <xs:element name="urlCheckStorage" type="xs:anyURI">
+                                            <xs:annotation>
+                                                <xs:documentation>Url per eseguire il Check dei dati sullo Storage
+</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element minOccurs="0" name="s3">
+                                <xs:annotation>
+                                    <xs:documentation xml:lang="it">Informazioni relativi agli storafe di tipo S3</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="urlS3" type="xs:string"/>
+                                        <xs:element name="region" type="xs:string"/>
+                                        <xs:element name="accessKey" type="xs:string"/>
+                                        <xs:element name="secretKey" type="xs:string"/>
+                                        <xs:element name="bucketName" type="xs:string"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:choice>
+                        <xs:attribute name="tipo">
+                            <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                    <xs:enumeration value="F">
+                                        <xs:annotation>
+                                            <xs:documentation xml:lang="it">File System</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:enumeration>
+                                    <xs:enumeration value="M">
+                                        <xs:annotation>
+                                            <xs:documentation xml:lang="it">MD - Rsync</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:enumeration>
+                                    <xs:enumeration value="S">
+                                        <xs:annotation>
+                                            <xs:documentation xml:lang="it">Protocollo S3</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:enumeration>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:attribute>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
