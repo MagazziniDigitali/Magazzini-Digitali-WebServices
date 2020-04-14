@@ -20,6 +20,7 @@ import it.bncf.magazziniDigitali.businessLogic.HashTable;
 import it.bncf.magazziniDigitali.businessLogic.exception.BusinessLogicException;
 import it.bncf.magazziniDigitali.businessLogic.istituzione.MDIstituzioneBusiness;
 import it.bncf.magazziniDigitali.businessLogic.rigths.MDRigthsBusiness;
+import it.bncf.magazziniDigitali.database.dao.MDRigthsDAO;
 import it.bncf.magazziniDigitali.database.dao.MDTicketDAO;
 import it.bncf.magazziniDigitali.database.entity.MDIstituzione;
 import it.bncf.magazziniDigitali.database.entity.MDRigths;
@@ -116,6 +117,7 @@ public class MDTicketBusiness extends BusinessLogic<MDTicket, MDTicketDAO, Strin
 	@Override
 	protected void save(MDTicket table, HashTable<String, Object> dati)
 			throws HibernateException, HibernateUtilException {
+		MDRigthsDAO mdRigthsDAO = null;
 
 		if (dati.get("objectIdentifier") != null) {
 			table.setObjectIdentifier((String) dati.get("objectIdentifier"));
@@ -134,7 +136,8 @@ public class MDTicketBusiness extends BusinessLogic<MDTicket, MDTicketDAO, Strin
 		}
 
 		if (dati.get("idRights") != null) {
-			table.setIdRights((String) dati.get("idRights"));
+			mdRigthsDAO = new MDRigthsDAO();
+			table.setIdRigths(mdRigthsDAO.findById((String) dati.get("idRights")));
 		}
 
 		if (dati.get("idIstituzione") != null) {

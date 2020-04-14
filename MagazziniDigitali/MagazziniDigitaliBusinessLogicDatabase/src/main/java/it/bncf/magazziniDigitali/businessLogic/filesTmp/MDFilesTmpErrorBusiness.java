@@ -11,7 +11,8 @@ import java.util.Vector;
 
 import javax.naming.NamingException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.criterion.Order;
@@ -39,7 +40,7 @@ import mx.randalf.hibernate.exception.HibernateUtilException;
 public class MDFilesTmpErrorBusiness extends
 		BusinessLogic<MDFilesTmpError, MDFilesTmpErrorDAO, String> {
 
-	private Logger log = Logger.getLogger(getClass());
+	private Logger log = LogManager.getLogger(getClass());
 
 	/**
 	 * @param hibernateTemplate
