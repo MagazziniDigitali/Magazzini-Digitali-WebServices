@@ -3,7 +3,7 @@
   <parent>
     <groupId>it.bncf.magazziniDigitali</groupId>
     <artifactId>MagazziniDigitali</artifactId>
-    <version>1.0.1</version>
+    <version>3.0.0</version>
   </parent>
   <groupId>it.bncf.magazziniDigitali.services.implement</groupId>
   <artifactId>MagazziniDigitaliServicesImplement</artifactId>
