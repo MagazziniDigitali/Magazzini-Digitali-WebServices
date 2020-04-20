@@ -29,76 +29,80 @@ public class CheckMDImpl {
 	public CheckMDImpl() {
 	}
 
-    public static ReadInfoOutput checkMDOperation(ReadInfoInput readInfoMsg) throws java.rmi.RemoteException {
-    	ReadInfoOutput output = null;
-    	OggettoDigitaleBusinessStatus oggettoDigitaleBusiness = null;
-    	Errori[] errori = null;
-    	Hashtable<String , String> dati = null;
-    	String md5 = null;
-    	String md564base = null;
-    	String sha1 = null;
-    	String sha164base = null; 
-	String sha256 = null;
-	String sha25664base = null;
+	public static ReadInfoOutput checkMDOperation(ReadInfoInput readInfoMsg) throws java.rmi.RemoteException {
+		ReadInfoOutput output = null;
+		OggettoDigitaleBusinessStatus oggettoDigitaleBusiness = null;
+		Errori[] errori = null;
+		Hashtable<String, String> dati = null;
+		String md5 = null;
+		String md564base = null;
+		String sha1 = null;
+		String sha164base = null;
+		String sha256 = null;
+		String sha25664base = null;
 
-    	try {
+		try {
 			output = new ReadInfoOutput();
 
 			output.setSoftware(readInfoMsg.getSoftware());
 			output.setOggettoDigitale(readInfoMsg.getOggettoDigitale());
-			if (SoftwareTools.checkSoftware(readInfoMsg.getSoftware(), readInfoMsg.getSoftware().getNome())){
+			if (SoftwareTools.checkSoftware(readInfoMsg.getSoftware(), readInfoMsg.getSoftware().getNome())) {
 
 				oggettoDigitaleBusiness = new OggettoDigitaleBusinessStatus();
-				for (int x=0; x<output.getOggettoDigitale().getDigest().length; x++){
+//				for (int x = 0; x < output.getOggettoDigitale().getDigest().length; x++) {
 					try {
-						for (Digest digest:output.getOggettoDigitale().getDigest()) {
-							switch(digest.getDigestType().getValue()) {
-								case Digest_type._value1:  // SHA256
-									sha256 = digest.getDigestValue();
-									break;
-								case Digest_type._value2:  // SHA1
-									sha1 = digest.getDigestValue();
-									break;
-								case Digest_type._value3:  // MD5
-									md5 = digest.getDigestValue();
-									break;
-								case Digest_type._value4:  // MD5-64Base
-									md564base = digest.getDigestValue();
-									break;
-								case Digest_type._value5:  // SHA1-64Base
-									sha164base = digest.getDigestValue();
-									break;
-								case Digest_type._value6:  // SHA256-64Base
-									sha25664base = digest.getDigestValue();
-									break;
-								default:
-									output.getOggettoDigitale().setStatoOggettoDigitale(StatoOggettoDigitale_type.ERROR);
-									errori = new Errori[1];
-									errori[0] = new Errori("-4","Digest del file usato non gestito");
-									output.setErrori(errori);
-									throw new RemoteException("Digest del file usato non gestito");
+						for (Digest digest : output.getOggettoDigitale().getDigest()) {
+							switch (digest.getDigestType().getValue()) {
+							case Digest_type._value1: // SHA256
+								sha256 = digest.getDigestValue();
+								break;
+							case Digest_type._value2: // SHA1
+								sha1 = digest.getDigestValue();
+								break;
+							case Digest_type._value3: // MD5
+								md5 = digest.getDigestValue();
+								break;
+							case Digest_type._value4: // MD5-64Base
+								md564base = digest.getDigestValue();
+								break;
+							case Digest_type._value5: // SHA1-64Base
+								sha164base = digest.getDigestValue();
+								break;
+							case Digest_type._value6: // SHA256-64Base
+								sha25664base = digest.getDigestValue();
+								break;
+							default:
+								output.getOggettoDigitale().setStatoOggettoDigitale(StatoOggettoDigitale_type.ERROR);
+								errori = new Errori[1];
+								errori[0] = new Errori("-4", "Digest del file usato non gestito");
+								output.setErrori(errori);
+								throw new RemoteException("Digest del file usato non gestito");
 							}
 						}
-						dati = oggettoDigitaleBusiness.checkStatus(md5, md564base, sha1, sha164base, sha256, sha25664base,
-								DepositoLegaleAxisServlet.mdConfiguration);
-						if (dati!= null){
+						dati = oggettoDigitaleBusiness.checkStatus(md5, md564base, sha1, sha164base, sha256,
+								sha25664base, DepositoLegaleAxisServlet.mdConfiguration);
+						if (dati != null) {
 							output.getOggettoDigitale().setId(dati.get("id"));
-							
-							if(dati.get("stato").equalsIgnoreCase(MDStatoDAO.FINEARCHIVE) ||
-									dati.get("stato").equalsIgnoreCase(MDStatoDAO.INITINDEX) ||
-									dati.get("stato").equalsIgnoreCase(MDStatoDAO.CHECKINDEX) ||
-									dati.get("stato").equalsIgnoreCase(MDStatoDAO.FINEINDEX)){
-								output.getOggettoDigitale().setStatoOggettoDigitale(StatoOggettoDigitale_type.ARCHIVIATO);
-							} else if (dati.get("stato").equalsIgnoreCase(MDStatoDAO.INITARCHIVE) ||
-									dati.get("stato").equalsIgnoreCase(MDStatoDAO.FINEPUBLISH) ||
-									dati.get("stato").equalsIgnoreCase(MDStatoDAO.INITPUBLISH) ||
-									dati.get("stato").equalsIgnoreCase(MDStatoDAO.FINEVALID) ||
-									dati.get("stato").equalsIgnoreCase(MDStatoDAO.INITVALID)){
-								output.getOggettoDigitale().setStatoOggettoDigitale(StatoOggettoDigitale_type.CHECKARCHIVIAZIONE);
-							} else if (dati.get("stato").equalsIgnoreCase(MDStatoDAO.FINETRASF)){
-								output.getOggettoDigitale().setStatoOggettoDigitale(StatoOggettoDigitale_type.FINETRASF);
-							} else if (dati.get("stato").equalsIgnoreCase(MDStatoDAO.INITTRASF)){
-								output.getOggettoDigitale().setStatoOggettoDigitale(StatoOggettoDigitale_type.INITTRASF);
+
+							if (dati.get("stato").equalsIgnoreCase(MDStatoDAO.FINEARCHIVE)
+									|| dati.get("stato").equalsIgnoreCase(MDStatoDAO.INITINDEX)
+									|| dati.get("stato").equalsIgnoreCase(MDStatoDAO.CHECKINDEX)
+									|| dati.get("stato").equalsIgnoreCase(MDStatoDAO.FINEINDEX)) {
+								output.getOggettoDigitale()
+										.setStatoOggettoDigitale(StatoOggettoDigitale_type.ARCHIVIATO);
+							} else if (dati.get("stato").equalsIgnoreCase(MDStatoDAO.INITARCHIVE)
+									|| dati.get("stato").equalsIgnoreCase(MDStatoDAO.FINEPUBLISH)
+									|| dati.get("stato").equalsIgnoreCase(MDStatoDAO.INITPUBLISH)
+									|| dati.get("stato").equalsIgnoreCase(MDStatoDAO.FINEVALID)
+									|| dati.get("stato").equalsIgnoreCase(MDStatoDAO.INITVALID)) {
+								output.getOggettoDigitale()
+										.setStatoOggettoDigitale(StatoOggettoDigitale_type.CHECKARCHIVIAZIONE);
+							} else if (dati.get("stato").equalsIgnoreCase(MDStatoDAO.FINETRASF)) {
+								output.getOggettoDigitale()
+										.setStatoOggettoDigitale(StatoOggettoDigitale_type.FINETRASF);
+							} else if (dati.get("stato").equalsIgnoreCase(MDStatoDAO.INITTRASF)) {
+								output.getOggettoDigitale()
+										.setStatoOggettoDigitale(StatoOggettoDigitale_type.INITTRASF);
 							} else {
 								output.getOggettoDigitale().setStatoOggettoDigitale(StatoOggettoDigitale_type.ERROR);
 							}
@@ -118,8 +122,8 @@ public class CheckMDImpl {
 						log.error(e.getMessage(), e);
 						throw new RemoteException(e.getMessage(), e);
 					}
-				}
-				if (output.getOggettoDigitale().getStatoOggettoDigitale()==null){
+//				}
+				if (output.getOggettoDigitale().getStatoOggettoDigitale() == null) {
 					output.getOggettoDigitale().setStatoOggettoDigitale(StatoOggettoDigitale_type.NONPRESENTE);
 				}
 			} else {
@@ -139,6 +143,6 @@ public class CheckMDImpl {
 			log.error(e.getMessage(), e);
 			throw new RemoteException(e.getMessage(), e);
 		}
-        return output;
+		return output;
 	}
 }

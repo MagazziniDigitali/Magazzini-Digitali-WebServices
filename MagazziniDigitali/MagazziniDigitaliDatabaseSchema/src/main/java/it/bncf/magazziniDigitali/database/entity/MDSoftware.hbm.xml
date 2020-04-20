@@ -25,7 +25,8 @@
 		</property>
 		<property name="password" type="java.lang.String">
 			<column name="PASSWORD" length="64" not-null="true">
-				<comment>Password del software</comment>
+				<comment>Password del software (codificata utilizzando
+					l\'algoritmo SHA256)</comment>
 			</column>
 		</property>
 		<property name="ipAutorizzati" type="java.lang.String">
@@ -60,5 +61,14 @@
 				<comment>Campo note descrittivo del Rigth</comment>
 			</column>
 		</property>
+		<set name="softwareConfigs" table="MDSoftwareConfig"
+			inverse="false" lazy="false" fetch="select"
+			order-by="nome">
+			<key>
+				<column name="ID_SOFTWARE" />
+			</key>
+			<one-to-many
+				class="it.bncf.magazziniDigitali.database.entity.MDSoftwareConfig" />
+		</set>
 	</class>
 </hibernate-mapping>

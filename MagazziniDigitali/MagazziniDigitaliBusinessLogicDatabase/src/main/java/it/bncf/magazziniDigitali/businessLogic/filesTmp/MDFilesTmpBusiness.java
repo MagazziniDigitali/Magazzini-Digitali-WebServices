@@ -42,6 +42,7 @@ import it.bncf.magazziniDigitali.database.entity.MDFilesTmp;
 import it.bncf.magazziniDigitali.database.entity.MDIstituzione;
 import it.bncf.magazziniDigitali.database.entity.MDNodi;
 import it.bncf.magazziniDigitali.database.entity.MDSoftware;
+import it.bncf.magazziniDigitali.database.entity.MDSoftwareConfig;
 import it.bncf.magazziniDigitali.database.entity.MDStato;
 import it.bncf.magazziniDigitali.utils.DateBusiness;
 import it.bncf.magazziniDigitali.utils.Record;
@@ -640,6 +641,10 @@ public class MDFilesTmpBusiness extends
 		if (dati.containsKey("geoReplicaPremis")) {
 			table.setGeoReplicaPremis((String) dati.get("geoReplicaPremis"));
 		}
+		
+		if (dati.containsKey("removeSource")) {
+			table.setRemoveSource(((String)dati.get("removeSource")).equalsIgnoreCase("true"));
+		}
 	}
 
 	/**
@@ -769,7 +774,7 @@ public class MDFilesTmpBusiness extends
 	}
 	
 	public String insertNewRec(MDSoftware idSoftware, String nomeFile, String md5, String md564base, String sha1, String sha164base, 
-			String sha256, String sha25664base, Calendar nomeFileMod, MDNodi idNodo) throws SQLException 
+			String sha256, String sha25664base, Calendar nomeFileMod, MDNodi idNodo, MDSoftwareConfig mdSoftwareConfig) throws SQLException 
 					{
 		String ris = null;
 		HashTable<String, Object> dati=null;
@@ -806,6 +811,18 @@ public class MDFilesTmpBusiness extends
 			dati.put("stato", mdStattoDAO.INITTRASF());
 			dati.put("trasfDataStart", new Timestamp(new GregorianCalendar().getTimeInMillis()));
 			dati.put("idNodo", idNodo);
+			if (mdSoftwareConfig == null) {
+				dati.put("removeSource", "true");
+			} else {
+				if (mdSoftwareConfig.getValue()== null ||
+						mdSoftwareConfig.getValue().trim().equals("") || 
+						mdSoftwareConfig.getValue().trim().equalsIgnoreCase("true") ||
+						mdSoftwareConfig.getValue().trim().equals("1")) {
+					dati.put("removeSource", "true");
+				} else {
+					dati.put("removeSource", "false");
+				}
+			}
 			ris = save(dati);
 			if (ris == null || ris.trim().equals("")){
 				throw new SQLException("Riscontrato un problema nell'inserimento del record nella tabella");

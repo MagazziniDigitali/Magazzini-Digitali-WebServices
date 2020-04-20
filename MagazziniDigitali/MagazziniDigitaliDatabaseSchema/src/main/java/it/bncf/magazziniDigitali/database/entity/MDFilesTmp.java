@@ -114,6 +114,8 @@ public class MDFilesTmp implements Serializable {
 
 	private String geoReplicaPremis;
 	
+	private Boolean removeSource;
+	
 	public MDFilesTmp() {
 	}
 
@@ -597,6 +599,14 @@ public class MDFilesTmp implements Serializable {
 	 */
 	public void setSha25664base(String sha25664base) {
 		this.sha25664base = sha25664base;
+	}
+
+	public Boolean getRemoveSource() {
+		return removeSource;
+	}
+
+	public void setRemoveSource(Boolean removeSource) {
+		this.removeSource = removeSource;
 	}
 
 }
