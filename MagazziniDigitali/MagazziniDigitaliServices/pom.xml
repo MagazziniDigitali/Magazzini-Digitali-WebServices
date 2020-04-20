@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>it.bncf.magazziniDigitali.services</groupId>
 	<artifactId>MagazziniDigitaliServices</artifactId>
-	<version>3.0.0</version>
+	<version>3.0.1</version>
 	<packaging>war</packaging>
 	<name>Interfaccie API Magazzini Digitali versione 2.0</name>
 	<url>http://maven.apache.org</url>
@@ -66,12 +66,12 @@
 				it.bncf.magazziniDigitali.businessLogic.utils
 			</groupId>
 			<artifactId>MagazziniDigitaliBusinessLogicUtils</artifactId>
-			<version>3.0.0</version>
+			<version>3.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>it.bncf.magazziniDigitali.services.client</groupId>
 			<artifactId>MagazziniDigitaliServicesClient</artifactId>
-			<version>3.0.0</version>
+			<version>3.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jwat</groupId>
@@ -101,7 +101,7 @@
 		<dependency>
 			<groupId>it.bncf.magazziniDigitali.nodi</groupId>
 			<artifactId>MagazziniDigitaliNodi</artifactId>
-			<version>3.0.0</version>
+			<version>3.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>

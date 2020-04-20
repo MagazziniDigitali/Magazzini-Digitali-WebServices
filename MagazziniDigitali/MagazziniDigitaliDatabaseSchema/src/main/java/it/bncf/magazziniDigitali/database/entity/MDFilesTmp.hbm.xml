@@ -271,6 +271,13 @@
 					Archiviazione del materiale</comment>
 			</column>
 		</property>
-
+		<property name="removeSource" type="java.lang.Boolean">
+			<column name="REMOVE_SOURCE" not-null="true" default="true">
+				<comment>Indica se cancellare il file Sorgente presente nell\'area temporanea
+				di MD una volta archiviato (default true) di solito viene impedita la 
+				cancellazione nel caso in cui il file è condiviso con un\'altro progamma
+				(es. Wayback Machine)</comment>
+			</column>
+		</property>
 	</class>
 </hibernate-mapping>

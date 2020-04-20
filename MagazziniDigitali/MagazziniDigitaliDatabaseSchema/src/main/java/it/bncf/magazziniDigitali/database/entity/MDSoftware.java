@@ -4,6 +4,7 @@
 package it.bncf.magazziniDigitali.database.entity;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -40,6 +41,8 @@ public class MDSoftware implements Serializable {
 	private String idRigthsID;
 
 	private String note;
+	
+	private Set<MDSoftwareConfig> softwareConfigs;
 	
 	public MDSoftware() {
 	}
@@ -188,5 +191,24 @@ public class MDSoftware implements Serializable {
 	 */
 	public void setBibliotecaDepositaria(Integer bibliotecaDepositaria) {
 		this.bibliotecaDepositaria = bibliotecaDepositaria;
+	}
+
+	public Set<MDSoftwareConfig> getSoftwareConfigs() {
+		return softwareConfigs;
+	}
+
+	public MDSoftwareConfig getSoftwareConfigs(String key) {
+		MDSoftwareConfig result = null;
+		for (MDSoftwareConfig mdSoftwareConfig: softwareConfigs) {
+			if (mdSoftwareConfig.getNome().trim().equalsIgnoreCase(key)) {
+				result = mdSoftwareConfig;
+				break;
+			}
+		}
+		return result;
+	}
+
+	public void setSoftwareConfigs(Set<MDSoftwareConfig> softwareConfigs) {
+		this.softwareConfigs = softwareConfigs;
 	}
 }

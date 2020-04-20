@@ -20,7 +20,8 @@
 		</property>
 		<property name="password" type="java.lang.String">
 			<column name="PASSWORD" length="64" not-null="true">
-				<comment>Password dell\'utente</comment>
+				<comment>Password dell\'utente (codificata utilizzando
+					l\'algoritmo SHA256)</comment>
 			</column>
 		</property>
 		<property name="cognome" type="java.lang.String">
