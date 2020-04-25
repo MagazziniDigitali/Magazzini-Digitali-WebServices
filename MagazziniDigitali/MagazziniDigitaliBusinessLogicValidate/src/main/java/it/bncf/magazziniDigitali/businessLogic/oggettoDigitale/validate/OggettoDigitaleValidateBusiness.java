@@ -1,13 +1,14 @@
 package it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.validate;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.OggettoDigitaleBusiness;
 
 
 public class OggettoDigitaleValidateBusiness extends OggettoDigitaleBusiness{
 	
-	public Logger log = Logger.getLogger(getClass());
+	public Logger log = LogManager.getLogger(getClass());
 
 	public OggettoDigitaleValidateBusiness() {
 		super();

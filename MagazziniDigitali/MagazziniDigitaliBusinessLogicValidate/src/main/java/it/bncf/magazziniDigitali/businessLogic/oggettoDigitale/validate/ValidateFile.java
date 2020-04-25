@@ -7,7 +7,8 @@ import java.io.File;
 import java.util.GregorianCalendar;
 import java.util.Vector;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 
 import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.validate.implement.ArchiveMD;
@@ -28,7 +29,7 @@ import mx.randalf.hibernate.exception.HibernateUtilException;
  */
 public class ValidateFile {
 
-	private Logger log = Logger.getLogger(ValidateFile.class);
+	private Logger log = LogManager.getLogger(ValidateFile.class);
 
 	/**
 	 * Variabile utilizzata per gestire la lista degli Errori
@@ -159,7 +160,8 @@ public class ValidateFile {
 			xmlType = archive.getXmltype();
 		} else if (archive.getXmltype() != null &&
 				(archive.getXmltype().value().equals(Xmltype.BAGIT.value()) ||
-						archive.getXmltype().value().equals(Xmltype.WARC.value()))){
+						archive.getXmltype().value().equals(Xmltype.WARC.value()) ||
+						archive.getXmltype().value().equals(Xmltype.MRC.value()))){
 			xmlType = archive.getXmltype();
 		}
 		

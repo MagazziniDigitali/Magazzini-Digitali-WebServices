@@ -9,7 +9,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.everit.json.schema.ValidationException;
 import org.json.JSONException;
 
@@ -36,7 +37,7 @@ import mx.randalf.xsd.exception.XsdException;
  */
 public class TarMD extends Tar {
 
-	private Logger log = Logger.getLogger(TarMD.class);
+	private Logger log = LogManager.getLogger(TarMD.class);
 
 	/**
 	 * 

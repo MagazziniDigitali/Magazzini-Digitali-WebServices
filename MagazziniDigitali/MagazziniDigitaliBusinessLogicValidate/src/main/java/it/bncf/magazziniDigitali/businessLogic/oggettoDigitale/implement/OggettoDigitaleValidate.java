@@ -13,7 +13,8 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Vector;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 
 import info.lc.xmlns.premis_v2.CHECKSUMTYPEDefinition;
@@ -31,6 +32,7 @@ import it.magazziniDigitali.xsd.premis.PremisDigest;
 import it.magazziniDigitali.xsd.premis.PremisXsd;
 import it.magazziniDigitali.xsd.premis.exception.PremisXsdException;
 import mx.randalf.archive.info.DigestType;
+import mx.randalf.archive.info.Type;
 import mx.randalf.archive.info.Xmltype;
 //import mx.randalf.configuration.Configuration;
 //import mx.randalf.configuration.exception.ConfigurationException;
@@ -44,7 +46,7 @@ import mx.randalf.xsd.exception.XsdException;
  */
 public class OggettoDigitaleValidate extends OggettoDigitale {
 
-	private Logger log = Logger.getLogger(getClass());
+	private Logger log = LogManager.getLogger(getClass());
 
 	private Logger logValidate = null;
 
@@ -439,13 +441,15 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 		boolean isWarc = false;
 		List<PremisDigest> digests = null;
 		String digest = null;
+		Type type = null;
 
 		try {
 			if (validate.getArchive() != null) {
 				logValidate.info("\n"+name + " [" + objectIdentifierPremis + "]" + " Analizzo gli archivi");
 				if (validate.getArchive().getType() != null &&
 						validate.getArchive().getType().getExt() != null &&
-						validate.getArchive().getType().getExt().equalsIgnoreCase("warc")){
+						(validate.getArchive().getType().getExt().equalsIgnoreCase("warc") ||
+						validate.getArchive().getType().getExt().equalsIgnoreCase("mrc"))){
 					isWarc = true;
 				}
 				if (validate.getArchive().checkMimetype("application/x-tar") || isWarc) {
@@ -485,11 +489,12 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 					pos = objectIdentifierMaster.indexOf(".");
 					objectIdentifierMaster = objectIdentifierMaster.substring(0,pos).replace(".", "");
 				}
+				type = archive.getType();
 				premis.addObjectFileContainer(objectIdentifierMaster, archive.getXmltype().value(),
-						archive.getType().getExt(), new BigInteger("0"), digests,
-						archive.getType().getSize(), archive.getMimetype(), archive.getNome(),
+						type.getExt(), new BigInteger("0"), digests,
+						type.getSize(), archive.getMimetype(), archive.getNome(),
 						mdFilesTmp.getIdSoftware().getIdRigths() 
-						, archive.getType().getFormat().getVersion(), archive.getType().getPUID());
+						, (type.getFormat()==null?null:type.getFormat().getVersion()), type.getPUID());
 
 				if (archive.getArchive() != null && archive.getArchive().size() > 0) {
 					logValidate.info("\n"+name + " [" + objectIdentifierPremis + "]" + " Inizio analisi degli Archivi "

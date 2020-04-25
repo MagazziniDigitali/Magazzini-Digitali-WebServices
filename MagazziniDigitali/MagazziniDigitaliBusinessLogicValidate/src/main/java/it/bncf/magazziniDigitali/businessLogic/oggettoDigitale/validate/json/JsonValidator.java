@@ -9,7 +9,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.everit.json.schema.Schema;
 import org.everit.json.schema.ValidationException;
 import org.everit.json.schema.loader.SchemaLoader;
@@ -23,7 +24,7 @@ import org.json.JSONTokener;
  */
 public class JsonValidator {
 
-	private Logger log = Logger.getLogger(JsonValidator.class);
+	private Logger log = LogManager.getLogger(JsonValidator.class);
 
 	/**
 	 * 

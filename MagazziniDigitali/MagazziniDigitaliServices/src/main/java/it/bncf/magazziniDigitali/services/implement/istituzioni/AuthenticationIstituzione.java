@@ -84,7 +84,7 @@ public class AuthenticationIstituzione {
 				} else if (mdIstituziones.size()>1){
 					errorMsgs.add(new ErrorMsg(ErrorType_type.ERROR, "Risultano più Istituzioni per questo Login"));
 				} else {
-					errorMsgs.add(new ErrorMsg(ErrorType_type.LOGINERROR, "Il login indicato non è Presente"));
+					errorMsgs.add(new ErrorMsg(ErrorType_type.LOGINERROR, "Il login ["+authenticationUtenti.getAuthentication().getLogin()+"] indicato non è Presente"));
 				}
 			} else {
 				errorMsgs.add(new ErrorMsg(ErrorType_type.ERROR, "Problemi del reperire le informazioni"));

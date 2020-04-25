@@ -87,7 +87,7 @@ public class AuthenticationUtenti {
 				} else if (mdUtentis.size()>1){
 					errorMsgs.add(new ErrorMsg(ErrorType_type.ERROR, "Risultano più Software per questo Login"));
 				} else {
-					errorMsgs.add(new ErrorMsg(ErrorType_type.LOGINERROR, "Il login indicato non è Presente"));
+					errorMsgs.add(new ErrorMsg(ErrorType_type.LOGINERROR, "Il login ["+authentication.getAuthentication().getLogin()+"] indicato non è Presente"));
 				}
 			} else {
 				errorMsgs.add(new ErrorMsg(ErrorType_type.ERROR, "Problemi del reperire le informazioni"));
