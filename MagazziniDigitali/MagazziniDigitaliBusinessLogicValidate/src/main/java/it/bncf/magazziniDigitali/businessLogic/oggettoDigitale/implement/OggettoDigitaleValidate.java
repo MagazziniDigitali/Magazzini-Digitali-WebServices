@@ -176,7 +176,12 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 				if (mdFilesTmp.getTarTmpFile() == null) {
 					fileTar = configuration.getSoftwareConfigString("path.tar"); 
 					fileTar += File.separator;
-					fileTar += configuration.getMDSoftware().getIdIstituzione().getId();
+					FactoryDAO.initialize(mdFilesTmp.getIdIstituto());
+					if (mdFilesTmp.getIdIstituto().getpIva() == null
+							|| mdFilesTmp.getIdIstituto().getpIva().equals("")) {
+						throw new ClientMDException("Non è stata indicata la Partita Iva per L'istituto");
+					}
+					fileTar += mdFilesTmp.getIdIstituto().getpIva();
 					fileTar += File.separator;
 					fileTar += mdFilesTmp.
 							getNomeFile().
