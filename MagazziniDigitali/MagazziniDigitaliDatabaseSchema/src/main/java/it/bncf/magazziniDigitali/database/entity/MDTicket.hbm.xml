@@ -37,14 +37,14 @@
 		</property>
 		<many-to-one name="idRigths"
 			class="it.bncf.magazziniDigitali.database.entity.MDRigths"
-			fetch="join">
+			fetch="join" lazy="false">
 			<column name="ID_RIGTHS" not-null="false">
 				<comment>Identificativo del Rigth</comment>
 			</column>
 		</many-to-one>
 		<many-to-one name="idIstituzione"
 			class="it.bncf.magazziniDigitali.database.entity.MDIstituzione"
-			fetch="join">
+			fetch="join" lazy="false">
 			<column name="ID_ISTITUZIONE" not-null="false">
 				<comment>Identificativo della Istituzione</comment>
 			</column>

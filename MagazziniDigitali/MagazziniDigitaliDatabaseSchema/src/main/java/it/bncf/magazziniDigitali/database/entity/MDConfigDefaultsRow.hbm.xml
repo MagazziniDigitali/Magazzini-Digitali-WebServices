@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 22-ott-2014 15.40.53 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+	<class
+		name="it.bncf.magazziniDigitali.database.entity.MDConfigDefaultsRow"
+		table="MDConfigDefaultsRow">
+		<comment>Questa tabella viene utilizzata per la gestione delle diverse
+			configurazioni relativi hai software in modo che al momento della
+			creazione di un nuovo software per l\'istituto venga riportato una
+			configurazione di default</comment>
+		<id name="id" type="java.lang.String">
+			<column name="ID" length="40">
+				<comment>Identificativo</comment>
+			</column>
+			<generator class="assigned" />
+		</id>
+    <many-to-one name="idConfigDefaults"
+      class="it.bncf.magazziniDigitali.database.entity.MDConfigDefaults"
+      fetch="join" lazy="false">
+      <column name="ID_CONFIGDEFAULTS" not-null="true"
+        unique-key="U_MDConfigDefaults_01">
+        <comment>Identificativo della configurazione di Default</comment>
+      </column>
+    </many-to-one>
+		<property name="name" type="java.lang.String">
+			<column name="NAME" length="255" not-null="true" 
+			   unique-key="U_MDConfigDefaults_01">
+				<comment>Indica il nome del parametro da assegnare</comment>
+			</column>
+		</property>
+    <property name="descrizione" type="java.lang.String">
+      <column name="DESCRIZIONE" length="255" not-null="false">
+        <comment>Descrizione relativa al parametro</comment>
+      </column>
+    </property>
+    <property name="value" type="java.lang.String">
+      <column name="VALUE" length="500" not-null="true">
+        <comment>Indica il valore di defaults da assegnare al parametro</comment>
+      </column>
+    </property>
+	</class>
+</hibernate-mapping>

@@ -14,11 +14,11 @@
 			<column name="ID" length="36">
 				<comment>Identificativo</comment>
 			</column>
-			<generator class="uuid.hex" />
+			<generator class="assigned" />
 		</id>
 		<many-to-one name="idMdFilesTmp"
 			class="it.bncf.magazziniDigitali.database.entity.MDFilesTmp"
-			fetch="join">
+			fetch="join" lazy="false">
 			<column name="ID_MDFILESTMP" not-null="true">
 				<comment>Identificativo del file da Caricare</comment>
 			</column>
@@ -30,7 +30,7 @@
 		</property>
 		<many-to-one name="type"
 			class="it.bncf.magazziniDigitali.database.entity.MDStato"
-			fetch="join">
+			fetch="join" lazy="false">
 			<column name="TYPE" not-null="true">
 				<comment>Identificativo dello stato avanzamente in cui si è
 					verificato l\'errore</comment>

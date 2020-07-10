@@ -14,7 +14,7 @@
 		</id>
 		<many-to-one name="idRegione"
 			class="it.bncf.magazziniDigitali.database.entity.Regioni"
-			fetch="join">
+			fetch="join" lazy="false">
 			<column name="ID_REGIONE" not-null="true">
 				<comment>Identificativo della Regione</comment>
 			</column>

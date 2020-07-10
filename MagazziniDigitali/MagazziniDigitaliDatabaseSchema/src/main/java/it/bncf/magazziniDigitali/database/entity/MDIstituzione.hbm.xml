@@ -14,7 +14,7 @@
 				<comment>Identificativo dell\'Istituzione (calcolata usando un
 					generatore di chiavi UUID)</comment>
 			</column>
-			<generator class="uuid.hex" />
+			<generator class="assigned" />
 		</id>
 		<property name="login" type="java.lang.String">
 			<column name="LOGIN" length="255" not-null="true"
@@ -109,7 +109,7 @@
 		</property>
 		<many-to-one name="idRegione"
 			class="it.bncf.magazziniDigitali.database.entity.Regioni"
-			fetch="join">
+			fetch="join" lazy="false">
 			<column name="ID_REGIONE" not-null="false">
 				<comment>Identificativo relative alla regione di appartenenza
 					dell\'Istituzione</comment>

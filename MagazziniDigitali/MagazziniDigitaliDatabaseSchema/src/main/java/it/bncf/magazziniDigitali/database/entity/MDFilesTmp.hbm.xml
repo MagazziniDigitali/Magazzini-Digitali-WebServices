@@ -11,11 +11,11 @@
 			<column name="ID" length="36">
 				<comment>Identificativo</comment>
 			</column>
-			<generator class="uuid.hex" />
+			<generator class="assigned" />
 		</id>
 		<many-to-one name="idIstituto"
 			class="it.bncf.magazziniDigitali.database.entity.MDIstituzione"
-			fetch="join">
+			fetch="join" lazy="false">
 			<column name="ID_ISTITUTO" not-null="true">
 				<comment>Identificatico dell\'Istituto che ha fatto il trasferimento
 					del materiale</comment>
@@ -23,7 +23,7 @@
 		</many-to-one>
 		<many-to-one name="idSoftware"
 			class="it.bncf.magazziniDigitali.database.entity.MDSoftware"
-			fetch="join">
+			fetch="join" lazy="false">
 			<column name="ID_SOFTWARE" not-null="true">
 				<comment>Idenditicativo del Software con cui l\'istituto a eseguirto
 					il trasferimento del materiale</comment>
@@ -77,7 +77,7 @@
 		</property>
 		<many-to-one name="stato"
 			class="it.bncf.magazziniDigitali.database.entity.MDStato"
-			fetch="join">
+			fetch="join" lazy="false">
 			<column name="STATO" not-null="true">
 				<comment>Stato avanzamento lavori del file originale</comment>
 			</column>
@@ -228,7 +228,7 @@
 			</column>
 		</property>
 		<many-to-one name="idNodo"
-			class="it.bncf.magazziniDigitali.database.entity.MDNodi" fetch="join">
+			class="it.bncf.magazziniDigitali.database.entity.MDNodi" fetch="join" lazy="false">
 			<column name="ID_NODO" not-null="false">
 				<comment>Identificativo del Nodo (Storage) Principale</comment>
 			</column>

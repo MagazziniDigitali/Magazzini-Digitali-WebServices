@@ -10,11 +10,11 @@
 			<column name="ID" length="36">
 				<comment>Identificativo</comment>
 			</column>
-			<generator class="uuid.hex" />
+			<generator class="assigned" />
 		</id>
 		<many-to-one name="idMdFilesTmp"
 			class="it.bncf.magazziniDigitali.database.entity.MDFilesTmp"
-			fetch="join">
+			fetch="join" lazy="false">
 			<column name="ID_MDFILESTMP" not-null="true"
 				unique-key="U_MDArchive_01">
 				<comment>Identificativo relativo al file presente nell\'area
@@ -22,7 +22,7 @@
 			</column>
 		</many-to-one>
 		<many-to-one name="idNodo"
-			class="it.bncf.magazziniDigitali.database.entity.MDNodi" fetch="join">
+			class="it.bncf.magazziniDigitali.database.entity.MDNodi" fetch="join" lazy="false">
 			<column name="ID_NODO" length="36" not-null="true"
 				unique-key="U_MDArchive_01">
 				<comment>Idenfiticativo del Nodo</comment>

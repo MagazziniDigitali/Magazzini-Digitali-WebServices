@@ -11,7 +11,6 @@ import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.sql.JoinType;
 
 import it.bncf.magazziniDigitali.database.entity.MDSoftware;
 import it.bncf.magazziniDigitali.database.entity.MDSoftwareConfig;
@@ -91,11 +90,11 @@ public class MDSoftwareConfigDAO extends GenericHibernateDAO<MDSoftwareConfig, S
 	/**
 	 * @see mx.randalf.hibernate.GenericHibernateDAO#initTableJoin(org.hibernate.Criteria)
 	 */
-	@Override
-	protected void initTableJoin(Criteria crit) {
-		crit.createAlias("idSoftware", "idSoftware", JoinType.LEFT_OUTER_JOIN);
-		crit.createAlias("idNodo", "idNodo", JoinType.LEFT_OUTER_JOIN);
-		super.initTableJoin(crit);
-	}
+//	@Override
+//	protected void initTableJoin(Criteria crit) {
+//		crit.createAlias("idSoftware", "idSoftware", JoinType.LEFT_OUTER_JOIN);
+//		crit.createAlias("idNodo", "idNodo", JoinType.LEFT_OUTER_JOIN);
+//		super.initTableJoin(crit);
+//	}
 
 }

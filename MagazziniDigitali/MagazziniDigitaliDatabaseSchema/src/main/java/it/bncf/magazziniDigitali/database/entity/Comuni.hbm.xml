@@ -19,7 +19,7 @@
 		</property>
 		<many-to-one name="idProvinca"
 			class="it.bncf.magazziniDigitali.database.entity.Province"
-			fetch="join">
+			fetch="join" lazy="false">
 			<column name="ID_PROVINCIA" not-null="true">
 				<comment>Identificativo della Provincia</comment>
 			</column>

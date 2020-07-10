@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 22-ott-2014 15.40.53 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+	<class
+		name="it.bncf.magazziniDigitali.database.entity.MDConfigDefaults"
+		table="MDConfigDefaults">
+		<comment>Questa tabella viene utilizzata per la gestione delle diverse
+			configurazioni relativi hai software in modo che al momento della
+			creazione di un nuovo software per l\'istituto venga riportato una
+			configurazione di default</comment>
+		<id name="id" type="java.lang.String">
+			<column name="ID" length="39">
+				<comment>Identificativo</comment>
+			</column>
+			<generator class="assigned" />
+		</id>
+		<property name="name" type="java.lang.String">
+			<column name="NAME" length="255" not-null="true">
+				<comment>Indica il nome della configurazione di Defaults</comment>
+			</column>
+		</property>
+    <property name="tipoIstituto" type="java.lang.String">
+      <column name="TIPO_ISTITUTO" length="1" not-null="true">
+        <comment>Indica a che tipo di Istituzione è predisposta questa configurazione (D - Depositante, B - Depositaria, E - Entrambe)</comment>
+      </column>
+    </property>
+	</class>
+</hibernate-mapping>

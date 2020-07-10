@@ -17,7 +17,7 @@
 		</id>
 		<many-to-one name="idSoftware"
 			class="it.bncf.magazziniDigitali.database.entity.MDSoftware"
-			fetch="join">
+			fetch="join" lazy="false">
 			<column name="ID_SOFTWARE" not-null="true"
 				unique-key="U_MDSoftwareConfig_01">
 				<comment>Identificativo del Software</comment>
@@ -40,7 +40,7 @@
 			</column>
 		</property>
 		<many-to-one name="idNodo"
-			class="it.bncf.magazziniDigitali.database.entity.MDNodi" fetch="join">
+			class="it.bncf.magazziniDigitali.database.entity.MDNodi" fetch="join" lazy="false">
 			<column name="ID_NODO" not-null="false">
 				<comment>Identificativo del nodo</comment>
 			</column>

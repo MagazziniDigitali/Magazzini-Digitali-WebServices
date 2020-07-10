@@ -13,6 +13,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
 
+import it.bncf.magazziniDigitali.database.entity.MDIstituzione;
 import it.bncf.magazziniDigitali.database.entity.MDSoftware;
 import mx.randalf.hibernate.GenericHibernateDAO;
 import mx.randalf.hibernate.exception.HibernateUtilException;
@@ -32,7 +33,7 @@ public class MDSoftwareDAO extends GenericHibernateDAO<MDSoftware, String> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<MDSoftware> find(String nome, String login,
+	public List<MDSoftware> find(String nome, String login, MDIstituzione mdIstituzione,
 			List<Order> orders) throws HibernateException,
 			HibernateUtilException {
 		Criteria criteria = null;
@@ -48,6 +49,9 @@ public class MDSoftwareDAO extends GenericHibernateDAO<MDSoftware, String> {
 			if (login != null){
 				criteria.add(Restrictions.eq("login", login));
 			}
+      if (mdIstituzione != null){
+        criteria.add(Restrictions.eq("idIstituzione", mdIstituzione));
+      }
 			if (orders != null) {
 				for (Order order : orders) {
 					criteria.addOrder(order);

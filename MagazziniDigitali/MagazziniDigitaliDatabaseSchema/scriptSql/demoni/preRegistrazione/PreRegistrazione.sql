@@ -1,0 +1,11 @@
+INSERT INTO `MDSoftware` (`ID`, `NOME`, `LOGIN`, `PASSWORD`, `IP_AUTORIZZATI`, `BIBLIOTECA_DEPOSITARIA`, `ID_ISTITUZIONE`, `ID_RIGTHS`, `NOTE`) VALUES
+('1d973703-0c16-4e10-b282-84318ea195ea-AG', 'Demone Quartz Verifica Pre Registrazione', 'DQ_VerificaPreRegistrazione_MD', '36d4c3e2b842797fa1edfe5f396b896e08cd8f0dc7db16bd473a189a9b063504', '127.0.0.1', 1, '5640ee96-3a39-40f0-b6e8-74d568a551fa-AG', NULL, '');
+
+INSERT INTO `MDSoftwareConfig` (`ID`, `ID_SOFTWARE`, `NOME`, `DESCRIZIONE`, `VALUE`, `ID_NODO`) VALUES
+('0efe5cd2-4833-4ff9-82c6-343035d72785', '1d973703-0c16-4e10-b282-84318ea195ea-AG', 'google.spreadsheetId', 'Indica la chiave identificativa del foglio di lavoro in Google Drive', '1NIsBtsB-J0EJRpgl9lNjoeQaacsenaBq-QZUJqrHj4Y', NULL),
+('0f32f1a6-7ff0-4601-adb9-aeaa8af7bb29', '1d973703-0c16-4e10-b282-84318ea195ea-AG', 'send.email.password', 'Indica la password dell\'indirizzo Email con vui verrà inviata la notifica', 'ov6Uojiejai5', NULL),
+('7712fb83-d845-4188-b0e3-235ce82270ec', '1d973703-0c16-4e10-b282-84318ea195ea-AG', 'socketPort', 'Porta del Software per la chiusura dell\'aplicativo', '9009', NULL),
+('98b640b1-5161-4345-9938-347a159b9010', '1d973703-0c16-4e10-b282-84318ea195ea-AG', 'google.clientSecret', 'Indica la posizione e il nome del file nel FileSystem del file clientSecret.json per l\'accesso alla file xls di gdrive', '/Users/massi/Desktop/Lavoro/Sorgenti/Bncf/MagazziniDigitaliDemoni/MagazziniDigitaliDemoniQuartz/MagazziniDigitaliDemoniVerificaPreRegistrazione/client_secret.json', NULL),
+('c10a688a-b1d9-40c7-b7e7-5605af1ea3bd', '1d973703-0c16-4e10-b282-84318ea195ea-AG', 'send.email.login', 'Indica l\'indirizzo Email con cui verrà inviata la email di notifica', 'noreply@depositolegale.it', NULL),
+('d9873af5-bc46-4625-a722-ab12dec4e9b3', '1d973703-0c16-4e10-b282-84318ea195ea-AG', 'google.page', 'Indica il nome della pagina all\'interno del foglio di lavoro di Google Drive', 'Risposte del modulo 1', NULL),
+('e284aca8-15ae-4049-9b1e-88901970871e', '1d973703-0c16-4e10-b282-84318ea195ea-AG', 'url.validate', 'Indica l\'URL per la validazione delle credenziali dell\'utente', 'http://localhost:8080/MagazziniDigitaliGestionale/Home.action?checkId=', NULL);

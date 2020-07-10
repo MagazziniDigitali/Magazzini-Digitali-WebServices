@@ -14,11 +14,11 @@
 				<comment>Identificativo relativo alla registrazione degli errori nel
 					registro di ingresso</comment>
 			</column>
-			<generator class="uuid.hex" />
+			<generator class="assigned" />
 		</id>
 		<many-to-one name="idMDRegistroIngresso"
 			class="it.bncf.magazziniDigitali.database.entity.MDRegistroIngresso"
-			fetch="join">
+			fetch="join" lazy="false">
 			<column name="ID_MDREGISTROINGRESSO" not-null="true">
 				<comment>Identificativo del contenitore di riferimento</comment>
 			</column>
@@ -30,7 +30,7 @@
 		</property>
 		<many-to-one name="type"
 			class="it.bncf.magazziniDigitali.database.entity.MDStato"
-			fetch="join">
+			fetch="join" lazy="false">
 			<column name="TYPE" not-null="true">
 				<comment>Tipo messaggio di errore</comment>
 			</column>

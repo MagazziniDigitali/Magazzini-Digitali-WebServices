@@ -9,7 +9,7 @@
 			<column name="ID" length="39">
 				<comment>Identificativo del Rigth</comment>
 			</column>
-			<generator class="uuid.hex" />
+			<generator class="assigned" />
 		</id>
 		<property name="nome" type="java.lang.String">
 			<column name="NOME" length="255" not-null="true">
@@ -18,7 +18,7 @@
 		</property>
 		<many-to-one name="idModalitaAccesso"
 			class="it.bncf.magazziniDigitali.database.entity.MDModalitaAccesso"
-			fetch="join">
+			fetch="join" lazy="false">
 			<column name="ID_MODALITAACCESSO" not-null="true">
 				<comment>Tipologia del Rigth</comment>
 			</column>

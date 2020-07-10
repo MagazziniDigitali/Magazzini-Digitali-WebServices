@@ -12,7 +12,7 @@
 			<column name="ID" length="36">
 				<comment>Identificativo</comment>
 			</column>
-			<generator class="uuid.hex" />
+			<generator class="assigned" />
 		</id>
 		<property name="progressivo" type="java.lang.Integer">
 			<column name="PROGRESSIVO" not-null="true">
@@ -70,7 +70,7 @@
 		</property>
 		<many-to-one name="idRegione"
 			class="it.bncf.magazziniDigitali.database.entity.Regioni"
-			fetch="join">
+			fetch="join" lazy="false">
 			<column name="ID_REGIONE" not-null="true">
 				<comment>Identificativo della Regione relativa l\'istituto</comment>
 			</column>
@@ -138,14 +138,14 @@
 		</property>
 		<many-to-one name="idIstituzione"
 			class="it.bncf.magazziniDigitali.database.entity.MDIstituzione"
-			fetch="join">
+			fetch="join" lazy="false">
 			<column name="ID_ISTITUZIONE" not-null="false">
 				<comment>Identificativo dell\'Istituto</comment>
 			</column>
 		</many-to-one>
 		<many-to-one name="idUtente"
 			class="it.bncf.magazziniDigitali.database.entity.MDUtenti"
-			fetch="join">
+			fetch="join" lazy="false">
 			<column name="ID_UTENTE" not-null="false">
 				<comment>Identificativo dell\'utente registrato</comment>
 			</column>

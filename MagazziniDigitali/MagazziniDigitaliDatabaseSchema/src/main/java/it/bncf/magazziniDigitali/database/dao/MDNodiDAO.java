@@ -59,8 +59,14 @@ public class MDNodiDAO extends GenericHibernateDAO<MDNodi, String> {
 		return result;
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<MDNodi> find(String nome,
+  public List<MDNodi> find(String nome,
+      List<Order> orders) throws HibernateException,
+      HibernateUtilException {
+    return find(nome, null, null, orders);
+  }
+
+  @SuppressWarnings("unchecked")
+	public List<MDNodi> find(String nome, Integer active, String code,
 			List<Order> orders) throws HibernateException,
 			HibernateUtilException {
 		Criteria criteria = null;
@@ -73,6 +79,12 @@ public class MDNodiDAO extends GenericHibernateDAO<MDNodi, String> {
 			if (nome != null) {
 				criteria.add(Restrictions.ilike("nome", "%"+nome+"%"));
 			}
+      if (active != null) {
+        criteria.add(Restrictions.eq("active", active));
+      }
+      if (code != null) {
+        criteria.add(Restrictions.eq("code", code));
+      }
 			if (orders != null) {
 				for (Order order : orders) {
 					criteria.addOrder(order);

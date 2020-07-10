@@ -145,7 +145,6 @@ public class MDFilesTmpDAO extends GenericHibernateDAO<MDFilesTmp, String> {
 		return result;
 	}
 
-	@SuppressWarnings("rawtypes")
 	public Hashtable<String, Long> findCountByIstituto(MDIstituzione idIstituto) 
 			throws HibernateException, HibernateUtilException {
 		Criteria criteria = null;

@@ -48,7 +48,7 @@
 		</property>
 		<many-to-one name="idIstituzione"
 			class="it.bncf.magazziniDigitali.database.entity.MDIstituzione"
-			fetch="join">
+			fetch="join" lazy="false">
 			<column name="ID_ISTITUZIONE" not-null="false">
 				<comment>Identificativo dell\'istituto di appartenenza</comment>
 			</column>
