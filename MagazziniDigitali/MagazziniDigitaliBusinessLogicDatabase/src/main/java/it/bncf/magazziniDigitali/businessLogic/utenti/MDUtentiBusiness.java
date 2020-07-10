@@ -72,9 +72,12 @@ public class MDUtentiBusiness extends BusinessLogic<MDUtenti, MDUtentiDAO, Strin
 
 		tableDao.setPage(page);
 		tableDao.setPageSize(pageSize);
-		tables = tableDao.find((String)dati.get("login"),
-				(String)dati.get("nome"), 
-				(String)dati.get("cognome"),
+		tables = tableDao.find((String)dati.get("login"), 
+		    (String)dati.get("nome"), 
+		    (String)dati.get("cognome"), 
+		    null, 
+		    (MDIstituzione)dati.get("idIstituzione"), 
+		    null, 
 				orders);
 		return tables;
 	}

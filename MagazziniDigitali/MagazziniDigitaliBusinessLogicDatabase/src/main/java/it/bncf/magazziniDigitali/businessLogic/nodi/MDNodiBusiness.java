@@ -200,6 +200,12 @@ public class MDNodiBusiness extends BusinessLogic<MDNodi, MDNodiDAO, String> {
 		} else {
 			table.setPathStorage(null);
 		}
+
+    if (dati.get("code") != null) {
+      table.setCode((String) dati.get("code"));
+    } else {
+      table.setPathStorage(null);
+    }
 	}
 
 	@Override

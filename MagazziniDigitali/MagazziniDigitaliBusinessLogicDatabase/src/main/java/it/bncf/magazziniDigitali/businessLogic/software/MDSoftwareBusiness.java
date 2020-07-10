@@ -21,10 +21,14 @@ import it.bncf.magazziniDigitali.businessLogic.HashTable;
 import it.bncf.magazziniDigitali.businessLogic.exception.BusinessLogicException;
 import it.bncf.magazziniDigitali.businessLogic.istituzione.MDIstituzioneBusiness;
 import it.bncf.magazziniDigitali.businessLogic.rigths.MDRigthsBusiness;
+import it.bncf.magazziniDigitali.database.dao.MDConfigDefaultsDAO;
+import it.bncf.magazziniDigitali.database.dao.MDConfigDefaultsRowDAO;
 import it.bncf.magazziniDigitali.database.dao.MDSoftwareDAO;
+import it.bncf.magazziniDigitali.database.entity.MDConfigDefaultsRow;
 import it.bncf.magazziniDigitali.database.entity.MDIstituzione;
 import it.bncf.magazziniDigitali.database.entity.MDRigths;
 import it.bncf.magazziniDigitali.database.entity.MDSoftware;
+import it.bncf.magazziniDigitali.database.entity.MDSoftwareConfig;
 import mx.randalf.hibernate.exception.HibernateUtilException;
 import mx.randalf.tools.SHA256Tools;
 
@@ -74,7 +78,7 @@ public class MDSoftwareBusiness extends BusinessLogic<MDSoftware, MDSoftwareDAO,
 		tableDao.setPage(page);
 		tableDao.setPageSize(pageSize);
 		tables = tableDao.find((String)dati.get("nome"),(String)dati.get("login"),
-				orders);
+		    (MDIstituzione) dati.get("idIstituzione"), orders);
 		return tables;
 	}
 
@@ -197,6 +201,7 @@ public class MDSoftwareBusiness extends BusinessLogic<MDSoftware, MDSoftwareDAO,
 		String jsonArray = "";
 		MDIstituzioneBusiness mdIstituzioneBusiness = null;
 		MDRigthsBusiness mdRigthsBusiness = null;
+		MDSoftwareConfigBusiness mdSoftwareConfigBusiness = null;
 		
 		try {
 			if (value instanceof MDIstituzione){
@@ -205,6 +210,9 @@ public class MDSoftwareBusiness extends BusinessLogic<MDSoftware, MDSoftwareDAO,
 			} else if (value instanceof MDRigths){
 				mdRigthsBusiness = new MDRigthsBusiness();
 				jsonArray = mdRigthsBusiness.toJson((MDRigths) value) + "\n";
+      } else if (value instanceof MDSoftwareConfig){
+        mdSoftwareConfigBusiness = new MDSoftwareConfigBusiness();
+        jsonArray = mdSoftwareConfigBusiness.toJson((MDSoftwareConfig) value, MDSoftware.class) + "\n";
 			} else {
 				throw new BusinessLogicException(this.getClass().getName()+" - Il formato Key: "+key+" class ["+value.getClass().getName()+"] non gestito");
 			}
@@ -221,4 +229,42 @@ public class MDSoftwareBusiness extends BusinessLogic<MDSoftware, MDSoftwareDAO,
 		}
 		return jsonArray;
 	}
+
+  /**
+   * Metodo utilizzato per la creazione della configurazione di Default per il Software
+   * 
+   * @param idSoftware
+   * @param idConfigDefaults
+   * @throws BusinessLogicException 
+   */
+  public static void createSoftwareConfig(String idSoftware, String idConfigDefaults) throws BusinessLogicException {
+    MDSoftwareDAO mdSoftwareDAO = null;
+    MDSoftwareConfigBusiness mdSoftwareConfigBusiness = null;
+    MDConfigDefaultsDAO mdConfigDefaultsDAO = null; 
+    MDConfigDefaultsRowDAO mdConfigDefaultsRowDAO = null;
+    MDSoftware mdSoftware = null;
+    List<MDConfigDefaultsRow> mdConfigDefaultsRows = null;
+    
+    try {
+      mdSoftwareDAO = new MDSoftwareDAO();
+      mdSoftware = mdSoftwareDAO.findById(idSoftware);
+
+      mdConfigDefaultsDAO = new MDConfigDefaultsDAO();
+      mdConfigDefaultsRowDAO = new MDConfigDefaultsRowDAO();
+      mdConfigDefaultsRows = mdConfigDefaultsRowDAO.find(mdConfigDefaultsDAO.findById(idConfigDefaults), 
+          null, null);
+      if (mdConfigDefaultsRows !=null) {
+        mdSoftwareConfigBusiness = new MDSoftwareConfigBusiness();
+        for (MDConfigDefaultsRow mdConfigDefaultsRow: mdConfigDefaultsRows) {
+          mdSoftwareConfigBusiness.add(mdSoftware, mdConfigDefaultsRow);
+        }
+      }
+    } catch (HibernateException e) {
+      throw new BusinessLogicException(e.getMessage(), e);
+    } catch (HibernateUtilException e) {
+      throw new BusinessLogicException(e.getMessage(), e);
+    } catch (BusinessLogicException e) {
+      throw e;
+    }
+  }
 }

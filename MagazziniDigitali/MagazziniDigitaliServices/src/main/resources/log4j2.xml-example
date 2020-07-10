@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="INFO">
 	<Properties>
-		<Property name="basePath">${sys:catalina.home}/logs/MagazziniDigitali3/Services</Property>
+		<Property name="basePath">${sys:catalina.home}/logs/MagazziniDigitali3</Property>
 	</Properties>
 
 	<Appenders>
 		<RollingFile name="fileLogger"
-			fileName="${basePath}/Output.log"
-			filePattern="${basePath}/Output-%d{yyyy-MM-dd}.log">
+			fileName="${basePath}/Services.log"
+			filePattern="${basePath}/%d{yyyy}/%d{MM}/%d{dd}/Services.log">
 			<PatternLayout>
 				<pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
 				</pattern>

@@ -17,10 +17,14 @@ import it.bncf.magazziniDigitali.businessLogic.BusinessLogic;
 import it.bncf.magazziniDigitali.businessLogic.HashTable;
 import it.bncf.magazziniDigitali.businessLogic.exception.BusinessLogicException;
 import it.bncf.magazziniDigitali.businessLogic.nodi.MDNodiBusiness;
+import it.bncf.magazziniDigitali.database.dao.MDNodiDAO;
 import it.bncf.magazziniDigitali.database.dao.MDSoftwareConfigDAO;
+import it.bncf.magazziniDigitali.database.entity.MDConfigDefaultsRow;
 import it.bncf.magazziniDigitali.database.entity.MDNodi;
 import it.bncf.magazziniDigitali.database.entity.MDSoftware;
 import it.bncf.magazziniDigitali.database.entity.MDSoftwareConfig;
+import mx.randalf.configuration.Configuration;
+import mx.randalf.configuration.exception.ConfigurationException;
 import mx.randalf.hibernate.FactoryDAO;
 import mx.randalf.hibernate.exception.HibernateUtilException;
 
@@ -195,4 +199,57 @@ public class MDSoftwareConfigBusiness extends BusinessLogic<MDSoftwareConfig, MD
 		// TODO Auto-generated method stub
 		return mdSoftwareConfig;
 	}
+
+  public void add(MDSoftware mdSoftware,
+      MDConfigDefaultsRow mdConfigDefaultsRow) throws BusinessLogicException {
+    MDNodiDAO mdNodiDAO = null;
+    List<MDNodi> mdNodis = null;
+    HashTable<String, Object> dati = null;
+    String value = "";
+
+    try {
+      dati = new HashTable<String, Object>();
+
+      dati.put("idSoftware", mdSoftware);
+      dati.put("nome", mdConfigDefaultsRow.getName().trim());
+      dati.put("descrizione", mdConfigDefaultsRow.getDescrizione().trim());
+      if (mdConfigDefaultsRow.getValue().trim().indexOf("$NODO_MASTER$")> -1) {
+        mdNodiDAO = new MDNodiDAO();
+        mdNodis = mdNodiDAO.find(null,  1, "C", null);
+        if (mdNodis!= null && mdNodis.size()>0) {
+          dati.put("idNodo",mdNodis.get(0));
+        } else {
+          dati.put("value", mdConfigDefaultsRow.getValue().trim());
+        }
+      } else {
+        value = mdConfigDefaultsRow.getValue().trim();
+        value = value.replace("$P_IVA$", mdSoftware.getIdIstituzione().getpIva());
+        value = value.replace("$URL_RSYNC$", Configuration.getValue("url.Rsync"));
+        value = value.replace("$URL_SERVICES$", Configuration.getValue("url.Services"));
+        value = value.replace("$URL_GESTIONALE$", Configuration.getValue("url.Gestionale"));
+        value = value.replace("$ID_ISTITUTOMD$", mdSoftware.getIdIstituzione().getId());
+        dati.put("value", value);
+      }
+
+      this.save(dati);
+    } catch (HibernateException e) {
+      throw new BusinessLogicException(e.getMessage(), e);
+    } catch (IllegalAccessException e) {
+      throw new BusinessLogicException(e.getMessage(), e);
+    } catch (IllegalArgumentException e) {
+      throw new BusinessLogicException(e.getMessage(), e);
+    } catch (InvocationTargetException e) {
+      throw new BusinessLogicException(e.getMessage(), e);
+    } catch (NoSuchMethodException e) {
+      throw new BusinessLogicException(e.getMessage(), e);
+    } catch (SecurityException e) {
+      throw new BusinessLogicException(e.getMessage(), e);
+    } catch (ConfigurationException e) {
+      throw new BusinessLogicException(e.getMessage(), e);
+    } catch (HibernateUtilException e) {
+      throw new BusinessLogicException(e.getMessage(), e);
+    } catch (NamingException e) {
+      throw new BusinessLogicException(e.getMessage(), e);
+    }
+  }
 }

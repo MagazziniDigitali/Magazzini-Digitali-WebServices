@@ -22,7 +22,8 @@ import javax.naming.NamingException;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 
 import gov.loc.premis.v3.LinkingAgentIdentifierComplexType;
@@ -45,7 +46,7 @@ import mx.randalf.xsd.exception.XsdException;
 
 public class OggettoDigitaleRegistroIngressiBusiness extends OggettoDigitaleBusiness {
 
-	private Logger log = Logger.getLogger(OggettoDigitaleRegistroIngressiBusiness.class);
+	private Logger log = LogManager.getLogger(OggettoDigitaleRegistroIngressiBusiness.class);
 
 	public OggettoDigitaleRegistroIngressiBusiness() {
 		super();

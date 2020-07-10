@@ -14,7 +14,8 @@ import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.OggettoDigitaleBusiness;
 import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.exception.OggettoDigitaleException;
@@ -26,7 +27,7 @@ import mx.randalf.tools.exception.UtilException;
 
 public class OggettoDigitalePackagesPremisBusiness extends OggettoDigitaleBusiness {
 
-	private Logger log = Logger.getLogger(OggettoDigitalePackagesPremisBusiness.class);
+	private Logger log = LogManager.getLogger(OggettoDigitalePackagesPremisBusiness.class);
 
 	public OggettoDigitalePackagesPremisBusiness() {
 		super();

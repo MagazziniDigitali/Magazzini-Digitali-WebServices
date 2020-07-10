@@ -272,7 +272,7 @@ public class OggettoDigitalePublish extends OggettoDigitalePublishPremis{
 					// TODO: da AggiornaremdFilesTmp.getIdSoftware().getPathTar();
 					fileObj = configuration.getSoftwareConfigString("path.tar");
 					fileObj += File.separator;
-					fileObj += mdFilesTmp.getIdIstituto().getId();
+					fileObj += mdFilesTmp.getIdIstituto().getpIva();
 					fileObj += File.separator;
 					fileObj += mdFilesTmp.getNomeFile();
 				} else {

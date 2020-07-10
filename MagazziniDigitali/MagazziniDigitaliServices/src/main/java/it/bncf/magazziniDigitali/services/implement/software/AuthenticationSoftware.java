@@ -95,12 +95,12 @@ public class AuthenticationSoftware {
 								log.error("\n"+"Al software ["+
 										authentication.getLogin()+
 										"] è stato negato l'accesso dall'IP ["+
-										ToolsServices.getRemoteIP()+
+										(ipClient==null?ToolsServices.getRemoteIP():ipClient)+
 										"]");
 								errorMsgs.add(new ErrorMsg(ErrorType_type.IPERROR, "Al software ["+
 										authentication.getLogin()+
 										"] è stato negato l'accesso dall'IP ["+
-										ToolsServices.getRemoteIP()+
+										(ipClient==null?ToolsServices.getRemoteIP():ipClient)+
 										"]"));
 							}
 						} else {
