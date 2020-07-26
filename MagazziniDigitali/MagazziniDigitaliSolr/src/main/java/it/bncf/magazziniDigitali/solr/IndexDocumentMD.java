@@ -83,6 +83,25 @@ public class IndexDocumentMD {
 		}
 	}
 	
+	public static SolrInputDocument initItem(Hashtable<String, List<Object>> params,
+			Item items) {
+		SolrInputDocument item = null;
+//		Vector<Object> objs = null;
+//		Object obj = null;
+		Enumeration<String> keys =null;
+		String key = null;
+
+		item = new SolrInputDocument();
+	
+		keys = params.keys();
+
+		while(keys.hasMoreElements()){
+			key = keys.nextElement();
+			items.add(item, key, (Vector<Object>) params.get(key));
+		}
+		return item;
+	}
+	
 	private SolrInputDocument initItem(String id,
 			Hashtable<String, List<Object>> params,
 			Item items) {
