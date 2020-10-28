@@ -3,10 +3,12 @@
  */
 package it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.solr.objectFilePremis;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.implement.indexSolr.premis.IndexPremis;
 import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.implement.indexSolr.premis.IndexPremis2_2;
@@ -24,7 +26,7 @@ import mx.randalf.solr.exception.SolrException;
  */
 public class SolrObjectFilePremis extends SolrObjectFileMets {
 
-	private Logger log = Logger.getLogger(SolrObjectFilePremis.class);
+	private Logger log = LogManager.getLogger(SolrObjectFilePremis.class);
 
 	/**
 	 * 
@@ -33,7 +35,7 @@ public class SolrObjectFilePremis extends SolrObjectFileMets {
 	}
 
 	protected void publicSolrPremis(java.io.File pathTar, AddDocumentMD admd, IMDConfiguration<?> configuration,
-			String name, Logger logPublish, String objectIdentifierPremis) throws SolrException {
+			String name, Logger logPublish, String objectIdentifierPremis, File fTar) throws SolrException {
 		java.io.File fName = null;
 		FileInputStream fInput = null;
 		PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?> premisInput = null;
@@ -51,7 +53,7 @@ public class SolrObjectFilePremis extends SolrObjectFileMets {
 					indexPremis = new IndexPremis3_0(name);
 				}
 
-				indexPremis.preIndexSolr(premisInput, admd, configuration, logPublish, objectIdentifierPremis, pathTar);
+				indexPremis.preIndexSolr(premisInput, admd, configuration, logPublish, objectIdentifierPremis, pathTar, fTar);
 			} else {
 				throw new SolrException("Impossibile trovare il file premis: "+filename+" nel contenitore");
 			}

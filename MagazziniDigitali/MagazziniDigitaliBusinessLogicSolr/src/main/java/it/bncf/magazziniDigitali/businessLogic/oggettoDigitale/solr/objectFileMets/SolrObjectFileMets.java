@@ -12,7 +12,8 @@ import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.solr.objectFileMag.SolrObjectFileMag;
 import it.bncf.magazziniDigitali.configuration.IMDConfiguration;
@@ -35,7 +36,7 @@ import mx.randalf.xsd.exception.XsdException;
  */
 public class SolrObjectFileMets extends SolrObjectFileMag{
 
-	private Logger log = Logger.getLogger(SolrObjectFileMets.class);
+	private Logger log = LogManager.getLogger(SolrObjectFileMets.class);
 
 	/**
 	 * 

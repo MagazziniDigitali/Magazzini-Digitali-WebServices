@@ -12,6 +12,7 @@ import it.bncf.magazziniDigitali.configuration.exception.MDConfigurationExceptio
 import it.bncf.magazziniDigitali.nodi.ENodi;
 import it.bncf.magazziniDigitali.nodi.Nodi;
 import it.bncf.magazziniDigitali.nodi.exception.NodiException;
+import it.bncf.magazziniDigitali.nodi.exception.NotImplementException;
 import it.magazziniDigitali.xsd.premis.PremisXsd;
 
 /**
@@ -84,6 +85,19 @@ public class OggettoDigitaleGeoReplica_SendFile extends OggettoDigitaleGeoReplic
 						, nodoOutput
 						, eNodi);
 			} catch (NodiException e) {
+				if (ris ==null){
+					ris = new Vector<String>();
+				}
+				ris.add(e.getMessage());
+				dEnd = new GregorianCalendar();
+				addGeoReplica(premisElab, dStart, dEnd
+						//, mdNodi, file.getAbsolutePath()
+						,e.getMessage()
+						//, application
+						, objectIdentifierMaster, configuration
+						, nodoOutput
+						, eNodi);
+			} catch (NotImplementException e) {
 				if (ris ==null){
 					ris = new Vector<String>();
 				}

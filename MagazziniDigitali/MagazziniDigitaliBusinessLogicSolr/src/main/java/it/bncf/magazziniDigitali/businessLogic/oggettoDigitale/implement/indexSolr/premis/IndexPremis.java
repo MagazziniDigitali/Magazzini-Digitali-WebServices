@@ -7,7 +7,8 @@ import java.io.File;
 import java.io.FileFilter;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.validate.implement.TarMD;
 import it.bncf.magazziniDigitali.configuration.IMDConfiguration;
@@ -23,7 +24,7 @@ import mx.randalf.solr.exception.SolrException;
  */
 public abstract class IndexPremis<PX extends PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?>, OCT, ECT> {
 
-	private Logger log = Logger.getLogger(IndexPremis.class);
+	private Logger log = LogManager.getLogger(IndexPremis.class);
 
 	protected String name = null;
 
@@ -35,34 +36,41 @@ public abstract class IndexPremis<PX extends PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?
 	}
 
 	@SuppressWarnings("unchecked")
-	public boolean preIndexSolr(PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?> premisInput, File fObj, Logger logPublish, String objectIdentifierPremis,
+	public boolean preIndexSolr(PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?> premisInput, File fTar, Logger logPublish, String objectIdentifierPremis,
 			IMDConfiguration<?> configuration) throws SolrException, SolrWarning {
 		boolean ris = false;
 		AddDocumentMD admd = null;
 		File pathTar = null;
 		Tar tar = null;
+		String optional = null;
 
 		try {
 			pathTar = new File(configuration.getSoftwareConfigString("solrIndex.tmpPath") +
 			// Configuration.getValue("demoni.SolrIndex.tmpPath")+
-					File.separator + fObj.getName());
+					File.separator + fTar.getName());
 			if (!pathTar.exists()) {
 				if (!pathTar.mkdirs()) {
 					throw new SolrException("Riscontrato un problema nella creazione della cartella ["
 							+ pathTar.getAbsolutePath() + "]");
 				}
 			}
-			if (fObj.getName().toLowerCase().endsWith(".tar")){
+			if (fTar.getName().toLowerCase().endsWith(".tar")){
 				tar = new TarMD();
-				tar.decompress(fObj, pathTar);
+				tar.decompress(fTar, pathTar);
+			}
+			try {
+				optional = configuration.getSoftwareConfigString("solr.optional");
+			}catch (Exception e) {
+				optional = null;
 			}
  			admd = new AddDocumentMD(configuration.getSoftwareConfigString("solr.URL"),
 					configuration.getSoftwareConfigBoolean("solr.Cloud"),
 					configuration.getSoftwareConfigString("solr.collection"),
 					configuration.getSoftwareConfigInteger("solr.connectionTimeOut"),
-					configuration.getSoftwareConfigInteger("solr.clientTimeOut"));
+					configuration.getSoftwareConfigInteger("solr.clientTimeOut"),
+					optional);
 			// admd = new IndexDocumentMD(fObj.getName());
-			checkObject((List<OCT>) premisInput.getObject(), logPublish, objectIdentifierPremis,admd, pathTar, configuration, false);
+			checkObject((List<OCT>) premisInput.getObject(), logPublish, objectIdentifierPremis,admd, pathTar, configuration, false, fTar);
 			checkEvent((List<ECT>) premisInput.getEvent(), logPublish, objectIdentifierPremis, admd);
 			logPublish.info("\n"+name + " [" + objectIdentifierPremis + "]" + " Inizio pubblicazione in Solr");
 			admd.commit();
@@ -105,10 +113,10 @@ public abstract class IndexPremis<PX extends PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?
 
 	@SuppressWarnings("unchecked")
 	public void preIndexSolr(PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?> premisInput, AddDocumentMD admd,
-			IMDConfiguration<?> configuration, Logger logPublish, String objectIdentifierPremis, File pathTar)
+			IMDConfiguration<?> configuration, Logger logPublish, String objectIdentifierPremis, File pathTar, File fTar)
 			throws SolrException {
 		try {
-			checkObject((List<OCT>) premisInput.getObject(), logPublish, objectIdentifierPremis,admd, pathTar, configuration, true);
+			checkObject((List<OCT>) premisInput.getObject(), logPublish, objectIdentifierPremis,admd, pathTar, configuration, true, fTar);
 			checkEvent((List<ECT>) premisInput.getEvent(), logPublish, objectIdentifierPremis, admd);
 		} catch (SolrException e) {
 			log.error(name + " [" + objectIdentifierPremis + "] " + e.getMessage(), e);
@@ -154,7 +162,7 @@ public abstract class IndexPremis<PX extends PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?
 	}
 
 	protected abstract void checkObject(List<OCT> objects, Logger logPublish, String objectIdentifierPremis, AddDocumentMD admd,
-			File pathTar, IMDConfiguration<?> configuration, boolean elabTarPremis) throws SolrException;
+			File pathTar, IMDConfiguration<?> configuration, boolean elabTarPremis, File fTar) throws SolrException;
 
 	protected abstract void checkEvent(List<ECT> events, Logger logPublish, String objectIdentifierPremis, AddDocumentMD admd)
 			throws SolrException;

@@ -9,7 +9,8 @@ import java.math.BigInteger;
 import java.sql.SQLException;
 import java.util.GregorianCalendar;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 
 import it.bncf.magazziniDigitali.businessLogic.filesTmp.MDFilesTmpBusiness;
@@ -30,7 +31,7 @@ import mx.randalf.xsd.exception.XsdException;
  */
 class OggettoDigitaleGeoReplica_Elab extends OggettoDigitaleGeoReplica_Verify {
 
-	private Logger log = Logger.getLogger(OggettoDigitaleGeoReplica_Elab.class);
+	private Logger log = LogManager.getLogger(OggettoDigitaleGeoReplica_Elab.class);
 
 	/**
 	 * 

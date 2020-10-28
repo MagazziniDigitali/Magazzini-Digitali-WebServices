@@ -7,7 +7,7 @@
   </parent>
   <groupId>it.bncf.magazziniDigitali.businessLogic.publish</groupId>
   <artifactId>MagazziniDigitaliBusinessLogicPublish</artifactId>
-  <version>2.0.19</version>
+  <version>3.0.0</version>
   <dependencies>
   <!-- 
   	<dependency>
@@ -23,14 +23,14 @@
   <dependency>
   	<groupId>it.bncf.magazziniDigitali.nodi</groupId>
   	<artifactId>MagazziniDigitaliNodi</artifactId>
-  	<version>1.0.3</version>
+  	<version>3.0.4</version>
   </dependency>
   <dependency>
   	<groupId>
   		it.bncf.magazziniDigitali.businessLogic.validate
   	</groupId>
   	<artifactId>MagazziniDigitaliBusinessLogicValidate</artifactId>
-  	<version>2.0.21</version>
+  	<version>3.0.3</version>
   </dependency>
   </dependencies>
 </project>

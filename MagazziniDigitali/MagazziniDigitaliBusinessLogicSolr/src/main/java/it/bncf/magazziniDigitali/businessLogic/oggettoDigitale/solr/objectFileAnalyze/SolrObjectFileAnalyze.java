@@ -10,10 +10,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 
-import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.solr.objectFileJson.SolrObjectFileJson;
+import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.solr.objectFileMrc.SolrObjectFileMrc;
 import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.solr.param.Params;
 import it.bncf.magazziniDigitali.configuration.IMDConfiguration;
 import it.bncf.magazziniDigitali.database.dao.MDNodiDAO;
@@ -29,9 +30,9 @@ import mx.randalf.xsd.exception.XsdException;
  *
  */
 public abstract class SolrObjectFileAnalyze<F, OICT, SPCT, OCCT, FCT, LRSICT, FRCT, FDCT, SCT, CLCT, RCT, ROICT>
-		extends SolrObjectFileJson {
+		extends SolrObjectFileMrc {
 
-	private Logger log = Logger.getLogger(getClass());
+	private Logger log = LogManager.getLogger(getClass());
 
 	protected long size = 0;
 	protected String mimeType = null;
@@ -46,7 +47,7 @@ public abstract class SolrObjectFileAnalyze<F, OICT, SPCT, OCCT, FCT, LRSICT, FR
 
 	public abstract boolean publishSolr(F object, AddDocumentMD admd, java.io.File pathTar,
 			IMDConfiguration<?> configuration, boolean elabTarPremis, String name, Logger logPublish, 
-			String objectIdentifierPremis) throws SolrException;
+			String objectIdentifierPremis, File fTar) throws SolrException;
 
 	protected void publicSolrOcr(java.io.File pathTar) throws SolrException {
 		publicSolrOcr(pathTar.getAbsolutePath() + java.io.File.separator + filename);
@@ -93,7 +94,7 @@ public abstract class SolrObjectFileAnalyze<F, OICT, SPCT, OCCT, FCT, LRSICT, FR
 	}
 
 	protected void checkAllegati(File pathTar, AddDocumentMD admd, IMDConfiguration<?> configuration, String name, 
-			Logger logPublish, String objectIdentifierPremis)
+			Logger logPublish, String objectIdentifierPremis, File fTar)
 			throws SolrException, XsdException {
 		File fTtl = null;
 		String filename = null;
@@ -117,10 +118,12 @@ public abstract class SolrObjectFileAnalyze<F, OICT, SPCT, OCCT, FCT, LRSICT, FR
 						publicSolrMets(pathTar, admd, configuration);
 					} else if ((fileType != null && fileType.equals("mag"))) {
 						publicSolrMag(pathTar, admd, configuration);
+//					} else if ((fileType != null && fileType.equals("mrc"))) {
+//						publicSolrMrc(pathTar, admd, configuration);
 					} else if ((fileType != null && fileType.equals("registro"))) {
 						publicSolrRegistro(pathTar, admd, configuration);
 					} else if (fileType.equals("premis")) {
-						publicSolrPremis(pathTar, admd, configuration, name, logPublish, objectIdentifierPremis);
+						publicSolrPremis(pathTar, admd, configuration, name, logPublish, objectIdentifierPremis, fTar);
 					} else if (fileType.equals("agent")){
 						publicSolrAgent(pathTar, admd, name);
 					} else if (fileType.equals("rights")){
@@ -150,6 +153,8 @@ public abstract class SolrObjectFileAnalyze<F, OICT, SPCT, OCCT, FCT, LRSICT, FR
 						}
 					}
 				}
+			} else if ((fileType != null && fileType.equals("mrc"))) {
+				publicSolrMrc(pathTar, admd, configuration, fTar);
 			}
 		}
 

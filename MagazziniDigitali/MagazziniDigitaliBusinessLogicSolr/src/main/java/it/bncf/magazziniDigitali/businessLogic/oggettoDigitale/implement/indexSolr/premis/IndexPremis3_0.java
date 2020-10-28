@@ -6,7 +6,7 @@ package it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.implement.indexS
 import java.io.File;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 
 import gov.loc.premis.v3.EventComplexType;
 import gov.loc.premis.v3.ObjectComplexType;
@@ -32,7 +32,7 @@ public class IndexPremis3_0 extends IndexPremis<PremisV3_0Xsd, ObjectComplexType
 
 	@Override
 	protected void checkObject(List<ObjectComplexType> objects, Logger logPublish, String objectIdentifierPremis,
-			AddDocumentMD admd, File pathTar, IMDConfiguration<?> configuration, boolean elabTarPremis) throws SolrException {
+			AddDocumentMD admd, File pathTar, IMDConfiguration<?> configuration, boolean elabTarPremis, File fTar) throws SolrException {
 		SolrObjectFileAnalyze3_0 sof = null;
 		ObjectComplexType object = null;
 		
@@ -49,7 +49,7 @@ public class IndexPremis3_0 extends IndexPremis<PremisV3_0Xsd, ObjectComplexType
 					}
 					object = objects.get(x);
 					if (object instanceof gov.loc.premis.v3.File) {
-						sof.publishSolr((gov.loc.premis.v3.File) object, admd, pathTar, configuration, elabTarPremis,  name,  logPublish,  objectIdentifierPremis);
+						sof.publishSolr((gov.loc.premis.v3.File) object, admd, pathTar, configuration, elabTarPremis,  name,  logPublish,  objectIdentifierPremis, fTar);
 					}
 				}
 				logPublish.info("\n"+name + " [" + objectIdentifierPremis + "]" + " Fine preIndicizzare oggetti");

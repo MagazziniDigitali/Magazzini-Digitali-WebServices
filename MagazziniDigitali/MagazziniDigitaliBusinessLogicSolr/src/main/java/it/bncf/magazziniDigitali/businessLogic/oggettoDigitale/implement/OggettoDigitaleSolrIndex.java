@@ -10,7 +10,8 @@ import java.sql.SQLException;
 import java.util.GregorianCalendar;
 import java.util.UUID;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 
 import it.bncf.magazziniDigitali.businessLogic.filesTmp.MDFilesTmpBusiness;
@@ -40,7 +41,7 @@ import mx.randalf.xsd.exception.XsdException;
  */
 public class OggettoDigitaleSolrIndex extends OggettoDigitale {
 
-	private Logger log = Logger.getLogger(OggettoDigitaleSolrIndex.class);
+	private Logger log = LogManager.getLogger(OggettoDigitaleSolrIndex.class);
 
 	private Logger logSolr = null;
 
@@ -143,12 +144,30 @@ public class OggettoDigitaleSolrIndex extends OggettoDigitale {
 				pFile = pFile.substring(pos + 1);
 			}
 
+			// Definisco il nome del File Premis da analizzare nell'area Temporanea
+			fInputPremis = new File(configuration.getSoftwareConfigString("solrIndex.tmpPath") +
+			// Configuration.getValue("demoni.SolrIndex.tmpPath")+
+					File.separator + pFile.replace(".premis", "")+
+					File.separator + pFile);
+
 			nodoInput = new Nodi(configuration.getSoftwareConfigMDNodi("nodo"), pFile);
-			fInputPremis = nodoInput.getFile(ENodi.PREMIS);
-//			fInputPremis = GenFileDest.genFileDest(configuration.getSoftwareConfigMDNodi("nodo"), pFile);
+
+			// Copio il File Premis in una area temporanea dallo Storage
+			nodoInput.getFile(ENodi.PREMIS, fInputPremis);
+//			fInputPremis = nodoInput.getFile(ENodi.PREMIS);
+
+			// Leggo il tracciato Premis
 			premisInput = PremisXsd.open(fInputPremis);
-			fInput = new File(fInputPremis.getParentFile().getAbsolutePath() + File.separator
-					+ fInputPremis.getName().replace(".premis", ""));
+
+			// Definisco il nome del File da analizzare nell'area Temporanea
+			fInput = new File(fInputPremis.getParentFile().getAbsolutePath()+
+					File.separator+
+					fInputPremis.getName().replace(".premis", ""));
+//			fInput = new File(fInputPremis.getParentFile().getAbsolutePath() + File.separator
+//					+ fInputPremis.getName().replace(".premis", ""));
+			// Copio il File da Elaborare in una area temporanea dallo Storage
+			nodoInput.getFile(ENodi.TAR, fInput);
+
 			if (mdFilesTmp.getStato().getId().equals(MDStatoDAO.FINEARCHIVE)) {
 				logSolr.info("\n"+name + " [" + objectIdentifierPremis + "]" + " Inizio l'indicizzazione del file ["
 						+ fInput.getAbsolutePath() + "]");
@@ -295,7 +314,7 @@ public class OggettoDigitaleSolrIndex extends OggettoDigitale {
 	}
 
 	
-	private boolean preIndexSolr(PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?> premisInput, File fInput,
+	private boolean preIndexSolr(PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?> premisInput, File fTar,
 			Logger logSolr2, String objectIdentifierPremis, IMDConfiguration<?> configuration) throws SolrException, SolrWarning {
 		IndexPremis<?, ?, ?> indexPremis = null;
 
@@ -304,6 +323,6 @@ public class OggettoDigitaleSolrIndex extends OggettoDigitale {
 		} else {
 			indexPremis = new IndexPremis3_0(name);
 		}
-		return indexPremis.preIndexSolr(premisInput, fInput, logSolr2, objectIdentifierPremis, configuration);
+		return indexPremis.preIndexSolr(premisInput, fTar, logSolr2, objectIdentifierPremis, configuration);
 	}
 }

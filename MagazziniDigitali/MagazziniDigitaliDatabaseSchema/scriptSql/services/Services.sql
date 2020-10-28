@@ -8,6 +8,7 @@ INSERT INTO `MDSoftwareConfig` (`ID`, `ID_SOFTWARE`, `NOME`, `DESCRIZIONE`, `VAL
 ('23a1d509-378a-43d8-8d05-273f09f15c03', 'd9a41529-289b-4695-98b5-5f95f978c749', 'pathStorage', 'Path in cui si Trovano Archiviate le immagini', '/mnt/MDStorage', NULL),
 ('2924f4d9-ffd9-4408-b214-d6b52ce366ca', 'd9a41529-289b-4695-98b5-5f95f978c749', 'solr.Cloud', 'Indica se il server Solr è in modalità Cloud ', 'false', NULL),
 ('41801e1e-2016-4ac1-bc55-c1dfa37ed4ba', 'd9a41529-289b-4695-98b5-5f95f978c749', 'solr.URL', 'Lista dei server Zookeeper i quali permettono di sapere la struttura dei server Solr', 'http://md-solr01.prod.bncf.lan:8983/solr/mdProd', NULL),
+('3d01fea7-1893-11eb-9512-08002725514e', 'd9a41529-289b-4695-98b5-5f95f978c749', 'solr.optional','','',NULL),
 ('62e91b95-199d-441f-8a1a-1f541349e1e3', 'd9a41529-289b-4695-98b5-5f95f978c749', 'ticket.internalUrl', 'Indirizzo UOL interno del visualizzatore oggetti digitali', 'https://services.depositolegale.it/MagazziniDigitaliServices/showObject', NULL),
 ('9159b469-094d-4126-97b6-2e0b2b56d7ee', 'd9a41529-289b-4695-98b5-5f95f978c749', 'solr.clientTimeOut', 'TimeOut del client verso il server Solr', '100000', NULL),
 ('983f700b-c3b2-4dca-899b-61c20d458823', 'd9a41529-289b-4695-98b5-5f95f978c749', 'istituzioneMD.id', 'Identificativo Istituzione MD per l\'autenticazione', '5640ee96-3a39-40f0-b6e8-74d568a551fa-AG', NULL),

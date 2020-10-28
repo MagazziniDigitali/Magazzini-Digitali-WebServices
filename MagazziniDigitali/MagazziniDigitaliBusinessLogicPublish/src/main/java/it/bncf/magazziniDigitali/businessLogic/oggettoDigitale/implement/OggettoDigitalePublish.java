@@ -12,7 +12,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.Vector;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 
 import info.lc.xmlns.premis_v2.CHECKSUMTYPEDefinition;
@@ -26,6 +27,7 @@ import it.bncf.magazziniDigitali.database.dao.MDStatoDAO;
 import it.bncf.magazziniDigitali.database.entity.MDFilesTmp;
 import it.bncf.magazziniDigitali.nodi.Nodi;
 import it.bncf.magazziniDigitali.nodi.exception.NodiException;
+import it.bncf.magazziniDigitali.nodi.exception.NotImplementException;
 import it.magazziniDigitali.xsd.premis.PremisDigest;
 import it.magazziniDigitali.xsd.premis.PremisXsd;
 import it.magazziniDigitali.xsd.premis.exception.PremisXsdException;
@@ -40,7 +42,7 @@ import mx.randalf.xsd.exception.XsdException;
  */
 public class OggettoDigitalePublish extends OggettoDigitalePublishPremis{
 
-	private Logger log = Logger.getLogger(getClass());
+	private Logger log = LogManager.getLogger(getClass());
 
 	private PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?> premisElab = null;
 	
@@ -164,6 +166,7 @@ public class OggettoDigitalePublish extends OggettoDigitalePublishPremis{
 					writeFilePremisDB(filePremis, configuration.getSoftwareConfigString("path.premis")));
 			log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
 		} catch (Exception e) {
+			log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
 			if (premisElab != null) {
 				premisElab.addEvent(
 						"Error",
@@ -178,7 +181,6 @@ public class OggettoDigitalePublish extends OggettoDigitalePublishPremis{
 //								+ application + ".UUID"), 
 						null);
 			}
-			log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
 			mdFileTmpBusiness.updateStopPublish(mdFilesTmp.getId(), false,
 					new Exception[] { e },
 					null,
@@ -355,6 +357,8 @@ public class OggettoDigitalePublish extends OggettoDigitalePublishPremis{
 			throw e;
 		} catch (NodiException e) {
 			throw new MDConfigurationException(e.getMessage(), e);
+		} catch (NotImplementException e) {
+			throw new MDConfigurationException(e.getMessage(), e);
 		}
 	}
 
@@ -476,6 +480,8 @@ public class OggettoDigitalePublish extends OggettoDigitalePublishPremis{
 			throw e;
 		} catch (NodiException e) {
 			throw new MDConfigurationException(e.getMessage(), e);
+		} catch (NotImplementException e) {
+			throw new MDConfigurationException(e.getMessage(), e);
 		}
 	}
 
@@ -554,9 +560,10 @@ public class OggettoDigitalePublish extends OggettoDigitalePublishPremis{
 	 * @param fObjNew
 	 * @return
 	 * @throws NodiException 
+	 * @throws NotImplementException 
 	 */
 	private boolean isFileExist(File fObj, MDFilesTmp record, 
-			Nodi nodi) throws NodiException{
+			Nodi nodi) throws NodiException, NotImplementException{
 		boolean ris = false;
 		
 		if (fObj.exists()) {

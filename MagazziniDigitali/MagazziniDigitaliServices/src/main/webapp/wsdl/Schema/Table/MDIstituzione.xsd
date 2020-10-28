@@ -1,93 +1,122 @@
-<?xml version="1.0" encoding="UTF-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.depositolegale.it/istituzione" xmlns:errorMsg="http://www.depositolegale.it/errorMsg" xmlns:loginUtenti="http://www.depositolegale.it/loginUtenti" elementFormDefault="qualified" targetNamespace="http://www.depositolegale.it/istituzione">
-    <xs:import namespace="http://www.depositolegale.it/loginUtenti" schemaLocation="../Tools/LoginUtenti.xsd"/>
-    <xs:import namespace="http://www.depositolegale.it/errorMsg" schemaLocation="../Tools/ErrorMsg.xsd"/>
-    <xs:element name="istituzione">
-        <xs:annotation>
-            <xs:documentation xml:lang="it">Informazioni relative all'istituto</xs:documentation>
-        </xs:annotation>
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="id" type="xs:string">
-                    <xs:annotation>
-                        <xs:documentation xml:lang="it">Identificativo dell'istituzione
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.depositolegale.it/istituzione"
+	xmlns:errorMsg="http://www.depositolegale.it/errorMsg"
+	xmlns:loginUtenti="http://www.depositolegale.it/loginUtenti"
+	elementFormDefault="qualified"
+	targetNamespace="http://www.depositolegale.it/istituzione">
+	<xs:import
+		namespace="http://www.depositolegale.it/loginUtenti"
+		schemaLocation="../Tools/LoginUtenti.xsd" />
+	<xs:import namespace="http://www.depositolegale.it/errorMsg"
+		schemaLocation="../Tools/ErrorMsg.xsd" />
+	<xs:element name="istituzione">
+		<xs:annotation>
+			<xs:documentation xml:lang="it">Informazioni relative
+				all'istituto</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="id" type="xs:string">
+					<xs:annotation>
+						<xs:documentation xml:lang="it">Identificativo
+							dell'istituzione
 
-</xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-                <xs:element name="nome" type="xs:string">
-                    <xs:annotation>
-                        <xs:documentation xml:lang="it">Nome dell'istituzione
-</xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-                <xs:element minOccurs="0" name="indirizzo" type="xs:string">
-                    <xs:annotation>
-                        <xs:documentation xml:lang="it">Indirizzo</xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-                <xs:element minOccurs="0" name="telefono" type="xs:string">
-                    <xs:annotation>
-                        <xs:documentation xml:lang="it">Numero di telefono del Contatto o Istituzione</xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-                <xs:element minOccurs="0" name="nomeContatto" type="xs:string">
-                    <xs:annotation>
-                        <xs:documentation xml:lang="it">Nome e Cognome del contatto dell'istituzione
-</xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-                <xs:element default="0" name="bibliotecaDepositaria" type="xs:integer">
-                    <xs:annotation>
-                        <xs:documentation xml:lang="it">Indica se l'istituto è una biblioteca depositaria
-</xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-                <xs:element default="0" name="istitutoCentrale" type="xs:integer">
-                    <xs:annotation>
-                        <xs:documentation xml:lang="it">Indica sel si tratta di un Istituto Centrale</xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-                <xs:element maxOccurs="unbounded" minOccurs="0" name="ipAccreditati" type="xs:string">
-                    <xs:annotation>
-                        <xs:documentation xml:lang="it">Indica la lista degli IP Accreditati</xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-                <xs:element minOccurs="0" name="apiUtente">
-                    <xs:annotation>
-                        <xs:documentation xml:lang="it">Dati relativa all'Api per l'autenticazione dell'utente</xs:documentation>
-                    </xs:annotation>
-                    <xs:complexType>
-                        <xs:sequence>
-                            <xs:element name="Interfaccia" type="xs:anyURI">
-                                <xs:annotation>
-                                    <xs:documentation xml:lang="it">URI relativo all'interfaccia Api da contattare</xs:documentation>
-                                </xs:annotation>
-                            </xs:element>
-                            <xs:element name="libreria" type="xs:string">
-                                <xs:annotation>
-                                    <xs:documentation xml:lang="it">Libreria da utilizzare per la gestione dell'interfaccia</xs:documentation>
-                                </xs:annotation>
-                            </xs:element>
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element minOccurs="0" name="emailBagit" type="xs:string">
-                    <xs:annotation>
-                        <xs:documentation xml:lang="it">Indirizzo Email accreditato per il Bagit</xs:documentation>
-                    </xs:annotation>
-                </xs:element>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="mdIstituzione">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="loginUtenti:authenticationUtenti"/>
-                <xs:choice>
-                    <xs:element maxOccurs="unbounded" minOccurs="0" ref="errorMsg:errorMsg"/>
-                    <xs:element minOccurs="0" ref="istituzione"/>
-                </xs:choice>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="nome" type="xs:string">
+					<xs:annotation>
+						<xs:documentation xml:lang="it">Nome dell'istituzione
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element minOccurs="0" name="indirizzo"
+					type="xs:string">
+					<xs:annotation>
+						<xs:documentation xml:lang="it">Indirizzo
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element minOccurs="0" name="telefono"
+					type="xs:string">
+					<xs:annotation>
+						<xs:documentation xml:lang="it">Numero di telefono del
+							Contatto o Istituzione</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element minOccurs="0" name="nomeContatto"
+					type="xs:string">
+					<xs:annotation>
+						<xs:documentation xml:lang="it">Nome e Cognome del
+							contatto dell'istituzione
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element default="0" name="bibliotecaDepositaria"
+					type="xs:integer">
+					<xs:annotation>
+						<xs:documentation xml:lang="it">Indica se l'istituto è
+							una biblioteca depositaria
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element default="0" name="istitutoCentrale"
+					type="xs:integer">
+					<xs:annotation>
+						<xs:documentation xml:lang="it">Indica sel si tratta
+							di un Istituto Centrale</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element maxOccurs="unbounded" minOccurs="0"
+					name="ipAccreditati" type="xs:string">
+					<xs:annotation>
+						<xs:documentation xml:lang="it">Indica la lista degli
+							IP Accreditati</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element minOccurs="0" name="apiUtente">
+					<xs:annotation>
+						<xs:documentation xml:lang="it">Dati relativa all'Api
+							per l'autenticazione dell'utente</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Interfaccia" type="xs:anyURI">
+								<xs:annotation>
+									<xs:documentation xml:lang="it">URI relativo
+										all'interfaccia Api da contattare</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="libreria" type="xs:string">
+								<xs:annotation>
+									<xs:documentation xml:lang="it">Libreria da
+										utilizzare per la gestione dell'interfaccia</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element minOccurs="0" name="emailBagit"
+					type="xs:string">
+					<xs:annotation>
+						<xs:documentation xml:lang="it">Indirizzo Email
+							accreditato per il Bagit</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="mdIstituzione">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="loginUtenti:authenticationUtenti" />
+				<xs:choice>
+					<xs:element maxOccurs="unbounded" minOccurs="0"
+						ref="errorMsg:errorMsg" />
+					<xs:element minOccurs="0" ref="istituzione" />
+				</xs:choice>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
 </xs:schema>

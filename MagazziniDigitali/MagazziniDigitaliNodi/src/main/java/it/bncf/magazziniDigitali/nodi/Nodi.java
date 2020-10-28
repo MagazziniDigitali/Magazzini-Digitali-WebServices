@@ -11,6 +11,7 @@ import java.security.NoSuchAlgorithmException;
 
 import it.bncf.magazziniDigitali.database.entity.MDNodi;
 import it.bncf.magazziniDigitali.nodi.exception.NodiException;
+import it.bncf.magazziniDigitali.nodi.exception.NotImplementException;
 import it.depositolegale.www.storage.Documenti;
 import it.depositolegale.www.storage.Storage;
 import mx.randalf.digest.MD5;
@@ -47,23 +48,23 @@ public class Nodi {
 		}
 	}
 
-	public boolean isStorageActive() throws NodiException {
+	public boolean isStorageActive() throws NodiException, NotImplementException {
 		return nodo.isStorageActive();
 	}
 
-	public String pathStorageActive() throws NodiException {
+	public String pathStorageActive() throws NodiException, NotImplementException {
 		return nodo.pathStorageActive();
 	}
 
-	public boolean isFileExists() throws NodiException {
+	public boolean isFileExists() throws NodiException, NotImplementException {
 		return (isFileTarExists() && isFilePremisExists());
 	}
 
-	public boolean isFileTarExists() throws NodiException {
+	public boolean isFileTarExists() throws NodiException, NotImplementException {
 		return nodo.isFileExists(ENodi.TAR);
 	}
 
-	public boolean isFilePremisExists() throws NodiException {
+	public boolean isFilePremisExists() throws NodiException, NotImplementException {
 		return nodo.isFileExists(ENodi.PREMIS);
 	}
 
@@ -83,7 +84,7 @@ public class Nodi {
 		return nodo.getNomeFile(ENodi.PREMIS);
 	}
 
-	public boolean copyFile(Nodi nodoInput, ENodi eNodi) throws NodiException {
+	public boolean copyFile(Nodi nodoInput, ENodi eNodi) throws NodiException, NotImplementException {
 		boolean ris = false;
 		File fInput = null;
 		MD5 md5 = null;
@@ -112,6 +113,8 @@ public class Nodi {
 			throw new NodiException(e.getMessage(), e);
 		} catch (IOException e) {
 			throw new NodiException(e.getMessage(), e);
+		} catch (NotImplementException e) {
+			throw e;
 		}
 		
 		return ris;
@@ -127,16 +130,43 @@ public class Nodi {
 		}
 	}
 
-	public Storage checkStorage(Documenti documenti) throws NodiException {
+	public Storage checkStorage(Documenti documenti) throws NodiException, NotImplementException {
 		return nodo.checkStorage(documenti);
 	}
 
-	public Documenti genDocumenti() throws NodiException{
+	public Documenti genDocumenti() throws NodiException, NotImplementException {
 		return nodo.genDocumenti();
 	}
 
-	public File getFile(ENodi eNodi) {
+	public File getFile(ENodi eNodi) throws NotImplementException {
 		return nodo.getFile(eNodi);
+	}
+
+	/**
+	 * Metodo utilizzato per scaricare un file presente su uno storage remoto e
+	 * scriverlo sul disco locale
+	 * 
+	 * @param eNodi
+	 * @param output Nome del file di destinazione
+	 * @return Esito della elaborazione
+	 */
+	public Boolean getFile(ENodi eNodi, File output) throws NodiException, NotImplementException {
+		return nodo.getFile(eNodi, output);
+	}
+
+	/**
+	 * Metodo utilizzato per scaricare un file presente su uno storage remoto e
+	 * scriverlo sul disco locale
+	 * 
+	 * @param eNodi
+	 * @param output Nome del file di destinazione
+	 * @param start  Byte di partenza per la lettura di una porzione di file
+	 * @param end    Byte di arrivo per la lettura di una porzione di file
+	 * @return Esito della elaborazione
+	 */
+	public Boolean getFile(ENodi eNodi, File output, Long start, Long end)
+			throws NodiException, NotImplementException{
+		return nodo.getFile(eNodi, output, start, end);
 	}
 
 	public MDNodi getMdNodi() {

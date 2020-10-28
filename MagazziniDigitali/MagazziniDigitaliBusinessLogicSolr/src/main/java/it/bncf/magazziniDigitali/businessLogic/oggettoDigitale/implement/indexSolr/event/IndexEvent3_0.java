@@ -3,9 +3,9 @@
  */
 package it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.implement.indexSolr.event;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.implement.indexSolr.event.IndexEvent;
 import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.solr.event.SolrEvent3_0;
 import it.bncf.magazziniDigitali.solr.AddDocumentMD;
 import it.magazziniDigitali.xsd.event.v3_0.EventV3_0Xsd;
@@ -16,7 +16,7 @@ import mx.randalf.solr.exception.SolrException;
  *
  */
 public class IndexEvent3_0 extends IndexEvent<EventV3_0Xsd> {
-	private Logger log = Logger.getLogger(IndexEvent3_0.class);
+	private Logger log = LogManager.getLogger(IndexEvent3_0.class);
 	
 	public IndexEvent3_0(String name) {
 		super(name);

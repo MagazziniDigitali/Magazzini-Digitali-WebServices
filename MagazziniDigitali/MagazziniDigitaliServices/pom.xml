@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>it.bncf.magazziniDigitali.services</groupId>
 	<artifactId>MagazziniDigitaliServices</artifactId>
-	<version>3.0.4</version>
+	<version>3.0.5</version>
 	<packaging>war</packaging>
 	<name>Interfaccie API Magazzini Digitali versione 2.0</name>
 	<url>http://maven.apache.org</url>
@@ -40,7 +40,7 @@
 		<dependency>
 			<groupId>it.bncf.magazziniDigitali.external.user</groupId>
 			<artifactId>MagazziniDigitaliExternalUser</artifactId>
-			<version>3.0.0</version>
+			<version>3.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
@@ -66,12 +66,12 @@
 				it.bncf.magazziniDigitali.businessLogic.utils
 			</groupId>
 			<artifactId>MagazziniDigitaliBusinessLogicUtils</artifactId>
-			<version>3.0.2</version>
+			<version>3.0.3</version>
 		</dependency>
 		<dependency>
 			<groupId>it.bncf.magazziniDigitali.services.client</groupId>
 			<artifactId>MagazziniDigitaliServicesClient</artifactId>
-			<version>3.0.2</version>
+			<version>3.0.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jwat</groupId>
@@ -91,17 +91,12 @@
 		<dependency>
 			<groupId>it.bncf.magazziniDigitali.solr</groupId>
 			<artifactId>MagazziniDigitaliSolr</artifactId>
-			<version>3.0.1</version>
-		</dependency>
-		<dependency>
-			<groupId>mx.randalf.digest</groupId>
-			<artifactId>RandalfDigest</artifactId>
-			<version>2.0.0</version>
+			<version>3.0.3</version>
 		</dependency>
 		<dependency>
 			<groupId>it.bncf.magazziniDigitali.nodi</groupId>
 			<artifactId>MagazziniDigitaliNodi</artifactId>
-			<version>3.0.2</version>
+			<version>3.0.4</version>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
@@ -176,6 +171,41 @@
 		</resources>
 	</build>
 	<profiles>
+		<profile>
+			<id>svilVM</id>
+			<build>
+				<finalName>MagazziniDigitaliServices##${project.version}-SvilVM</finalName>
+				<plugins>
+					<plugin>
+           				<artifactId>maven-antrun-plugin</artifactId>
+           				<executions>
+             				<execution>
+             					<phase>test</phase>
+               					<goals>
+                 					<goal>run</goal>
+               					</goals>
+               					<configuration>
+                 					<tasks>
+                   						<delete file="${project.build.outputDirectory}/hibernate.cfg.xml"/>
+		                  				<delete file="${project.build.outputDirectory}/log4j2.xml"/>
+                   						<copy file="MD3Config/SvilVM/hibernate.cfg.xml"
+                         					tofile="${project.build.outputDirectory}/hibernate.cfg.xml"/>
+		                  				<copy file="MD3Config/SvilVM/log4j2.xml"
+		                        			tofile="${project.build.outputDirectory}/log4j2.xml"/>
+                 					</tasks>
+               					</configuration>
+             				</execution>
+           				</executions>
+   					</plugin>
+         			<plugin>
+           				<artifactId>maven-surefire-plugin</artifactId>
+           				<configuration>
+             				<skip>true</skip>
+           				</configuration>
+         			</plugin>
+   				</plugins>
+			</build>
+		</profile>
 		<profile>
 			<id>col</id>
 			<build>

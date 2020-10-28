@@ -2,7 +2,8 @@ package it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.solr.objectFileA
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import info.lc.xmlns.premis_v2.CHECKSUMTYPEDefinition;
 import info.lc.xmlns.premis_v2.ContentLocationComplexType;
@@ -28,13 +29,13 @@ public class SolrObjectFileAnalyze2_2 extends
 		SolrObjectFileAnalyze<File, ObjectIdentifierComplexType, SignificantPropertiesComplexType, 
 		ObjectCharacteristicsComplexType, FormatComplexType, LinkingRightsStatementIdentifierComplexType, FormatRegistryComplexType, FormatDesignationComplexType, StorageComplexType, ContentLocationComplexType, RelationshipComplexType, RelatedObjectIdentificationComplexType> {
 
-	private Logger log = Logger.getLogger(SolrObjectFileAnalyze2_2.class);
+	private Logger log = LogManager.getLogger(SolrObjectFileAnalyze2_2.class);
 
 	public SolrObjectFileAnalyze2_2() {
 	}
 
 	public boolean publishSolr(File object, AddDocumentMD admd, java.io.File pathTar, IMDConfiguration<?> configuration,
-			boolean elabTarPremis, String name, Logger logPublish, String objectIdentifierPremis) throws SolrException {
+			boolean elabTarPremis, String name, Logger logPublish, String objectIdentifierPremis, java.io.File fTar) throws SolrException {
 		boolean ris = false;
 		java.io.File fTxt = null;
 		boolean isValid = false;
@@ -115,7 +116,7 @@ public class SolrObjectFileAnalyze2_2 extends
 				admd.add(params.getParams(), new ItemMD());
 
 				if (!elabTarPremis) {
-					checkAllegati(pathTar, admd, configuration, name, logPublish, objectIdentifierPremis);
+					checkAllegati(pathTar, admd, configuration, name, logPublish, objectIdentifierPremis, fTar);
 				}
 			}
 

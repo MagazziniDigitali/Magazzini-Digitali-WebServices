@@ -8,7 +8,8 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.GregorianCalendar;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import it.bncf.magazziniDigitali.businessLogic.filesTmp.MDFilesTmpBusiness;
 import it.bncf.magazziniDigitali.configuration.IMDConfiguration;
@@ -22,7 +23,7 @@ import mx.randalf.tools.MD5Tools;
 
 public class OggettoDigitalePublishPremis extends OggettoDigitalePublishTar {
 
-	private Logger log = Logger.getLogger(OggettoDigitalePublishPremis.class);
+	private Logger log = LogManager.getLogger(OggettoDigitalePublishPremis.class);
 
 	public OggettoDigitalePublishPremis(Logger logPublish, String name) {
 		super(logPublish, name);
@@ -46,14 +47,14 @@ public class OggettoDigitalePublishPremis extends OggettoDigitalePublishTar {
 		boolean result = false;
 		GregorianCalendar gcStart = null;
 		GregorianCalendar gcEnd = null;
-		FileInputStream fis = null;
+//		FileInputStream fis = null;
 
 		try {
 			if (mdFilesTmp.getCopyPremisDataStart() == null
 					&& mdFilesTmp.getCopyPremisDataEnd() == null) {
 				gcStart = new GregorianCalendar();
-				fis = new FileInputStream(fInput);
-				result = nodi.copyFile(fis, fInput.length(), MD5Tools.readMD5File(fInput.getAbsolutePath()), ENodi.PREMIS);
+//				fis = new FileInputStream(fInput);
+				result = nodi.copyFile(fInput, fInput.length(), MD5Tools.readMD5File(fInput.getAbsolutePath()), ENodi.PREMIS);
 //				result = (Utils.copyFileValidate(fInput.getAbsolutePath(),
 //						fOutput.getAbsolutePath()));
 				gcEnd = new GregorianCalendar();
@@ -194,33 +195,33 @@ public class OggettoDigitalePublishPremis extends OggettoDigitalePublishTar {
 					configuration.getMDSoftware(),
 					objectIdentifierMaster);
 			log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
-		} finally {
-			try {
-				if (fis != null) {
-					fis.close();
-				}
-			} catch (IOException e) {
-				mdFileTmpBusiness.updateCopyPremis(
-						mdFilesTmp.getId(),
-						gcStart,
-						gcEnd,
-						false,
-						new Exception[] { e },
-						null,
-						mdFilesTmp.getIdSoftware().getIdIstituzione().getId(), 
-						configuration.getSoftwareConfigMDNodi("nodo"), 
-						configuration.getMDSoftware().getId()); 
-				premisElab.addEvent(
-						"copyPremis",
-						gcStart,
-						gcEnd,
-						fInput.getAbsolutePath() + " => "
-								+ nodi.genFilePremisDest(), "KO",
-						new String[] { e.getMessage() }, null,
-						configuration.getMDSoftware(),
-						objectIdentifierMaster);
-				log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
-			}
+//		} finally {
+//			try {
+//				if (fis != null) {
+//					fis.close();
+//				}
+//			} catch (IOException e) {
+//				mdFileTmpBusiness.updateCopyPremis(
+//						mdFilesTmp.getId(),
+//						gcStart,
+//						gcEnd,
+//						false,
+//						new Exception[] { e },
+//						null,
+//						mdFilesTmp.getIdSoftware().getIdIstituzione().getId(), 
+//						configuration.getSoftwareConfigMDNodi("nodo"), 
+//						configuration.getMDSoftware().getId()); 
+//				premisElab.addEvent(
+//						"copyPremis",
+//						gcStart,
+//						gcEnd,
+//						fInput.getAbsolutePath() + " => "
+//								+ nodi.genFilePremisDest(), "KO",
+//						new String[] { e.getMessage() }, null,
+//						configuration.getMDSoftware(),
+//						objectIdentifierMaster);
+//				log.error(name+" ["+objectIdentifierPremis+"] "+e.getMessage(), e);
+//			}
 		}
 		return result;
 	}

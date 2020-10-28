@@ -3,7 +3,7 @@
  */
 package it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.geoReplica;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 
 import it.bncf.magazziniDigitali.businessLogic.filesTmp.MDFilesTmpBusiness;

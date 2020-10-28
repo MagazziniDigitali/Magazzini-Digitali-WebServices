@@ -18,6 +18,7 @@ import it.bncf.magazziniDigitali.database.entity.MDNodi;
 import it.bncf.magazziniDigitali.nodi.ENodi;
 import it.bncf.magazziniDigitali.nodi.Nodi;
 import it.bncf.magazziniDigitali.nodi.exception.NodiException;
+import it.bncf.magazziniDigitali.nodi.exception.NotImplementException;
 import it.depositolegale.www.storage.Storage;
 import it.magazziniDigitali.xsd.premis.PremisXsd;
 import mx.randalf.hibernate.exception.HibernateUtilException;
@@ -47,7 +48,7 @@ class OggettoDigitaleGeoReplica_GeoReplica extends OggettoDigitaleGeoReplica_Sen
 //			, String objectIdentifierPremis
 			, IMDConfiguration<?> configuration
 			) throws HibernateException, HibernateUtilException, SQLException,
-			MDConfigurationException, NodiException
+			MDConfigurationException, NodiException, NotImplementException
 	{
 		Vector<String> ris = null;
 		Storage storage = null;
@@ -136,6 +137,8 @@ class OggettoDigitaleGeoReplica_GeoReplica extends OggettoDigitaleGeoReplica_Sen
 		} catch (MDConfigurationException e) {
 			throw e;
 		} catch (NodiException e) {
+			throw e;
+		} catch (NotImplementException e) {
 			throw e;
 		} catch (Exception e) {
 			throw e;

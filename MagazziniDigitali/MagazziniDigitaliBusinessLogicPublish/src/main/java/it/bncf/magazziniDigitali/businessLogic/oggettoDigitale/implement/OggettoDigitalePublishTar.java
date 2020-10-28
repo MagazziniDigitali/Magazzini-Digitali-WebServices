@@ -10,7 +10,8 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.GregorianCalendar;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import it.bncf.magazziniDigitali.businessLogic.filesTmp.MDFilesTmpBusiness;
 import it.bncf.magazziniDigitali.configuration.IMDConfiguration;
@@ -29,7 +30,7 @@ import mx.randalf.tools.exception.UtilException;
  */
 public class OggettoDigitalePublishTar extends OggettoDigitale{
 
-	private Logger log = Logger.getLogger(OggettoDigitalePublishTar.class);
+	private Logger log = LogManager.getLogger(OggettoDigitalePublishTar.class);
 
 	protected Logger logPublish = null;
 
@@ -106,7 +107,7 @@ public class OggettoDigitalePublishTar extends OggettoDigitale{
 		boolean result = false;
 		GregorianCalendar gcStart = null;
 		GregorianCalendar gcEnd = null;
-		FileInputStream fis = null;
+//		FileInputStream fis = null;
 
 		try {
 			if (mdFilesTmp.getMoveFileDataEnd() == null) {
@@ -116,8 +117,8 @@ public class OggettoDigitalePublishTar extends OggettoDigitale{
 					gcStart.setTimeInMillis(mdFilesTmp.getMoveFileDataStart().getTime());
 				}
 
-				fis = new FileInputStream(fInput);
-				result = nodi.copyFile(fis, 
+//				fis = new FileInputStream(fInput);
+				result = nodi.copyFile(fInput, 
 						fInput.length(), 
 						MD5Tools.readMD5File(fInput.getAbsolutePath()),
 						ENodi.TAR);

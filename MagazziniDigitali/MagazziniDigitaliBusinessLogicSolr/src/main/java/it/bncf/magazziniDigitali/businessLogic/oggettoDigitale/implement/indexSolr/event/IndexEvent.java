@@ -6,7 +6,8 @@ package it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.implement.indexS
 import java.io.File;
 import java.io.FileFilter;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.validate.implement.TarMD;
 import it.bncf.magazziniDigitali.configuration.IMDConfiguration;
@@ -22,7 +23,7 @@ import mx.randalf.solr.exception.SolrException;
  */
 public abstract class IndexEvent<PX extends EventXsd<?, ?, ?, ?, ?>> {
 
-	private Logger log = Logger.getLogger(IndexEvent.class);
+	private Logger log = LogManager.getLogger(IndexEvent.class);
 
 	protected String name = null;
 
@@ -55,7 +56,8 @@ public abstract class IndexEvent<PX extends EventXsd<?, ?, ?, ?, ?>> {
 					configuration.getSoftwareConfigBoolean("solr.Cloud"),
 					configuration.getSoftwareConfigString("solr.collection"),
 					configuration.getSoftwareConfigInteger("solr.connectionTimeOut"),
-					configuration.getSoftwareConfigInteger("solr.clientTimeOut"));
+					configuration.getSoftwareConfigInteger("solr.clientTimeOut"),
+					configuration.getSoftwareConfigString("solr.optional"));
 
 			checkEvent((PX) eventInput, admd);
 			log.info("\n"+name + " Inizio pubblicazione in Solr");

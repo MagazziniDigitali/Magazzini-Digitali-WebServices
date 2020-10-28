@@ -48,7 +48,7 @@
 			</column>
 		</property>
 		<property name="pathStorage" type="java.lang.String">
-			<column name="PATH_STORAGE" length="255" not-null="true">
+			<column name="PATH_STORAGE" length="255" not-null="false">
 				<comment>Path dello storage Remoto relativo alla sua Home</comment>
 			</column>
 		</property>

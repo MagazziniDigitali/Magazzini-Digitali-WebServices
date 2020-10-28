@@ -6,7 +6,7 @@ package it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.geoReplica;
 import java.io.File;
 import java.sql.SQLException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 
 import it.bncf.magazziniDigitali.businessLogic.filesTmp.MDFilesTmpBusiness;
@@ -15,6 +15,7 @@ import it.bncf.magazziniDigitali.configuration.exception.MDConfigurationExceptio
 import it.bncf.magazziniDigitali.database.entity.MDFilesTmp;
 import it.bncf.magazziniDigitali.nodi.Nodi;
 import it.bncf.magazziniDigitali.nodi.exception.NodiException;
+import it.bncf.magazziniDigitali.nodi.exception.NotImplementException;
 import it.magazziniDigitali.xsd.premis.PremisXsd;
 import mx.randalf.hibernate.exception.HibernateUtilException;
 
@@ -25,7 +26,7 @@ import mx.randalf.hibernate.exception.HibernateUtilException;
 class OggettoDigitaleGeoReplica_Verify extends OggettoDigitaleGeoReplica_SendNodes {
 
 	protected Logger logPublish = null;
-	
+
 	protected String name = null;
 
 	/**
@@ -38,48 +39,33 @@ class OggettoDigitaleGeoReplica_Verify extends OggettoDigitaleGeoReplica_SendNod
 
 	protected boolean verifyFileElabPremis(
 ////			File fileElabPremis
-			Nodi nodoInput
-			, String objectIdentifierPremis
-			, PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?> premisElab
-			, IMDConfiguration<?> configuration
-			, MDFilesTmpBusiness mdFileTmpBusiness
-			, MDFilesTmp mdFilesTmp
+			Nodi nodoInput, String objectIdentifierPremis, PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?> premisElab,
+			IMDConfiguration<?> configuration, MDFilesTmpBusiness mdFileTmpBusiness, MDFilesTmp mdFilesTmp
 //			//, File fileElab
 //			, String application
-			, File filePremis
-			) throws MDConfigurationException, SQLException, HibernateUtilException, NodiException 
-	{
+			, File filePremis) throws MDConfigurationException, SQLException, HibernateUtilException, NodiException,
+			NotImplementException {
 		boolean esito = true;
 
 		try {
-			if (nodoInput.isFilePremisExists()){
+			if (nodoInput.isFilePremisExists()) {
 				esito = sendNodes(nodoInput
-						//fileElab, fileElabPremis
+				// fileElab, fileElabPremis
 						, configuration, mdFilesTmp, premisElab
-						//, application
-						, objectIdentifierPremis, 
-						mdFileTmpBusiness, filePremis);
+						// , application
+						, objectIdentifierPremis, mdFileTmpBusiness, filePremis);
 			} else {
 				esito = false;
-				logPublish.error("\n"+name+" ["+objectIdentifierPremis+"]"+" Il file ["+nodoInput.genFilePremisDest()+"] non è presente");
-				premisElab.addEvent(
-						"Error",
-						null,
-						null,
-						null,
-						"KO",
-						new String[] { "Il file ["+nodoInput.genFilePremisDest()+"] non è presente" },
-						null,
+				logPublish.error("\n" + name + " [" + objectIdentifierPremis + "]" + " Il file ["
+						+ nodoInput.genFilePremisDest() + "] non è presente");
+				premisElab.addEvent("Error", null, null, null, "KO",
+						new String[] { "Il file [" + nodoInput.genFilePremisDest() + "] non è presente" }, null,
 						configuration.getMDSoftware()
 //					Configuration.getValue("demoni."
 //							+ application + ".UUID")
 						, null);
-				mdFileTmpBusiness
-				.updateStopArchive(
-						mdFilesTmp.getId(),
-						false,
-						null,
-						new String[] { "Il file ["+nodoInput.genFilePremisDest()+"] non è presente" },
+				mdFileTmpBusiness.updateStopArchive(mdFilesTmp.getId(), false, null,
+						new String[] { "Il file [" + nodoInput.genFilePremisDest() + "] non è presente" },
 						writeFilePremisDB(filePremis, configuration.getSoftwareConfigString("path.premis")));
 			}
 		} catch (MDConfigurationException e) {
@@ -97,6 +83,8 @@ class OggettoDigitaleGeoReplica_Verify extends OggettoDigitaleGeoReplica_SendNod
 		} catch (HibernateUtilException e) {
 			throw e;
 		} catch (NodiException e) {
+			throw e;
+		} catch (NotImplementException e) {
 			throw e;
 		} catch (Exception e) {
 			throw e;

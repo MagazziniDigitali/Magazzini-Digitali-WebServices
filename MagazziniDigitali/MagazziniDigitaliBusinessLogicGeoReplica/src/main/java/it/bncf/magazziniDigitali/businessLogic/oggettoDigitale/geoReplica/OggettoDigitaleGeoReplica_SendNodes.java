@@ -17,6 +17,7 @@ import it.bncf.magazziniDigitali.database.entity.MDFilesTmp;
 import it.bncf.magazziniDigitali.database.entity.MDNodi;
 import it.bncf.magazziniDigitali.nodi.Nodi;
 import it.bncf.magazziniDigitali.nodi.exception.NodiException;
+import it.bncf.magazziniDigitali.nodi.exception.NotImplementException;
 import it.magazziniDigitali.xsd.premis.PremisXsd;
 import mx.randalf.hibernate.exception.HibernateUtilException;
 
@@ -33,18 +34,14 @@ class OggettoDigitaleGeoReplica_SendNodes extends OggettoDigitaleGeoReplica_GeoR
 	}
 
 	@SuppressWarnings("unused")
-	protected boolean sendNodes(
-			Nodi nodoInput
+	protected boolean sendNodes(Nodi nodoInput
 ////			File fileElab, File fileElabPremis
-			, IMDConfiguration<?> configuration
-			, MDFilesTmp mdFilesTmp
-			, PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?> premisElab
+			, IMDConfiguration<?> configuration, MDFilesTmp mdFilesTmp,
+			PremisXsd<?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?> premisElab
 //			, String application
-			, String objectIdentifierPremis
-			, MDFilesTmpBusiness mdFileTmpBusiness
-			, File filePremis
-			) throws MDConfigurationException, HibernateUtilException, SQLException, NodiException 
-	{
+			, String objectIdentifierPremis, MDFilesTmpBusiness mdFileTmpBusiness, File filePremis)
+			throws MDConfigurationException, HibernateUtilException, SQLException, NodiException,
+			NotImplementException {
 		MDNodiDAO mdNodiDAO = null;
 		List<MDNodi> mdNodis = null;
 		boolean elabNodi = true;
@@ -64,38 +61,32 @@ class OggettoDigitaleGeoReplica_SendNodes extends OggettoDigitaleGeoReplica_GeoR
 //			files[0] = fileElab;
 //			files[1] = fileElabPremis;
 //			documenti = genDocumenti(files, configuration);
-			for (MDNodi mdNodiOutput : mdNodis){
-				if (!mdNodiOutput.getId().equals(
-						configuration.getSoftwareConfigMDNodi("nodo").getId()
+			for (MDNodi mdNodiOutput : mdNodis) {
+				if (!mdNodiOutput.getId().equals(configuration.getSoftwareConfigMDNodi("nodo").getId()
 //					Configuration.getValue("nodo")
-						)){
-					
+				)) {
+
 					nodoOutput = new Nodi(mdNodiOutput, nodoInput.getNomeFileTar(), nodoInput.getNomeFilePremis());
-					msgs =geoReplica(
-							nodoInput
-							, nodoOutput
-							, mdNodiOutput
+					msgs = geoReplica(nodoInput, nodoOutput, mdNodiOutput
 //							, files
-							, mdFilesTmp
-							, premisElab
+							, mdFilesTmp, premisElab
 //							, application
 							, objectIdentifierPremis
 //							, documenti
 //							, objectIdentifierPremis
-							, configuration
-							);
-					if (msgs!=null){
-						if (msgErr==null){
+							, configuration);
+					if (msgs != null) {
+						if (msgErr == null) {
 							msgErr = new Vector<String>();
 						}
-						for (int x=0; x<msgs.length; x++){
+						for (int x = 0; x < msgs.length; x++) {
 							msgErr.add(msgs[x]);
 						}
 						elabNodi = false;
 					}
 				}
 			}
-			if (elabNodi){
+			if (elabNodi) {
 				gcEnd = mdFileTmpBusiness.updateStopArchive(mdFilesTmp.getId(), true, null, null,
 						writeFilePremisDB(filePremis, configuration.getSoftwareConfigString("path.premis")));
 			} else {
@@ -119,6 +110,8 @@ class OggettoDigitaleGeoReplica_SendNodes extends OggettoDigitaleGeoReplica_GeoR
 		} catch (SQLException e) {
 			throw e;
 		} catch (NodiException e) {
+			throw e;
+		} catch (NotImplementException e) {
 			throw e;
 		} catch (Exception e) {
 			throw e;

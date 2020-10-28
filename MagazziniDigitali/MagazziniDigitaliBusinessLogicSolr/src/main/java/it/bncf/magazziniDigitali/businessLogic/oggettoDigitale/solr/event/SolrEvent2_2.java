@@ -5,7 +5,8 @@ package it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.solr.event;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import info.lc.xmlns.premis_v2.EventComplexType;
 import info.lc.xmlns.premis_v2.EventIdentifierComplexType;
@@ -24,7 +25,7 @@ import mx.randalf.solr.exception.SolrException;
 public class SolrEvent2_2 extends SolrEvent<EventComplexType, LinkingObjectIdentifierComplexType,
 		LinkingAgentIdentifierComplexType, EventOutcomeInformationComplexType, EventIdentifierComplexType> {
 
-	private Logger log = Logger.getLogger(SolrEvent2_2.class);
+	private Logger log = LogManager.getLogger(SolrEvent2_2.class);
 
 	/**
 	 * 

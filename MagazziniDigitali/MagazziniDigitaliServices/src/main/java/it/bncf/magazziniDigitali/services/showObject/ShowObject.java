@@ -37,6 +37,8 @@ import org.jwat.warc.WarcReader;
 import org.jwat.warc.WarcReaderFactory;
 import org.jwat.warc.WarcRecord;
 
+import com.amazonaws.SDKGlobalConfiguration;
+
 import it.bncf.magazziniDigitali.businessLogic.ticket.MDTicketBusiness;
 import it.bncf.magazziniDigitali.configuration.exception.MDConfigurationException;
 import it.bncf.magazziniDigitali.database.entity.MDTicket;
@@ -80,6 +82,9 @@ public class ShowObject extends HttpServlet {
 		String line = null;
 
 		try {
+			
+			System.setProperty(SDKGlobalConfiguration.DISABLE_CERT_CHECKING_SYSTEM_PROPERTY, "true");
+
 			if (req.getPathInfo() != null && !req.getPathInfo().trim().equals("/")) {
 				line = req.getPathInfo().trim().substring(1);
 				if (line.indexOf("/") > -1) {

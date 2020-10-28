@@ -13,6 +13,7 @@ import org.apache.commons.httpclient.protocol.Protocol;
 
 import it.bncf.magazziniDigitali.database.entity.MDNodi;
 import it.bncf.magazziniDigitali.nodi.exception.NodiException;
+import it.bncf.magazziniDigitali.nodi.exception.NotImplementException;
 import it.depositolegale.www.storage.Documenti;
 import it.depositolegale.www.storage.Storage;
 import it.depositolegale.www.webservice_checkStorageMD.CheckStorageMDPortTypeProxy;
@@ -35,16 +36,16 @@ class NodiMDRsync extends INodi<File> {
 	}
 
 	@Override
-	public boolean isStorageActive() throws NodiException {
-		URL  url = null;
+	public boolean isStorageActive() throws NodiException, NotImplementException {
+		URL url = null;
 		Socket socket = null;
 		int port = 873;
 		boolean result = false;
 
 		try {
 			url = new URL(mdNodi.getRsync());
-			
-			if (url.getPort()==-1) {
+
+			if (url.getPort() == -1) {
 				if (url.getProtocol().equals("http")) {
 					port = 80;
 				} else if (url.getProtocol().equals("https")) {
@@ -57,27 +58,25 @@ class NodiMDRsync extends INodi<File> {
 			} else {
 				port = url.getPort();
 			}
-			
+
 			socket = new Socket(url.getHost(), port);
 			socket.close();
 			result = true;
 		} catch (NumberFormatException e) {
-			throw new NodiException(e.getMessage(),e);
+			throw new NodiException(e.getMessage(), e);
 		} catch (Exception e) {
 		}
 		return result;
 	}
 
 	@Override
-	public boolean isFileExists(ENodi eNodi) throws NodiException{
-		// TODO Auto-generated method stub
-		return false;
+	public boolean isFileExists(ENodi eNodi) throws NodiException, NotImplementException {
+		throw new NotImplementException("Metodo non implementato per questo tipo di risorsa");
 	}
 
 	@Override
-	public String pathStorageActive() throws NodiException {
-		// TODO Auto-generated method stub
-		return null;
+	public String pathStorageActive() throws NodiException, NotImplementException {
+		throw new NotImplementException("Metodo non implementato per questo tipo di risorsa");
 	}
 
 	@Override
@@ -93,12 +92,9 @@ class NodiMDRsync extends INodi<File> {
 	@Override
 	public boolean copyFile(File fSend, long lengthFile, String md5Ori, ENodi eNodi) throws NodiException {
 		boolean result = false;
-		
+
 		try {
-			RSync.send(
-					Configuration.getValue("md.sendRsync.path"), 
-					mdNodi.getRsyncPassword(), 
-					RSync.checkPath(fSend), 
+			RSync.send(Configuration.getValue("md.sendRsync.path"), mdNodi.getRsyncPassword(), RSync.checkPath(fSend),
 					genFileDest(eNodi));
 			result = true;
 		} catch (RSyncException e) {
@@ -111,16 +107,15 @@ class NodiMDRsync extends INodi<File> {
 	}
 
 	@Override
-	public Storage checkStorage(Documenti documenti) throws NodiException {
+	public Storage checkStorage(Documenti documenti) throws NodiException, NotImplementException {
 		CheckStorageMDPortTypeProxy proxy = null;
 		Storage storage = null;
 		String wsdlCheckMD = null;
-		
+
 		try {
 			wsdlCheckMD = mdNodi.getUrlCheckStorage();
-			if (wsdlCheckMD.toLowerCase().trim().startsWith("https")){
-				Protocol.registerProtocol("https", 
-						new Protocol("https", new DefaultProtocolSocketFactory(), 443));
+			if (wsdlCheckMD.toLowerCase().trim().startsWith("https")) {
+				Protocol.registerProtocol("https", new Protocol("https", new DefaultProtocolSocketFactory(), 443));
 			}
 			proxy = new CheckStorageMDPortTypeProxy(wsdlCheckMD);
 			storage = proxy.checkStorageMDOperation(documenti);
@@ -131,15 +126,18 @@ class NodiMDRsync extends INodi<File> {
 	}
 
 	@Override
-	public Documenti genDocumenti() {
-		// TODO Auto-generated method stub
-		return null;
+	public Documenti genDocumenti() throws NodiException, NotImplementException {
+		throw new NotImplementException("Metodo non implementato per questo tipo di risorsa");
 	}
 
 	@Override
-	public File getFile(ENodi eNodi) {
-		// TODO Auto-generated method stub
-		return null;
+	public File getFile(ENodi eNodi) throws NotImplementException {
+		throw new NotImplementException("Metodo non implementato per questo tipo di risorsa");
+	}
+
+	@Override
+	public Boolean getFile(ENodi eNodi, File output, Long start, Long end) throws NodiException, NotImplementException {
+		throw new NotImplementException("Metodo non implementato per questo tipo di risorsa");
 	}
 
 }

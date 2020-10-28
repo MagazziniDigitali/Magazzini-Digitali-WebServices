@@ -6,7 +6,8 @@ package it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.solr.objectFileR
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.implement.indexSolr.rights.IndexRights;
 import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.implement.indexSolr.rights.IndexRights2_2;
@@ -23,7 +24,7 @@ import mx.randalf.solr.exception.SolrException;
  */
 public class SolrObjectFileRights extends SolrObjectFileAgent {
 
-	private Logger log = Logger.getLogger(SolrObjectFileRights.class);
+	private Logger log = LogManager.getLogger(SolrObjectFileRights.class);
 
 	/**
 	 * 

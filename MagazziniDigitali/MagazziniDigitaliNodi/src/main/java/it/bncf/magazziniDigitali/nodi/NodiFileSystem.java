@@ -15,6 +15,7 @@ import java.util.Vector;
 
 import it.bncf.magazziniDigitali.database.entity.MDNodi;
 import it.bncf.magazziniDigitali.nodi.exception.NodiException;
+import it.bncf.magazziniDigitali.nodi.exception.NotImplementException;
 import it.depositolegale.www.storage.Documenti;
 import it.depositolegale.www.storage.DocumentiDocumento;
 import it.depositolegale.www.storage.DocumentiDocumentoDigests;
@@ -38,20 +39,19 @@ class NodiFileSystem extends INodi<InputStream> {
 	}
 
 	@Override
-	public boolean isStorageActive() throws NodiException {
+	public boolean isStorageActive() throws NodiException, NotImplementException {
 		File fNodo = null;
 		fNodo = new File(pathStorageActive());
 		return fNodo.exists();
 	}
 
 	@Override
-	public String pathStorageActive() throws NodiException {
-		// TODO Auto-generated method stub
+	public String pathStorageActive() throws NodiException, NotImplementException {
 		return mdNodi.getPathStorage()+File.separator+"storage.id";
 	}
 
 	@Override
-	public boolean isFileExists(ENodi eNodi) throws NodiException {
+	public boolean isFileExists(ENodi eNodi) throws NodiException, NotImplementException {
 		File fOutput = null;
 		boolean result = false;
 		
@@ -177,13 +177,12 @@ class NodiFileSystem extends INodi<InputStream> {
 	}
 
 	@Override
-	public Storage checkStorage(Documenti documenti) throws NodiException {
-		// TODO Auto-generated method stub
-		return null;
+	public Storage checkStorage(Documenti documenti) throws NodiException, NotImplementException {
+		throw new NotImplementException("Metodo non implementato per questo tipo di risorsa");
 	}
 
 	@Override
-	public Documenti genDocumenti() throws NodiException {
+	public Documenti genDocumenti() throws NodiException, NotImplementException {
 		Documenti documenti = null;
 		DocumentiDocumento[] documento =  null;
 		
@@ -270,8 +269,12 @@ class NodiFileSystem extends INodi<InputStream> {
 	}
 
 	@Override
-	public File getFile(ENodi eNodi) {
-		// TODO Auto-generated method stub
+	public File getFile(ENodi eNodi) throws NotImplementException{
 		return new File(genFileDest(eNodi));
+	}
+
+	@Override
+	public Boolean getFile(ENodi eNodi, File output, Long start, Long end) throws NodiException, NotImplementException {
+		throw new NotImplementException("Metodo non implementato per questo tipo di risorsa");
 	}
 }

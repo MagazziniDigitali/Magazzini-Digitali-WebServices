@@ -7,7 +7,8 @@ import java.io.File;
 import java.sql.SQLException;
 import java.util.UUID;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import it.bncf.magazziniDigitali.businessLogic.filesTmp.MDFilesTmpBusiness;
 import it.bncf.magazziniDigitali.configuration.IMDConfiguration;
@@ -21,7 +22,7 @@ import it.magazziniDigitali.xsd.premis.PremisXsd;
  */
 class OggettoDigitaleGeoReplica_Init extends OggettoDigitaleGeoReplica_Elab {
 
-	private Logger log = Logger.getLogger(OggettoDigitaleGeoReplica_Init.class);
+	private Logger log = LogManager.getLogger(OggettoDigitaleGeoReplica_Init.class);
 
 	protected boolean trasferito = false;
 

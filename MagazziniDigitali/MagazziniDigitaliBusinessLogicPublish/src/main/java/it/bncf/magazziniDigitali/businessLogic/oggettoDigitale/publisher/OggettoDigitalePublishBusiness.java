@@ -1,12 +1,14 @@
 package it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.publisher;
 
-import org.apache.log4j.Logger;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.OggettoDigitaleBusiness;
 
 public class OggettoDigitalePublishBusiness extends OggettoDigitaleBusiness{
 	
-	public Logger log = Logger.getLogger(OggettoDigitalePublishBusiness.class);
+	public Logger log = LogManager.getLogger(OggettoDigitalePublishBusiness.class);
 
 	public OggettoDigitalePublishBusiness() {
 		super();

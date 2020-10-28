@@ -1,12 +1,13 @@
 package it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.solr;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import it.bncf.magazziniDigitali.businessLogic.oggettoDigitale.OggettoDigitaleBusiness;
 
 public class OggettoDigitaleSolrIndexBusiness extends OggettoDigitaleBusiness{
 	
-	public Logger log = Logger.getLogger(OggettoDigitaleSolrIndexBusiness.class);
+	public Logger log = LogManager.getLogger(OggettoDigitaleSolrIndexBusiness.class);
 
 	public OggettoDigitaleSolrIndexBusiness() {
 		super();
