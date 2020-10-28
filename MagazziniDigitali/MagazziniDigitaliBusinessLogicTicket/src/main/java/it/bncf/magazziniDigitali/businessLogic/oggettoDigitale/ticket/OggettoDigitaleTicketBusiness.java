@@ -21,7 +21,8 @@ import javax.naming.NamingException;
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 
 import gov.loc.premis.v3.LinkingRightsStatementIdentifierComplexType;
@@ -42,7 +43,7 @@ import mx.randalf.xsd.exception.XsdException;
 
 public class OggettoDigitaleTicketBusiness extends OggettoDigitaleBusiness {
 
-	private Logger log = Logger.getLogger(OggettoDigitaleTicketBusiness.class);
+	private Logger log = LogManager.getLogger(OggettoDigitaleTicketBusiness.class);
 
 	public OggettoDigitaleTicketBusiness() {
 		super();
@@ -247,7 +248,7 @@ public class OggettoDigitaleTicketBusiness extends OggettoDigitaleBusiness {
 			
 			lrsict = new LinkingRightsStatementIdentifierComplexType();
 			lrsict.setLinkingRightsStatementIdentifierType(PremisV3_0Xsd.addStringPlusAuthority(PremisXsd.UUID_MD_RG));
-			lrsict.setLinkingRightsStatementIdentifierValue(mdTicket.getIdRights());
+			lrsict.setLinkingRightsStatementIdentifierValue(mdTicket.getIdRigths().getId());
 			ticket.setLinkingRightsStatementIdentifier(lrsict);
 
 			ticket.setIpClient(mdTicket.getIpClient());
