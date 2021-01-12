@@ -80,7 +80,9 @@ public class IConfiguration {
 		Integer value = null;
 		
 		try {
-			value = new Integer(Configuration.getValue(key));
+			if (Configuration.getValue(key) != null) {
+				value = new Integer(Configuration.getValue(key));
+			}
 		} catch (NumberFormatException e) {
 			log.error(e.getMessage(), e);
 			throw new MDConfigurationException(e.getMessage(), e);

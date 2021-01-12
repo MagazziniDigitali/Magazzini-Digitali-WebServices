@@ -6,7 +6,7 @@
     <version>3.0.0</version>
   </parent>
   <artifactId>MagazziniDigitaliSolr</artifactId>
-  <version>3.0.3</version>
+  <version>3.0.4</version>
   <description>Librerie per l'interfaccia verso il database Solr</description>
   <groupId>it.bncf.magazziniDigitali.solr</groupId>
   <properties>
@@ -33,7 +33,7 @@
   	<dependency>
   		<groupId>it.bncf.magazziniDigitali.utils</groupId>
   		<artifactId>MagazziniDigitaliUtils</artifactId>
-  		<version>3.0.3</version>
+  		<version>3.0.4</version>
   	</dependency>
   </dependencies>
   <repositories>

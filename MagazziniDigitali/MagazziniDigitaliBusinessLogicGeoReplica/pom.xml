@@ -7,19 +7,19 @@
   </parent>
   <groupId>it.bncf.magazziniDigitali.businessLogic.geoReplica</groupId>
   <artifactId>MagazziniDigitaliBusinessLogicGeoReplica</artifactId>
-  <version>3.0.0</version>
+  <version>3.0.1</version>
   <dependencies>
   	<dependency>
   		<groupId>
   			it.bncf.magazziniDigitali.businessLogic.utils
   		</groupId>
   		<artifactId>MagazziniDigitaliBusinessLogicUtils</artifactId>
-  		<version>3.0.3</version>
+  		<version>3.0.4</version>
   	</dependency>
   	<dependency>
   		<groupId>it.bncf.magazziniDigitali.nodi</groupId>
   		<artifactId>MagazziniDigitaliNodi</artifactId>
-  		<version>3.0.4</version>
+  		<version>3.0.5</version>
   	</dependency>
   </dependencies>
 </project>
