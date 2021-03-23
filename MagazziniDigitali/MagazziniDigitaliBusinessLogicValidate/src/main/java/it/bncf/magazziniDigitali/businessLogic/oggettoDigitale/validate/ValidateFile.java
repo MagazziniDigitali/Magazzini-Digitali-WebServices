@@ -20,6 +20,7 @@ import it.bncf.magazziniDigitali.database.entity.MDIstituzione;
 import it.bncf.magazziniDigitali.database.entity.MDUtenti;
 import mx.randalf.archive.check.exception.CheckArchiveException;
 import mx.randalf.archive.info.Xmltype;
+import mx.randalf.configuration.Configuration;
 import mx.randalf.hibernate.FactoryDAO;
 import mx.randalf.hibernate.exception.HibernateUtilException;
 
@@ -104,7 +105,8 @@ public class ValidateFile {
 			checkArchive.setRemoveOrgin(removeOrigin);
 
 			archive = checkArchive.check(file, fileTar, deCompEsito, decompressRequired,
-					new File(configuration.getSoftwareConfigString("path.droid.tmp")));
+					new File(configuration.getSoftwareConfigString("path.droid.tmp")),
+					new File(Configuration.getValue("file.tar")));
 			if (archive != null) {
 				check((ArchiveMD)archive);
 			} else {

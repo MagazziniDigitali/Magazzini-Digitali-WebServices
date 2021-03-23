@@ -170,7 +170,8 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 
 				if (!fObj.getName().endsWith(".tgz") &&
 						!fObj.getName().endsWith(".tar.gz") &&
-						!fObj.getName().endsWith(".warc.gz")){
+						!fObj.getName().endsWith(".warc.gz") &&
+						!fObj.getName().endsWith(".zip")){
 					validate.setDecompressRequired(false);
 				}
 				if (mdFilesTmp.getTarTmpFile() == null) {
@@ -187,6 +188,7 @@ public class OggettoDigitaleValidate extends OggettoDigitale {
 							getNomeFile().
 							replace(".tar.gz", ".tar").
 							replace(".tgz", ".tar").
+							replace(".zip", ".tar").
 							replace(".warc.gz", ".warc");
 				} else {
 					fileTar = mdFilesTmp.getTarTmpFile();
