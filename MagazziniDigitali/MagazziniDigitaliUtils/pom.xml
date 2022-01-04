@@ -4,11 +4,11 @@
 	<parent>
 		<groupId>it.bncf.magazziniDigitali</groupId>
 		<artifactId>MagazziniDigitali</artifactId>
-		<version>3.0.0</version>
+		<version>3.0.1</version><!-- 3.0.0 -->
 	</parent>
 	<groupId>it.bncf.magazziniDigitali.utils</groupId>
 	<artifactId>MagazziniDigitaliUtils</artifactId>
-	<version>3.0.4</version>
+	<version>3.0.5</version><!-- 3.0.4 -->
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
@@ -34,7 +34,7 @@
 		<dependency>
 			<groupId>it.bncf.magazziniDigitali.databaseSchema</groupId>
 			<artifactId>MagazziniDigitaliDatabaseSchema</artifactId>
-			<version>3.0.3</version>
+			<version>3.0.4</version><!-- 3.0.3 -->
 		</dependency>
 		<dependency>
 			<groupId>javax.mail</groupId>

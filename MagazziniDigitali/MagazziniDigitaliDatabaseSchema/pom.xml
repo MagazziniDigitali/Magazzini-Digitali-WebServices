@@ -5,12 +5,13 @@
 		<version>1.0.0</version> </parent> -->
 	<groupId>it.bncf.magazziniDigitali.databaseSchema</groupId>
 	<artifactId>MagazziniDigitaliDatabaseSchema</artifactId>
-	<version>3.0.3</version>
+	<version>3.0.4</version><!-- 3.0.3 -->
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
+<!-- 
 	<repositories>
 		<repository>
 			<id>bncf</id>
@@ -43,13 +44,14 @@
 			</releases>
 		</pluginRepository>
 	</pluginRepositories>
-	<distributionManagement>
+ 	<distributionManagement>
 		<repository>
 			<id>mvn-bncf</id>
 			<name>mvn-bncf-releases</name>
 			<url>http://maven.bncf.firenze.sbn.it/artifactory/libs-release-local</url>
 		</repository>
 	</distributionManagement>
+-->	
 	<build>
 		<resources>
 			<resource>
@@ -72,12 +74,12 @@
 		<dependency>
 			<groupId>mx.randalf.hibernate</groupId>
 			<artifactId>RandalfHibernate</artifactId>
-			<version>2.0.2</version>
+			<version>2.0.3</version><!-- 2.0.2 -->
 		</dependency>
 	</dependencies>
 	<parent>
 		<groupId>it.bncf.magazziniDigitali</groupId>
 		<artifactId>MagazziniDigitali</artifactId>
-		<version>3.0.0</version>
+		<version>3.0.1</version><!-- 3.0.0 -->
 	</parent>
 </project>

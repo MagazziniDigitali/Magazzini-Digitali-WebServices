@@ -5,11 +5,11 @@
 	<parent>
 		<groupId>it.bncf.magazziniDigitali</groupId>
 		<artifactId>MagazziniDigitali</artifactId>
-		<version>3.0.0</version>
+		<version>3.0.1</version><!-- 3.0.0 -->
 	</parent>
 	<groupId>it.bncf.magazziniDigitali.businessLogic.utils</groupId>
 	<artifactId>MagazziniDigitaliBusinessLogicUtils</artifactId>
-	<version>3.0.4</version>
+	<version>3.0.5</version> <!-- 3.0.4 -->
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
@@ -17,21 +17,14 @@
 	</properties>
 	<dependencies>
 		<dependency>
-			<groupId>
-  			it.bncf.magazziniDigitali.businessLogic.database
-  		</groupId>
+			<groupId>it.bncf.magazziniDigitali.businessLogic.database</groupId>
 			<artifactId>MagazziniDigitaliBusinessLogicDatabase</artifactId>
-			<version>3.0.4</version>
+			<version>3.0.5</version>
 		</dependency>
 		<dependency>
 			<groupId>it.bncf.magazziniDigitali.xsd</groupId>
 			<artifactId>MagazziniDigitaliXsd</artifactId>
-			<version>3.0.3</version>
+			<version>3.0.4</version><!-- 3.0.3 -->
 		</dependency>
-		<!-- <dependency> <groupId>it.bncf.magazziniDigitali.solr</groupId> <artifactId>MagazziniDigitaliSolr</artifactId> 
-			<version>2.0.14</version> </dependency> <dependency> <groupId>mx.randalf.digest</groupId> 
-			<artifactId>RandalfDigest</artifactId> <version>1.0.3</version> </dependency> 
-			<dependency> <groupId>it.bncf.magazziniDigitali.nodi</groupId> <artifactId>MagazziniDigitaliNodi</artifactId> 
-			<version>1.0.1</version> </dependency> -->
 	</dependencies>
 </project>

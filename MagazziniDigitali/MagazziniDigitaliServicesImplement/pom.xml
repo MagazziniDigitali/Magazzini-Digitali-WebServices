@@ -3,14 +3,16 @@
   <parent>
     <groupId>it.bncf.magazziniDigitali</groupId>
     <artifactId>MagazziniDigitali</artifactId>
-    <version>3.0.0</version>
+    <version>3.0.1</version><!-- 3.0.0 -->
   </parent>
   <groupId>it.bncf.magazziniDigitali.services.implement</groupId>
   <artifactId>MagazziniDigitaliServicesImplement</artifactId>
+    <version>1.0.0</version>
   <properties>
-    <maven.compiler.source>1.6</maven.compiler.source>
-    <maven.compiler.target>1.6</maven.compiler.target>
+    <maven.compiler.source>1.8</maven.compiler.source><!-- 1.6 -->
+    <maven.compiler.target>1.8</maven.compiler.target><!-- 1.6 -->
   </properties>
+  <!-- 
   <repositories>
     <repository>
         <id>bncf</id>
@@ -27,6 +29,7 @@
         </releases>
     </repository>
 </repositories>
+
 <pluginRepositories>
     <pluginRepository>
         <id>bncf</id>
@@ -50,4 +53,5 @@
         <url>http://maven.bncf.firenze.sbn.it/artifactory/libs-release-local</url>
     </repository>
 </distributionManagement>
+ -->
 </project>

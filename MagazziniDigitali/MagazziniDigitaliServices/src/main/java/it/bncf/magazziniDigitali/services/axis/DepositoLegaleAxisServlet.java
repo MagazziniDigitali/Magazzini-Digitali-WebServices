@@ -1,6 +1,7 @@
 package it.bncf.magazziniDigitali.services.axis;
 
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
 import org.apache.axis.transport.http.AxisServlet;
@@ -27,8 +28,10 @@ public class DepositoLegaleAxisServlet extends AxisServlet {
 	public void init() throws ServletException {
 		try {
 			super.init();
-			DepositoLegaleAxisServlet.mdConfiguration = 
-					new MDConfiguration("IA",this.getServletContext().getInitParameter("nomeCatalogo"));
+			ServletContext sc =  this.getServletContext();
+			String nomeCatalogo = sc.getInitParameter("nomeCatalogo");
+			DepositoLegaleAxisServlet.mdConfiguration = new MDConfiguration("IA",nomeCatalogo);
+			System.out.println("DepositoLegaleAxisServlet.init()");
 		} catch (MDConfigurationException e) {
 			throw new ServletException(e.getMessage(), e);
 		} catch (Exception e) {

@@ -3,10 +3,10 @@
   <parent>
     <groupId>it.bncf.magazziniDigitali</groupId>
     <artifactId>MagazziniDigitali</artifactId>
-    <version>3.0.0</version>
+    <version>3.0.1</version><!-- 3.0.0 -->
   </parent>
   <artifactId>MagazziniDigitaliSolr</artifactId>
-  <version>3.0.4</version>
+  <version>3.0.5</version><!-- 3.0.4 -->
   <description>Librerie per l'interfaccia verso il database Solr</description>
   <groupId>it.bncf.magazziniDigitali.solr</groupId>
   <properties>
@@ -18,7 +18,7 @@
   	<dependency>
   		<groupId>mx.randalf.solr</groupId>
   		<artifactId>RandalfSolrCore</artifactId>
-  		<version>2.0.2</version>
+  		<version>2.0.3</version><!-- 2.0.2 -->
   	</dependency>
   	<dependency>
   		<groupId>commons-logging</groupId>
@@ -28,14 +28,15 @@
   	<dependency>
   		<groupId>mx.randalf.tools</groupId>
   		<artifactId>RandalfTools</artifactId>
-  		<version>2.0.0</version>
+  		<version>2.0.1</version>
   	</dependency>
   	<dependency>
   		<groupId>it.bncf.magazziniDigitali.utils</groupId>
   		<artifactId>MagazziniDigitaliUtils</artifactId>
-  		<version>3.0.4</version>
+  		<version>3.0.5</version><!-- 3.0.4 -->
   	</dependency>
   </dependencies>
+<!-- 
   <repositories>
     <repository>
         <id>bncf</id>
@@ -52,6 +53,7 @@
         <url>http://maven.bncf.firenze.sbn.it/artifactory/libs-release-local</url>
     </repository>
 </distributionManagement>
+ -->
   <build>
 	<resources>
 		<resource>

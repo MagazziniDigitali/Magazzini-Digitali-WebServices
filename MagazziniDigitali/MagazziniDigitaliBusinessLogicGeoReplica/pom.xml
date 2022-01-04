@@ -3,23 +3,23 @@
   <parent>
     <groupId>it.bncf.magazziniDigitali</groupId>
     <artifactId>MagazziniDigitali</artifactId>
-    <version>3.0.0</version>
+    <version>3.0.1</version><!-- 3.0.0 -->
   </parent>
   <groupId>it.bncf.magazziniDigitali.businessLogic.geoReplica</groupId>
   <artifactId>MagazziniDigitaliBusinessLogicGeoReplica</artifactId>
-  <version>3.0.1</version>
+  <version>3.0.2</version><!-- 3.0.1 -->
   <dependencies>
   	<dependency>
   		<groupId>
   			it.bncf.magazziniDigitali.businessLogic.utils
   		</groupId>
   		<artifactId>MagazziniDigitaliBusinessLogicUtils</artifactId>
-  		<version>3.0.4</version>
+  		<version>3.0.5</version><!-- 3.0.4 -->
   	</dependency>
   	<dependency>
   		<groupId>it.bncf.magazziniDigitali.nodi</groupId>
   		<artifactId>MagazziniDigitaliNodi</artifactId>
-  		<version>3.0.5</version>
+  		<version>3.0.6</version><!-- 3.0.5 -->
   	</dependency>
   </dependencies>
 </project>

@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>it.bncf.magazziniDigitali.xsd</groupId>
   <artifactId>MagazziniDigitaliXsd</artifactId>
-  <version>3.0.3</version>
+  <version>3.0.4</version><!-- 3.0.3 -->
   <description>Libreria utilizzata per la getione di tutti i tracciati Xsd relativi al progetto Magazzini Digitali</description>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -13,17 +13,17 @@
   	<dependency>
   		<groupId>mx.randalf.xsd</groupId>
   		<artifactId>RandalfXsd</artifactId>
-  		<version>2.0.1</version>
+  		<version>2.0.2</version><!-- 2.0.1 -->
   	</dependency>
   	<dependency>
   		<groupId>it.bncf.magazziniDigitali.databaseSchema</groupId>
   		<artifactId>MagazziniDigitaliDatabaseSchema</artifactId>
-  		<version>3.0.3</version>
+  		<version>3.0.4</version><!-- 3.0.3 -->
   	</dependency>
   </dependencies>
   <parent>
   	<groupId>it.bncf.magazziniDigitali</groupId>
   	<artifactId>MagazziniDigitali</artifactId>
-  	<version>3.0.0</version>
+  	<version>3.0.1</version><!-- 3.0.0 -->
   </parent>
 </project>

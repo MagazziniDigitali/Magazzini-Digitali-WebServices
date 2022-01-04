@@ -3,28 +3,26 @@
   <parent>
     <groupId>it.bncf.magazziniDigitali</groupId>
     <artifactId>MagazziniDigitali</artifactId>
-    <version>3.0.0</version>
+    <version>3.0.1</version><!-- 3.0.0 -->
   </parent>
   <artifactId>MagazziniDigitaliBusinessLogicValidate</artifactId>
   <version>3.0.5</version>
   <groupId>it.bncf.magazziniDigitali.businessLogic.validate</groupId>
   <dependencies>
   	<dependency>
-  		<groupId>
-  			it.bncf.magazziniDigitali.businessLogic.utils
-  		</groupId>
+  		<groupId>it.bncf.magazziniDigitali.businessLogic.utils	</groupId>
   		<artifactId>MagazziniDigitaliBusinessLogicUtils</artifactId>
-  		<version>3.0.4</version>
+  		<version>3.0.5</version><!-- 3.0.4 -->
   	</dependency>
   	<dependency>
   		<groupId>mx.randalf.mets</groupId>
   		<artifactId>RandalfMets</artifactId>
-  		<version>2.0.2</version>
+  		<version>2.0.3</version><!-- 2.0.2 -->
   	</dependency>
   	<dependency>
   		<groupId>mx.randalf.archive</groupId>
   		<artifactId>RandalfArchive</artifactId>
-  		<version>2.0.5</version>
+  		<version>2.0.6</version><!-- 2.0.5 -->
   	</dependency>
   	<dependency>
   		<groupId>org.everit.json</groupId>

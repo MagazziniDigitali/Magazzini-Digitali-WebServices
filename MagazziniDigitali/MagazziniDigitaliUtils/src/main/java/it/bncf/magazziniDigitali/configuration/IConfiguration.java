@@ -66,6 +66,12 @@ public class IConfiguration {
 							this.pathProperties = path.getAbsolutePath();
 							break;
 						}
+						else // Arge 14/06/2021
+						{
+							String error = "Path per properties non esiste: " + pathProperties;
+							log.error(error);
+							throw new MDConfigurationException(error);
+						}
 					}
 				}
 			}
